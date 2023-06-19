@@ -2,13 +2,14 @@
   "name": "xql",
   "version": "0.0.0",
   "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "jest"
-  },
+  "author": "Petra Jaros <peeja@peeja.com>",
+  "license": "MIT",
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "jest",
+    "build": "tsc --project tsconfig.build.json"
+  },
   "devDependencies": {
     "@jest/globals": "^29.5.0",
     "eslint": "^8.43.0",
