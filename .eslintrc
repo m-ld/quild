@@ -1,0 +1,59 @@
+{
+  "extends": [
+    "eslint:recommended",
+    "plugin:import/recommended",
+    "plugin:@eslint-community/eslint-comments/recommended"
+  ],
+  "overrides": [
+    {
+      "files": ["**/*.ts?(x)"],
+      "parser": "@typescript-eslint/parser",
+      "parserOptions": {
+        "project": "tsconfig.json",
+        // Specifically, 5.1 is not a problem. Remove this line if TS is upgraded
+        // beyond 5.1, as any warning may then be an actual concern.
+        // https://github.com/typescript-eslint/typescript-eslint/issues/6934
+        "warnOnUnsupportedTypeScriptVersion": false
+      },
+      "extends": [
+        "plugin:@typescript-eslint/recommended",
+        "plugin:@typescript-eslint/recommended-requiring-type-checking",
+        "plugin:import/typescript"
+      ],
+      "settings": {
+        "import/resolver": {
+          "typescript": {}
+        }
+      },
+      "rules": {
+        "arrow-body-style": "warn",
+        "import/no-extraneous-dependencies": [
+          "error",
+          {
+            "devDependencies": ["**/*.test?(util).[jt]s?(x)"]
+          }
+        ],
+        "import/order": [
+          "warn",
+          {
+            "newlines-between": "always",
+            "alphabetize": {
+              "order": "asc"
+            }
+          }
+        ],
+        "import/first": "warn",
+
+        // Make all the @eslint-community/eslint-comments/recommended rules warnings
+        "@eslint-community/eslint-comments/disable-enable-pair": "warn",
+        "@eslint-community/eslint-comments/no-aggregating-enable": "warn",
+        "@eslint-community/eslint-comments/no-duplicate-disable": "warn",
+        "@eslint-community/eslint-comments/no-unlimited-disable": "warn",
+        "@eslint-community/eslint-comments/no-unused-enable": "warn",
+
+        "@eslint-community/eslint-comments/no-unused-disable": "warn",
+        "@eslint-community/eslint-comments/require-description": "warn"
+      }
+    }
+  ]
+}
