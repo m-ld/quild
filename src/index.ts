@@ -93,7 +93,7 @@ export const readAll = <R>(stream: ResultStream<R>) =>
  * @param query The xQL query to read.
  */
 export const query = async (
-  source: Source<Quad>,
+  source: Source,
   query: jsonld.NodeObject
 ): Promise<jsonld.NodeObject> => {
   const quadsStream = await engine.queryQuads(await sparqlForXQL(query), {
