@@ -2,7 +2,8 @@
   "extends": [
     "eslint:recommended",
     "plugin:import/recommended",
-    "plugin:@eslint-community/eslint-comments/recommended"
+    "plugin:@eslint-community/eslint-comments/recommended",
+    "plugin:promise/recommended"
   ],
   "rules": {
     "arrow-body-style": "warn",
