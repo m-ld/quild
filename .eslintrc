@@ -6,6 +6,19 @@
   ],
   "rules": {
     "arrow-body-style": "warn",
+    "default-param-last": "warn",
+    "no-magic-numbers": "warn",
+    "no-invalid-this": "error",
+    "array-callback-return": "error",
+    "no-await-in-loop": "warn",
+    "no-constant-binary-expression": "warn",
+    "no-unmodified-loop-condition": "error",
+    "no-unreachable-loop": "warn",
+    "require-atomic-updates": "error",
+    "eqeqeq": "warn",
+    "no-unused-vars": ["warn", { "varsIgnorePattern": "^_" }],
+    "no-return-await": "warn",
+
     "import/no-extraneous-dependencies": [
       "error",
       {
@@ -31,11 +44,9 @@
     "@eslint-community/eslint-comments/no-unused-enable": "warn",
 
     "@eslint-community/eslint-comments/no-unused-disable": "warn",
-    "@eslint-community/eslint-comments/require-description": "warn",
-
-    "no-unused-vars": ["warn", { "varsIgnorePattern": "^_" }],
-    "no-return-await": "warn"
+    "@eslint-community/eslint-comments/require-description": "warn"
   },
+  "ignorePatterns": ["/dist"],
   "overrides": [
     {
       "files": ["**/*.ts?(x)"],
@@ -62,7 +73,19 @@
         "@typescript-eslint/no-unused-vars": [
           "warn",
           { "varsIgnorePattern": "^_" }
-        ]
+        ],
+        "@typescript-eslint/switch-exhaustiveness-check": "error",
+        "@typescript-eslint/no-confusing-void-expression": "error",
+        "@typescript-eslint/no-duplicate-type-constituents": "warn",
+        "@typescript-eslint/no-import-type-side-effects": "error",
+        "@typescript-eslint/consistent-type-exports": "error",
+        "@typescript-eslint/consistent-type-imports": "error",
+        "default-param-last": "off",
+        "@typescript-eslint/default-param-last": "error",
+        "no-magic-numbers": "off",
+        "@typescript-eslint/no-magic-numbers": "error",
+        "no-invalid-this": "off",
+        "@typescript-eslint/no-invalid-this": "error"
       }
     }
   ]

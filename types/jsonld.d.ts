@@ -526,7 +526,7 @@ declare module "jsonld/jsonld-spec" {
    * https://www.w3.org/TR/json-ld-api/
    *
    */
-  import { JsonLdDocument, NodeObject, ContextDefinition } from "jsonld";
+  import type { JsonLdDocument, NodeObject, ContextDefinition } from "jsonld";
 
   type DOMString = string;
   type LoadDocumentCallback = (url: Url) => Promise<RemoteDocument>;

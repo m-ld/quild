@@ -12,6 +12,7 @@
     "moduleResolution": "node",
     "incremental": true,
     "noErrorTruncation": true,
-    "exactOptionalPropertyTypes": true
+    "exactOptionalPropertyTypes": true,
+    "useUnknownInCatchVariables": true
   }
 }

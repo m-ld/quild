@@ -1,5 +1,5 @@
 declare module "@graphy/memory.dataset.fast" {
-  import type { Duplex } from "node:stream";
+  import { Duplex } from "node:stream";
 
   import type { BaseQuad, Dataset, Quad, Stream, Term } from "@rdfjs/types";
 

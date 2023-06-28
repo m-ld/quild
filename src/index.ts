@@ -3,7 +3,8 @@ import type { Quad, ResultStream, Source, Term } from "@rdfjs/types";
 import jsonld from "jsonld";
 import { customAlphabet } from "nanoid";
 import { DataFactory } from "rdf-data-factory";
-import { Algebra, Factory as SparqlFactory } from "sparqlalgebrajs";
+import type { Algebra } from "sparqlalgebrajs";
+import { Factory as SparqlFactory } from "sparqlalgebrajs";
 
 const PLACEHOLDER = "?";
 
@@ -29,9 +30,10 @@ export const fixQuad = (q: jsonld.Quad): Quad => {
   );
 };
 
+const VARIABLE_NAME_LENGTH = 10;
 const randomVariableName = customAlphabet(
   "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",
-  10
+  VARIABLE_NAME_LENGTH
 );
 
 /**
