@@ -33,7 +33,8 @@
     "@eslint-community/eslint-comments/no-unused-disable": "warn",
     "@eslint-community/eslint-comments/require-description": "warn",
 
-    "no-unused-vars": ["warn", { "varsIgnorePattern": "^_" }]
+    "no-unused-vars": ["warn", { "varsIgnorePattern": "^_" }],
+    "no-return-await": "warn"
   },
   "overrides": [
     {
