@@ -4,6 +4,37 @@
     "plugin:import/recommended",
     "plugin:@eslint-community/eslint-comments/recommended"
   ],
+  "rules": {
+    "arrow-body-style": "warn",
+    "import/no-extraneous-dependencies": [
+      "error",
+      {
+        "devDependencies": ["**/*.test?(util).[jt]s?(x)"]
+      }
+    ],
+    "import/order": [
+      "warn",
+      {
+        "newlines-between": "always",
+        "alphabetize": {
+          "order": "asc"
+        }
+      }
+    ],
+    "import/first": "warn",
+
+    // Make all the @eslint-community/eslint-comments/recommended rules warnings
+    "@eslint-community/eslint-comments/disable-enable-pair": "warn",
+    "@eslint-community/eslint-comments/no-aggregating-enable": "warn",
+    "@eslint-community/eslint-comments/no-duplicate-disable": "warn",
+    "@eslint-community/eslint-comments/no-unlimited-disable": "warn",
+    "@eslint-community/eslint-comments/no-unused-enable": "warn",
+
+    "@eslint-community/eslint-comments/no-unused-disable": "warn",
+    "@eslint-community/eslint-comments/require-description": "warn",
+
+    "no-unused-vars": ["warn", { "varsIgnorePattern": "^_" }]
+  },
   "overrides": [
     {
       "files": ["**/*.ts?(x)"],
@@ -26,33 +57,10 @@
         }
       },
       "rules": {
-        "arrow-body-style": "warn",
-        "import/no-extraneous-dependencies": [
-          "error",
-          {
-            "devDependencies": ["**/*.test?(util).[jt]s?(x)"]
-          }
-        ],
-        "import/order": [
+        "@typescript-eslint/no-unused-vars": [
           "warn",
-          {
-            "newlines-between": "always",
-            "alphabetize": {
-              "order": "asc"
-            }
-          }
-        ],
-        "import/first": "warn",
-
-        // Make all the @eslint-community/eslint-comments/recommended rules warnings
-        "@eslint-community/eslint-comments/disable-enable-pair": "warn",
-        "@eslint-community/eslint-comments/no-aggregating-enable": "warn",
-        "@eslint-community/eslint-comments/no-duplicate-disable": "warn",
-        "@eslint-community/eslint-comments/no-unlimited-disable": "warn",
-        "@eslint-community/eslint-comments/no-unused-enable": "warn",
-
-        "@eslint-community/eslint-comments/no-unused-disable": "warn",
-        "@eslint-community/eslint-comments/require-description": "warn"
+          { "varsIgnorePattern": "^_" }
+        ]
       }
     }
   ]
