@@ -57,4 +57,18 @@ describe("query()", () => {
       "http://swapi.dev/documentation#hair_color": "blond",
     });
   });
+
+  // Note that the result includes an `@id`!
+  it("can query for a property by other properties", async () => {
+    expect(
+      await query(source, {
+        "http://swapi.dev/documentation#name": "Luke Skywalker",
+        "http://swapi.dev/documentation#eye_color": "?",
+      })
+    ).toStrictEqual({
+      "@id": "https://swapi.dev/api/people/1/",
+      "http://swapi.dev/documentation#name": "Luke Skywalker",
+      "http://swapi.dev/documentation#eye_color": "blue",
+    });
+  });
 });

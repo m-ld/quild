@@ -5,6 +5,8 @@ import { customAlphabet } from "nanoid";
 import { DataFactory } from "rdf-data-factory";
 import { Algebra, Factory as SparqlFactory } from "sparqlalgebrajs";
 
+const PLACEHOLDER = "?";
+
 const engine = new QueryEngine();
 const df = new DataFactory();
 
@@ -32,8 +34,18 @@ const randomVariableName = customAlphabet(
   10
 );
 
-const placeholderToVariable = <T extends Term>(term: T) =>
-  term.termType === "Literal" && term.value === "?"
+/**
+ * Replaces the given term with a variable if it's either the placeholder value
+ * or a blank node. Placeholders are replaced with variables because that's what
+ * the placeholder means. Blank nodes are replaced with variables to ensure that
+ * the query engine returns a value for them--without this, the query may
+ * *match* the right data but not return all of it.
+ * @param term The term to possibly replace
+ * @returns `term`, or a new variable term if required instead
+ */
+const variablize = <T extends Term>(term: T) =>
+  (term.termType === "Literal" && term.value === PLACEHOLDER) ||
+  term.termType === "BlankNode"
     ? df.variable(randomVariableName())
     : term;
 
@@ -46,11 +58,9 @@ const sparqlForXQL = async (query: jsonld.NodeObject) => {
 
   const patterns = frameRdf.map((frameQuad: Quad) =>
     sparql.createPattern(
-      // Swap blank nodes out for variables, so the engine resolves actual
-      // values for them.
-      placeholderToVariable(frameQuad.subject),
-      placeholderToVariable(frameQuad.predicate),
-      placeholderToVariable(frameQuad.object)
+      variablize(frameQuad.subject),
+      variablize(frameQuad.predicate),
+      variablize(frameQuad.object)
     )
   );
 
