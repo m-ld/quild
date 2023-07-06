@@ -3,12 +3,15 @@
 // TODO: Package and push upstream to "@types/jsonld".
 declare module "jsonld" {
   import type { Quad as RDFQuad } from "@rdfjs/types";
-  import type { NodeObject } from "jsonld/jsonld";
   import type {
-    Frame,
-    // Url,
+    NodeObject,
+    ContextDefinition,
+    JsonLdDocument,
+  } from "jsonld/jsonld";
+  import type {
+    Url,
     // JsonLdProcessor,
-    // RemoteDocument,
+    RemoteDocument,
     // NodeObject,
     // JsonLdArray,
   } from "jsonld/jsonld-spec";
@@ -27,13 +30,15 @@ declare module "jsonld" {
    * @see https://www.w3.org/TR/n-quads/
    */
   type MimeNQuad = "application/n-quads" | "application/nquads";
-  // type Callback<T> = (err: Error, res: T) => void;
   // /*
   //  * Declares interfaces used to type the methods options object.
   //  * The interfaces are usefull to avoid code replication.
   //  */
   export namespace Options {
     interface DocLoader {
+      /**
+       * The document loader.
+       */
       documentLoader?:
         | ((
             url: Url,
@@ -41,26 +46,54 @@ declare module "jsonld" {
           ) => Promise<RemoteDocument>)
         | undefined;
     }
+
     interface Common extends DocLoader {
-      base?: string | undefined;
-      expandContext?: ContextDefinition | undefined;
+      /**
+       * The base IRI to use.
+       */
+      base?: string;
+      /**
+       * A context to expand with.
+       */
+      expandContext?: ContextDefinition;
+      /**
+       * `true` to use safe mode.
+       * @default false
+       */
+      safe?: boolean;
     }
-    //   interface ExpMap {
-    //     // TODO: Figure out type of info
-    //     expansionMap?: ((info: any) => any) | undefined;
-    //   }
-    //   interface Compact extends Common, ExpMap {
-    //     compactArrays?: boolean | undefined;
-    //     appropriate?: boolean | undefined;
-    //     compactToRelative?: boolean | undefined;
-    //     graph?: boolean | undefined;
-    //     skipExpansion?: boolean | undefined;
-    //     expansion?: boolean | undefined;
-    //     framing?: boolean | undefined;
-    //     // TODO: Figure out type of info
-    //     compactionMap?: ((info: any) => void) | undefined;
-    //   }
-    //   interface Expand extends Common, ExpMap {
+
+    interface Compact extends Common, DocLoader {
+      /**
+       * `true` to compact arrays to single values when appropriate, `false` not
+       * to.
+       * @default true
+       */
+      compactArrays?: boolean;
+      /**
+       * `true` to compact IRIs to be relative to document base, `false` to keep
+       * absolute.
+       * @default true
+       */
+      compactToRelative?: boolean;
+      /**
+       * `true` to always output a top-level graph.
+       * @default false
+       */
+      graph?: boolean;
+      /**
+       * `true` to assume the input is expanded and skip expansion, `false` not
+       * to.
+       * @default false
+       */
+      skipExpansion?: boolean;
+      /**
+       * `true` if compaction is occuring during a framing operation.
+       */
+      framing?: boolean;
+    }
+
+    //   interface Expand extends Common {
     //     keepFreeFloatingNodes?: boolean | undefined;
     //   }
     //   type Flatten = Common;
@@ -79,57 +112,67 @@ declare module "jsonld" {
     //     format?: MimeNQuad | undefined;
     //     useNative?: boolean | undefined;
     //   }
-    //   interface FromRdf {
-    //     format?: MimeNQuad | undefined;
-    //     rdfParser?: any;
-    //     useRdfType?: boolean | undefined;
-    //     useNativeTypes?: boolean | undefined;
-    //   }
 
-    // TODO: Use:
-    /**
-     *          [base] the base IRI to use.
-     *          [expandContext] a context to expand with.
-     *          [documentLoader(url, options)] the document loader.
-     *          [safe] true to use safe mode. (default: false)
-     */
+    interface FromRdf extends Pick<Common, "safe"> {
+      /**
+       * The format if dataset param must first be parsed:
+       * `"application/n-quads"` for N-Quads. Ignored if the dataset given is
+       * not a string, when it will be expected as `Quad`s.
+       * @see registerRDFParser
+       */
+      format?: MimeNQuad | undefined;
+
+      /**
+       * A custom RDF-parser to use to parse the dataset.
+       */
+      rdfParser?: (
+        rdfSource: string
+      ) => Iterable<Quad> | Promise<Iterable<Quad>>;
+
+      /**
+       * `true` to use rdf:type, false to use `@type`.
+       * @default false
+       */
+      useRdfType?: boolean;
+      /**
+       * `true` to convert XSD types into native types (boolean, integer,
+       * double), `false` not to.
+       * @default false
+       */
+      useNativeTypes?: boolean | undefined;
+      /**
+       * `"i18n-datatype"` to support RDF transformation of `@direction`.
+       */
+      rdfDirection?: "i18n-datatype";
+    }
 
     interface ToRdf<Format extends MimeNQuad | undefined> extends Common {
       /**
-       * True to assume the input is expanded and skip expansion,
-       * false not to.
-       * @default false.
+       * `true` to assume the input is expanded and skip expansion,
+       * `false` not to.
+       * @default false
        */
       skipExpansion?: boolean;
       /**
-       * The format to use to output a string. 'application/n-quads' for
+       * The format to use to output a string. `"application/n-quads"` for
        * N-Quads.
        */
       format?: Format;
       /**
-       * true to output generalized RDF, false to produce only standard RDF.
+       * `true` to output generalized RDF, `false` to produce only standard RDF.
        * @default false
        * @see https://www.w3.org/TR/rdf11-concepts/#section-generalized-rdf
        */
       produceGeneralizedRdf?: boolean;
     }
   }
+
   export function compact(
     input: JsonLdDocument,
     ctx: ContextDefinition,
-    options: Options.Compact,
-    callback: Callback<NodeObject>
-  ): void;
-  export function compact(
-    input: JsonLdDocument,
-    ctx: ContextDefinition,
-    callback: Callback<NodeObject>
-  ): void;
-  export function compact(
-    input: JsonLdDocument,
-    ctx?: ContextDefinition,
     options?: Options.Compact
   ): Promise<NodeObject>;
+
   // export function expand(
   //   input: JsonLdDocument,
   //   options: Options.Expand,
@@ -160,11 +203,11 @@ declare module "jsonld" {
   //   options?: Options.Flatten
   // ): Promise<NodeObject>;
 
-  export function frame(
-    input: JsonLdDocument,
-    frame: Frame,
-    options?: Options.Frame
-  ): Promise<NodeObject>;
+  // export function frame(
+  //   input: JsonLdDocument,
+  //   frame: Frame,
+  //   options?: Options.Frame
+  // ): Promise<NodeObject>;
 
   // export function normalize(
   //   input: JsonLdDocument,
@@ -180,18 +223,22 @@ declare module "jsonld" {
   //   options?: Options.Normalize
   // ): Promise<string>;
   // export const canonize: typeof normalize;
+
   export function fromRDF(
     dataset: Iterable<Quad>,
     options?: Options.FromRdf
-  ): Promise<JsonLdArray>;
+  ): Promise<NodeObject[]>;
+
   export function toRDF(
     input: JsonLdDocument,
     options?: Options.ToRdf<undefined>
   ): Promise<Quad[]>;
+
   export function toRDF(
     input: JsonLdDocument,
     options?: Options.ToRdf<MimeNQuad>
   ): Promise<string>;
+
   // export let JsonLdProcessor: JsonLdProcessor;
   // disable autoexport
   // export {};
@@ -233,7 +280,7 @@ declare module "jsonld/jsonld" {
     "@graph"?: Keyword["@included"];
     "@nest"?: OrArray<JsonObject>;
     "@type"?: OrArray<Keyword["@type"]>;
-    "@reverse"?: { [key: string]: Keyword["@reverse"] };
+    "@reverse"?: Record<string, Keyword["@reverse"]>;
     "@index"?: Keyword["@index"];
     [key: string]:
       | OrArray<
@@ -314,17 +361,16 @@ declare module "jsonld/jsonld" {
    * A language map is used to associate a language with a value in a way that allows easy programmatic access.
    * @see https://www.w3.org/TR/json-ld11/#language-maps
    */
-  export interface LanguageMap {
-    [key: string]: null | string | string[];
-  }
+  export type LanguageMap = Record<string, null | string | string[]>;
 
   /**
    * An index map allows keys that have no semantic meaning, but should be preserved regardless,
    * to be used in JSON-LD documents.
    * @see https://www.w3.org/TR/json-ld11/#index-maps
    */
-  export interface IndexMap {
-    [key: string]: OrArray<
+  export type IndexMap = Record<
+    string,
+    OrArray<
       | null
       | boolean
       | number
@@ -333,24 +379,20 @@ declare module "jsonld/jsonld" {
       | ValueObject
       | ListObject
       | SetObject
-    >;
-  }
+    >
+  >;
 
   /**
    * An id map is used to associate an IRI with a value that allows easy programmatic access.
    * @see https://www.w3.org/TR/json-ld11/#id-maps
    */
-  export interface IdMap {
-    [key: string]: NodeObject;
-  }
+  export type IdMap = Record<string, NodeObject>;
 
   /**
    * A type map is used to associate an IRI with a value that allows easy programmatic access.
    * @see https://www.w3.org/TR/json-ld11/#type-maps
    */
-  export interface TypeMap {
-    [key: string]: string | NodeObject;
-  }
+  export type TypeMap = Record<string, string | NodeObject>;
 
   /**
    * An included block is used to provide a set of node objects.
@@ -416,8 +458,7 @@ declare module "jsonld/jsonld" {
    * Not for export.
    * @see https://www.w3.org/TR/json-ld/#keywords
    */
-  // tslint:disable-next-line:interface-over-type-literal
-  type Keyword = {
+  interface Keyword {
     "@base": string | null;
     "@container":
       | OrArray<"@list" | "@set" | ContainerType>
@@ -448,7 +489,7 @@ declare module "jsonld/jsonld" {
     "@value": null | boolean | number | string;
     "@version": "1.1";
     "@vocab": string | null;
-  };
+  }
 
   /*
    * Helper Types
@@ -473,10 +514,9 @@ declare module "jsonld/jsonld" {
    * (not for export)
    */
   type JsonPrimitive = string | number | boolean | null;
-  type JsonArray = Array<JsonValue>;
-  interface JsonObject {
-    [key: string]: JsonValue | undefined;
-  }
+  type JsonArray = JsonValue[];
+  // eslint-disable-next-line @typescript-eslint/consistent-indexed-object-style, @typescript-eslint/consistent-type-definitions -- https://github.com/typescript-eslint/typescript-eslint/issues/7148
+  type JsonObject = { [key: string]: JsonValue };
   type JsonValue = JsonPrimitive | JsonArray | JsonObject;
 }
 
@@ -486,7 +526,7 @@ declare module "jsonld/jsonld-spec" {
    * https://www.w3.org/TR/json-ld-api/
    *
    */
-  import { JsonLdDocument, NodeObject, ContextDefinition } from "jsonld";
+  import type { JsonLdDocument, NodeObject, ContextDefinition } from "jsonld";
 
   type DOMString = string;
   type LoadDocumentCallback = (url: Url) => Promise<RemoteDocument>;

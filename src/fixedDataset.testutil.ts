@@ -6,15 +6,16 @@
 import originalDataset from "@graphy/memory.dataset.fast";
 
 const d = originalDataset();
-const FastDataset = d.constructor as { new (): typeof d };
+const FastDataset = d.constructor as new () => typeof d;
 
 class FixedFastDataset extends FastDataset {
-  offspring(h_quad_tree = null) {
+  offspring(h_quad_tree: unknown = null) {
     return super.offspring(
       h_quad_tree || { [originalDataset.keys]: 0, [originalDataset.quads]: 0 }
     );
   }
 }
+
 export const dataset = Object.assign(
   () => new FixedFastDataset(),
   originalDataset
