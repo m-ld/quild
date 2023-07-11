@@ -13,6 +13,7 @@
     "incremental": true,
     "noErrorTruncation": true,
     "exactOptionalPropertyTypes": true,
-    "useUnknownInCatchVariables": true
+    "useUnknownInCatchVariables": true,
+    "resolveJsonModule": true
   }
 }
