@@ -103,5 +103,5 @@ export const query = async (
   });
 
   const quads = await readAll(quadsStream);
-  return jsonld.compact(await jsonld.fromRDF(quads), {});
+  return jsonld.compact(await jsonld.fromRDF(quads), query["@context"] ?? {});
 };

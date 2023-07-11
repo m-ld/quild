@@ -5,6 +5,7 @@ declare module "jsonld" {
   import type { Quad as RDFQuad } from "@rdfjs/types";
   import type {
     NodeObject,
+    Context,
     ContextDefinition,
     JsonLdDocument,
   } from "jsonld/jsonld";
@@ -30,21 +31,16 @@ declare module "jsonld" {
    * @see https://www.w3.org/TR/n-quads/
    */
   type MimeNQuad = "application/n-quads" | "application/nquads";
-  // /*
-  //  * Declares interfaces used to type the methods options object.
-  //  * The interfaces are usefull to avoid code replication.
-  //  */
+
+  /** Something which, when awaited, produces a T. */
+  type Awaitable<T> = T | PromiseLike<T>;
+
   export namespace Options {
     interface DocLoader {
       /**
        * The document loader.
        */
-      documentLoader?:
-        | ((
-            url: Url,
-            callback: (err: Error, remoteDoc: RemoteDocument) => void
-          ) => Promise<RemoteDocument>)
-        | undefined;
+      documentLoader?: (url: Url) => Awaitable<RemoteDocument>;
     }
 
     interface Common extends DocLoader {
@@ -169,7 +165,7 @@ declare module "jsonld" {
 
   export function compact(
     input: JsonLdDocument,
-    ctx: ContextDefinition,
+    ctx: Context,
     options?: Options.Compact
   ): Promise<NodeObject>;
 
@@ -405,20 +401,18 @@ declare module "jsonld/jsonld" {
    * @see https://www.w3.org/TR/json-ld11/#context-definitions
    */
   export interface ContextDefinition {
-    "@base"?: Keyword["@base"] | undefined;
-    "@direction"?: Keyword["@direction"] | undefined;
-    "@import"?: Keyword["@import"] | undefined;
-    "@language"?: Keyword["@language"] | undefined;
-    "@propagate"?: Keyword["@propagate"] | undefined;
-    "@protected"?: Keyword["@protected"] | undefined;
-    "@type"?:
-      | {
-          "@container": "@set";
-          "@protected"?: Keyword["@protected"] | undefined;
-        }
-      | undefined;
-    "@version"?: Keyword["@version"] | undefined;
-    "@vocab"?: Keyword["@vocab"] | undefined;
+    "@base"?: Keyword["@base"];
+    "@direction"?: Keyword["@direction"];
+    "@import"?: Keyword["@import"];
+    "@language"?: Keyword["@language"];
+    "@propagate"?: Keyword["@propagate"];
+    "@protected"?: Keyword["@protected"];
+    "@type"?: {
+      "@container": "@set";
+      "@protected"?: Keyword["@protected"];
+    };
+    "@version"?: Keyword["@version"];
+    "@vocab"?: Keyword["@vocab"];
     [key: string]:
       | null
       | string
@@ -486,6 +480,13 @@ declare module "jsonld/jsonld" {
   );
 
   /**
+   * A context, possibly composed of other contexts. Generally used as the value
+   * of the `@context` keyword, but also used for other purposes.
+   * @see https://www.w3.org/TR/json-ld/#keywords
+   */
+  export type Context = OrArray<null | string | ContextDefinition>;
+
+  /**
    * A list of keywords and their types.
    * Only used for internal reference; not an actual interface.
    * Not for export.
@@ -497,7 +498,7 @@ declare module "jsonld/jsonld" {
       | OrArray<"@list" | "@set" | ContainerType>
       | ContainerTypeArray
       | null;
-    "@context": OrArray<null | string | ContextDefinition>;
+    "@context": Context;
     "@direction": "ltr" | "rtl" | null;
     "@graph": OrArray<NodeObject>;
     "@id": OrArray<string>;
@@ -591,7 +592,8 @@ declare module "jsonld/jsonld-spec" {
   }
 
   export interface RemoteDocument {
-    contextUrl?: Url | undefined;
+    /** A context URL found in a Link header, if any. */
+    contextUrl?: Url;
     documentUrl: Url;
     document: JsonLdDocument;
   }
