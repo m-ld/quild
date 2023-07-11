@@ -426,7 +426,11 @@ declare module "jsonld/jsonld" {
       | ContextDefinition[keyof ContextDefinition];
   }
 
-  interface Nothing {}
+  /* eslint-disable-next-line @typescript-eslint/no-empty-interface
+     --------
+     Must be an interface to make HintedUnion behave correctly.
+   */
+  interface HintedUnionAnything {}
 
   /**
    * A non-literal type which provides a finite set of literal hints for editor
@@ -448,9 +452,9 @@ declare module "jsonld/jsonld" {
    * const name1: Name = <insertion point> // Autocompletes "Jane" and "John"
    * const name2: Name = "Eleanor"         // Still accepts any string
    */
-  export type HintedUnion<LiteralUnion, Catchall> =
+  type HintedUnion<LiteralUnion, Catchall> =
     | LiteralUnion
-    | (Catchall & Nothing);
+    | (Catchall & HintedUnionAnything);
 
   /**
    * An expanded term definition is used to describe the mapping between a term
