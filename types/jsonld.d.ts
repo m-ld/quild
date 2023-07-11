@@ -426,6 +426,32 @@ declare module "jsonld/jsonld" {
       | ContextDefinition[keyof ContextDefinition];
   }
 
+  interface Nothing {}
+
+  /**
+   * A non-literal type which provides a finite set of literal hints for editor
+   * ergonomics. Whereas `"a" | "b" | string` will be optimized to just `string`
+   * and lose autocompletion for "a" and "b", `HintedUnion<"a" | "b", string>`
+   * will preserve the literals for autocompletion, while still accepting any
+   * string. The resulting type will be type-equivalent to `LiteralUnion |
+   * Catchall`. Typically everything in `LiteralUnion` will extend `Catchall`, and
+   * thus the resulting type is also type-equivalent to just `Catchall`, but this
+   * is not required.
+   *
+   * @see https://github.com/microsoft/TypeScript/issues/29729#issuecomment-1483854699
+   *
+   * @param LiteralUnion A union of literal values to autocomplete in editors.
+   * @param Catchall A more general type to accept.
+   *
+   * @example
+   * type Name = HintedUnion<"Jane" | "John", string>;
+   * const name1: Name = <insertion point> // Autocompletes "Jane" and "John"
+   * const name2: Name = "Eleanor"         // Still accepts any string
+   */
+  export type HintedUnion<LiteralUnion, Catchall> =
+    | LiteralUnion
+    | (Catchall & Nothing);
+
   /**
    * An expanded term definition is used to describe the mapping between a term
    * and its expanded identifier, as well as other properties of the value
@@ -433,22 +459,25 @@ declare module "jsonld/jsonld" {
    * @see https://www.w3.org/TR/json-ld11/#expanded-term-definition
    */
   export type ExpandedTermDefinition = {
-    "@type"?: "@id" | "@json" | "@none" | "@vocab" | string | undefined;
-    "@language"?: Keyword["@language"] | undefined;
-    "@index"?: Keyword["@index"] | undefined;
-    "@context"?: ContextDefinition | undefined;
-    "@prefix"?: Keyword["@prefix"] | undefined;
-    "@propagate"?: Keyword["@propagate"] | undefined;
-    "@protected"?: Keyword["@protected"] | undefined;
+    "@type"?: HintedUnion<"@id" | "@json" | "@none" | "@vocab", string>;
+    "@language"?: Keyword["@language"];
+    "@index"?: Keyword["@index"];
+    "@context"?: ContextDefinition;
+    "@prefix"?: Keyword["@prefix"];
+    "@propagate"?: Keyword["@propagate"];
+    "@protected"?: Keyword["@protected"];
   } & (
     | {
-        "@id"?: Keyword["@id"] | null | undefined;
-        "@nest"?: "@nest" | string | undefined;
-        "@container"?: Keyword["@container"] | undefined;
+        "@id"?: Keyword["@id"] | null;
+        /**
+         * @see https://www.w3.org/TR/json-ld11/#nested-properties
+         */
+        "@nest"?: HintedUnion<"@nest", string>;
+        "@container"?: Keyword["@container"];
       }
     | {
         "@reverse": Keyword["@reverse"];
-        "@container"?: "@set" | "@index" | null | undefined;
+        "@container"?: "@set" | "@index" | null;
       }
   );
 
