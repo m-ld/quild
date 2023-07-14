@@ -1,11 +1,9 @@
 import { describe, it, expect } from "@jest/globals";
 import jsonld from "jsonld";
 
-import data from "../fixtures/data.json";
-
-import { dataset } from "./fixedDataset.testutil";
-
 import { fixQuad, query } from "./index";
+import data from "../fixtures/data.json";
+import { dataset } from "../test-util/fixedDataset";
 
 const quads = (await jsonld.toRDF(data as jsonld.JsonLdDocument)).map(fixQuad);
 const source = dataset().addAll(quads);

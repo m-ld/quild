@@ -14,6 +14,7 @@
     "noErrorTruncation": true,
     "exactOptionalPropertyTypes": true,
     "useUnknownInCatchVariables": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "noUncheckedIndexedAccess": true
   }
 }

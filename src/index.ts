@@ -1,10 +1,13 @@
 import { QueryEngine } from "@comunica/query-sparql-rdfjs";
-import type { Quad, ResultStream, Source, Term } from "@rdfjs/types";
 import jsonld from "jsonld";
 import { customAlphabet } from "nanoid";
 import { DataFactory } from "rdf-data-factory";
-import type { Algebra } from "sparqlalgebrajs";
 import { Factory as SparqlFactory } from "sparqlalgebrajs";
+
+import { readAll } from "./readAll";
+
+import type { Quad, Source, Term } from "@rdfjs/types";
+import type { Algebra } from "sparqlalgebrajs";
 
 const PLACEHOLDER = "?";
 
@@ -73,21 +76,6 @@ const sparqlForXQL = async (query: jsonld.NodeObject) => {
 
   return algebraQuery;
 };
-
-/**
- * Read all results from an RDF Stream and return them as a promise of an array.
- */
-export const readAll = <R>(stream: ResultStream<R>) =>
-  new Promise<R[]>((resolve) => {
-    const quads: R[] = [];
-    stream
-      .on("data", (result: R) => {
-        quads.push(result);
-      })
-      .on("end", () => {
-        resolve(quads);
-      });
-  });
 
 /**
  * Reads the query once and returns the result.

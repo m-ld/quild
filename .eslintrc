@@ -8,7 +8,7 @@
   "rules": {
     "arrow-body-style": "warn",
     "default-param-last": "warn",
-    "no-magic-numbers": "warn",
+    "no-magic-numbers": ["warn", { "ignoreArrayIndexes": true }],
     "no-invalid-this": "error",
     "array-callback-return": "error",
     "no-await-in-loop": "warn",
@@ -23,22 +23,36 @@
     "import/no-extraneous-dependencies": [
       "error",
       {
-        "devDependencies": ["**/*.test?(util).[jt]s?(x)"]
+        "devDependencies": ["**/*.test.[jt]s?(x)", "test-util/**/*.[jt]s?(x)"]
       }
     ],
     "import/order": [
       "warn",
       {
+        "groups": [
+          "builtin",
+          "external",
+          ["parent", "sibling", "index"],
+          "internal",
+          "unknown",
+          "object",
+          "type"
+        ],
         "newlines-between": "always",
         "alphabetize": {
-          "order": "asc"
-        }
+          "order": "asc",
+          "orderImportKind": "asc"
+        },
+        "warnOnUnassignedImports": true
       }
     ],
     "import/first": "warn",
 
     // Make all the @eslint-community/eslint-comments/recommended rules warnings
-    "@eslint-community/eslint-comments/disable-enable-pair": "warn",
+    "@eslint-community/eslint-comments/disable-enable-pair": [
+      "warn",
+      { "allowWholeFile": true }
+    ],
     "@eslint-community/eslint-comments/no-aggregating-enable": "warn",
     "@eslint-community/eslint-comments/no-duplicate-disable": "warn",
     "@eslint-community/eslint-comments/no-unlimited-disable": "warn",
@@ -77,15 +91,28 @@
         "@typescript-eslint/switch-exhaustiveness-check": "error",
         "@typescript-eslint/no-confusing-void-expression": "error",
         "@typescript-eslint/no-duplicate-type-constituents": "warn",
-        "@typescript-eslint/no-import-type-side-effects": "error",
-        "@typescript-eslint/consistent-type-exports": "error",
-        "@typescript-eslint/consistent-type-imports": "error",
+        "@typescript-eslint/consistent-type-exports": "warn",
+        "@typescript-eslint/consistent-type-imports": [
+          "warn",
+          { "fixStyle": "inline-type-imports" }
+        ],
         "default-param-last": "off",
         "@typescript-eslint/default-param-last": "error",
         "no-magic-numbers": "off",
-        "@typescript-eslint/no-magic-numbers": "error",
+        "@typescript-eslint/no-magic-numbers": [
+          "warn",
+          { "ignore": [0, 1], "ignoreArrayIndexes": true }
+        ],
         "no-invalid-this": "off",
         "@typescript-eslint/no-invalid-this": "error"
+      }
+    },
+
+    {
+      "files": ["**/*.test.[jt]s?(x)"],
+      "rules": {
+        "no-magic-numbers": "off",
+        "@typescript-eslint/no-magic-numbers": "off"
       }
     }
   ]
