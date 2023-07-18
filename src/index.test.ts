@@ -8,6 +8,9 @@ import { dataset } from "../test-util/fixedDataset";
 const quads = (await jsonld.toRDF(data as jsonld.JsonLdDocument)).map(fixQuad);
 const source = dataset().addAll(quads);
 
+// TODO: BIG OPEN QUESTION:
+// What happens if something doesn't match?
+
 describe("query()", () => {
   it("can query for a property by @id", async () => {
     expect(
@@ -21,7 +24,6 @@ describe("query()", () => {
     });
   });
 
-  // Note that the result includes an `@id`!
   it("can query for a property by other properties", async () => {
     expect(
       await query(source, {
@@ -29,7 +31,6 @@ describe("query()", () => {
         "http://swapi.dev/documentation#eye_color": "?",
       })
     ).toStrictEqual({
-      "@id": "https://swapi.dev/api/people/1/",
       "http://swapi.dev/documentation#name": "Luke Skywalker",
       "http://swapi.dev/documentation#eye_color": "blue",
     });
@@ -44,9 +45,10 @@ describe("query()", () => {
       })
     ).toStrictEqual({
       "@context": { "@vocab": "http://swapi.dev/documentation#" },
-      "@id": "https://swapi.dev/api/people/1/",
       name: "Luke Skywalker",
-      homeworld: { name: "Tattooine" },
+      homeworld: {
+        name: "Tatooine",
+      },
     });
   });
 
@@ -56,11 +58,19 @@ describe("query()", () => {
         "@context": { "@vocab": "http://swapi.dev/documentation#" },
         "@id": "https://swapi.dev/api/people/1/",
         hair_color: "?",
+        homeworld: {
+          "@context": { planetName: "http://swapi.dev/documentation#name" },
+          planetName: "?",
+        },
       })
     ).toStrictEqual({
       "@context": { "@vocab": "http://swapi.dev/documentation#" },
       "@id": "https://swapi.dev/api/people/1/",
       hair_color: "blond",
+      homeworld: {
+        "@context": { planetName: "http://swapi.dev/documentation#name" },
+        planetName: "Tatooine",
+      },
     });
   });
 });

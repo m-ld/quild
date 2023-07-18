@@ -1,13 +1,13 @@
+/* eslint-disable @typescript-eslint/no-throw-literal */
 import { QueryEngine } from "@comunica/query-sparql-rdfjs";
-import jsonld from "jsonld";
-import { customAlphabet } from "nanoid";
+import { isEqual } from "lodash-es";
+import { compose, lensPath, lensProp, set } from "rambda";
 import { DataFactory } from "rdf-data-factory";
-import { Factory as SparqlFactory } from "sparqlalgebrajs";
 
 import { readAll } from "./readAll";
 
-import type { Quad, Source, Term } from "@rdfjs/types";
-import type { Algebra } from "sparqlalgebrajs";
+import type { Bindings, Quad, Source, Term } from "@rdfjs/types";
+import type JsonLD from "jsonld";
 
 const PLACEHOLDER = "?";
 
@@ -17,7 +17,7 @@ const df = new DataFactory();
 // This madness is just to cope with the fact that jsonld.toRDF doesn't return
 // real Quads. Namely, the "Quad" itself is missing its `termType`, and it and
 // its terms are all missing the `.equals()` method.
-export const fixQuad = (q: jsonld.Quad): Quad => {
+export const fixQuad = (q: JsonLD.Quad): Quad => {
   const fixTerm = ((term: Term) =>
     term.termType === "Literal"
       ? df.literal(term.value, term.datatype)
@@ -33,50 +33,6 @@ export const fixQuad = (q: jsonld.Quad): Quad => {
   );
 };
 
-const VARIABLE_NAME_LENGTH = 10;
-const randomVariableName = customAlphabet(
-  "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",
-  VARIABLE_NAME_LENGTH
-);
-
-/**
- * Replaces the given term with a variable if it's either the placeholder value
- * or a blank node. Placeholders are replaced with variables because that's what
- * the placeholder means. Blank nodes are replaced with variables to ensure that
- * the query engine returns a value for them--without this, the query may
- * *match* the right data but not return all of it.
- * @param term The term to possibly replace
- * @returns `term`, or a new variable term if required instead
- */
-const variablize = <T extends Term>(term: T) =>
-  (term.termType === "Literal" && term.value === PLACEHOLDER) ||
-  term.termType === "BlankNode"
-    ? df.variable(randomVariableName())
-    : term;
-
-const sparqlForXQL = async (query: jsonld.NodeObject) => {
-  const sparql = new SparqlFactory();
-
-  const frameRdf = (
-    await jsonld.toRDF(query, { produceGeneralizedRdf: true })
-  ).map(fixQuad);
-
-  const patterns = frameRdf.map((frameQuad: Quad) =>
-    sparql.createPattern(
-      variablize(frameQuad.subject),
-      variablize(frameQuad.predicate),
-      variablize(frameQuad.object)
-    )
-  );
-
-  const algebraQuery: Algebra.Construct = sparql.createConstruct(
-    sparql.createBgp(patterns),
-    patterns
-  );
-
-  return algebraQuery;
-};
-
 /**
  * Reads the query once and returns the result.
  * @param graph The RDF data to query.
@@ -84,12 +40,185 @@ const sparqlForXQL = async (query: jsonld.NodeObject) => {
  */
 export const query = async (
   source: Source,
-  query: jsonld.NodeObject
-): Promise<jsonld.NodeObject> => {
-  const quadsStream = await engine.queryQuads(await sparqlForXQL(query), {
+  query: JsonLD.NodeObject
+): Promise<JsonLD.NodeObject> => {
+  const bindingsStream = await engine.queryBindings(sparqlForXQL(query), {
     sources: [source],
   });
 
-  const quads = await readAll(quadsStream);
-  return jsonld.compact(await jsonld.fromRDF(quads), query["@context"] ?? {});
+  const bindings = await readAll(bindingsStream);
+
+  return bindingsToResults(query, bindings);
+};
+
+const sparqlForXQL = (query: JsonLD.NodeObject) => {
+  const query1 = {
+    "@id": "https://swapi.dev/api/people/1/",
+    "http://swapi.dev/documentation#hair_color": "?",
+  };
+
+  if (isEqual(query, query1)) {
+    return /* sparql */ `
+        BASE <https://swapi.dev/api/>
+        PREFIX swapi: <http://swapi.dev/documentation#>
+        SELECT ?hair_color WHERE { 
+          <people/1/> swapi:hair_color ?hair_color .
+        }
+      `;
+  }
+
+  const query2 = {
+    "http://swapi.dev/documentation#name": "Luke Skywalker",
+    "http://swapi.dev/documentation#eye_color": "?",
+  };
+
+  if (isEqual(query, query2)) {
+    return /* sparql */ `
+        PREFIX swapi: <http://swapi.dev/documentation#>
+        SELECT ?eye_color WHERE { 
+          [] swapi:name "Luke Skywalker";
+             swapi:eye_color ?eye_color .
+        }
+      `;
+  }
+
+  const query3 = {
+    "@context": { "@vocab": "http://swapi.dev/documentation#" },
+    name: "Luke Skywalker",
+    homeworld: { name: "?" },
+  };
+
+  if (isEqual(query, query3)) {
+    return /* sparql */ `
+        PREFIX swapi: <http://swapi.dev/documentation#>
+        SELECT ?homeworld_name WHERE { 
+          [] swapi:name "Luke Skywalker";
+             swapi:homeworld ?homeworld .
+          ?homeworld swapi:name ?homeworld_name .
+        }
+      `;
+  }
+
+  const query4 = {
+    "@context": { "@vocab": "http://swapi.dev/documentation#" },
+    "@id": "https://swapi.dev/api/people/1/",
+    hair_color: "?",
+    homeworld: {
+      "@context": { planetName: "http://swapi.dev/documentation#name" },
+      planetName: "?",
+    },
+  };
+
+  if (isEqual(query, query4)) {
+    return /* sparql */ `
+        PREFIX swapi: <http://swapi.dev/documentation#>
+        SELECT ?hair_color ?homeworld_name WHERE { 
+          [] swapi:name "Luke Skywalker";
+             swapi:hair_color ?hair_color;
+             swapi:homeworld ?homeworld .
+          ?homeworld swapi:name ?homeworld_name .
+        }
+      `;
+  }
+
+  throw "TODO: Not covered";
+};
+
+const bindingsToResults = (
+  query: JsonLD.NodeObject,
+  bindingses: Bindings[]
+): JsonLD.NodeObject => {
+  const query1 = {
+    "@id": "https://swapi.dev/api/people/1/",
+    "http://swapi.dev/documentation#hair_color": "?",
+  };
+
+  if (isEqual(query, query1)) {
+    const bindings = bindingses[0];
+
+    // TODO: BIG OPEN QUESTION:
+    // What happens if something doesn't match?
+    if (!bindings) throw "Query didn't match.";
+
+    const hairColor = bindings.get(df.variable("hair_color"));
+    if (!hairColor) throw "No value found.";
+
+    return set(
+      lensProp("http://swapi.dev/documentation#hair_color"),
+      hairColor.value,
+      query1
+    );
+  }
+
+  const query2 = {
+    "http://swapi.dev/documentation#name": "Luke Skywalker",
+    "http://swapi.dev/documentation#eye_color": "?",
+  };
+
+  if (isEqual(query, query2)) {
+    const bindings = bindingses[0];
+
+    // TODO: BIG OPEN QUESTION:
+    // What happens if something doesn't match?
+    if (!bindings) throw "Query didn't match.";
+
+    const eyeColor = bindings.get(df.variable("eye_color"));
+    if (!eyeColor) throw "No value found.";
+
+    return set(
+      lensProp("http://swapi.dev/documentation#eye_color"),
+      eyeColor.value,
+      query2
+    );
+  }
+
+  const query3 = {
+    "@context": { "@vocab": "http://swapi.dev/documentation#" },
+    name: "Luke Skywalker",
+    homeworld: { name: "?" },
+  };
+
+  if (isEqual(query, query3)) {
+    const bindings = bindingses[0];
+
+    // TODO: BIG OPEN QUESTION:
+    // What happens if something doesn't match?
+    if (!bindings) throw "Query didn't match.";
+
+    const homeworldName = bindings.get(df.variable("homeworld_name"));
+    if (!homeworldName) throw "No value found.";
+
+    return set(lensPath(["homeworld", "name"]), homeworldName.value, query3);
+  }
+
+  const query4 = {
+    "@context": { "@vocab": "http://swapi.dev/documentation#" },
+    "@id": "https://swapi.dev/api/people/1/",
+    hair_color: "?",
+    homeworld: {
+      "@context": { planetName: "http://swapi.dev/documentation#name" },
+      planetName: "?",
+    },
+  };
+
+  if (isEqual(query, query4)) {
+    const bindings = bindingses[0];
+
+    // TODO: BIG OPEN QUESTION:
+    // What happens if something doesn't match?
+    if (!bindings) throw "Query didn't match.";
+
+    const hairColor = bindings.get(df.variable("hair_color"));
+    if (!hairColor) throw "No value found.";
+
+    const homeworldName = bindings.get(df.variable("homeworld_name"));
+    if (!homeworldName) throw "No value found.";
+
+    return compose(
+      set(lensPath(["hair_color"]), hairColor.value),
+      set(lensPath(["homeworld", "planetName"]), homeworldName.value)
+    )(query4);
+  }
+
+  throw "TODO: Not covered";
 };

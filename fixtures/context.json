@@ -1,7 +1,8 @@
 {
   "@vocab": "http://swapi.dev/documentation#",
-  "url": "@id",
   "height": { "@type": "xsd:integer" },
+  "homeworld": { "@type": "@id" },
   "mass": { "@type": "xsd:integer" },
+  "url": "@id",
   "vehicles": { "@type": "@id" }
 }
