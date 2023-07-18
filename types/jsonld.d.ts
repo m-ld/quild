@@ -1,11 +1,11 @@
 // Because the DefinitelyTyped definitions are way out of date:
 // https://github.com/DefinitelyTyped/DefinitelyTyped/blob/master/types/jsonld/index.d.ts
+
 // TODO: Package and push upstream to "@types/jsonld".
 declare module "jsonld" {
   import type { Quad as RDFQuad } from "@rdfjs/types";
   import type {
     NodeObject,
-    Context,
     ContextDefinition,
     JsonLdDocument,
   } from "jsonld/jsonld";
@@ -15,7 +15,9 @@ declare module "jsonld" {
     RemoteDocument,
     // NodeObject,
     // JsonLdArray,
+    Frame,
   } from "jsonld/jsonld-spec";
+  import type { ActiveContext } from "jsonld/lib/context";
 
   // Currently, jsonld returns incomplete Quad-likes.
   export type Quad = {
@@ -26,6 +28,8 @@ declare module "jsonld" {
   };
 
   export type * from "jsonld/jsonld";
+  export type * from "jsonld/jsonld-spec";
+
   /**
    * Format option: Serialized as N-Quads.
    * @see https://www.w3.org/TR/n-quads/
@@ -93,13 +97,37 @@ declare module "jsonld" {
     //     keepFreeFloatingNodes?: boolean | undefined;
     //   }
     //   type Flatten = Common;
-    //   interface Frame {
-    //     embed?: "@last" | "@always" | "@never" | "@link" | undefined;
-    //     explicit?: boolean | undefined;
-    //     requireAll?: boolean | undefined;
-    //     omitDefault?: boolean | undefined;
-    //     omitGraph?: boolean | undefined;
-    //   }
+
+    /**
+     * @see https://www.w3.org/TR/json-ld11-framing/#idl-index
+     */
+    interface Frame extends Common {
+      /**
+       * Default `@embed` flag value.
+       * @default '@last'
+       */
+      embed?: "@last" | "@always" | "@never" | "@link";
+      /**
+       * Default `@explicit` flag value.
+       * @default false
+       */
+      explicit?: boolean;
+      /**
+       * Default `@requireAll` flag value.
+       * @default true
+       */
+      requireAll?: boolean;
+      /**
+       * Default `@omitDefault` flag value.
+       * @default false
+       */
+      omitDefault?: boolean;
+      /**
+       * Default `@omitGraph` flag value.
+       * @default false
+       */
+      omitGraph?: boolean;
+    }
     //   interface Normalize extends Common {
     //     algorithm?: "URDNA2015" | `URGNA2012` | undefined;
     //     skipExpansion?: boolean | undefined;
@@ -165,7 +193,7 @@ declare module "jsonld" {
 
   export function compact(
     input: JsonLdDocument,
-    ctx: Context,
+    ctx: NodeObject["@context"],
     options?: Options.Compact
   ): Promise<NodeObject>;
 
@@ -199,11 +227,21 @@ declare module "jsonld" {
   //   options?: Options.Flatten
   // ): Promise<NodeObject>;
 
-  // export function frame(
-  //   input: JsonLdDocument,
-  //   frame: Frame,
-  //   options?: Options.Frame
-  // ): Promise<NodeObject>;
+  /**
+   * Performs JSON-LD framing.
+   *
+   * @param input The JSON-LD input to frame.
+   * @param frame The JSON-LD frame to use.
+   * @param options The framing options.
+   *
+   * @return a Promise that resolves to the framed output.
+   * @see https://www.w3.org/TR/json-ld11-framing/
+   */
+  export function frame(
+    input: JsonLdDocument,
+    frame: Frame,
+    options?: Options.Frame
+  ): Promise<NodeObject>;
 
   // export function normalize(
   //   input: JsonLdDocument,
@@ -234,6 +272,13 @@ declare module "jsonld" {
     input: JsonLdDocument,
     options?: Options.ToRdf<MimeNQuad>
   ): Promise<string>;
+
+  export function processContext(
+    activeCtx: ActiveContext,
+    localCtx: NodeObject["@context"]
+    // TODO: Not sure what this should be yet.
+    // options?: Options.Common
+  ): Promise<ActiveContext>;
 
   // export let JsonLdProcessor: JsonLdProcessor;
   // disable autoexport
@@ -466,7 +511,7 @@ declare module "jsonld/jsonld" {
     "@protected"?: Keyword["@protected"];
   } & (
     | {
-        "@id"?: Keyword["@id"] | null;
+        "@id"?: HintedUnion<keyof Keyword, Keyword["@id"]> | null;
         /**
          * @see https://www.w3.org/TR/json-ld11/#nested-properties
          */
@@ -480,13 +525,6 @@ declare module "jsonld/jsonld" {
   );
 
   /**
-   * A context, possibly composed of other contexts. Generally used as the value
-   * of the `@context` keyword, but also used for other purposes.
-   * @see https://www.w3.org/TR/json-ld/#keywords
-   */
-  export type Context = OrArray<null | string | ContextDefinition>;
-
-  /**
    * A list of keywords and their types.
    * Only used for internal reference; not an actual interface.
    * Not for export.
@@ -498,10 +536,10 @@ declare module "jsonld/jsonld" {
       | OrArray<"@list" | "@set" | ContainerType>
       | ContainerTypeArray
       | null;
-    "@context": Context;
+    "@context": OrArray<null | string | ContextDefinition>;
     "@direction": "ltr" | "rtl" | null;
     "@graph": OrArray<NodeObject>;
-    "@id": OrArray<string>;
+    "@id": string;
     "@import": string;
     "@included": IncludedBlock;
     "@index": string;
@@ -570,11 +608,11 @@ declare module "jsonld/jsonld-spec" {
   export type Frame = NodeObject | Url;
 
   export interface Options {
-    base?: DOMString | null | undefined;
-    compactArrays?: boolean | undefined;
-    documentLoader?: LoadDocumentCallback | null | undefined;
-    expandContext?: ContextDefinition | null | undefined;
-    processingMode?: DOMString | undefined;
+    base?: DOMString | null;
+    compactArrays?: boolean;
+    documentLoader?: LoadDocumentCallback | null;
+    expandContext?: ContextDefinition | null;
+    processingMode?: DOMString;
   }
 
   export interface JsonLdProcessor {
@@ -599,4 +637,57 @@ declare module "jsonld/jsonld-spec" {
   }
 
   export {};
+}
+
+declare module "jsonld/lib/context" {
+  import type { Options, Iri } from "jsonld/jsonld-spec";
+
+  /**
+   * A mapping in the context. Left opaque for now.
+   */
+  type Mapping = unknown;
+
+  /**
+   * An object representing a context, which the processor passes around during
+   * processing. Notably, *not* a {@link ContextDefinition}, which is how a
+   * context is defined in a JSON-LD document. Defined here as an opaque type,
+   * because the details of its innards are not worth specifying. Always use
+   * processing functions to create a new `ActiveContext`.
+   */
+  export interface ActiveContext {
+    readonly [contextTag]: typeof contextTag;
+  }
+  const contextTag: unique symbol;
+
+  /**
+   * Gets the initial context.
+   *
+   * @param options Processing options.
+   * @return The initial context.
+   */
+  export function getInitialContext(options: Options): ActiveContext;
+
+  /**
+   * Expands a string to a full IRI. The string may be a term, a prefix, a
+   * relative IRI, or an absolute IRI. The associated absolute IRI will be
+   * returned.
+   *
+   * @param activeCtx The current active context.
+   * @param value The string to expand.
+   * @param relativeTo Options for how to resolve relative IRIs:
+   * @param options Processing options.
+   *
+   * @return The expanded value.
+   */
+  export function expandIri(
+    activeCtx: ActiveContext,
+    value: string,
+    relativeTo: {
+      /** `true` to resolve against the base IRI, `false` not to. */
+      base: boolean;
+      /** `true` to concatenate after `@vocab`, `false` not to. */
+      vocab: boolean;
+    },
+    options?: Options
+  ): Iri;
 }
