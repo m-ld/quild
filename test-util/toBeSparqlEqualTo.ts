@@ -54,10 +54,15 @@ const normalized = ({
   value: unknown;
   name: string;
   stringify: MatcherUtils["utils"]["stringify"];
-} & Partial<Pick<SparqlQuery, "base" | "prefixes">>): {
+  /** `base: null` means "remove the base" */
+  base?: SparqlQuery["base"] | null;
+  prefixes?: SparqlQuery["prefixes"];
+}): {
   sparqlJs: SparqlQuery;
   string: string;
-} & Pick<SparqlQuery, "base" | "prefixes"> => {
+  base?: SparqlQuery["base"];
+  prefixes: SparqlQuery["prefixes"];
+} => {
   if (
     !(
       typeof value === "string" ||
@@ -89,6 +94,7 @@ const normalized = ({
   const sparqlJs = parser.parse(incomingSparqlString);
 
   if (base) sparqlJs.base = base;
+  if (base === null) delete sparqlJs.base;
   if (prefixes) sparqlJs.prefixes = prefixes;
 
   return {
@@ -125,7 +131,7 @@ const toBeSparqlEqualTo: MatcherFunction<[expectedSparql: unknown]> = function (
     value: actual,
     name: "Actual",
     stringify: this.utils.stringify,
-    base,
+    base: base ?? null,
     prefixes,
   });
 

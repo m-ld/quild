@@ -24,19 +24,49 @@ describe("toBeSparqlEqualTo", () => {
 
   it("matches an equivalent SPARQL string", () => {
     const query1 = /* sparql */ `
-      SELECT ?s ?p ?o
+      BASE <http://example.com/>
+      SELECT ?name
       WHERE {
-        ?s ?p ?o .
+         <alice> <http://xmlns.com/foaf/0.1/name> ?name .
       }
     `;
 
     const query2 = /* sparql */ `
-      SELECT ?s ?p ?o
-
-      WHERE { ?s ?p ?o . }
+      PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+      
+      SELECT ?name
+      WHERE { <http://example.com/alice> foaf:name ?name . }
     `;
 
     expect(run(query1, query2)).toMatchInlineSnapshot(`"<Pass>"`);
+  });
+
+  it("uses the expected value's prefixes and base in the output", () => {
+    const query1 = /* sparql */ `
+      BASE <http://example.com/>
+      SELECT ?name
+      WHERE {
+         <alice> <http://xmlns.com/foaf/0.1/homepage> ?name .
+      }
+    `;
+
+    const query2 = /* sparql */ `
+      PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+      
+      SELECT ?name
+      WHERE { <http://example.com/alice> foaf:name ?name . }
+    `;
+
+    expect(run(query1, query2)).toMatchInlineSnapshot(`
+"expect(received).toBe(expected) // Object.is equality
+
+- Expected  - 1
++ Received  + 1
+
+  PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+- SELECT ?name WHERE { <http://example.com/alice> foaf:name ?name. }
++ SELECT ?name WHERE { <http://example.com/alice> foaf:homepage ?name. }"
+`);
   });
 
   it("fails on non-equivalent SPARQL strings", () => {
