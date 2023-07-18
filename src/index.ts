@@ -42,98 +42,25 @@ export const query = async (
   source: Source,
   query: JsonLD.NodeObject
 ): Promise<JsonLD.NodeObject> => {
-  const bindingsStream = await engine.queryBindings(sparqlForXQL(query), {
-    sources: [source],
-  });
-
-  const bindings = await readAll(bindingsStream);
-
-  return bindingsToResults(query, bindings);
-};
-
-const sparqlForXQL = (query: JsonLD.NodeObject) => {
   const query1 = {
     "@id": "https://swapi.dev/api/people/1/",
     "http://swapi.dev/documentation#hair_color": "?",
   };
 
   if (isEqual(query, query1)) {
-    return /* sparql */ `
+    const sparql = /* sparql */ `
         BASE <https://swapi.dev/api/>
         PREFIX swapi: <http://swapi.dev/documentation#>
         SELECT ?hair_color WHERE { 
           <people/1/> swapi:hair_color ?hair_color .
         }
       `;
-  }
 
-  const query2 = {
-    "http://swapi.dev/documentation#name": "Luke Skywalker",
-    "http://swapi.dev/documentation#eye_color": "?",
-  };
+    const bindingsStream = await engine.queryBindings(sparql, {
+      sources: [source],
+    });
 
-  if (isEqual(query, query2)) {
-    return /* sparql */ `
-        PREFIX swapi: <http://swapi.dev/documentation#>
-        SELECT ?eye_color WHERE { 
-          [] swapi:name "Luke Skywalker";
-             swapi:eye_color ?eye_color .
-        }
-      `;
-  }
-
-  const query3 = {
-    "@context": { "@vocab": "http://swapi.dev/documentation#" },
-    name: "Luke Skywalker",
-    homeworld: { name: "?" },
-  };
-
-  if (isEqual(query, query3)) {
-    return /* sparql */ `
-        PREFIX swapi: <http://swapi.dev/documentation#>
-        SELECT ?homeworld_name WHERE { 
-          [] swapi:name "Luke Skywalker";
-             swapi:homeworld ?homeworld .
-          ?homeworld swapi:name ?homeworld_name .
-        }
-      `;
-  }
-
-  const query4 = {
-    "@context": { "@vocab": "http://swapi.dev/documentation#" },
-    "@id": "https://swapi.dev/api/people/1/",
-    hair_color: "?",
-    homeworld: {
-      "@context": { planetName: "http://swapi.dev/documentation#name" },
-      planetName: "?",
-    },
-  };
-
-  if (isEqual(query, query4)) {
-    return /* sparql */ `
-        PREFIX swapi: <http://swapi.dev/documentation#>
-        SELECT ?hair_color ?homeworld_name WHERE { 
-          [] swapi:name "Luke Skywalker";
-             swapi:hair_color ?hair_color;
-             swapi:homeworld ?homeworld .
-          ?homeworld swapi:name ?homeworld_name .
-        }
-      `;
-  }
-
-  throw "TODO: Not covered";
-};
-
-const bindingsToResults = (
-  query: JsonLD.NodeObject,
-  bindingses: Bindings[]
-): JsonLD.NodeObject => {
-  const query1 = {
-    "@id": "https://swapi.dev/api/people/1/",
-    "http://swapi.dev/documentation#hair_color": "?",
-  };
-
-  if (isEqual(query, query1)) {
+    const bindingses = await readAll(bindingsStream);
     const bindings = bindingses[0];
 
     // TODO: BIG OPEN QUESTION:
@@ -156,6 +83,19 @@ const bindingsToResults = (
   };
 
   if (isEqual(query, query2)) {
+    const sparql = /* sparql */ `
+        PREFIX swapi: <http://swapi.dev/documentation#>
+        SELECT ?eye_color WHERE { 
+          [] swapi:name "Luke Skywalker";
+             swapi:eye_color ?eye_color .
+        }
+      `;
+
+    const bindingsStream = await engine.queryBindings(sparql, {
+      sources: [source],
+    });
+
+    const bindingses = await readAll(bindingsStream);
     const bindings = bindingses[0];
 
     // TODO: BIG OPEN QUESTION:
@@ -179,6 +119,20 @@ const bindingsToResults = (
   };
 
   if (isEqual(query, query3)) {
+    const sparql = /* sparql */ `
+        PREFIX swapi: <http://swapi.dev/documentation#>
+        SELECT ?homeworld_name WHERE { 
+          [] swapi:name "Luke Skywalker";
+             swapi:homeworld ?homeworld .
+          ?homeworld swapi:name ?homeworld_name .
+        }
+      `;
+
+    const bindingsStream = await engine.queryBindings(sparql, {
+      sources: [source],
+    });
+
+    const bindingses = await readAll(bindingsStream);
     const bindings = bindingses[0];
 
     // TODO: BIG OPEN QUESTION:
@@ -202,6 +156,21 @@ const bindingsToResults = (
   };
 
   if (isEqual(query, query4)) {
+    const sparql = /* sparql */ `
+        PREFIX swapi: <http://swapi.dev/documentation#>
+        SELECT ?hair_color ?homeworld_name WHERE { 
+          [] swapi:name "Luke Skywalker";
+             swapi:hair_color ?hair_color;
+             swapi:homeworld ?homeworld .
+          ?homeworld swapi:name ?homeworld_name .
+        }
+      `;
+
+    const bindingsStream = await engine.queryBindings(sparql, {
+      sources: [source],
+    });
+
+    const bindingses = await readAll(bindingsStream);
     const bindings = bindingses[0];
 
     // TODO: BIG OPEN QUESTION:
