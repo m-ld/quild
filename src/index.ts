@@ -7,6 +7,7 @@ import {
   type Algebra,
   Factory as AlgebraFactory,
   toSparql,
+  translate,
 } from "sparqlalgebrajs";
 
 import { readAll } from "./readAll";
@@ -114,13 +115,46 @@ export const query = async (
   };
 
   if (isEqual(query, query2)) {
-    const sparql = /* sparql */ `
-        PREFIX swapi: <http://swapi.dev/documentation#>
-        SELECT ?eye_color WHERE { 
-          [] swapi:name "Luke Skywalker";
-             swapi:eye_color ?eye_color .
+    const id = query["@id"];
+    const subject = id ? df.namedNode(id) : df.variable("root");
+
+    interface Stuff {
+      variables: Array<[variable: Variable, lens: Lens]>;
+      patterns: Algebra.Pattern[];
+    }
+
+    const stuff = Object.entries(query).reduce<Stuff>(
+      (acc, [key, value]): Stuff => {
+        if (value === PLACEHOLDER) {
+          const variable = df.variable(key);
+          return {
+            variables: [...acc.variables, [variable, lensProp(key)]],
+            patterns: [
+              ...acc.patterns,
+              af.createPattern(subject, df.namedNode(key), variable),
+            ],
+          };
+        } else if (key !== "@id") {
+          if (typeof value !== "string")
+            throw "TODO: Only string values are supported so far";
+          return {
+            variables: acc.variables,
+            patterns: [
+              ...acc.patterns,
+              af.createPattern(subject, df.namedNode(key), df.literal(value)),
+            ],
+          };
+        } else {
+          return acc;
         }
-      `;
+      },
+      { variables: [], patterns: [] }
+    );
+
+    const sparql = af.createProject(
+      af.createBgp(stuff.patterns),
+      stuff.variables.map(([v, _l]) => v)
+    );
 
     const bindingsStream = await engine.queryBindings(sparql, {
       sources: [source],
@@ -133,12 +167,13 @@ export const query = async (
     // What happens if something doesn't match?
     if (!bindings) throw "Query didn't match.";
 
-    const eyeColor = bindings.get(df.variable("eye_color"));
-    if (!eyeColor) throw "No value found.";
+    const a = <T>(v: T | undefined): T => {
+      if (v === undefined) throw "No value found.";
+      return v;
+    };
 
-    return set(
-      lensProp("http://swapi.dev/documentation#eye_color"),
-      eyeColor.value,
+    return stuff.variables.reduce(
+      (q, [v, l]) => set(l, a(bindings.get(v)).value, q),
       query2
     );
   }
