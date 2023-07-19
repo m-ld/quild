@@ -17,10 +17,12 @@ describe("query()", () => {
       await query(source, {
         "@id": "https://swapi.dev/api/people/1/",
         "http://swapi.dev/documentation#hair_color": "?",
+        "http://swapi.dev/documentation#eye_color": "?",
       })
     ).toStrictEqual({
       "@id": "https://swapi.dev/api/people/1/",
       "http://swapi.dev/documentation#hair_color": "blond",
+      "http://swapi.dev/documentation#eye_color": "blue",
     });
   });
 

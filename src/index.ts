@@ -1,18 +1,24 @@
 /* eslint-disable @typescript-eslint/no-throw-literal */
 import { QueryEngine } from "@comunica/query-sparql-rdfjs";
 import { isEqual } from "lodash-es";
-import { compose, lensPath, lensProp, set } from "rambda";
+import { type Lens, compose, lensPath, lensProp, set } from "rambda";
 import { DataFactory } from "rdf-data-factory";
+import {
+  type Algebra,
+  Factory as AlgebraFactory,
+  toSparql,
+} from "sparqlalgebrajs";
 
 import { readAll } from "./readAll";
 
-import type { Bindings, Quad, Source, Term } from "@rdfjs/types";
+import type { Quad, Source, Term, Variable } from "@rdfjs/types";
 import type JsonLD from "jsonld";
 
 const PLACEHOLDER = "?";
 
 const engine = new QueryEngine();
 const df = new DataFactory();
+const af = new AlgebraFactory(df);
 
 // This madness is just to cope with the fact that jsonld.toRDF doesn't return
 // real Quads. Namely, the "Quad" itself is missing its `termType`, and it and
@@ -45,16 +51,40 @@ export const query = async (
   const query1 = {
     "@id": "https://swapi.dev/api/people/1/",
     "http://swapi.dev/documentation#hair_color": "?",
+    "http://swapi.dev/documentation#eye_color": "?",
   };
 
   if (isEqual(query, query1)) {
-    const sparql = /* sparql */ `
-        BASE <https://swapi.dev/api/>
-        PREFIX swapi: <http://swapi.dev/documentation#>
-        SELECT ?hair_color WHERE { 
-          <people/1/> swapi:hair_color ?hair_color .
+    const id = query["@id"];
+    if (!id) throw "Query must have @id, for now";
+
+    interface Stuff {
+      variables: Array<[variable: Variable, lens: Lens]>;
+      patterns: Algebra.Pattern[];
+    }
+
+    const stuff = Object.entries(query).reduce<Stuff>(
+      (acc, [key, value]): Stuff => {
+        if (value === PLACEHOLDER) {
+          const variable = df.variable(key);
+          return {
+            variables: [...acc.variables, [variable, lensProp(key)]],
+            patterns: [
+              ...acc.patterns,
+              af.createPattern(df.namedNode(id), df.namedNode(key), variable),
+            ],
+          };
+        } else {
+          return acc;
         }
-      `;
+      },
+      { variables: [], patterns: [] }
+    );
+
+    const sparql = af.createProject(
+      af.createBgp(stuff.patterns),
+      stuff.variables.map(([v, _l]) => v)
+    );
 
     const bindingsStream = await engine.queryBindings(sparql, {
       sources: [source],
@@ -67,12 +97,13 @@ export const query = async (
     // What happens if something doesn't match?
     if (!bindings) throw "Query didn't match.";
 
-    const hairColor = bindings.get(df.variable("hair_color"));
-    if (!hairColor) throw "No value found.";
+    const a = <T>(v: T | undefined): T => {
+      if (v === undefined) throw "No value found.";
+      return v;
+    };
 
-    return set(
-      lensProp("http://swapi.dev/documentation#hair_color"),
-      hairColor.value,
+    return stuff.variables.reduce(
+      (q, [v, l]) => set(l, a(bindings.get(v)).value, q),
       query1
     );
   }
