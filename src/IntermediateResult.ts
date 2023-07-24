@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-throw-literal */
 import { Map } from "immutable";
 
 import { scalarRepresentation } from "./scalarRepresentation";
@@ -6,39 +5,72 @@ import { scalarRepresentation } from "./scalarRepresentation";
 import type * as RDF from "@rdfjs/types";
 import type { JsonValue } from "type-fest";
 
+export class ResultError extends Error {}
+
+const termString = (term: RDF.Term) => `<${term.termType}: ${term.value}>`;
+
+export class TooManyBindingsError extends ResultError {
+  constructor(readonly variable: RDF.Variable, readonly value: RDF.Term) {
+    super(
+      `Unexpected additional binding ${termString(value)} for ?${
+        variable.value
+      }`
+    );
+  }
+}
+
+export class IncompleteResultError extends ResultError {
+  constructor(readonly variable: RDF.Variable) {
+    super(`Result incomplete: No value returned for ?${variable.value}`);
+  }
+}
+
+export class BadScalarError extends ResultError {
+  constructor(readonly variable: RDF.Variable, readonly value: RDF.Term) {
+    super(
+      `Can't represent ${termString(value)} as a scalar for ?${variable.value}`
+    );
+  }
+}
+
 export interface IntermediateResult {
   addSolution(solution: RDF.Bindings): IntermediateResult;
   result(): JsonValue;
 }
 
-export class Literal implements IntermediateResult {
-  constructor(private readonly literal: RDF.Literal) {}
-
-  addSolution(_solution: RDF.Bindings): IntermediateResult {
-    // Ignore additional solutions.
-    // TODO: Is this correct?
-    return this;
-  }
-
-  result() {
-    return scalarRepresentation(this.literal);
-  }
-}
-
 export class Scalar implements IntermediateResult {
-  constructor(private readonly variable: RDF.Variable) {}
+  constructor(
+    private readonly variable: RDF.Variable,
+    private readonly value?: RDF.Term
+  ) {}
 
   addSolution(solution: RDF.Bindings): IntermediateResult {
-    const r = solution.get(this.variable);
-    if (r?.termType === "Literal") {
-      return new Literal(r);
+    const v = solution.get(this.variable);
+
+    // If there's no binding for us in the solution, ignore it.
+    // TODO: Is this the correct thing to do?
+    if (!v) {
+      return this;
     }
 
-    throw "TODO: Not covered yet";
+    if (this.value && !this.value.equals(v)) {
+      throw new TooManyBindingsError(this.variable, v);
+    }
+
+    return new Scalar(this.variable, v);
   }
 
   result(): JsonValue {
-    throw "TODO: Shouldn't get here";
+    if (this.value) {
+      const rep = scalarRepresentation(this.value);
+      if (rep) {
+        return rep;
+      } else {
+        throw new BadScalarError(this.variable, this.value);
+      }
+    } else {
+      throw new IncompleteResultError(this.variable);
+    }
   }
 }
 
@@ -52,7 +84,11 @@ export class Plural implements IntermediateResult {
   addSolution(solution: RDF.Bindings): IntermediateResult {
     const v = solution.get(this.variable);
 
-    if (!v) throw "TODO: Not covered yet";
+    // If there's no binding for us in the solution, ignore it.
+    // TODO: Is this the correct thing to do?
+    if (!v) {
+      return this;
+    }
 
     return new Plural(
       this.variable,

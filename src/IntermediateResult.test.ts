@@ -3,11 +3,13 @@ import { describe, it, expect } from "@jest/globals";
 import { Map } from "immutable";
 
 import {
-  Literal,
   Scalar,
   Plural,
   NodeObject,
   type IntermediateResult,
+  TooManyBindingsError,
+  IncompleteResultError,
+  BadScalarError,
 } from "./IntermediateResult";
 import { df, integer } from "./common";
 
@@ -30,26 +32,13 @@ const filmsTitle = df.variable("root·films·title");
 //   might be better, but would require implementing polymorphism another way.
 //   - Immutable.js Records?
 
-describe("Literal", () => {
-  it("returns its result", () => {
-    const ir = new Literal(df.literal("blue"));
-    expect(ir.result()).toBe("blue");
-  });
-
-  it("returns its result as JSON-LD", () => {
-    const ir = new Literal(df.literal("172", integer));
-    expect(ir.result()).toBe(172);
-  });
-
-  it("ignores additional solutions", () => {
-    const ir = new Literal(df.literal("blue")).addSolution(
-      bf.bindings([[eyeColor, df.literal("brown")]])
-    );
-    expect(ir.result()).toBe("blue");
-  });
-});
-
 describe("Scalar", () => {
+  it("throws when it hasn't received a solution", () => {
+    expect(() => {
+      new Scalar(filmsTitle).result();
+    }).toThrow(new IncompleteResultError(filmsTitle));
+  });
+
   it("accepts one solution", () => {
     const ir = new Scalar(filmsTitle).addSolution(
       bf.bindings([[filmsTitle, df.literal("A New Hope")]])
@@ -57,13 +46,37 @@ describe("Scalar", () => {
     expect(ir.result()).toBe("A New Hope");
   });
 
-  it("ignores additional solutions", () => {
-    const ir = new Scalar(filmsTitle)
-      .addSolution(bf.bindings([[filmsTitle, df.literal("A New Hope")]]))
-      .addSolution(
+  it("throws trying to represent a non-scalar value", () => {
+    const ir = new Scalar(filmsTitle).addSolution(
+      bf.bindings([
+        [filmsTitle, df.namedNode("https://swapi.dev/api/films/1/")],
+      ])
+    );
+    expect(() => {
+      ir.result();
+    }).toThrow(
+      new BadScalarError(
+        filmsTitle,
+        df.namedNode("https://swapi.dev/api/films/1/")
+      )
+    );
+  });
+
+  it("throws on additional solutions", () => {
+    const ir = new Scalar(filmsTitle).addSolution(
+      bf.bindings([[filmsTitle, df.literal("A New Hope")]])
+    );
+
+    expect(() => {
+      ir.addSolution(
         bf.bindings([[filmsTitle, df.literal("The Empire Strikes Back")]])
       );
-    expect(ir.result()).toBe("A New Hope");
+    }).toThrow(
+      new TooManyBindingsError(
+        filmsTitle,
+        df.literal("The Empire Strikes Back")
+      )
+    );
   });
 });
 
