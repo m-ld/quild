@@ -6,7 +6,14 @@ prefix="https://swapi.dev/api/"
 # The URLs of the resources to fetch, relative to the prefix.
 resources=(
   people/1
+  people/6
   planets/1
+  films/1
+  films/2
+  films/3
+  films/4
+  films/5
+  films/6
 )
 
 # Do everything in the fixtures directory.
