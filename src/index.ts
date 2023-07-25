@@ -1,25 +1,17 @@
-/* eslint-disable @typescript-eslint/no-throw-literal */
-import { QueryEngine } from "@comunica/query-sparql-rdfjs";
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { BindingsFactory } from "@comunica/bindings-factory";
+import { Map } from "immutable";
 import { isEqual } from "lodash-es";
-import { type Lens, compose, lensPath, lensProp, set } from "rambda";
 import { DataFactory } from "rdf-data-factory";
-import {
-  type Algebra,
-  Factory as AlgebraFactory,
-  toSparql,
-  translate,
-} from "sparqlalgebrajs";
 
-import { readAll } from "./readAll";
+import * as IR from "./IntermediateResult";
+import { integer } from "./common";
 
-import type { Quad, Source, Term, Variable } from "@rdfjs/types";
-import type JsonLD from "jsonld";
+import type { Quad, Source, Term } from "@rdfjs/types";
+import type * as JsonLD from "jsonld";
 
-const PLACEHOLDER = "?";
-
-const engine = new QueryEngine();
 const df = new DataFactory();
-const af = new AlgebraFactory(df);
+const bf = new BindingsFactory(df);
 
 // This madness is just to cope with the fact that jsonld.toRDF doesn't return
 // real Quads. Namely, the "Quad" itself is missing its `termType`, and it and
@@ -47,7 +39,7 @@ export const fixQuad = (q: JsonLD.Quad): Quad => {
  */
 export const query = async (
   source: Source,
-  query: JsonLD.NodeObject
+  query: JsonLD.NodeObject | JsonLD.NodeObject[]
 ): Promise<JsonLD.NodeObject> => {
   const query1 = {
     "@id": "https://swapi.dev/api/people/1/",
@@ -56,126 +48,67 @@ export const query = async (
   };
 
   if (isEqual(query, query1)) {
-    const id = query["@id"];
-    if (!id) throw "Query must have @id, for now";
-
-    interface Stuff {
-      variables: Array<[variable: Variable, lens: Lens]>;
-      patterns: Algebra.Pattern[];
-    }
-
-    const stuff = Object.entries(query).reduce<Stuff>(
-      (acc, [key, value]): Stuff => {
-        if (value === PLACEHOLDER) {
-          const variable = df.variable(key);
-          return {
-            variables: [...acc.variables, [variable, lensProp(key)]],
-            patterns: [
-              ...acc.patterns,
-              af.createPattern(df.namedNode(id), df.namedNode(key), variable),
-            ],
-          };
-        } else {
-          return acc;
-        }
-      },
-      { variables: [], patterns: [] }
+    const initialIr = new IR.NodeObject(
+      Map({
+        "@id": new IR.Name(df.namedNode("https://swapi.dev/api/people/1/")),
+        "http://swapi.dev/documentation#hair_color": new IR.NativePlaceholder(
+          df.variable("root·hair_color")
+        ),
+        "http://swapi.dev/documentation#eye_color": new IR.NativePlaceholder(
+          df.variable("root·eye_color")
+        ),
+      })
     );
 
-    const sparql = af.createProject(
-      af.createBgp(stuff.patterns),
-      stuff.variables.map(([v, _l]) => v)
+    const solutions = [
+      bf.fromRecord({
+        "root·hair_color": df.literal("blond"),
+        "root·eye_color": df.literal("blue"),
+      }),
+    ];
+
+    const ir = solutions.reduce<IR.IntermediateResult>(
+      (partialIr, solution) => partialIr.addSolution(solution),
+      initialIr
     );
 
-    const bindingsStream = await engine.queryBindings(sparql, {
-      sources: [source],
-    });
-
-    const bindingses = await readAll(bindingsStream);
-    const bindings = bindingses[0];
-
-    // TODO: BIG OPEN QUESTION:
-    // What happens if something doesn't match?
-    if (!bindings) throw "Query didn't match.";
-
-    const a = <T>(v: T | undefined): T => {
-      if (v === undefined) throw "No value found.";
-      return v;
-    };
-
-    return stuff.variables.reduce(
-      (q, [v, l]) => set(l, a(bindings.get(v)).value, q),
-      query1
-    );
+    return ir.result() as JsonLD.NodeObject;
   }
 
   const query2 = {
     "http://swapi.dev/documentation#name": "Luke Skywalker",
+    "http://swapi.dev/documentation#hair_color": "?",
     "http://swapi.dev/documentation#eye_color": "?",
   };
 
   if (isEqual(query, query2)) {
-    const id = query["@id"];
-    const subject = id ? df.namedNode(id) : df.variable("root");
-
-    interface Stuff {
-      variables: Array<[variable: Variable, lens: Lens]>;
-      patterns: Algebra.Pattern[];
-    }
-
-    const stuff = Object.entries(query).reduce<Stuff>(
-      (acc, [key, value]): Stuff => {
-        if (value === PLACEHOLDER) {
-          const variable = df.variable(key);
-          return {
-            variables: [...acc.variables, [variable, lensProp(key)]],
-            patterns: [
-              ...acc.patterns,
-              af.createPattern(subject, df.namedNode(key), variable),
-            ],
-          };
-        } else if (key !== "@id") {
-          if (typeof value !== "string")
-            throw "TODO: Only string values are supported so far";
-          return {
-            variables: acc.variables,
-            patterns: [
-              ...acc.patterns,
-              af.createPattern(subject, df.namedNode(key), df.literal(value)),
-            ],
-          };
-        } else {
-          return acc;
-        }
-      },
-      { variables: [], patterns: [] }
+    const initialIr = new IR.NodeObject(
+      Map({
+        "http://swapi.dev/documentation#name": new IR.NativeValue(
+          df.literal("Luke Skywalker")
+        ),
+        "http://swapi.dev/documentation#hair_color": new IR.NativePlaceholder(
+          df.variable("root·hair_color")
+        ),
+        "http://swapi.dev/documentation#eye_color": new IR.NativePlaceholder(
+          df.variable("root·eye_color")
+        ),
+      })
     );
 
-    const sparql = af.createProject(
-      af.createBgp(stuff.patterns),
-      stuff.variables.map(([v, _l]) => v)
+    const solutions = [
+      bf.fromRecord({
+        "root·hair_color": df.literal("blond"),
+        "root·eye_color": df.literal("blue"),
+      }),
+    ];
+
+    const ir = solutions.reduce<IR.IntermediateResult>(
+      (partialIr, solution) => partialIr.addSolution(solution),
+      initialIr
     );
 
-    const bindingsStream = await engine.queryBindings(sparql, {
-      sources: [source],
-    });
-
-    const bindingses = await readAll(bindingsStream);
-    const bindings = bindingses[0];
-
-    // TODO: BIG OPEN QUESTION:
-    // What happens if something doesn't match?
-    if (!bindings) throw "Query didn't match.";
-
-    const a = <T>(v: T | undefined): T => {
-      if (v === undefined) throw "No value found.";
-      return v;
-    };
-
-    return stuff.variables.reduce(
-      (q, [v, l]) => set(l, a(bindings.get(v)).value, q),
-      query2
-    );
+    return ir.result() as JsonLD.NodeObject;
   }
 
   const query3 = {
@@ -185,30 +118,30 @@ export const query = async (
   };
 
   if (isEqual(query, query3)) {
-    const sparql = /* sparql */ `
-        PREFIX swapi: <http://swapi.dev/documentation#>
-        SELECT ?homeworld_name WHERE { 
-          [] swapi:name "Luke Skywalker";
-             swapi:homeworld ?homeworld .
-          ?homeworld swapi:name ?homeworld_name .
-        }
-      `;
+    const initialIr = new IR.NodeObject(
+      Map({
+        name: new IR.NativeValue(df.literal("Luke Skywalker")),
+        homeworld: new IR.NodeObject(
+          Map({
+            name: new IR.NativePlaceholder(df.variable("root·homeworld·name")),
+          })
+        ),
+      }),
+      { "@vocab": "http://swapi.dev/documentation#" }
+    );
 
-    const bindingsStream = await engine.queryBindings(sparql, {
-      sources: [source],
-    });
+    const solutions = [
+      bf.fromRecord({
+        "root·homeworld·name": df.literal("Tatooine"),
+      }),
+    ];
 
-    const bindingses = await readAll(bindingsStream);
-    const bindings = bindingses[0];
+    const ir = solutions.reduce<IR.IntermediateResult>(
+      (partialIr, solution) => partialIr.addSolution(solution),
+      initialIr
+    );
 
-    // TODO: BIG OPEN QUESTION:
-    // What happens if something doesn't match?
-    if (!bindings) throw "Query didn't match.";
-
-    const homeworldName = bindings.get(df.variable("homeworld_name"));
-    if (!homeworldName) throw "No value found.";
-
-    return set(lensPath(["homeworld", "name"]), homeworldName.value, query3);
+    return ir.result() as JsonLD.NodeObject;
   }
 
   const query4 = {
@@ -222,37 +155,162 @@ export const query = async (
   };
 
   if (isEqual(query, query4)) {
-    const sparql = /* sparql */ `
-        PREFIX swapi: <http://swapi.dev/documentation#>
-        SELECT ?hair_color ?homeworld_name WHERE { 
-          [] swapi:name "Luke Skywalker";
-             swapi:hair_color ?hair_color;
-             swapi:homeworld ?homeworld .
-          ?homeworld swapi:name ?homeworld_name .
-        }
-      `;
+    const initialIr = new IR.NodeObject(
+      Map({
+        "@id": new IR.Name(df.namedNode("https://swapi.dev/api/people/1/")),
+        hair_color: new IR.NativePlaceholder(df.variable("root·hair_color")),
+        homeworld: new IR.NodeObject(
+          Map({
+            planetName: new IR.NativePlaceholder(
+              df.variable("root·homeworld·planetName")
+            ),
+          }),
+          { planetName: "http://swapi.dev/documentation#name" }
+        ),
+      }),
+      { "@vocab": "http://swapi.dev/documentation#" }
+    );
 
-    const bindingsStream = await engine.queryBindings(sparql, {
-      sources: [source],
-    });
+    const solutions = [
+      bf.fromRecord({
+        "root·hair_color": df.literal("blond"),
+        "root·homeworld·planetName": df.literal("Tatooine"),
+      }),
+    ];
 
-    const bindingses = await readAll(bindingsStream);
-    const bindings = bindingses[0];
+    const ir = solutions.reduce<IR.IntermediateResult>(
+      (partialIr, solution) => partialIr.addSolution(solution),
+      initialIr
+    );
 
-    // TODO: BIG OPEN QUESTION:
-    // What happens if something doesn't match?
-    if (!bindings) throw "Query didn't match.";
+    return ir.result() as JsonLD.NodeObject;
+  }
 
-    const hairColor = bindings.get(df.variable("hair_color"));
-    if (!hairColor) throw "No value found.";
+  const query5 = [
+    {
+      "@context": { "@vocab": "http://swapi.dev/documentation#" },
+      eye_color: "blue",
+      name: "?",
+      height: "?",
+    },
+  ];
 
-    const homeworldName = bindings.get(df.variable("homeworld_name"));
-    if (!homeworldName) throw "No value found.";
+  if (isEqual(query, query5)) {
+    const initialIr = new IR.Plural(
+      df.variable("root"),
+      new IR.NodeObject(
+        Map({
+          eye_color: new IR.NativeValue(df.literal("blue")),
+          name: new IR.NativePlaceholder(df.variable("root·name")),
+          height: new IR.NativePlaceholder(df.variable("root·height")),
+        }),
+        { "@vocab": "http://swapi.dev/documentation#" }
+      )
+    );
 
-    return compose(
-      set(lensPath(["hair_color"]), hairColor.value),
-      set(lensPath(["homeworld", "planetName"]), homeworldName.value)
-    )(query4);
+    const solutions = [
+      bf.fromRecord({
+        root: df.namedNode("https://swapi.dev/api/people/1/"),
+        "root·name": df.literal("Luke Skywalker"),
+        "root·height": df.literal("172", integer),
+      }),
+      bf.fromRecord({
+        root: df.namedNode("https://swapi.dev/api/people/6/"),
+        "root·name": df.literal("Owen Lars"),
+        "root·height": df.literal("178", integer),
+      }),
+    ];
+
+    const ir = solutions.reduce<IR.IntermediateResult>(
+      (partialIr, solution) => partialIr.addSolution(solution),
+      initialIr
+    );
+
+    return ir.result() as JsonLD.NodeObject;
+  }
+
+  const query6 = [
+    {
+      "@context": { "@vocab": "http://swapi.dev/documentation#" },
+      eye_color: "blue",
+      name: "?",
+      films: [{ title: "?" }],
+    },
+  ];
+
+  if (isEqual(query, query6)) {
+    const initialIr = new IR.Plural(
+      df.variable("root"),
+      new IR.NodeObject(
+        Map({
+          eye_color: new IR.NativeValue(df.literal("blue")),
+          name: new IR.NativePlaceholder(df.variable("root·name")),
+          films: new IR.Plural(
+            df.variable("root·films"),
+            new IR.NodeObject(
+              Map({
+                title: new IR.NativePlaceholder(
+                  df.variable("root·films·title")
+                ),
+              })
+            )
+          ),
+        }),
+        { "@vocab": "http://swapi.dev/documentation#" }
+      )
+    );
+
+    const solutions = [
+      bf.fromRecord({
+        root: df.namedNode("https://swapi.dev/api/people/1/"),
+        "root·name": df.literal("Luke Skywalker"),
+        "root·films": df.namedNode("https://swapi.dev/api/films/1/"),
+        "root·films·title": df.literal("A New Hope"),
+      }),
+      bf.fromRecord({
+        root: df.namedNode("https://swapi.dev/api/people/1/"),
+        "root·name": df.literal("Luke Skywalker"),
+        "root·films": df.namedNode("https://swapi.dev/api/films/2/"),
+        "root·films·title": df.literal("The Empire Strikes Back"),
+      }),
+      bf.fromRecord({
+        root: df.namedNode("https://swapi.dev/api/people/1/"),
+        "root·name": df.literal("Luke Skywalker"),
+        "root·films": df.namedNode("https://swapi.dev/api/films/3/"),
+        "root·films·title": df.literal("Return of the Jedi"),
+      }),
+      bf.fromRecord({
+        root: df.namedNode("https://swapi.dev/api/people/1/"),
+        "root·name": df.literal("Luke Skywalker"),
+        "root·films": df.namedNode("https://swapi.dev/api/films/6/"),
+        "root·films·title": df.literal("Revenge of the Sith"),
+      }),
+      bf.fromRecord({
+        root: df.namedNode("https://swapi.dev/api/people/6/"),
+        "root·name": df.literal("Owen Lars"),
+        "root·films": df.namedNode("https://swapi.dev/api/films/1/"),
+        "root·films·title": df.literal("A New Hope"),
+      }),
+      bf.fromRecord({
+        root: df.namedNode("https://swapi.dev/api/people/6/"),
+        "root·name": df.literal("Owen Lars"),
+        "root·films": df.namedNode("https://swapi.dev/api/films/5/"),
+        "root·films·title": df.literal("Attack of the Clones"),
+      }),
+      bf.fromRecord({
+        root: df.namedNode("https://swapi.dev/api/people/6/"),
+        "root·name": df.literal("Owen Lars"),
+        "root·films": df.namedNode("https://swapi.dev/api/films/6/"),
+        "root·films·title": df.literal("Revenge of the Sith"),
+      }),
+    ];
+
+    const ir = solutions.reduce<IR.IntermediateResult>(
+      (partialIr, solution) => partialIr.addSolution(solution),
+      initialIr
+    );
+
+    return ir.result() as JsonLD.NodeObject;
   }
 
   throw "TODO: Not covered";

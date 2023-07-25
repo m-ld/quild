@@ -3,13 +3,15 @@ import { describe, it, expect } from "@jest/globals";
 import { Map } from "immutable";
 
 import {
-  Scalar,
+  NativePlaceholder,
   Plural,
   NodeObject,
   type IntermediateResult,
-  TooManyBindingsError,
   IncompleteResultError,
-  BadScalarError,
+  BadNativeValueError,
+  NativeValue,
+  Name,
+  BadNameError,
 } from "./IntermediateResult";
 import { df, integer } from "./common";
 
@@ -20,72 +22,91 @@ const bf = new BindingsFactory(df);
 const root = df.variable("root");
 const name = df.variable("root·name");
 const height = df.variable("root·height");
-const eyeColor = df.variable("root·eye_color");
 const films = df.variable("root·films");
 const filmsTitle = df.variable("root·films·title");
 
-// TODO:
-// Remaining oddity:
-// - Plural-of-Scalar uses the variable twice
-// - NodeObject is oddly trivial
-// - `addSolution` is a bit cumbersome—using data structures instead of classes
-//   might be better, but would require implementing polymorphism another way.
-//   - Immutable.js Records?
-
-describe("Scalar", () => {
+describe(NativePlaceholder, () => {
   it("throws when it hasn't received a solution", () => {
     expect(() => {
-      new Scalar(filmsTitle).result();
+      new NativePlaceholder(filmsTitle).result();
     }).toThrow(new IncompleteResultError(filmsTitle));
   });
 
   it("accepts one solution", () => {
-    const ir = new Scalar(filmsTitle).addSolution(
+    const ir = new NativePlaceholder(filmsTitle).addSolution(
       bf.bindings([[filmsTitle, df.literal("A New Hope")]])
     );
     expect(ir.result()).toBe("A New Hope");
   });
 
-  it("throws trying to represent a non-scalar value", () => {
-    const ir = new Scalar(filmsTitle).addSolution(
-      bf.bindings([
-        [filmsTitle, df.namedNode("https://swapi.dev/api/films/1/")],
-      ])
+  it("ignores additional solutions", () => {
+    const ir = new NativePlaceholder(filmsTitle)
+      .addSolution(bf.bindings([[filmsTitle, df.literal("A New Hope")]]))
+      .addSolution(
+        bf.bindings([[filmsTitle, df.literal("The Empire Strikes Back")]])
+      );
+
+    expect(ir.result()).toBe("A New Hope");
+  });
+});
+
+describe(NativeValue, () => {
+  it("returns its result", () => {
+    const ir = new NativeValue(df.literal("blue"));
+    expect(ir.result()).toBe("blue");
+  });
+
+  it("returns its result as JSON-LD", () => {
+    const ir = new NativeValue(df.literal("172", integer));
+    expect(ir.result()).toBe(172);
+  });
+
+  it("ignores additional solutions", () => {
+    const ir = new NativeValue(df.literal("Luke Skywalker")).addSolution(
+      bf.bindings([[name, df.literal("Owen Lars")]])
     );
+    expect(ir.result()).toBe("Luke Skywalker");
+  });
+
+  it("throws trying to represent a non-scalar value", () => {
+    const ir = new NativeValue(df.namedNode("https://swapi.dev/api/films/1/"));
     expect(() => {
       ir.result();
     }).toThrow(
-      new BadScalarError(
-        filmsTitle,
-        df.namedNode("https://swapi.dev/api/films/1/")
-      )
-    );
-  });
-
-  it("throws on additional solutions", () => {
-    const ir = new Scalar(filmsTitle).addSolution(
-      bf.bindings([[filmsTitle, df.literal("A New Hope")]])
-    );
-
-    expect(() => {
-      ir.addSolution(
-        bf.bindings([[filmsTitle, df.literal("The Empire Strikes Back")]])
-      );
-    }).toThrow(
-      new TooManyBindingsError(
-        filmsTitle,
-        df.literal("The Empire Strikes Back")
-      )
+      new BadNativeValueError(df.namedNode("https://swapi.dev/api/films/1/"))
     );
   });
 });
 
-describe("NodeObject", () => {
+describe(Name, () => {
+  it("returns its result", () => {
+    const ir = new Name(df.namedNode("https://swapi.dev/api/people/1/"));
+    expect(ir.result()).toBe("https://swapi.dev/api/people/1/");
+  });
+
+  it("ignores additional solutions", () => {
+    const ir = new Name(
+      df.namedNode("https://swapi.dev/api/people/1/")
+    ).addSolution(
+      bf.bindings([[root, df.namedNode("https://swapi.dev/api/people/6/")]])
+    );
+    expect(ir.result()).toBe("https://swapi.dev/api/people/1/");
+  });
+
+  it("throws trying to represent a non-scalar value", () => {
+    const ir = new Name(df.literal("Luke Skywalker"));
+    expect(() => {
+      ir.result();
+    }).toThrow(new BadNameError(df.literal("Luke Skywalker")));
+  });
+});
+
+describe(NodeObject, () => {
   it("distributes solutions", () => {
     const ir = new NodeObject(
       Map({
-        name: new Scalar(name),
-        height: new Scalar(height),
+        name: new NativePlaceholder(name),
+        height: new NativePlaceholder(height),
       })
     ).addSolution(
       bf.bindings([
@@ -99,20 +120,48 @@ describe("NodeObject", () => {
       height: 172,
     });
   });
+
+  it("includes any context in its result", () => {
+    const ir = new NodeObject(
+      Map({
+        name: new NativePlaceholder(name),
+        height: new NativePlaceholder(height),
+      }),
+      {
+        name: "http://swapi.dev/documentation#name",
+        height: "http://swapi.dev/documentation#height",
+      }
+    ).addSolution(
+      bf.bindings([
+        [name, df.literal("Luke Skywalker")],
+        [height, df.literal("172", integer)],
+      ])
+    );
+
+    expect(ir.result()).toStrictEqual({
+      "@context": {
+        name: "http://swapi.dev/documentation#name",
+        height: "http://swapi.dev/documentation#height",
+      },
+      name: "Luke Skywalker",
+      height: 172,
+    });
+  });
 });
 
-describe("Plural", () => {
-  describe("of a Scalar", () => {
+describe(Plural, () => {
+  describe(`of a ${NativePlaceholder.name}`, () => {
     it("puts its results in an array", () => {
-      const ir = new Plural(filmsTitle, new Scalar(filmsTitle)).addSolution(
-        bf.bindings([[filmsTitle, df.literal("A New Hope")]])
-      );
+      const ir = new Plural(
+        filmsTitle,
+        new NativePlaceholder(filmsTitle)
+      ).addSolution(bf.bindings([[filmsTitle, df.literal("A New Hope")]]));
 
       expect(ir.result()).toStrictEqual(["A New Hope"]);
     });
 
     it("accepts multiple solutions", () => {
-      const ir = new Plural(filmsTitle, new Scalar(filmsTitle))
+      const ir = new Plural(filmsTitle, new NativePlaceholder(filmsTitle))
         .addSolution(bf.bindings([[filmsTitle, df.literal("A New Hope")]]))
         .addSolution(
           bf.bindings([[filmsTitle, df.literal("The Empire Strikes Back")]])
@@ -125,14 +174,14 @@ describe("Plural", () => {
     });
   });
 
-  describe("of a NodeObject", () => {
+  describe(`of a ${NodeObject.name}`, () => {
     it("puts its results in an array", () => {
       const ir = new Plural(
         root,
         new NodeObject(
           Map({
-            name: new Scalar(name),
-            height: new Scalar(height),
+            name: new NativePlaceholder(name),
+            height: new NativePlaceholder(height),
           })
         )
       ).addSolution(
@@ -156,8 +205,8 @@ describe("Plural", () => {
         root,
         new NodeObject(
           Map({
-            name: new Scalar(name),
-            height: new Scalar(height),
+            name: new NativePlaceholder(name),
+            height: new NativePlaceholder(height),
           })
         )
       )
@@ -193,10 +242,10 @@ describe("Plural", () => {
         root,
         new NodeObject(
           Map({
-            name: new Scalar(name),
+            name: new NativePlaceholder(name),
             films: new Plural(
               films,
-              new NodeObject(Map({ title: new Scalar(filmsTitle) }))
+              new NodeObject(Map({ title: new NativePlaceholder(filmsTitle) }))
             ),
           })
         )

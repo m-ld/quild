@@ -462,7 +462,9 @@ declare module "jsonld/jsonld" {
       | null
       | string
       | ExpandedTermDefinition
-      | ContextDefinition[keyof ContextDefinition];
+      // Only here to be compatible with the explicit keys above, as there's no
+      // good way to write an index signature for "everything but keywords".
+      | Exclude<ContextDefinition[keyof ContextDefinition], undefined>;
   }
 
   /* eslint-disable-next-line @typescript-eslint/no-empty-interface

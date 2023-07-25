@@ -1,23 +1,14 @@
 import { Map } from "immutable";
 
-import { scalarRepresentation } from "./scalarRepresentation";
+import nativeRepresentation from "./nativeRepresentation";
 
 import type * as RDF from "@rdfjs/types";
+import type * as JsonLD from "jsonld";
 import type { JsonValue } from "type-fest";
 
 export class ResultError extends Error {}
 
 const termString = (term: RDF.Term) => `<${term.termType}: ${term.value}>`;
-
-export class TooManyBindingsError extends ResultError {
-  constructor(readonly variable: RDF.Variable, readonly value: RDF.Term) {
-    super(
-      `Unexpected additional binding ${termString(value)} for ?${
-        variable.value
-      }`
-    );
-  }
-}
 
 export class IncompleteResultError extends ResultError {
   constructor(readonly variable: RDF.Variable) {
@@ -25,11 +16,15 @@ export class IncompleteResultError extends ResultError {
   }
 }
 
-export class BadScalarError extends ResultError {
-  constructor(readonly variable: RDF.Variable, readonly value: RDF.Term) {
-    super(
-      `Can't represent ${termString(value)} as a scalar for ?${variable.value}`
-    );
+export class BadNativeValueError extends ResultError {
+  constructor(readonly value: RDF.Term) {
+    super(`Can't represent ${termString(value)} as a native JSON value`);
+  }
+}
+
+export class BadNameError extends ResultError {
+  constructor(readonly value: RDF.Term) {
+    super(`Expected ${termString(value)} to be a NamedNode`);
   }
 }
 
@@ -38,11 +33,8 @@ export interface IntermediateResult {
   result(): JsonValue;
 }
 
-export class Scalar implements IntermediateResult {
-  constructor(
-    private readonly variable: RDF.Variable,
-    private readonly value?: RDF.Term
-  ) {}
+export class NativePlaceholder implements IntermediateResult {
+  constructor(private readonly variable: RDF.Variable) {}
 
   addSolution(solution: RDF.Bindings): IntermediateResult {
     const v = solution.get(this.variable);
@@ -53,23 +45,43 @@ export class Scalar implements IntermediateResult {
       return this;
     }
 
-    if (this.value && !this.value.equals(v)) {
-      throw new TooManyBindingsError(this.variable, v);
-    }
-
-    return new Scalar(this.variable, v);
+    return new NativeValue(v);
   }
 
   result(): JsonValue {
-    if (this.value) {
-      const rep = scalarRepresentation(this.value);
-      if (rep) {
-        return rep;
-      } else {
-        throw new BadScalarError(this.variable, this.value);
-      }
+    throw new IncompleteResultError(this.variable);
+  }
+}
+
+export class NativeValue implements IntermediateResult {
+  constructor(private readonly value: RDF.Term) {}
+
+  addSolution(_solution: RDF.Bindings): IntermediateResult {
+    return this;
+  }
+
+  result(): JsonValue {
+    const rep = nativeRepresentation(this.value);
+    if (rep) {
+      return rep;
     } else {
-      throw new IncompleteResultError(this.variable);
+      throw new BadNativeValueError(this.value);
+    }
+  }
+}
+
+export class Name implements IntermediateResult {
+  constructor(private readonly value: RDF.Term) {}
+
+  addSolution(_solution: RDF.Bindings): IntermediateResult {
+    return this;
+  }
+
+  result(): JsonValue {
+    if (this.value.termType === "NamedNode") {
+      return this.value.value;
+    } else {
+      throw new BadNameError(this.value);
     }
   }
 }
@@ -108,15 +120,23 @@ export class Plural implements IntermediateResult {
 }
 
 export class NodeObject implements IntermediateResult {
-  constructor(private readonly results: Map<string, IntermediateResult>) {}
+  constructor(
+    private readonly results: Map<string, IntermediateResult>,
+    private readonly context?: JsonLD.NodeObject["@context"]
+  ) {}
 
   addSolution(solution: RDF.Bindings): IntermediateResult {
-    const newResults = this.results.map((ir) => ir.addSolution(solution));
-
-    return new NodeObject(newResults);
+    return new NodeObject(
+      this.results.map((ir) => ir.addSolution(solution)),
+      this.context
+    );
   }
 
   result(): JsonValue {
-    return this.results.map((r) => r.result()).toObject();
+    const propertyResults = this.results.map((r) => r.result()).toObject();
+    if (this.context) {
+      return { "@context": this.context, ...propertyResults };
+    }
+    return propertyResults;
   }
 }
