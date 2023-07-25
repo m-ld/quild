@@ -1,5 +1,5 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { BindingsFactory } from "@comunica/bindings-factory";
+import { type Bindings, BindingsFactory } from "@comunica/bindings-factory";
 import { Map } from "immutable";
 import { isEqual } from "lodash-es";
 import { DataFactory } from "rdf-data-factory";
@@ -41,6 +41,9 @@ export const query = async (
   source: Source,
   query: JsonLD.NodeObject | JsonLD.NodeObject[]
 ): Promise<JsonLD.NodeObject> => {
+  let initialIr: IR.IntermediateResult | undefined;
+  let solutions: Bindings[] | undefined;
+
   const query1 = {
     "@id": "https://swapi.dev/api/people/1/",
     "http://swapi.dev/documentation#hair_color": "?",
@@ -48,7 +51,7 @@ export const query = async (
   };
 
   if (isEqual(query, query1)) {
-    const initialIr = new IR.NodeObject(
+    initialIr = new IR.NodeObject(
       Map({
         "@id": new IR.Name(df.namedNode("https://swapi.dev/api/people/1/")),
         "http://swapi.dev/documentation#hair_color": new IR.NativePlaceholder(
@@ -60,19 +63,12 @@ export const query = async (
       })
     );
 
-    const solutions = [
+    solutions = [
       bf.fromRecord({
         "root·hair_color": df.literal("blond"),
         "root·eye_color": df.literal("blue"),
       }),
     ];
-
-    const ir = solutions.reduce<IR.IntermediateResult>(
-      (partialIr, solution) => partialIr.addSolution(solution),
-      initialIr
-    );
-
-    return ir.result() as JsonLD.NodeObject;
   }
 
   const query2 = {
@@ -82,7 +78,7 @@ export const query = async (
   };
 
   if (isEqual(query, query2)) {
-    const initialIr = new IR.NodeObject(
+    initialIr = new IR.NodeObject(
       Map({
         "http://swapi.dev/documentation#name": new IR.NativeValue(
           df.literal("Luke Skywalker")
@@ -96,19 +92,12 @@ export const query = async (
       })
     );
 
-    const solutions = [
+    solutions = [
       bf.fromRecord({
         "root·hair_color": df.literal("blond"),
         "root·eye_color": df.literal("blue"),
       }),
     ];
-
-    const ir = solutions.reduce<IR.IntermediateResult>(
-      (partialIr, solution) => partialIr.addSolution(solution),
-      initialIr
-    );
-
-    return ir.result() as JsonLD.NodeObject;
   }
 
   const query3 = {
@@ -118,7 +107,7 @@ export const query = async (
   };
 
   if (isEqual(query, query3)) {
-    const initialIr = new IR.NodeObject(
+    initialIr = new IR.NodeObject(
       Map({
         name: new IR.NativeValue(df.literal("Luke Skywalker")),
         homeworld: new IR.NodeObject(
@@ -130,18 +119,11 @@ export const query = async (
       { "@vocab": "http://swapi.dev/documentation#" }
     );
 
-    const solutions = [
+    solutions = [
       bf.fromRecord({
         "root·homeworld·name": df.literal("Tatooine"),
       }),
     ];
-
-    const ir = solutions.reduce<IR.IntermediateResult>(
-      (partialIr, solution) => partialIr.addSolution(solution),
-      initialIr
-    );
-
-    return ir.result() as JsonLD.NodeObject;
   }
 
   const query4 = {
@@ -155,7 +137,7 @@ export const query = async (
   };
 
   if (isEqual(query, query4)) {
-    const initialIr = new IR.NodeObject(
+    initialIr = new IR.NodeObject(
       Map({
         "@id": new IR.Name(df.namedNode("https://swapi.dev/api/people/1/")),
         hair_color: new IR.NativePlaceholder(df.variable("root·hair_color")),
@@ -171,19 +153,12 @@ export const query = async (
       { "@vocab": "http://swapi.dev/documentation#" }
     );
 
-    const solutions = [
+    solutions = [
       bf.fromRecord({
         "root·hair_color": df.literal("blond"),
         "root·homeworld·planetName": df.literal("Tatooine"),
       }),
     ];
-
-    const ir = solutions.reduce<IR.IntermediateResult>(
-      (partialIr, solution) => partialIr.addSolution(solution),
-      initialIr
-    );
-
-    return ir.result() as JsonLD.NodeObject;
   }
 
   const query5 = [
@@ -196,7 +171,7 @@ export const query = async (
   ];
 
   if (isEqual(query, query5)) {
-    const initialIr = new IR.Plural(
+    initialIr = new IR.Plural(
       df.variable("root"),
       new IR.NodeObject(
         Map({
@@ -208,7 +183,7 @@ export const query = async (
       )
     );
 
-    const solutions = [
+    solutions = [
       bf.fromRecord({
         root: df.namedNode("https://swapi.dev/api/people/1/"),
         "root·name": df.literal("Luke Skywalker"),
@@ -220,13 +195,6 @@ export const query = async (
         "root·height": df.literal("178", integer),
       }),
     ];
-
-    const ir = solutions.reduce<IR.IntermediateResult>(
-      (partialIr, solution) => partialIr.addSolution(solution),
-      initialIr
-    );
-
-    return ir.result() as JsonLD.NodeObject;
   }
 
   const query6 = [
@@ -239,7 +207,7 @@ export const query = async (
   ];
 
   if (isEqual(query, query6)) {
-    const initialIr = new IR.Plural(
+    initialIr = new IR.Plural(
       df.variable("root"),
       new IR.NodeObject(
         Map({
@@ -260,7 +228,7 @@ export const query = async (
       )
     );
 
-    const solutions = [
+    solutions = [
       bf.fromRecord({
         root: df.namedNode("https://swapi.dev/api/people/1/"),
         "root·name": df.literal("Luke Skywalker"),
@@ -304,7 +272,9 @@ export const query = async (
         "root·films·title": df.literal("Revenge of the Sith"),
       }),
     ];
+  }
 
+  if (initialIr && solutions) {
     const ir = solutions.reduce<IR.IntermediateResult>(
       (partialIr, solution) => partialIr.addSolution(solution),
       initialIr
