@@ -138,30 +138,4 @@ describe("query()", () => {
       },
     });
   });
-
-  // it("REPRO", async () => {
-  //   const engine = new QueryEngine();
-
-  //   const bindingsMatching = async (sparql: string | Algebra.Operation) =>
-  //     readAll(
-  //       await engine.queryBindings(sparql, {
-  //         sources: [source],
-  //       })
-  //     );
-
-  //   const sparql = /* sparql */ `
-  //     PREFIX swapi: <http://swapi.dev/documentation#>
-  //     SELECT ?eye_color WHERE {
-  //       [] swapi:name "Luke Skywalker";
-  //          swapi:eye_color ?eye_color .
-  //     }
-  //   `;
-
-  //   // Why didn't this fail?
-  //   // Moot: We'll need to get the node as a variable anyhow, so we can
-  //   // distinguish nodes.
-  //   expect(bindingsMatching(translate(sparql))).toStrictEqual(
-  //     bindingsMatching(sparql)
-  //   );
-  // });
 });

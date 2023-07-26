@@ -1,18 +1,18 @@
-// eslint-disable-next-line import/no-extraneous-dependencies
-import { type Bindings, BindingsFactory } from "@comunica/bindings-factory";
-import { Map, Seq } from "immutable";
+import { QueryEngine } from "@comunica/query-sparql-rdfjs";
+import { Map } from "immutable";
 import { isEqual, isObjectLike } from "lodash-es";
 import { last } from "rambda";
-import { DataFactory } from "rdf-data-factory";
+import { Factory as AlgebraFactory, type Algebra } from "sparqlalgebrajs";
 
 import * as IR from "./IntermediateResult";
-import { PLACEHOLDER, integer } from "./common";
+import { PLACEHOLDER, df } from "./common";
+import { readAll } from "./readAll";
 
 import type { Quad, Source, Term } from "@rdfjs/types";
 import type * as JsonLD from "jsonld";
 
-const df = new DataFactory();
-const bf = new BindingsFactory(df);
+const af = new AlgebraFactory(df);
+const engine = new QueryEngine();
 
 // This madness is just to cope with the fact that jsonld.toRDF doesn't return
 // real Quads. Namely, the "Quad" itself is missing its `termType`, and it and
@@ -21,6 +21,8 @@ export const fixQuad = (q: JsonLD.Quad): Quad => {
   const fixTerm = ((term: Term) =>
     term.termType === "Literal"
       ? df.literal(term.value, term.datatype)
+      : term.termType === "BlankNode"
+      ? df.blankNode(term.value.replace(/^_:/, ""))
       : df.fromTerm(term)) as typeof df.fromTerm;
 
   // Pretend q is a real quad for a moment.
@@ -97,7 +99,7 @@ export const query = async (
   query: JsonLD.NodeObject | JsonLD.NodeObject[]
 ): Promise<JsonLD.NodeObject> => {
   let initialIr: IR.IntermediateResult | undefined;
-  let solutions: Bindings[] | undefined;
+  let sparql: Algebra.Project | undefined;
 
   const query1 = {
     "@id": "https://swapi.dev/api/people/1/",
@@ -108,12 +110,21 @@ export const query = async (
   if (isEqual(query, query1)) {
     initialIr = createIRNamedNode(query1, "root");
 
-    solutions = [
-      bf.fromRecord({
-        "root·hair_color": df.literal("blond"),
-        "root·eye_color": df.literal("blue"),
-      }),
-    ];
+    sparql = af.createProject(
+      af.createBgp([
+        af.createPattern(
+          df.namedNode("https://swapi.dev/api/people/1/"),
+          df.namedNode("http://swapi.dev/documentation#hair_color"),
+          df.variable("root·hair_color")
+        ),
+        af.createPattern(
+          df.namedNode("https://swapi.dev/api/people/1/"),
+          df.namedNode("http://swapi.dev/documentation#eye_color"),
+          df.variable("root·eye_color")
+        ),
+      ]),
+      [df.variable("root·hair_color"), df.variable("root·eye_color")]
+    );
   }
 
   const query2 = {
@@ -125,12 +136,24 @@ export const query = async (
   if (isEqual(query, query2)) {
     initialIr = createIRNamedNode(query2, "root");
 
-    solutions = [
-      bf.fromRecord({
-        "root·hair_color": df.literal("blond"),
-        "root·eye_color": df.literal("blue"),
-      }),
-    ];
+    const root = df.variable("root");
+    const rootHairColor = df.variable("root·hair_color");
+    const rootEyeColor = df.variable("root·eye_color");
+    sparql = af.createProject(
+      af.createBgp([
+        af.createPattern(
+          root,
+          df.namedNode("http://swapi.dev/documentation#hair_color"),
+          rootHairColor
+        ),
+        af.createPattern(
+          root,
+          df.namedNode("http://swapi.dev/documentation#eye_color"),
+          rootEyeColor
+        ),
+      ]),
+      [rootHairColor, rootEyeColor]
+    );
   }
 
   const query3 = {
@@ -142,11 +165,29 @@ export const query = async (
   if (isEqual(query, query3)) {
     initialIr = createIRNamedNode(query3, "root");
 
-    solutions = [
-      bf.fromRecord({
-        "root·homeworld·name": df.literal("Tatooine"),
-      }),
-    ];
+    const root = df.variable("root");
+    const rootHomeworld = df.variable("root·homeworld");
+    const rootHomeworldName = df.variable("root·homeworld·name");
+    sparql = af.createProject(
+      af.createBgp([
+        af.createPattern(
+          root,
+          df.namedNode("http://swapi.dev/documentation#name"),
+          df.literal("Luke Skywalker")
+        ),
+        af.createPattern(
+          root,
+          df.namedNode("http://swapi.dev/documentation#homeworld"),
+          rootHomeworld
+        ),
+        af.createPattern(
+          rootHomeworld,
+          df.namedNode("http://swapi.dev/documentation#name"),
+          rootHomeworldName
+        ),
+      ]),
+      [rootHomeworldName]
+    );
   }
 
   const query4 = {
@@ -176,12 +217,30 @@ export const query = async (
       { "@vocab": "http://swapi.dev/documentation#" }
     );
 
-    solutions = [
-      bf.fromRecord({
-        "root·hair_color": df.literal("blond"),
-        "root·homeworld·planetName": df.literal("Tatooine"),
-      }),
-    ];
+    const root = df.namedNode("https://swapi.dev/api/people/1/");
+    const rootHairColor = df.variable("root·hair_color");
+    const rootHomeworld = df.variable("root·homeworld");
+    const rootHomeworldPlanetName = df.variable("root·homeworld·planetName");
+    sparql = af.createProject(
+      af.createBgp([
+        af.createPattern(
+          root,
+          df.namedNode("http://swapi.dev/documentation#hair_color"),
+          rootHairColor
+        ),
+        af.createPattern(
+          root,
+          df.namedNode("http://swapi.dev/documentation#homeworld"),
+          rootHomeworld
+        ),
+        af.createPattern(
+          rootHomeworld,
+          df.namedNode("http://swapi.dev/documentation#name"),
+          rootHomeworldPlanetName
+        ),
+      ]),
+      [rootHairColor, rootHomeworldPlanetName]
+    );
   }
 
   const query5 = [
@@ -194,30 +253,42 @@ export const query = async (
   ];
 
   if (isEqual(query, query5)) {
+    const root = df.variable("root");
+    const rootName = df.variable("root·name");
+    const rootHeight = df.variable("root·height");
+
     initialIr = new IR.Plural(
-      df.variable("root"),
+      root,
       new IR.NodeObject(
         Map({
           eye_color: new IR.NativeValue(df.literal("blue")),
-          name: new IR.NativePlaceholder(df.variable("root·name")),
-          height: new IR.NativePlaceholder(df.variable("root·height")),
+          name: new IR.NativePlaceholder(rootName),
+          height: new IR.NativePlaceholder(rootHeight),
         }),
         { "@vocab": "http://swapi.dev/documentation#" }
       )
     );
 
-    solutions = [
-      bf.fromRecord({
-        root: df.namedNode("https://swapi.dev/api/people/1/"),
-        "root·name": df.literal("Luke Skywalker"),
-        "root·height": df.literal("172", integer),
-      }),
-      bf.fromRecord({
-        root: df.namedNode("https://swapi.dev/api/people/6/"),
-        "root·name": df.literal("Owen Lars"),
-        "root·height": df.literal("178", integer),
-      }),
-    ];
+    sparql = af.createProject(
+      af.createBgp([
+        af.createPattern(
+          root,
+          df.namedNode("http://swapi.dev/documentation#eye_color"),
+          df.literal("blue")
+        ),
+        af.createPattern(
+          root,
+          df.namedNode("http://swapi.dev/documentation#name"),
+          rootName
+        ),
+        af.createPattern(
+          root,
+          df.namedNode("http://swapi.dev/documentation#height"),
+          rootHeight
+        ),
+      ]),
+      [root, rootName, rootHeight]
+    );
   }
 
   const query6 = [
@@ -230,19 +301,22 @@ export const query = async (
   ];
 
   if (isEqual(query, query6)) {
+    const root = df.variable("root");
+    const rootName = df.variable("root·name");
+    const rootFilms = df.variable("root·films");
+    const rootFilmsTitle = df.variable("root·films·title");
+
     initialIr = new IR.Plural(
       df.variable("root"),
       new IR.NodeObject(
         Map({
           eye_color: new IR.NativeValue(df.literal("blue")),
-          name: new IR.NativePlaceholder(df.variable("root·name")),
+          name: new IR.NativePlaceholder(rootName),
           films: new IR.Plural(
-            df.variable("root·films"),
+            rootFilms,
             new IR.NodeObject(
               Map({
-                title: new IR.NativePlaceholder(
-                  df.variable("root·films·title")
-                ),
+                title: new IR.NativePlaceholder(rootFilmsTitle),
               })
             )
           ),
@@ -251,53 +325,40 @@ export const query = async (
       )
     );
 
-    solutions = [
-      bf.fromRecord({
-        root: df.namedNode("https://swapi.dev/api/people/1/"),
-        "root·name": df.literal("Luke Skywalker"),
-        "root·films": df.namedNode("https://swapi.dev/api/films/1/"),
-        "root·films·title": df.literal("A New Hope"),
-      }),
-      bf.fromRecord({
-        root: df.namedNode("https://swapi.dev/api/people/1/"),
-        "root·name": df.literal("Luke Skywalker"),
-        "root·films": df.namedNode("https://swapi.dev/api/films/2/"),
-        "root·films·title": df.literal("The Empire Strikes Back"),
-      }),
-      bf.fromRecord({
-        root: df.namedNode("https://swapi.dev/api/people/1/"),
-        "root·name": df.literal("Luke Skywalker"),
-        "root·films": df.namedNode("https://swapi.dev/api/films/3/"),
-        "root·films·title": df.literal("Return of the Jedi"),
-      }),
-      bf.fromRecord({
-        root: df.namedNode("https://swapi.dev/api/people/1/"),
-        "root·name": df.literal("Luke Skywalker"),
-        "root·films": df.namedNode("https://swapi.dev/api/films/6/"),
-        "root·films·title": df.literal("Revenge of the Sith"),
-      }),
-      bf.fromRecord({
-        root: df.namedNode("https://swapi.dev/api/people/6/"),
-        "root·name": df.literal("Owen Lars"),
-        "root·films": df.namedNode("https://swapi.dev/api/films/1/"),
-        "root·films·title": df.literal("A New Hope"),
-      }),
-      bf.fromRecord({
-        root: df.namedNode("https://swapi.dev/api/people/6/"),
-        "root·name": df.literal("Owen Lars"),
-        "root·films": df.namedNode("https://swapi.dev/api/films/5/"),
-        "root·films·title": df.literal("Attack of the Clones"),
-      }),
-      bf.fromRecord({
-        root: df.namedNode("https://swapi.dev/api/people/6/"),
-        "root·name": df.literal("Owen Lars"),
-        "root·films": df.namedNode("https://swapi.dev/api/films/6/"),
-        "root·films·title": df.literal("Revenge of the Sith"),
-      }),
-    ];
+    sparql = af.createProject(
+      af.createBgp([
+        af.createPattern(
+          root,
+          df.namedNode("http://swapi.dev/documentation#eye_color"),
+          df.literal("blue")
+        ),
+        af.createPattern(
+          root,
+          df.namedNode("http://swapi.dev/documentation#name"),
+          rootName
+        ),
+        af.createPattern(
+          root,
+          df.namedNode("http://swapi.dev/documentation#films"),
+          rootFilms
+        ),
+        af.createPattern(
+          rootFilms,
+          df.namedNode("http://swapi.dev/documentation#title"),
+          rootFilmsTitle
+        ),
+      ]),
+      [root, rootName, rootFilms, rootFilmsTitle]
+    );
   }
 
-  if (initialIr && solutions) {
+  if (initialIr && sparql) {
+    const bindingsStream = await engine.queryBindings(sparql, {
+      sources: [source],
+    });
+
+    const solutions = await readAll(bindingsStream);
+
     const ir = solutions.reduce<IR.IntermediateResult>(
       (partialIr, solution) => partialIr.addSolution(solution),
       initialIr
