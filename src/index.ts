@@ -1,11 +1,12 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { type Bindings, BindingsFactory } from "@comunica/bindings-factory";
-import { Map } from "immutable";
-import { isEqual } from "lodash-es";
+import { Map, Seq } from "immutable";
+import { isEqual, isObjectLike } from "lodash-es";
+import { last } from "rambda";
 import { DataFactory } from "rdf-data-factory";
 
 import * as IR from "./IntermediateResult";
-import { integer } from "./common";
+import { PLACEHOLDER, integer } from "./common";
 
 import type { Quad, Source, Term } from "@rdfjs/types";
 import type * as JsonLD from "jsonld";
@@ -32,6 +33,60 @@ export const fixQuad = (q: JsonLD.Quad): Quad => {
   );
 };
 
+/* eslint-disable no-misleading-character-class
+   ---
+   We're intentionally doing this by code point, to match the way the spec
+   defines them. */
+
+/** @see https://www.w3.org/TR/sparql11-query/#rPN_CHARS_BASE */
+const PN_CHARS_BASE_RE =
+  /[A-Za-z\u{00C0}-\u{00D6}\u{00D8}-\u{00F6}\u{00F8}-\u{02FF}\u{0370}-\u{037D}\u{037F}-\u{1FFF}\u{200C}-\u{200D}\u{2070}-\u{218F}\u{2C00}-\u{2FEF}\u{3001}-\u{D7FF}\u{F900}-\u{FDCF}\u{FDF0}-\u{FFFD}\u{10000}-\u{EFFFF}]/u;
+
+/** @see https://www.w3.org/TR/sparql11-query/#rPN_CHARS_U */
+const PN_CHARS_U_RE = new RegExp(`(?:${PN_CHARS_BASE_RE.source})|_`, "u");
+
+/** @see https://www.w3.org/TR/sparql11-query/#rVARNAME */
+const VARNAME_RE = new RegExp(
+  `(?:(?:${PN_CHARS_U_RE.source})|[0-9])(?:(?:${PN_CHARS_U_RE.source})|[0-9\u{00B7}\u{0300}-\u{036F}\u{203F}-\u{2040}])*`,
+  "u"
+);
+
+const VARNAME_RE_G = new RegExp(VARNAME_RE, VARNAME_RE.flags + "g");
+
+// const PN_CHARS_BASE_RE_INV =
+//   /[^A-Za-z\u{00C0}-\u{00D6}\u{00D8}-\u{00F6}\u{00F8}-\u{02FF}\u{0370}-\u{037D}\u{037F}-\u{1FFF}\u{200C}-\u{200D}\u{2070}-\u{218F}\u{2C00}-\u{2FEF}\u{3001}-\u{D7FF}\u{F900}-\u{FDCF}\u{FDF0}-\u{FFFD}\u{10000}-\u{EFFFF}]/gu;
+
+/* eslint-enable no-misleading-character-class --- ^^^ */
+
+const variableName = (key: string) =>
+  last(key.match(VARNAME_RE_G) ?? []) ?? "_";
+
+const isPlaceholder = (v: string) => v === PLACEHOLDER;
+
+const createIRNamedNode = (
+  q: JsonLD.NodeObject,
+  prefix: string
+): IR.NodeObject => {
+  const queryMap = Map(q);
+
+  return new IR.NodeObject(
+    queryMap
+      .delete("@context")
+      .map((v, k) =>
+        k === "@id"
+          ? new IR.Name(df.namedNode(v))
+          : isPlaceholder(v)
+          ? new IR.NativePlaceholder(
+              df.variable(`${prefix}·${variableName(k)}`)
+            )
+          : isObjectLike(v)
+          ? createIRNamedNode(v, `${prefix}·${variableName(k)}`)
+          : new IR.NativeValue(df.literal(v))
+      ),
+    queryMap.get("@context")
+  );
+};
+
 /**
  * Reads the query once and returns the result.
  * @param graph The RDF data to query.
@@ -48,20 +103,10 @@ export const query = async (
     "@id": "https://swapi.dev/api/people/1/",
     "http://swapi.dev/documentation#hair_color": "?",
     "http://swapi.dev/documentation#eye_color": "?",
-  };
+  } as const;
 
   if (isEqual(query, query1)) {
-    initialIr = new IR.NodeObject(
-      Map({
-        "@id": new IR.Name(df.namedNode("https://swapi.dev/api/people/1/")),
-        "http://swapi.dev/documentation#hair_color": new IR.NativePlaceholder(
-          df.variable("root·hair_color")
-        ),
-        "http://swapi.dev/documentation#eye_color": new IR.NativePlaceholder(
-          df.variable("root·eye_color")
-        ),
-      })
-    );
+    initialIr = createIRNamedNode(query1, "root");
 
     solutions = [
       bf.fromRecord({
@@ -75,22 +120,10 @@ export const query = async (
     "http://swapi.dev/documentation#name": "Luke Skywalker",
     "http://swapi.dev/documentation#hair_color": "?",
     "http://swapi.dev/documentation#eye_color": "?",
-  };
+  } as const;
 
   if (isEqual(query, query2)) {
-    initialIr = new IR.NodeObject(
-      Map({
-        "http://swapi.dev/documentation#name": new IR.NativeValue(
-          df.literal("Luke Skywalker")
-        ),
-        "http://swapi.dev/documentation#hair_color": new IR.NativePlaceholder(
-          df.variable("root·hair_color")
-        ),
-        "http://swapi.dev/documentation#eye_color": new IR.NativePlaceholder(
-          df.variable("root·eye_color")
-        ),
-      })
-    );
+    initialIr = createIRNamedNode(query2, "root");
 
     solutions = [
       bf.fromRecord({
@@ -104,20 +137,10 @@ export const query = async (
     "@context": { "@vocab": "http://swapi.dev/documentation#" },
     name: "Luke Skywalker",
     homeworld: { name: "?" },
-  };
+  } as const;
 
   if (isEqual(query, query3)) {
-    initialIr = new IR.NodeObject(
-      Map({
-        name: new IR.NativeValue(df.literal("Luke Skywalker")),
-        homeworld: new IR.NodeObject(
-          Map({
-            name: new IR.NativePlaceholder(df.variable("root·homeworld·name")),
-          })
-        ),
-      }),
-      { "@vocab": "http://swapi.dev/documentation#" }
-    );
+    initialIr = createIRNamedNode(query3, "root");
 
     solutions = [
       bf.fromRecord({

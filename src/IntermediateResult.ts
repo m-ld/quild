@@ -1,4 +1,4 @@
-import { Map } from "immutable";
+import { type Collection, Map } from "immutable";
 
 import nativeRepresentation from "./nativeRepresentation";
 
@@ -121,7 +121,7 @@ export class Plural implements IntermediateResult {
 
 export class NodeObject implements IntermediateResult {
   constructor(
-    private readonly results: Map<string, IntermediateResult>,
+    private readonly results: Collection.Keyed<string, IntermediateResult>,
     private readonly context?: JsonLD.NodeObject["@context"]
   ) {}
 
