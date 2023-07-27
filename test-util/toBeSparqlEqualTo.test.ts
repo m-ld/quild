@@ -1,6 +1,6 @@
 import { describe, expect, it } from "@jest/globals";
 import { DataFactory } from "rdf-data-factory";
-import { Factory } from "sparqlalgebrajs";
+import { Factory as AlgebraFactory } from "sparqlalgebrajs";
 
 import { runMatcher } from "./runMatcher";
 import "./toBeSparqlEqualTo";
@@ -8,7 +8,7 @@ import "./toBeSparqlEqualTo";
 const run = runMatcher(expect, "toBeSparqlEqualTo");
 
 const df = new DataFactory();
-const af = new Factory(df);
+const af = new AlgebraFactory(df);
 
 describe("toBeSparqlEqualTo", () => {
   it("matches a SPARQL string to itself", () => {
