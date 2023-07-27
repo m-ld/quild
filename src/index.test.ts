@@ -1,9 +1,34 @@
 import { describe, it, expect } from "@jest/globals";
 import jsonld from "jsonld";
 
-import { fixQuad, query } from "./index";
+import { df } from "./common";
+import { query } from "./index";
 import data from "../fixtures/data.json";
 import { dataset } from "../test-util/fixedDataset";
+
+import type { Quad, Term } from "@rdfjs/types";
+import type * as JsonLD from "jsonld";
+
+// This madness is just to cope with the fact that jsonld.toRDF doesn't return
+// real Quads. Namely, the "Quad" itself is missing its `termType`, and it and
+// its terms are all missing the `.equals()` method.
+const fixQuad = (q: JsonLD.Quad): Quad => {
+  const fixTerm = ((term: Term) =>
+    term.termType === "Literal"
+      ? df.literal(term.value, term.datatype)
+      : term.termType === "BlankNode"
+      ? df.blankNode(term.value.replace(/^_:/, ""))
+      : df.fromTerm(term)) as typeof df.fromTerm;
+
+  // Pretend q is a real quad for a moment.
+  const quad = q as Quad;
+  return df.quad(
+    fixTerm(quad.subject),
+    fixTerm(quad.predicate),
+    fixTerm(quad.object),
+    fixTerm(quad.graph)
+  );
+};
 
 const quads = (await jsonld.toRDF(data as jsonld.JsonLdDocument)).map(fixQuad);
 const source = dataset().addAll(quads);

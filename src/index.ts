@@ -8,32 +8,11 @@ import * as IR from "./IntermediateResult";
 import { PLACEHOLDER, df } from "./common";
 import { readAll } from "./readAll";
 
-import type { Quad, Source, Term } from "@rdfjs/types";
+import type { Source } from "@rdfjs/types";
 import type * as JsonLD from "jsonld";
 
 const af = new AlgebraFactory(df);
 const engine = new QueryEngine();
-
-// This madness is just to cope with the fact that jsonld.toRDF doesn't return
-// real Quads. Namely, the "Quad" itself is missing its `termType`, and it and
-// its terms are all missing the `.equals()` method.
-export const fixQuad = (q: JsonLD.Quad): Quad => {
-  const fixTerm = ((term: Term) =>
-    term.termType === "Literal"
-      ? df.literal(term.value, term.datatype)
-      : term.termType === "BlankNode"
-      ? df.blankNode(term.value.replace(/^_:/, ""))
-      : df.fromTerm(term)) as typeof df.fromTerm;
-
-  // Pretend q is a real quad for a moment.
-  const quad = q as Quad;
-  return df.quad(
-    fixTerm(quad.subject),
-    fixTerm(quad.predicate),
-    fixTerm(quad.object),
-    fixTerm(quad.graph)
-  );
-};
 
 /* eslint-disable no-misleading-character-class
    ---
