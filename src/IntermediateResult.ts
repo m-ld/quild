@@ -1,5 +1,7 @@
 import { type Collection, Map } from "immutable";
+import { type Algebra } from "sparqlalgebrajs";
 
+import { df } from "./common";
 import nativeRepresentation from "./nativeRepresentation";
 
 import type * as RDF from "@rdfjs/types";
@@ -121,9 +123,14 @@ export class Plural implements IntermediateResult {
 
 export class NodeObject implements IntermediateResult {
   constructor(
-    private readonly results: Collection.Keyed<string, IntermediateResult>,
+    private readonly results: Map<string, IntermediateResult>,
     private readonly context?: JsonLD.NodeObject["@context"]
   ) {}
+
+  // TODO: Test
+  addMapping(k: string, v: IntermediateResult) {
+    return new NodeObject(this.results.set(k, v), this.context);
+  }
 
   addSolution(solution: RDF.Bindings): IntermediateResult {
     return new NodeObject(
