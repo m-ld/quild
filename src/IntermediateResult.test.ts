@@ -11,7 +11,6 @@ import {
   BadNativeValueError,
   NativeValue,
   Name,
-  BadNameError,
 } from "./IntermediateResult";
 import { df, integer } from "./common";
 
@@ -91,13 +90,6 @@ describe(Name, () => {
       bf.bindings([[root, df.namedNode("https://swapi.dev/api/people/6/")]])
     );
     expect(ir.result()).toBe("https://swapi.dev/api/people/1/");
-  });
-
-  it("throws trying to represent a non-scalar value", () => {
-    const ir = new Name(df.literal("Luke Skywalker"));
-    expect(() => {
-      ir.result();
-    }).toThrow(new BadNameError(df.literal("Luke Skywalker")));
   });
 });
 

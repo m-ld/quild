@@ -2,7 +2,7 @@ import { type Collection, Map } from "immutable";
 import { type Algebra } from "sparqlalgebrajs";
 
 import { df } from "./common";
-import nativeRepresentation from "./nativeRepresentation";
+import { toJSONNative } from "./representation";
 
 import type * as RDF from "@rdfjs/types";
 import type * as JsonLD from "jsonld";
@@ -21,12 +21,6 @@ export class IncompleteResultError extends ResultError {
 export class BadNativeValueError extends ResultError {
   constructor(readonly value: RDF.Term) {
     super(`Can't represent ${termString(value)} as a native JSON value`);
-  }
-}
-
-export class BadNameError extends ResultError {
-  constructor(readonly value: RDF.Term) {
-    super(`Expected ${termString(value)} to be a NamedNode`);
   }
 }
 
@@ -63,7 +57,7 @@ export class NativeValue implements IntermediateResult {
   }
 
   result(): JsonValue {
-    const rep = nativeRepresentation(this.value);
+    const rep = toJSONNative(this.value);
     if (rep) {
       return rep;
     } else {
@@ -73,18 +67,14 @@ export class NativeValue implements IntermediateResult {
 }
 
 export class Name implements IntermediateResult {
-  constructor(private readonly value: RDF.Term) {}
+  constructor(private readonly value: RDF.NamedNode) {}
 
   addSolution(_solution: RDF.Bindings): IntermediateResult {
     return this;
   }
 
   result(): JsonValue {
-    if (this.value.termType === "NamedNode") {
-      return this.value.value;
-    } else {
-      throw new BadNameError(this.value);
-    }
+    return this.value.value;
   }
 }
 
