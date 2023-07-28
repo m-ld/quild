@@ -1,7 +1,16 @@
 /* eslint-disable @typescript-eslint/no-throw-literal */
 import { Map } from "immutable";
 import { isString } from "lodash-es";
-import { append, dissoc, evolve, pipe, reduce, toPairs } from "rambda";
+import {
+  type Evolver,
+  append as append_,
+  dissoc,
+  evolve,
+  pipe,
+  reduce,
+  toPairs,
+  map,
+} from "rambda";
 
 import * as IR from "./IntermediateResult";
 import { PLACEHOLDER, af, df } from "./common";
@@ -9,6 +18,9 @@ import { variableUnder } from "./variableUnder";
 
 import type * as RDF from "@rdfjs/types";
 import type { Algebra } from "sparqlalgebrajs";
+
+// Patching: https://github.com/selfrefactor/rambda/pull/694
+const append = append_ as <T>(x: T) => (list: T[]) => T[];
 
 const isPlaceholder = (v: unknown) => v === PLACEHOLDER;
 
@@ -41,10 +53,10 @@ export const toSparql = (
     projections: [] as RDF.Variable[],
   };
 
-  const thingToDo = (k: string, v: unknown) => {
+  const thingToDo = ([k, v]: [k: string, v: unknown]) => {
     if (isName(k)) {
       if (!isString(v)) throw "TODO: Name must be a string";
-      return evolve({
+      return evolve<Evolver<typeof init>>({
         intermediateResult: addMapping(k, new IR.Name(df.namedNode(v))),
       });
     } else if (isPlaceholder(v)) {
@@ -64,7 +76,8 @@ export const toSparql = (
   const { intermediateResult, patterns, projections } = pipe(
     dissoc("@context"),
     toPairs,
-    reduce((acc, [k, v]) => thingToDo(k, v)(acc), init)
+    map(thingToDo),
+    reduce((acc, f) => f(acc), init)
   )(query);
 
   return {
