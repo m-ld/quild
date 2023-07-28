@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-throw-literal */
 import { Map } from "immutable";
 import { isString } from "lodash-es";
-import { append, dissoc, lensProp, over, pipe, reduce, toPairs } from "rambda";
+import { append, dissoc, evolve, pipe, reduce, toPairs } from "rambda";
 
 import * as IR from "./IntermediateResult";
 import { PLACEHOLDER, af, df } from "./common";
@@ -17,6 +17,10 @@ const query1 = {
   "http://swapi.dev/documentation#hair_color": "?",
   "http://swapi.dev/documentation#eye_color": "?",
 } as const;
+
+const addMapping =
+  (k: string, v: IR.IntermediateResult) => (ir: IR.NodeObject) =>
+    ir.addMapping(k, v);
 
 // TODO: Currently only producing NodeObjects
 export const toSparql = (
@@ -40,25 +44,18 @@ export const toSparql = (
   const thingToDo = (k: string, v: unknown) => {
     if (isName(k)) {
       if (!isString(v)) throw "TODO: Name must be a string";
-      return pipe(
-        over(lensProp("intermediateResult"), (ir: IR.NodeObject) =>
-          ir.addMapping(k, new IR.Name(df.namedNode(v)))
-        )
-      );
+      return evolve({
+        intermediateResult: addMapping(k, new IR.Name(df.namedNode(v))),
+      });
     } else if (isPlaceholder(v)) {
       const variable = variableUnder(parent, k);
       // TODO:
       const predicate = df.namedNode(k);
-      return pipe(
-        over(lensProp("intermediateResult"), (ir: IR.NodeObject) =>
-          ir.addMapping(k, new IR.NativePlaceholder(variable))
-        ),
-        over(
-          lensProp("patterns"),
-          append(af.createPattern(node, predicate, variable))
-        ),
-        over(lensProp("projections"), append(variable))
-      );
+      return evolve({
+        intermediateResult: addMapping(k, new IR.NativePlaceholder(variable)),
+        patterns: append(af.createPattern(node, predicate, variable)),
+        projections: append(variable),
+      });
     } else {
       throw "TODO: Not yet covered";
     }
