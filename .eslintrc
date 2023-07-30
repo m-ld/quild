@@ -5,6 +5,7 @@
     "plugin:@eslint-community/eslint-comments/recommended",
     "plugin:promise/recommended"
   ],
+  "plugins": ["unused-imports"],
   "rules": {
     "arrow-body-style": "warn",
     "default-param-last": "warn",
@@ -17,7 +18,9 @@
     "no-unreachable-loop": "warn",
     "require-atomic-updates": "error",
     "eqeqeq": "warn",
-    "no-unused-vars": [
+    "no-unused-vars": "off",
+    "unused-imports/no-unused-imports": "error",
+    "unused-imports/no-unused-vars": [
       "warn",
       { "varsIgnorePattern": "^_", "argsIgnorePattern": "^_" }
     ],
@@ -87,7 +90,9 @@
         }
       },
       "rules": {
-        "@typescript-eslint/no-unused-vars": [
+        "@typescript-eslint/no-unused-vars": "off",
+        "unused-imports/no-unused-imports": "error",
+        "unused-imports/no-unused-vars": [
           "warn",
           { "varsIgnorePattern": "^_", "argsIgnorePattern": "^_" }
         ],
