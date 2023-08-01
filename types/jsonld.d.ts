@@ -7,15 +7,14 @@ declare module "jsonld" {
   import type {
     NodeObject,
     ContextDefinition,
+    ContextSpec,
     JsonLdDocument,
   } from "jsonld/jsonld";
   import type {
     Url,
-    // JsonLdProcessor,
     RemoteDocument,
-    // NodeObject,
-    // JsonLdArray,
     Frame,
+    ProcessingOptions,
   } from "jsonld/jsonld-spec";
   import type { ActiveContext } from "jsonld/lib/context";
 
@@ -29,6 +28,7 @@ declare module "jsonld" {
 
   export type * from "jsonld/jsonld";
   export type * from "jsonld/jsonld-spec";
+  export type { ActiveContext };
 
   /**
    * Format option: Serialized as N-Quads.
@@ -193,7 +193,7 @@ declare module "jsonld" {
 
   export function compact(
     input: JsonLdDocument,
-    ctx: NodeObject["@context"],
+    ctx: ContextSpec,
     options?: Options.Compact
   ): Promise<NodeObject>;
 
@@ -275,9 +275,8 @@ declare module "jsonld" {
 
   export function processContext(
     activeCtx: ActiveContext,
-    localCtx: NodeObject["@context"]
-    // TODO: Not sure what this should be yet.
-    // options?: Options.Common
+    localCtx: ContextSpec,
+    options?: ProcessingOptions
   ): Promise<ActiveContext>;
 
   // export let JsonLdProcessor: JsonLdProcessor;
@@ -315,7 +314,7 @@ declare module "jsonld/jsonld" {
    * @see https://www.w3.org/TR/json-ld11/#node-objects
    */
   export interface NodeObject {
-    "@context"?: Keyword["@context"];
+    "@context"?: ContextSpec;
     "@id"?: Keyword["@id"];
     "@included"?: Keyword["@included"];
     "@graph"?: Keyword["@included"];
@@ -351,7 +350,7 @@ declare module "jsonld/jsonld" {
     "@graph": OrArray<NodeObject>;
     "@index"?: Keyword["@index"];
     "@id"?: Keyword["@id"];
-    "@context"?: Keyword["@context"];
+    "@context"?: ContextSpec;
   }
 
   /**
@@ -361,7 +360,7 @@ declare module "jsonld/jsonld" {
    */
   export type ValueObject = {
     "@index"?: Keyword["@index"] | undefined;
-    "@context"?: Keyword["@context"] | undefined;
+    "@context"?: ContextSpec | undefined;
   } & ( // A string, possibly a language-typed string
     | {
         "@value": Keyword["@value"];
@@ -527,6 +526,17 @@ declare module "jsonld/jsonld" {
   );
 
   /**
+   * A description of a context, as used in as the value of a `@context` key.
+   * Can be a `ContextDefinition` object, a URL string pointing to a remote
+   * context, or `null` to reset the context from any inherited context, or an
+   * array of any of these, to be applied in order.
+   *
+   * In addition to being used as the type of the `@context` keyword, this type
+   * is also accepted by some jsonld.js functions.
+   */
+  export type ContextSpec = OrArray<null | string | ContextDefinition>;
+
+  /**
    * A list of keywords and their types.
    * Only used for internal reference; not an actual interface.
    * Not for export.
@@ -538,7 +548,7 @@ declare module "jsonld/jsonld" {
       | OrArray<"@list" | "@set" | ContainerType>
       | ContainerTypeArray
       | null;
-    "@context": OrArray<null | string | ContextDefinition>;
+    "@context": ContextSpec;
     "@direction": "ltr" | "rtl" | null;
     "@graph": OrArray<NodeObject>;
     "@id": string;
@@ -609,25 +619,49 @@ declare module "jsonld/jsonld-spec" {
   export type Iri = Url;
   export type Frame = NodeObject | Url;
 
-  export interface Options {
+  interface Event {
+    type: ["JsonLdEvent"];
+    code: string;
+    level: "warning" | "info";
+    message: string;
+    details: object;
+  }
+
+  type EventHandlerFn = (args: { event: Event; next: () => void }) => void;
+  type EventHandler = EventHandlerFn | Record<string, EventHandlerFn>;
+
+  export interface ProcessingOptions {
     base?: DOMString | null;
     compactArrays?: boolean;
     documentLoader?: LoadDocumentCallback | null;
     expandContext?: ContextDefinition | null;
     processingMode?: DOMString;
+    /**
+     * Top level APIs have a common 'eventHandler' option. This option can be a
+     * function, array of functions, object mapping event.code to functions
+     * (with a default to call next()), or any combination of such handlers.
+     * Handlers will be called with an object with an 'event' entry and a 'next'
+     * function. Custom handlers should process the event as appropriate. The
+     * 'next()' function should be called to let the next handler process the
+     * event.
+     */
+    eventHandler?: EventHandler | EventHandler[];
   }
 
   export interface JsonLdProcessor {
     compact(
       input: JsonLdDocument,
       context: ContextDefinition,
-      options?: Options
+      options?: ProcessingOptions
     ): Promise<NodeObject>;
-    expand(input: JsonLdDocument, options?: Options): Promise<NodeObject[]>;
+    expand(
+      input: JsonLdDocument,
+      options?: ProcessingOptions
+    ): Promise<NodeObject[]>;
     flatten(
       input: JsonLdDocument,
       context?: ContextDefinition | null,
-      options?: Options
+      options?: ProcessingOptions
     ): Promise<NodeObject>;
   }
 
@@ -642,7 +676,8 @@ declare module "jsonld/jsonld-spec" {
 }
 
 declare module "jsonld/lib/context" {
-  import type { Options, Iri } from "jsonld/jsonld-spec";
+  import type { ContextSpec } from "jsonld/jsonld";
+  import type { ProcessingOptions, Iri } from "jsonld/jsonld-spec";
 
   /**
    * A mapping in the context. Left opaque for now.
@@ -667,7 +702,7 @@ declare module "jsonld/lib/context" {
    * @param options Processing options.
    * @return The initial context.
    */
-  export function getInitialContext(options: Options): ActiveContext;
+  export function getInitialContext(options: ProcessingOptions): ActiveContext;
 
   /**
    * Expands a string to a full IRI. The string may be a term, a prefix, a
@@ -685,11 +720,21 @@ declare module "jsonld/lib/context" {
     activeCtx: ActiveContext,
     value: string,
     relativeTo: {
-      /** `true` to resolve against the base IRI, `false` not to. */
-      base: boolean;
-      /** `true` to concatenate after `@vocab`, `false` not to. */
-      vocab: boolean;
+      /** `true` to resolve against the base IRI. */
+      base?: boolean;
+      /** `true` to concatenate after `@vocab`. */
+      vocab?: boolean;
     },
-    options?: Options
+    options?: ProcessingOptions
   ): Iri;
+
+  export function process(args: {
+    activeCtx: ActiveContext;
+    localCtx: ContextSpec;
+    options: ProcessingOptions;
+    /** @default true */
+    propagate?: boolean;
+    /** @default false */
+    overrideProtected?: boolean;
+  }): Promise<ActiveContext>;
 }

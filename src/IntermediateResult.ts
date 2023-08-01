@@ -1,7 +1,5 @@
-import { type Collection, Map } from "immutable";
-import { type Algebra } from "sparqlalgebrajs";
+import { Map } from "immutable";
 
-import { df } from "./common";
 import { toJSONNative } from "./representation";
 
 import type * as RDF from "@rdfjs/types";
@@ -41,7 +39,11 @@ export class NativePlaceholder implements IntermediateResult {
       return this;
     }
 
-    return new NativeValue(v);
+    if (v.termType === "Literal") {
+      return new NativeValue(v);
+    } else {
+      throw new BadNativeValueError(v);
+    }
   }
 
   result(): JsonValue {
@@ -50,7 +52,7 @@ export class NativePlaceholder implements IntermediateResult {
 }
 
 export class NativeValue implements IntermediateResult {
-  constructor(private readonly value: RDF.Term) {}
+  constructor(private readonly value: RDF.Literal) {}
 
   addSolution(_solution: RDF.Bindings): IntermediateResult {
     return this;

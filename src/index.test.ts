@@ -1,3 +1,5 @@
+// TODO: Plurals are always optional
+
 import { describe, it, expect } from "@jest/globals";
 import jsonld from "jsonld";
 

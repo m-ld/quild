@@ -1,6 +1,14 @@
 /* eslint-disable @typescript-eslint/no-throw-literal */
 import { Map } from "immutable";
-import { isBoolean, isNull, isNumber, isString, isUndefined } from "lodash-es";
+import jsonld from "jsonld";
+import Context from "jsonld/lib/context";
+import {
+  isBoolean,
+  isNumber,
+  isObject,
+  isString,
+  isUndefined,
+} from "lodash-es";
 import {
   type Evolver,
   append as append_,
@@ -11,16 +19,17 @@ import {
   toPairs,
   map,
   anyPass as anyPass_,
+  concat,
 } from "rambda";
 
 import * as IR from "./IntermediateResult";
 import { PLACEHOLDER, af, df } from "./common";
+import { pipedAsync } from "./pipedAsync";
 import { toRdfLiteral } from "./representation";
 import { variableUnder } from "./variableUnder";
 
 import type * as RDF from "@rdfjs/types";
 import type { Algebra } from "sparqlalgebrajs";
-import type { JsonObject } from "type-fest";
 
 // Patching: https://github.com/selfrefactor/rambda/pull/694
 const append = append_ as <T>(x: T) => (list: T[]) => T[];
@@ -38,8 +47,47 @@ const addMapping =
 
 const isLiteral = anyPass([isString, isNumber, isBoolean]);
 
+/**
+ * Returns a null (empty, initial) `ActiveContext`.
+ */
+const nullContext = (
+  options?: jsonld.ProcessingOptions
+): Promise<jsonld.ActiveContext> =>
+  // Relies on `jsonld.processContext()` short-circuiting when the local context
+  // is `null`. Otherwise, there's no way to get an initial context using the
+  // public API.
+  jsonld.processContext(null as unknown as jsonld.ActiveContext, null, options);
+
+const predicateForKey = (k: string, ctx: jsonld.ActiveContext) =>
+  df.namedNode(Context.expandIri(ctx, k, { vocab: true }));
+
 // TODO: Currently only producing NodeObjects
-export const toSparql = (query: JsonObject, parent = df.variable("root")) => {
+export const toSparql = async (query: jsonld.NodeObject) => {
+  const { intermediateResult, patterns, projections } = await parseNodeObject(
+    query,
+    df.variable("root"),
+    await nullContext()
+  );
+
+  return {
+    intermediateResult,
+    sparql: af.createProject(af.createBgp(patterns), projections),
+  };
+};
+
+const parseNodeObject = async (
+  query: jsonld.NodeObject,
+  parent: RDF.Variable,
+  outerCtx: Context.ActiveContext
+): Promise<{
+  intermediateResult: IR.NodeObject;
+  patterns: Algebra.Pattern[];
+  projections: RDF.Variable[];
+}> => {
+  const ctx = query["@context"]
+    ? await jsonld.processContext(outerCtx, query["@context"])
+    : outerCtx;
+
   // TODO:
   const id = query["@id"];
   if (!isUndefined(id) && !isString(id)) throw "TODO: Name must be a string";
@@ -49,14 +97,12 @@ export const toSparql = (query: JsonObject, parent = df.variable("root")) => {
   const isName = (k: string) => k === "@id";
 
   const init = {
-    intermediateResult: new IR.NodeObject(
-      Map() /* TODO: , query["@context"] */
-    ),
+    intermediateResult: new IR.NodeObject(Map(), query["@context"]),
     patterns: [] as Algebra.Pattern[],
     projections: [] as RDF.Variable[],
   };
 
-  const thingToDo = ([k, v]: [k: string, v: unknown]) => {
+  const operationForEntry = async ([k, v]: [k: string, v: unknown]) => {
     if (isName(k)) {
       if (!isString(v)) throw "TODO: Name must be a string";
       return evolve<Evolver<typeof init>>({
@@ -64,8 +110,7 @@ export const toSparql = (query: JsonObject, parent = df.variable("root")) => {
       });
     } else if (isPlaceholder(v)) {
       const variable = variableUnder(parent, k);
-      // TODO:
-      const predicate = df.namedNode(k);
+      const predicate = predicateForKey(k, ctx);
       return evolve({
         intermediateResult: addMapping(k, new IR.NativePlaceholder(variable)),
         patterns: append(af.createPattern(node, predicate, variable)),
@@ -73,26 +118,34 @@ export const toSparql = (query: JsonObject, parent = df.variable("root")) => {
       });
     } else if (isLiteral(v)) {
       const literal = toRdfLiteral(v);
-      // TODO:
-      const predicate = df.namedNode(k);
+      const predicate = predicateForKey(k, ctx);
       return evolve({
         intermediateResult: addMapping(k, new IR.NativeValue(literal)),
         patterns: append(af.createPattern(node, predicate, literal)),
+      });
+    } else if (isObject(v)) {
+      const variable = variableUnder(parent, k);
+      const predicate = predicateForKey(k, ctx);
+      const parsedChild = await parseNodeObject(v, variable, ctx);
+      return evolve({
+        intermediateResult: addMapping(k, parsedChild.intermediateResult),
+        patterns: pipe(
+          append(af.createPattern(node, predicate, variable)),
+          concat(parsedChild.patterns)
+        ),
+        projections: concat(parsedChild.projections),
       });
     } else {
       throw "TODO: Not yet covered";
     }
   };
 
-  const { intermediateResult, patterns, projections } = pipe(
+  return pipedAsync(
+    query,
     dissoc("@context"),
     toPairs,
-    map(thingToDo),
+    map(operationForEntry),
+    (promises) => Promise.all(promises),
     reduce((acc, f) => f(acc), init)
-  )(query);
-
-  return {
-    intermediateResult,
-    sparql: af.createProject(af.createBgp(patterns), projections),
-  };
+  );
 };

@@ -6,8 +6,10 @@ import { df } from "./common";
 import { toSparql } from "./toSparql";
 import "../test-util/toBeSparqlEqualTo";
 
+import type jsonld from "jsonld";
+
 describe(toSparql, () => {
-  it("can produce a query for a property by @id", () => {
+  it("can produce a query for a property by @id", async () => {
     const query = {
       "@id": "https://swapi.dev/api/people/1/",
       "http://swapi.dev/documentation#hair_color": "?",
@@ -26,7 +28,7 @@ describe(toSparql, () => {
       })
     );
 
-    const { intermediateResult, sparql } = toSparql(query);
+    const { intermediateResult, sparql } = await toSparql(query);
 
     expect(intermediateResult).toStrictEqual(expectedIR);
     expect(sparql).toBeSparqlEqualTo(/* sparql */ `
@@ -39,12 +41,12 @@ describe(toSparql, () => {
     `);
   });
 
-  it("can produce a query for a property by other properties", () => {
+  it("can produce a query for a property by other properties", async () => {
     const query = {
       "http://swapi.dev/documentation#name": "Luke Skywalker",
       "http://swapi.dev/documentation#hair_color": "?",
       "http://swapi.dev/documentation#eye_color": "?",
-    } as const;
+    } as jsonld.NodeObject;
 
     const expectedIR = new IR.NodeObject(
       Map({
@@ -60,7 +62,7 @@ describe(toSparql, () => {
       })
     );
 
-    const { intermediateResult, sparql } = toSparql(query);
+    const { intermediateResult, sparql } = await toSparql(query);
 
     expect(intermediateResult).toStrictEqual(expectedIR);
     expect(sparql).toBeSparqlEqualTo(/* sparql */ `
@@ -70,6 +72,38 @@ describe(toSparql, () => {
           swapi:name "Luke Skywalker";
           swapi:hair_color ?root·hair_color;
           swapi:eye_color ?root·eye_color.
+      }
+    `);
+  });
+
+  it("can produce a query for a singular related node", async () => {
+    const query = {
+      "@context": { "@vocab": "http://swapi.dev/documentation#" },
+      name: "Luke Skywalker",
+      homeworld: { name: "?" },
+    } as const;
+
+    const expectedIR = new IR.NodeObject(
+      Map({
+        name: new IR.NativeValue(df.literal("Luke Skywalker")),
+        homeworld: new IR.NodeObject(
+          Map({
+            name: new IR.NativePlaceholder(df.variable("root·homeworld·name")),
+          })
+        ),
+      }),
+      { "@vocab": "http://swapi.dev/documentation#" }
+    );
+
+    const { intermediateResult, sparql } = await toSparql(query);
+
+    expect(intermediateResult).toStrictEqual(expectedIR);
+    expect(sparql).toBeSparqlEqualTo(/* sparql */ `
+      PREFIX swapi: <http://swapi.dev/documentation#>
+      SELECT ?root·homeworld·name WHERE {
+        ?root·homeworld swapi:name ?root·homeworld·name .
+        ?root swapi:name "Luke Skywalker";
+              swapi:homeworld ?root·homeworld .
       }
     `);
   });
