@@ -1,14 +1,14 @@
 import { describe, it, expect } from "@jest/globals";
 import { Map } from "immutable";
 
-import * as IR from "./IntermediateResult";
-import { df } from "./common";
-import { toSparql } from "./toSparql";
-import "../test-util/toBeSparqlEqualTo";
+import { parse } from ".";
+import * as IR from "../IntermediateResult";
+import { df } from "../common";
+import "../../test-util/toBeSparqlEqualTo";
 
 import type jsonld from "jsonld";
 
-describe(toSparql, () => {
+describe(parse, () => {
   it("can produce a query for a property by @id", async () => {
     const query = {
       "@id": "https://swapi.dev/api/people/1/",
@@ -28,7 +28,7 @@ describe(toSparql, () => {
       })
     );
 
-    const { intermediateResult, sparql } = await toSparql(query);
+    const { intermediateResult, sparql } = await parse(query);
 
     expect(intermediateResult).toStrictEqual(expectedIR);
     expect(sparql).toBeSparqlEqualTo(/* sparql */ `
@@ -62,7 +62,7 @@ describe(toSparql, () => {
       })
     );
 
-    const { intermediateResult, sparql } = await toSparql(query);
+    const { intermediateResult, sparql } = await parse(query);
 
     expect(intermediateResult).toStrictEqual(expectedIR);
     expect(sparql).toBeSparqlEqualTo(/* sparql */ `
@@ -95,7 +95,7 @@ describe(toSparql, () => {
       { "@vocab": "http://swapi.dev/documentation#" }
     );
 
-    const { intermediateResult, sparql } = await toSparql(query);
+    const { intermediateResult, sparql } = await parse(query);
 
     expect(intermediateResult).toStrictEqual(expectedIR);
     expect(sparql).toBeSparqlEqualTo(/* sparql */ `

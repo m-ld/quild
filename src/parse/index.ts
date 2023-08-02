@@ -22,11 +22,11 @@ import {
   concat,
 } from "rambdax";
 
-import * as IR from "./IntermediateResult";
-import { PLACEHOLDER, af, df } from "./common";
-import { pipedAsync } from "./pipedAsync";
-import { toRdfLiteral } from "./representation";
-import { variableUnder } from "./variableUnder";
+import * as IR from "../IntermediateResult";
+import { PLACEHOLDER, af, df } from "../common";
+import { pipedAsync } from "../pipedAsync";
+import { toRdfLiteral } from "../representation";
+import { variableUnder } from "../variableUnder";
 
 import type * as RDF from "@rdfjs/types";
 import type { Algebra } from "sparqlalgebrajs";
@@ -62,7 +62,7 @@ const predicateForKey = (k: string, ctx: jsonld.ActiveContext) =>
   df.namedNode(Context.expandIri(ctx, k, { vocab: true }));
 
 // TODO: Currently only producing NodeObjects
-export const toSparql = async (query: jsonld.NodeObject) => {
+export const parse = async (query: jsonld.NodeObject) => {
   const { intermediateResult, patterns, projections } = await parseNodeObject(
     query,
     df.variable("root"),

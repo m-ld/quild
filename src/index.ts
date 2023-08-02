@@ -5,8 +5,8 @@ import { Factory as AlgebraFactory, type Algebra } from "sparqlalgebrajs";
 
 import * as IR from "./IntermediateResult";
 import { df } from "./common";
+import { parse } from "./parse";
 import { readAll } from "./readAll";
-import { toSparql } from "./toSparql";
 
 import type { Source } from "@rdfjs/types";
 import type * as JsonLD from "jsonld";
@@ -61,7 +61,7 @@ export const query = async (
       isEqual(query, query4)) &&
     !isArray(query)
   ) {
-    ({ intermediateResult: initialIr, sparql } = await toSparql(query));
+    ({ intermediateResult: initialIr, sparql } = await parse(query));
   }
 
   const query5 = [
