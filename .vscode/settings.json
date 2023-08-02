@@ -1,0 +1,5 @@
+{
+  // Add interpunct (·) to word separators to make working with variable names
+  // easier.
+  "editor.wordSeparators": "`~!@#$%^&*()-=+[{]}\\|;:'\",.<>/?·"
+}
