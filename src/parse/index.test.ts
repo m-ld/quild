@@ -2,9 +2,9 @@ import { describe, it, expect } from "@jest/globals";
 import { Map } from "immutable";
 
 import { parse } from ".";
+import "../../test-util/toBeSparqlEqualTo";
 import * as IR from "../IntermediateResult";
 import { df } from "../common";
-import "../../test-util/toBeSparqlEqualTo";
 
 import type jsonld from "jsonld";
 
@@ -16,21 +16,22 @@ describe(parse, () => {
       "http://swapi.dev/documentation#eye_color": "?",
     } as const;
 
-    const expectedIR = new IR.NodeObject(
-      Map({
-        "@id": new IR.Name(df.namedNode("https://swapi.dev/api/people/1/")),
-        "http://swapi.dev/documentation#hair_color": new IR.NativePlaceholder(
-          df.variable("root·hair_color")
-        ),
-        "http://swapi.dev/documentation#eye_color": new IR.NativePlaceholder(
-          df.variable("root·eye_color")
-        ),
-      })
-    );
-
     const { intermediateResult, sparql } = await parse(query);
 
-    expect(intermediateResult).toStrictEqual(expectedIR);
+    expect(intermediateResult).toStrictEqual(
+      new IR.NodeObject(
+        Map({
+          "@id": new IR.Name(df.namedNode("https://swapi.dev/api/people/1/")),
+          "http://swapi.dev/documentation#hair_color": new IR.NativePlaceholder(
+            df.variable("root·hair_color")
+          ),
+          "http://swapi.dev/documentation#eye_color": new IR.NativePlaceholder(
+            df.variable("root·eye_color")
+          ),
+        })
+      )
+    );
+
     expect(sparql).toBeSparqlEqualTo(/* sparql */ `
       PREFIX swapi: <http://swapi.dev/documentation#>
       SELECT ?root·hair_color ?root·eye_color WHERE {
@@ -48,23 +49,24 @@ describe(parse, () => {
       "http://swapi.dev/documentation#eye_color": "?",
     } as jsonld.NodeObject;
 
-    const expectedIR = new IR.NodeObject(
-      Map({
-        "http://swapi.dev/documentation#name": new IR.NativeValue(
-          df.literal("Luke Skywalker")
-        ),
-        "http://swapi.dev/documentation#hair_color": new IR.NativePlaceholder(
-          df.variable("root·hair_color")
-        ),
-        "http://swapi.dev/documentation#eye_color": new IR.NativePlaceholder(
-          df.variable("root·eye_color")
-        ),
-      })
-    );
-
     const { intermediateResult, sparql } = await parse(query);
 
-    expect(intermediateResult).toStrictEqual(expectedIR);
+    expect(intermediateResult).toStrictEqual(
+      new IR.NodeObject(
+        Map({
+          "http://swapi.dev/documentation#name": new IR.NativeValue(
+            df.literal("Luke Skywalker")
+          ),
+          "http://swapi.dev/documentation#hair_color": new IR.NativePlaceholder(
+            df.variable("root·hair_color")
+          ),
+          "http://swapi.dev/documentation#eye_color": new IR.NativePlaceholder(
+            df.variable("root·eye_color")
+          ),
+        })
+      )
+    );
+
     expect(sparql).toBeSparqlEqualTo(/* sparql */ `
       PREFIX swapi: <http://swapi.dev/documentation#>
       SELECT ?root·hair_color ?root·eye_color WHERE {
@@ -83,21 +85,24 @@ describe(parse, () => {
       homeworld: { name: "?" },
     } as const;
 
-    const expectedIR = new IR.NodeObject(
-      Map({
-        name: new IR.NativeValue(df.literal("Luke Skywalker")),
-        homeworld: new IR.NodeObject(
-          Map({
-            name: new IR.NativePlaceholder(df.variable("root·homeworld·name")),
-          })
-        ),
-      }),
-      { "@vocab": "http://swapi.dev/documentation#" }
-    );
-
     const { intermediateResult, sparql } = await parse(query);
 
-    expect(intermediateResult).toStrictEqual(expectedIR);
+    expect(intermediateResult).toStrictEqual(
+      new IR.NodeObject(
+        Map({
+          name: new IR.NativeValue(df.literal("Luke Skywalker")),
+          homeworld: new IR.NodeObject(
+            Map({
+              name: new IR.NativePlaceholder(
+                df.variable("root·homeworld·name")
+              ),
+            })
+          ),
+        }),
+        { "@vocab": "http://swapi.dev/documentation#" }
+      )
+    );
+
     expect(sparql).toBeSparqlEqualTo(/* sparql */ `
       PREFIX swapi: <http://swapi.dev/documentation#>
       SELECT ?root·homeworld·name WHERE {
