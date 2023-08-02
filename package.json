@@ -45,7 +45,7 @@
     "immutable": "4.3.0",
     "jsonld": "8.1.1",
     "lodash-es": "4.17.21",
-    "rambda": "7.5.0",
+    "rambdax": "^10.0.0",
     "rdf-data-factory": "1.1.1",
     "sparqlalgebrajs": "4.2.0"
   },

@@ -15,12 +15,12 @@ import {
   dissoc,
   evolve,
   pipe,
+  mapParallelAsync,
   reduce,
   toPairs,
-  map,
   anyPass as anyPass_,
   concat,
-} from "rambda";
+} from "rambdax";
 
 import * as IR from "./IntermediateResult";
 import { PLACEHOLDER, af, df } from "./common";
@@ -144,8 +144,7 @@ const parseNodeObject = async (
     query,
     dissoc("@context"),
     toPairs,
-    map(operationForEntry),
-    (promises) => Promise.all(promises),
+    mapParallelAsync(operationForEntry),
     reduce((acc, f) => f(acc), init)
   );
 };

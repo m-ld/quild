@@ -1,7 +1,7 @@
 import { QueryEngine } from "@comunica/query-sparql-rdfjs";
 import { Map } from "immutable";
 import { isEqual, isObjectLike } from "lodash-es";
-import { last } from "rambda";
+import { last } from "rambdax";
 import { Factory as AlgebraFactory, type Algebra } from "sparqlalgebrajs";
 
 import * as IR from "./IntermediateResult";
