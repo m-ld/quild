@@ -106,9 +106,45 @@ describe(parse, () => {
     expect(sparql).toBeSparqlEqualTo(/* sparql */ `
       PREFIX swapi: <http://swapi.dev/documentation#>
       SELECT ?root·homeworld·name WHERE {
-        ?root·homeworld swapi:name ?root·homeworld·name .
+        ?root·homeworld swapi:name ?root·homeworld·name.
         ?root swapi:name "Luke Skywalker";
-              swapi:homeworld ?root·homeworld .
+              swapi:homeworld ?root·homeworld.
+      }
+    `);
+  });
+
+  it("can produce a query for multiple results", async () => {
+    const query = [
+      {
+        "@context": { "@vocab": "http://swapi.dev/documentation#" },
+        eye_color: "blue",
+        name: "?",
+        height: "?",
+      },
+    ] as const;
+
+    const { intermediateResult, sparql } = await parse(query);
+
+    expect(intermediateResult).toStrictEqual(
+      new IR.Plural(
+        df.variable("root"),
+        new IR.NodeObject(
+          Map({
+            eye_color: new IR.NativeValue(df.literal("blue")),
+            name: new IR.NativePlaceholder(df.variable("root·name")),
+            height: new IR.NativePlaceholder(df.variable("root·height")),
+          }),
+          { "@vocab": "http://swapi.dev/documentation#" }
+        )
+      )
+    );
+
+    expect(sparql).toBeSparqlEqualTo(/* sparql */ `
+      PREFIX swapi: <http://swapi.dev/documentation#>
+      SELECT ?root ?root·name ?root·height WHERE {
+        ?root swapi:eye_color "blue";
+              swapi:name ?root·name;
+              swapi:height ?root·height.
       }
     `);
   });

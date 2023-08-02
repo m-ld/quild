@@ -1,6 +1,6 @@
 import { QueryEngine } from "@comunica/query-sparql-rdfjs";
 import { Map } from "immutable";
-import { isArray, isEqual } from "lodash-es";
+import { isEqual } from "lodash-es";
 import { Factory as AlgebraFactory, type Algebra } from "sparqlalgebrajs";
 
 import * as IR from "./IntermediateResult";
@@ -54,16 +54,6 @@ export const query = async (
     },
   };
 
-  if (
-    (isEqual(query, query1) ||
-      isEqual(query, query2) ||
-      isEqual(query, query3) ||
-      isEqual(query, query4)) &&
-    !isArray(query)
-  ) {
-    ({ intermediateResult: initialIr, sparql } = await parse(query));
-  }
-
   const query5 = [
     {
       "@context": { "@vocab": "http://swapi.dev/documentation#" },
@@ -73,43 +63,14 @@ export const query = async (
     },
   ];
 
-  if (isEqual(query, query5)) {
-    const root = df.variable("root");
-    const rootName = df.variable("root·name");
-    const rootHeight = df.variable("root·height");
-
-    initialIr = new IR.Plural(
-      root,
-      new IR.NodeObject(
-        Map({
-          eye_color: new IR.NativeValue(df.literal("blue")),
-          name: new IR.NativePlaceholder(rootName),
-          height: new IR.NativePlaceholder(rootHeight),
-        }),
-        { "@vocab": "http://swapi.dev/documentation#" }
-      )
-    );
-
-    sparql = af.createProject(
-      af.createBgp([
-        af.createPattern(
-          root,
-          df.namedNode("http://swapi.dev/documentation#eye_color"),
-          df.literal("blue")
-        ),
-        af.createPattern(
-          root,
-          df.namedNode("http://swapi.dev/documentation#name"),
-          rootName
-        ),
-        af.createPattern(
-          root,
-          df.namedNode("http://swapi.dev/documentation#height"),
-          rootHeight
-        ),
-      ]),
-      [root, rootName, rootHeight]
-    );
+  if (
+    isEqual(query, query1) ||
+    isEqual(query, query2) ||
+    isEqual(query, query3) ||
+    isEqual(query, query4) ||
+    isEqual(query, query5)
+  ) {
+    ({ intermediateResult: initialIr, sparql } = await parse(query));
   }
 
   const query6 = [

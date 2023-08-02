@@ -48,6 +48,14 @@ const addMapping =
 const isLiteral = anyPass([isString, isNumber, isBoolean]);
 
 /**
+ * Array.isArray, but typed to properly narrow types which may be readonly
+ * arrays.
+ *
+ * @see https://github.com/microsoft/TypeScript/issues/17002
+ */
+const isArray = Array.isArray as (arg: unknown) => arg is readonly unknown[];
+
+/**
  * Returns a null (empty, initial) `ActiveContext`.
  */
 const nullContext = (
@@ -61,13 +69,12 @@ const nullContext = (
 const predicateForKey = (k: string, ctx: jsonld.ActiveContext) =>
   df.namedNode(Context.expandIri(ctx, k, { vocab: true }));
 
-// TODO: Currently only producing NodeObjects
-export const parse = async (query: jsonld.NodeObject) => {
-  const { intermediateResult, patterns, projections } = await parseNodeObject(
-    query,
-    df.variable("root"),
-    await nullContext()
-  );
+export const parse = async (
+  query: jsonld.NodeObject | readonly jsonld.NodeObject[]
+) => {
+  const { intermediateResult, patterns, projections } = await (isArray(query)
+    ? parsePlural(query, df.variable("root"), await nullContext())
+    : parseNodeObject(query, df.variable("root"), await nullContext()));
 
   return {
     intermediateResult,
@@ -75,6 +82,32 @@ export const parse = async (query: jsonld.NodeObject) => {
   };
 };
 
+const parsePlural = async (
+  query: readonly jsonld.NodeObject[],
+  parent: RDF.Variable,
+  outerCtx: Context.ActiveContext
+): Promise<{
+  intermediateResult: IR.Plural;
+  patterns: Algebra.Pattern[];
+  projections: RDF.Variable[];
+}> => {
+  const soleSubquery = query[0];
+  if (!(soleSubquery && query.length === 1)) {
+    throw "TODO: Only exactly one subquery is supported in an array, so far.";
+  }
+
+  const { intermediateResult, patterns, projections } = await parseNodeObject(
+    soleSubquery,
+    parent,
+    outerCtx
+  );
+
+  return {
+    intermediateResult: new IR.Plural(parent, intermediateResult),
+    patterns,
+    projections: [parent, ...projections],
+  };
+};
 const parseNodeObject = async (
   query: jsonld.NodeObject,
   parent: RDF.Variable,
