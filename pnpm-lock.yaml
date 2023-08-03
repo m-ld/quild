@@ -38,8 +38,8 @@ dependencies:
 
 devDependencies:
   '@comunica/bindings-factory':
-    specifier: 2.5.1
-    version: 2.5.1
+    specifier: 2.7.0
+    version: 2.7.0
   '@eslint-community/eslint-plugin-eslint-comments':
     specifier: 3.2.1
     version: 3.2.1(eslint@8.43.0)
@@ -1626,14 +1626,6 @@ packages:
       - encoding
     dev: false
 
-  /@comunica/bindings-factory@2.5.1:
-    resolution: {integrity: sha512-w8L9t17EaBibuyDXQAjSK04E4E3s/WWsSCNQz7QzG8dpLqscLfwiE0OBJpqpqGZ8pBkgQPt/JyC2WAqwPi5CHg==}
-    dependencies:
-      '@rdfjs/types': 1.1.0
-      immutable: 4.3.0
-      rdf-data-factory: 1.1.1
-      rdf-string: 1.6.3
-
   /@comunica/bindings-factory@2.7.0:
     resolution: {integrity: sha512-NeLbBmqiNhyUCZSfqZfwZD50dQ5+DABgPbzfuZnbHq9uSfhxAzuGCzgrK0hmuwRHWOPBtmeRnyZTJorePuxTzQ==}
     dependencies:
@@ -1641,7 +1633,6 @@ packages:
       immutable: 4.3.0
       rdf-data-factory: 1.1.1
       rdf-string: 1.6.3
-    dev: false
 
   /@comunica/bus-context-preprocess@2.8.1:
     resolution: {integrity: sha512-oidDXOAwQ0EcmNkREmSelW7K+IEgER9cMCGMhpEUMbg/XuWhxAl4RFAdygwn8J3VQleWYEh2JNK3shwi9SF24g==}
@@ -6136,7 +6127,7 @@ packages:
     resolution: {integrity: sha512-/SCQekZMJaTVANUelbXFfZGrmzFViLO4DieTtAI0J32kE6CobxtwQf4prfFSjRrT43vitaUuLgcuCSlpQWNycQ==}
     hasBin: true
     dependencies:
-      '@comunica/bindings-factory': 2.5.1
+      '@comunica/bindings-factory': 2.7.0
       '@rdfjs/types': 1.1.0
       '@types/lru-cache': 5.1.1
       '@types/spark-md5': 3.0.2

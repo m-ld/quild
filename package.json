@@ -14,7 +14,7 @@
     "lint": "eslint ."
   },
   "devDependencies": {
-    "@comunica/bindings-factory": "2.5.1",
+    "@comunica/bindings-factory": "2.7.0",
     "@eslint-community/eslint-plugin-eslint-comments": "3.2.1",
     "@jest/globals": "^29.5.0",
     "@rdfjs/types": "1.1.0",
