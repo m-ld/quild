@@ -31,18 +31,19 @@ export class NativePlaceholder implements IntermediateResult {
   constructor(private readonly variable: RDF.Variable) {}
 
   addSolution(solution: RDF.Bindings): IntermediateResult {
-    const v = solution.get(this.variable);
+    const value = solution.get(this.variable);
 
     // If there's no binding for us in the solution, ignore it.
     // TODO: Is this the correct thing to do?
-    if (!v) {
+    if (!value) {
       return this;
     }
 
-    if (v.termType === "Literal") {
-      return new NativeValue(v);
+    const rep = toJSONNative(value);
+    if (rep) {
+      return new NativeValue(rep);
     } else {
-      throw new BadNativeValueError(v);
+      throw new BadNativeValueError(value);
     }
   }
 
@@ -52,19 +53,14 @@ export class NativePlaceholder implements IntermediateResult {
 }
 
 export class NativeValue implements IntermediateResult {
-  constructor(private readonly value: RDF.Literal) {}
+  constructor(private readonly value: JsonValue) {}
 
   addSolution(_solution: RDF.Bindings): IntermediateResult {
     return this;
   }
 
   result(): JsonValue {
-    const rep = toJSONNative(this.value);
-    if (rep) {
-      return rep;
-    } else {
-      throw new BadNativeValueError(this.value);
-    }
+    return this.value;
   }
 }
 

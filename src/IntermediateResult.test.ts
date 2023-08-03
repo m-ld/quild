@@ -8,9 +8,9 @@ import {
   NodeObject,
   type IntermediateResult,
   IncompleteResultError,
-  BadNativeValueError,
   NativeValue,
   Name,
+  BadNativeValueError,
 } from "./IntermediateResult";
 import { df, integer } from "./common";
 
@@ -47,33 +47,31 @@ describe(NativePlaceholder, () => {
 
     expect(ir.result()).toBe("A New Hope");
   });
+
+  it("throws trying to represent a non-scalar value", () => {
+    expect(() => {
+      new NativePlaceholder(filmsTitle).addSolution(
+        bf.bindings([
+          [filmsTitle, df.namedNode("https://swapi.dev/api/films/1/")],
+        ])
+      );
+    }).toThrow(
+      new BadNativeValueError(df.namedNode("https://swapi.dev/api/films/1/"))
+    );
+  });
 });
 
 describe(NativeValue, () => {
   it("returns its result", () => {
-    const ir = new NativeValue(df.literal("blue"));
+    const ir = new NativeValue("blue");
     expect(ir.result()).toBe("blue");
   });
 
-  it("returns its result as JSON-LD", () => {
-    const ir = new NativeValue(df.literal("172", integer));
-    expect(ir.result()).toBe(172);
-  });
-
   it("ignores additional solutions", () => {
-    const ir = new NativeValue(df.literal("Luke Skywalker")).addSolution(
+    const ir = new NativeValue("Luke Skywalker").addSolution(
       bf.bindings([[name, df.literal("Owen Lars")]])
     );
     expect(ir.result()).toBe("Luke Skywalker");
-  });
-
-  it("throws trying to represent a non-scalar value", () => {
-    const ir = new NativeValue(df.namedNode("https://swapi.dev/api/films/1/"));
-    expect(() => {
-      ir.result();
-    }).toThrow(
-      new BadNativeValueError(df.namedNode("https://swapi.dev/api/films/1/"))
-    );
   });
 });
 

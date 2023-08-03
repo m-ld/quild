@@ -151,11 +151,10 @@ const parseNodeObject = async (
         projections: append(variable),
       });
     } else if (isLiteral(v)) {
-      const literal = toRdfLiteral(v);
       const predicate = predicateForKey(k, ctx);
       return evolve({
-        intermediateResult: addMapping(k, new IR.NativeValue(literal)),
-        patterns: append(af.createPattern(node, predicate, literal)),
+        intermediateResult: addMapping(k, new IR.NativeValue(v)),
+        patterns: append(af.createPattern(node, predicate, toRdfLiteral(v))),
       });
     } else if (isArray(v)) {
       const variable = variableUnder(parent, k);

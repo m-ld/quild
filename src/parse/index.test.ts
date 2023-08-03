@@ -55,7 +55,7 @@ describe(parse, () => {
       new IR.NodeObject(
         Map({
           "http://swapi.dev/documentation#name": new IR.NativeValue(
-            df.literal("Luke Skywalker")
+            "Luke Skywalker"
           ),
           "http://swapi.dev/documentation#hair_color": new IR.NativePlaceholder(
             df.variable("root·hair_color")
@@ -90,7 +90,7 @@ describe(parse, () => {
     expect(intermediateResult).toStrictEqual(
       new IR.NodeObject(
         Map({
-          name: new IR.NativeValue(df.literal("Luke Skywalker")),
+          name: new IR.NativeValue("Luke Skywalker"),
           homeworld: new IR.NodeObject(
             Map({
               name: new IR.NativePlaceholder(
@@ -130,7 +130,7 @@ describe(parse, () => {
         df.variable("root"),
         new IR.NodeObject(
           Map({
-            eye_color: new IR.NativeValue(df.literal("blue")),
+            eye_color: new IR.NativeValue("blue"),
             name: new IR.NativePlaceholder(df.variable("root·name")),
             height: new IR.NativePlaceholder(df.variable("root·height")),
           }),
@@ -166,7 +166,7 @@ describe(parse, () => {
         df.variable("root"),
         new IR.NodeObject(
           Map({
-            eye_color: new IR.NativeValue(df.literal("blue")),
+            eye_color: new IR.NativeValue("blue"),
             name: new IR.NativePlaceholder(df.variable("root·name")),
             films: new IR.Plural(
               df.variable("root·films"),
