@@ -108,6 +108,7 @@ const parsePlural = async (
     projections: [parent, ...projections],
   };
 };
+
 const parseNodeObject = async (
   query: jsonld.NodeObject,
   parent: RDF.Variable,
@@ -155,6 +156,18 @@ const parseNodeObject = async (
       return evolve({
         intermediateResult: addMapping(k, new IR.NativeValue(literal)),
         patterns: append(af.createPattern(node, predicate, literal)),
+      });
+    } else if (isArray(v)) {
+      const variable = variableUnder(parent, k);
+      const predicate = predicateForKey(k, ctx);
+      const parsedChild = await parsePlural(v, variable, ctx);
+      return evolve({
+        intermediateResult: addMapping(k, parsedChild.intermediateResult),
+        patterns: pipe(
+          append(af.createPattern(node, predicate, variable)),
+          concat(parsedChild.patterns)
+        ),
+        projections: concat(parsedChild.projections),
       });
     } else if (isObject(v)) {
       const variable = variableUnder(parent, k);

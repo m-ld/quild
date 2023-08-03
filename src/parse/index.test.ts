@@ -149,5 +149,52 @@ describe(parse, () => {
     `);
   });
 
+  it("can produce a query for a plural related node", async () => {
+    const query = [
+      {
+        "@context": { "@vocab": "http://swapi.dev/documentation#" },
+        eye_color: "blue",
+        name: "?",
+        films: [{ title: "?" }],
+      },
+    ] as const;
+
+    const { intermediateResult, sparql } = await parse(query);
+
+    expect(intermediateResult).toStrictEqual(
+      new IR.Plural(
+        df.variable("root"),
+        new IR.NodeObject(
+          Map({
+            eye_color: new IR.NativeValue(df.literal("blue")),
+            name: new IR.NativePlaceholder(df.variable("root·name")),
+            films: new IR.Plural(
+              df.variable("root·films"),
+              new IR.NodeObject(
+                Map({
+                  title: new IR.NativePlaceholder(
+                    df.variable("root·films·title")
+                  ),
+                })
+              )
+            ),
+          }),
+          { "@vocab": "http://swapi.dev/documentation#" }
+        )
+      )
+    );
+
+    expect(sparql).toBeSparqlEqualTo(/* sparql */ `
+      PREFIX swapi: <http://swapi.dev/documentation#>
+      SELECT ?root ?root·films ?root·films·title ?root·name WHERE {
+        ?root·films swapi:title ?root·films·title.
+        ?root swapi:eye_color "blue";
+              swapi:name ?root·name;
+              swapi:films ?root·films.
+      }
+    `);
+  });
+
   // TODO: Deal with duplicate variable names
+  // TODO: Ignore unmapped keys
 });

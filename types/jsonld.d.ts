@@ -309,36 +309,46 @@ declare module "jsonld/jsonld" {
   export type JsonLdDocument = NodeObject | NodeObject[];
 
   /**
+   * The value of an entry in a {@link NodeObject} map whose key is not a
+   * keyword.
+   */
+  export type NodeObjectDataEntryValue = OrArray<
+    | null
+    | boolean
+    | number
+    | string
+    | NodeObject
+    | GraphObject
+    | ValueObject
+    | ListObject
+    | SetObject
+    | LanguageMap
+    | IndexMap
+    | IncludedBlock
+    | IdMap
+    | TypeMap
+  >;
+
+  /**
    * A node object represents zero or more properties of a node
    * in the graph serialized by the JSON-LD document.
    * @see https://www.w3.org/TR/json-ld11/#node-objects
    */
   export interface NodeObject {
-    "@context"?: ContextSpec;
-    "@id"?: Keyword["@id"];
-    "@included"?: Keyword["@included"];
-    "@graph"?: Keyword["@included"];
-    "@nest"?: OrArray<JsonObject>;
-    "@type"?: OrArray<Keyword["@type"]>;
-    "@reverse"?: Record<string, Keyword["@reverse"]>;
-    "@index"?: Keyword["@index"];
-    [key: string]:
-      | OrArray<
-          | null
-          | boolean
-          | number
-          | string
-          | NodeObject
-          | GraphObject
-          | ValueObject
-          | ListObject
-          | SetObject
-        >
-      | LanguageMap
-      | IndexMap
-      | IncludedBlock
-      | IdMap
-      | TypeMap
+    readonly "@context"?: ContextSpec;
+    readonly "@id"?: Keyword["@id"];
+    readonly "@included"?: Keyword["@included"];
+    readonly "@graph"?: Keyword["@included"];
+    readonly "@nest"?: OrArray<JsonObject>;
+    readonly "@type"?: OrArray<Keyword["@type"]>;
+    readonly "@reverse"?: Record<string, Keyword["@reverse"]>;
+    readonly "@index"?: Keyword["@index"];
+
+    // When getting a value by an arbitrary string key, the value may be one of
+    // the above (if the key turns out to be a keyword) or a
+    // NodeObjectDataEntryValue.
+    readonly [key: string]:
+      | NodeObjectDataEntryValue
       | NodeObject[keyof NodeObject];
   }
 
@@ -579,7 +589,7 @@ declare module "jsonld/jsonld" {
    * Helper Types
    * (not for export)
    */
-  type OrArray<T> = T | T[];
+  type OrArray<T> = T | readonly T[];
   type ContainerType = "@language" | "@index" | "@id" | "@graph" | "@type";
   type ContainerTypeArray =
     | ["@graph", "@id"]

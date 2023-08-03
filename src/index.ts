@@ -1,17 +1,12 @@
 import { QueryEngine } from "@comunica/query-sparql-rdfjs";
-import { Map } from "immutable";
-import { isEqual } from "lodash-es";
-import { Factory as AlgebraFactory, type Algebra } from "sparqlalgebrajs";
 
-import * as IR from "./IntermediateResult";
-import { df } from "./common";
 import { parse } from "./parse";
 import { readAll } from "./readAll";
 
+import type * as IR from "./IntermediateResult";
 import type { Source } from "@rdfjs/types";
 import type * as JsonLD from "jsonld";
 
-const af = new AlgebraFactory(df);
 const engine = new QueryEngine();
 
 /**
@@ -23,131 +18,18 @@ export const query = async (
   source: Source,
   query: JsonLD.NodeObject | JsonLD.NodeObject[]
 ): Promise<JsonLD.NodeObject> => {
-  let initialIr: IR.IntermediateResult | undefined;
-  let sparql: Algebra.Project | undefined;
+  const { intermediateResult, sparql } = await parse(query);
 
-  const query1 = {
-    "@id": "https://swapi.dev/api/people/1/",
-    "http://swapi.dev/documentation#hair_color": "?",
-    "http://swapi.dev/documentation#eye_color": "?",
-  } as const;
+  const bindingsStream = await engine.queryBindings(sparql, {
+    sources: [source],
+  });
 
-  const query2 = {
-    "http://swapi.dev/documentation#name": "Luke Skywalker",
-    "http://swapi.dev/documentation#hair_color": "?",
-    "http://swapi.dev/documentation#eye_color": "?",
-  } as const;
+  const solutions = await readAll(bindingsStream);
 
-  const query3 = {
-    "@context": { "@vocab": "http://swapi.dev/documentation#" },
-    name: "Luke Skywalker",
-    homeworld: { name: "?" },
-  } as const;
+  const ir = solutions.reduce<IR.IntermediateResult>(
+    (partialIr, solution) => partialIr.addSolution(solution),
+    intermediateResult
+  );
 
-  const query4 = {
-    "@context": { "@vocab": "http://swapi.dev/documentation#" },
-    "@id": "https://swapi.dev/api/people/1/",
-    hair_color: "?",
-    homeworld: {
-      "@context": { planetName: "http://swapi.dev/documentation#name" },
-      planetName: "?",
-    },
-  };
-
-  const query5 = [
-    {
-      "@context": { "@vocab": "http://swapi.dev/documentation#" },
-      eye_color: "blue",
-      name: "?",
-      height: "?",
-    },
-  ];
-
-  if (
-    isEqual(query, query1) ||
-    isEqual(query, query2) ||
-    isEqual(query, query3) ||
-    isEqual(query, query4) ||
-    isEqual(query, query5)
-  ) {
-    ({ intermediateResult: initialIr, sparql } = await parse(query));
-  }
-
-  const query6 = [
-    {
-      "@context": { "@vocab": "http://swapi.dev/documentation#" },
-      eye_color: "blue",
-      name: "?",
-      films: [{ title: "?" }],
-    },
-  ];
-
-  if (isEqual(query, query6)) {
-    const root = df.variable("root");
-    const rootName = df.variable("root·name");
-    const rootFilms = df.variable("root·films");
-    const rootFilmsTitle = df.variable("root·films·title");
-
-    initialIr = new IR.Plural(
-      df.variable("root"),
-      new IR.NodeObject(
-        Map({
-          eye_color: new IR.NativeValue(df.literal("blue")),
-          name: new IR.NativePlaceholder(rootName),
-          films: new IR.Plural(
-            rootFilms,
-            new IR.NodeObject(
-              Map({
-                title: new IR.NativePlaceholder(rootFilmsTitle),
-              })
-            )
-          ),
-        }),
-        { "@vocab": "http://swapi.dev/documentation#" }
-      )
-    );
-
-    sparql = af.createProject(
-      af.createBgp([
-        af.createPattern(
-          root,
-          df.namedNode("http://swapi.dev/documentation#eye_color"),
-          df.literal("blue")
-        ),
-        af.createPattern(
-          root,
-          df.namedNode("http://swapi.dev/documentation#name"),
-          rootName
-        ),
-        af.createPattern(
-          root,
-          df.namedNode("http://swapi.dev/documentation#films"),
-          rootFilms
-        ),
-        af.createPattern(
-          rootFilms,
-          df.namedNode("http://swapi.dev/documentation#title"),
-          rootFilmsTitle
-        ),
-      ]),
-      [root, rootName, rootFilms, rootFilmsTitle]
-    );
-  }
-
-  if (initialIr && sparql) {
-    const bindingsStream = await engine.queryBindings(sparql, {
-      sources: [source],
-    });
-
-    const solutions = await readAll(bindingsStream);
-
-    const ir = solutions.reduce<IR.IntermediateResult>(
-      (partialIr, solution) => partialIr.addSolution(solution),
-      initialIr
-    );
-
-    return ir.result() as JsonLD.NodeObject;
-  }
-
-  throw "TODO: Not covered";
+  return ir.result() as JsonLD.NodeObject;
 };
