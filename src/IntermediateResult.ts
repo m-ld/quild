@@ -3,7 +3,7 @@ import { Map } from "immutable";
 import { toJSONNative } from "./representation";
 
 import type * as RDF from "@rdfjs/types";
-import type * as JsonLD from "jsonld";
+import type * as jsonld from "jsonld";
 import type { JsonValue } from "type-fest";
 
 export class ResultError extends Error {}
@@ -116,7 +116,7 @@ export class Plural implements IntermediateResult {
 export class NodeObject implements IntermediateResult {
   constructor(
     private readonly results: Map<string, IntermediateResult>,
-    private readonly context?: JsonLD.NodeObject["@context"]
+    private readonly context?: jsonld.ContextSpec
   ) {}
 
   // TODO: Test
