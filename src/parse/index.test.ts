@@ -195,6 +195,72 @@ describe(parse, () => {
     `);
   });
 
+  it("ignores and warns about unmapped keys", async () => {
+    const query = [
+      {
+        "@context": {
+          name: "http://swapi.dev/documentation#name",
+          films: "http://swapi.dev/documentation#films",
+        },
+        eye_color: "blue",
+        name: "?",
+        homeworld: { name: "?" },
+        films: [{ title: "?" }],
+        vehicles: [{ name: "?" }],
+      },
+    ] as const;
+
+    const { intermediateResult, sparql, warnings } = await parse(query);
+
+    expect(intermediateResult).toStrictEqual(
+      new IR.Plural(
+        df.variable("root"),
+        new IR.NodeObject(
+          Map({
+            eye_color: new IR.NativeValue("blue"),
+            name: new IR.NativePlaceholder(df.variable("root·name")),
+            homeworld: new IR.NativeValue({ name: "?" }),
+            films: new IR.Plural(
+              df.variable("root·films"),
+              new IR.NodeObject(Map({ title: new IR.NativeValue("?") }))
+            ),
+            vehicles: new IR.NativeValue([{ name: "?" }]),
+          }),
+          {
+            name: "http://swapi.dev/documentation#name",
+            films: "http://swapi.dev/documentation#films",
+          }
+        )
+      )
+    );
+
+    expect(sparql).toBeSparqlEqualTo(/* sparql */ `
+      PREFIX swapi: <http://swapi.dev/documentation#>
+      SELECT ?root ?root·films ?root·name WHERE {
+        ?root swapi:name ?root·name;
+              swapi:films ?root·films.
+      }
+    `);
+
+    expect(warnings).toStrictEqual([
+      {
+        message: "Placeholder ignored at key not defined by context",
+        path: [0, "films", 0, "title"],
+      },
+      {
+        message: "Placeholder ignored at key not defined by context",
+        path: [0, "eye_color"],
+      },
+      {
+        message: "Placeholder ignored at key not defined by context",
+        path: [0, "homeworld"],
+      },
+      {
+        message: "Placeholder ignored at key not defined by context",
+        path: [0, "vehicles"],
+      },
+    ]);
+  });
+
   // TODO: Deal with duplicate variable names
-  // TODO: Ignore unmapped keys
 });

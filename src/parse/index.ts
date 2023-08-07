@@ -10,22 +10,23 @@ import {
   isUndefined,
 } from "lodash-es";
 import {
-  type Evolver,
   append as append_,
   dissoc,
-  evolve,
   pipe,
   mapParallelAsync,
   reduce,
   toPairs,
   anyPass as anyPass_,
   concat,
+  map,
 } from "rambdax";
 
 import * as IR from "../IntermediateResult";
 import { PLACEHOLDER, af, df } from "../common";
 import { pipedAsync } from "../pipedAsync";
 import { toRdfLiteral } from "../representation";
+import { type Evolver, evolve } from "../upstream/rambda/evolve";
+import { prepend } from "../upstream/rambda/prepend";
 import { variableUnder } from "../variableUnder";
 
 import type * as RDF from "@rdfjs/types";
@@ -39,7 +40,8 @@ const anyPass = anyPass_ as unknown as <T, U extends T[]>(predicates: {
   [K in keyof U]: (x: T) => x is U[K];
 }) => (input: T) => input is U[number];
 
-const isPlaceholder = (v: unknown) => v === PLACEHOLDER;
+const isPlaceholder = (v: unknown): v is typeof PLACEHOLDER =>
+  v === PLACEHOLDER;
 
 const addMapping =
   (k: string, v: IR.IntermediateResult) => (ir: IR.NodeObject) =>
@@ -66,58 +68,82 @@ const nullContext = (
   // public API.
   jsonld.processContext(null as unknown as jsonld.ActiveContext, null, options);
 
-const predicateForKey = (k: string, ctx: jsonld.ActiveContext) =>
-  df.namedNode(Context.expandIri(ctx, k, { vocab: true }));
+const isAbsoluteIri = (x: string): boolean => x.includes(":");
+
+/**
+ * Returns a `NamedNode` predicate for the given key, expanded under the given
+ * context, or `null` if the key does not expand to an absolute IRI.
+ * @param key The key to expand.
+ * @param ctx The context under which to expand the key.
+ */
+const predicateForKey = (key: string, ctx: jsonld.ActiveContext) => {
+  const expanded = Context.expandIri(ctx, key, { vocab: true });
+  return isAbsoluteIri(expanded) ? df.namedNode(expanded) : null;
+};
 
 export const parse = async (
   query: jsonld.NodeObject | readonly jsonld.NodeObject[]
 ) => {
-  const { intermediateResult, patterns, projections } = await (isArray(query)
-    ? parsePlural(query, df.variable("root"), await nullContext())
-    : parseNodeObject(query, df.variable("root"), await nullContext()));
+  const { intermediateResult, patterns, projections, warnings } =
+    await (isArray(query)
+      ? parsePlural(query, df.variable("root"), await nullContext())
+      : parseNodeObject(query, df.variable("root"), await nullContext()));
 
   return {
     intermediateResult,
     sparql: af.createProject(af.createBgp(patterns), projections),
+    warnings,
   };
 };
+
+interface ParseWarning {
+  message: string;
+  path: Array<string | number>;
+}
+
+interface Parsed<IRType extends IR.IntermediateResult> {
+  intermediateResult: IRType;
+  patterns: Algebra.Pattern[];
+  projections: RDF.Variable[];
+  warnings: ParseWarning[];
+}
+
+const nestWarningsUnderKey = (
+  key: ParseWarning["path"][number]
+): ((
+  iterable: ParseWarning[]
+) => Array<{ message: string; path: Array<typeof key> }>) =>
+  map(
+    evolve({
+      path: prepend(key)<typeof key>,
+    })
+  );
 
 const parsePlural = async (
   query: readonly jsonld.NodeObject[],
   parent: RDF.Variable,
   outerCtx: Context.ActiveContext
-): Promise<{
-  intermediateResult: IR.Plural;
-  patterns: Algebra.Pattern[];
-  projections: RDF.Variable[];
-}> => {
+): Promise<Parsed<IR.Plural>> => {
   const soleSubquery = query[0];
   if (!(soleSubquery && query.length === 1)) {
     throw "TODO: Only exactly one subquery is supported in an array, so far.";
   }
 
-  const { intermediateResult, patterns, projections } = await parseNodeObject(
-    soleSubquery,
-    parent,
-    outerCtx
+  return evolve(
+    {
+      intermediateResult: (ir) => new IR.Plural(parent, ir),
+      projections: prepend(parent)<RDF.Variable>,
+      warnings: nestWarningsUnderKey(0),
+    },
+    await parseNodeObject(soleSubquery, parent, outerCtx)
   );
-
-  return {
-    intermediateResult: new IR.Plural(parent, intermediateResult),
-    patterns,
-    projections: [parent, ...projections],
-  };
 };
 
 const parseNodeObject = async (
   query: jsonld.NodeObject,
   parent: RDF.Variable,
   outerCtx: Context.ActiveContext
-): Promise<{
-  intermediateResult: IR.NodeObject;
-  patterns: Algebra.Pattern[];
-  projections: RDF.Variable[];
-}> => {
+): Promise<Parsed<IR.NodeObject>> => {
   const ctx = query["@context"]
     ? await jsonld.processContext(outerCtx, query["@context"])
     : outerCtx;
@@ -130,50 +156,69 @@ const parseNodeObject = async (
   // TODO:
   const isName = (k: string) => k === "@id";
 
-  const init = {
+  const init: Parsed<IR.NodeObject> = {
     intermediateResult: new IR.NodeObject(Map(), query["@context"]),
-    patterns: [] as Algebra.Pattern[],
-    projections: [] as RDF.Variable[],
+    patterns: [],
+    projections: [],
+    warnings: [],
   };
 
-  const operationForEntry = async ([k, v]: [k: string, v: unknown]) => {
-    if (isName(k)) {
-      if (!isString(v)) throw "TODO: Name must be a string";
-      return evolve<Evolver<typeof init>>({
-        intermediateResult: addMapping(k, new IR.Name(df.namedNode(v))),
-      });
-    } else if (isPlaceholder(v)) {
-      const variable = variableUnder(parent, k);
-      const predicate = predicateForKey(k, ctx);
+  const operationForEntry = async ([key, value]: [
+    key: string,
+    value: unknown
+  ]) => {
+    if (isName(key)) {
+      if (!isString(value)) throw "TODO: Name must be a string";
       return evolve({
-        intermediateResult: addMapping(k, new IR.NativePlaceholder(variable)),
+        intermediateResult: addMapping(key, new IR.Name(df.namedNode(value))),
+      });
+    }
+
+    const predicate = predicateForKey(key, ctx);
+
+    if (!predicate) {
+      // Key is not defined in the context.
+      return evolve({
+        intermediateResult: addMapping(key, new IR.NativeValue(value)),
+        warnings: append<ParseWarning>({
+          message: "Placeholder ignored at key not defined by context",
+          path: [key],
+        }),
+      });
+    }
+
+    if (isPlaceholder(value)) {
+      const variable = variableUnder(parent, key);
+
+      return evolve({
+        intermediateResult: addMapping(key, new IR.NativePlaceholder(variable)),
         patterns: append(af.createPattern(node, predicate, variable)),
         projections: append(variable),
       });
-    } else if (isLiteral(v)) {
-      const predicate = predicateForKey(k, ctx);
+    } else if (isLiteral(value)) {
       return evolve({
-        intermediateResult: addMapping(k, new IR.NativeValue(v)),
-        patterns: append(af.createPattern(node, predicate, toRdfLiteral(v))),
+        intermediateResult: addMapping(key, new IR.NativeValue(value)),
+        patterns: append(
+          af.createPattern(node, predicate, toRdfLiteral(value))
+        ),
       });
-    } else if (isArray(v)) {
-      const variable = variableUnder(parent, k);
-      const predicate = predicateForKey(k, ctx);
-      const parsedChild = await parsePlural(v, variable, ctx);
-      return evolve({
-        intermediateResult: addMapping(k, parsedChild.intermediateResult),
+    } else if (isArray(value)) {
+      const variable = variableUnder(parent, key);
+      const parsedChild = await parsePlural(value, variable, ctx);
+      return evolve<Evolver<Parsed<IR.NodeObject>>>({
+        intermediateResult: addMapping(key, parsedChild.intermediateResult),
         patterns: pipe(
           append(af.createPattern(node, predicate, variable)),
           concat(parsedChild.patterns)
         ),
         projections: concat(parsedChild.projections),
+        warnings: concat(nestWarningsUnderKey(key)(parsedChild.warnings)),
       });
-    } else if (isObject(v)) {
-      const variable = variableUnder(parent, k);
-      const predicate = predicateForKey(k, ctx);
-      const parsedChild = await parseNodeObject(v, variable, ctx);
+    } else if (isObject(value)) {
+      const variable = variableUnder(parent, key);
+      const parsedChild = await parseNodeObject(value, variable, ctx);
       return evolve({
-        intermediateResult: addMapping(k, parsedChild.intermediateResult),
+        intermediateResult: addMapping(key, parsedChild.intermediateResult),
         patterns: pipe(
           append(af.createPattern(node, predicate, variable)),
           concat(parsedChild.patterns)
