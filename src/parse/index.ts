@@ -19,6 +19,8 @@ import {
   anyPass as anyPass_,
   concat,
   map,
+  filter,
+  piped,
 } from "rambdax";
 
 import * as IR from "../IntermediateResult";
@@ -26,6 +28,7 @@ import { PLACEHOLDER, af, df } from "../common";
 import { pipedAsync } from "../pipedAsync";
 import { toRdfLiteral } from "../representation";
 import { type Evolver, evolve } from "../upstream/rambda/evolve";
+import { keys } from "../upstream/rambda/keys";
 import { prepend } from "../upstream/rambda/prepend";
 import { variableUnder } from "../variableUnder";
 
@@ -148,13 +151,15 @@ const parseNodeObject = async (
     ? await jsonld.processContext(outerCtx, query["@context"])
     : outerCtx;
 
-  // TODO:
-  const id = query["@id"];
+  const isId = (k: string) =>
+    Context.expandIri(ctx, k, { vocab: true }) === "@id";
+
+  const [idKey, ...extraIdKeys] = piped(keys(query), filter(isId));
+  if (extraIdKeys.length)
+    throw "TODO: Invalid JSON-LD syntax; colliding keywords detected.";
+  const id = idKey && query[idKey];
   if (!isUndefined(id) && !isString(id)) throw "TODO: Name must be a string";
   const node = id ? df.namedNode(id) : parent;
-
-  // TODO:
-  const isName = (k: string) => k === "@id";
 
   const init: Parsed<IR.NodeObject> = {
     intermediateResult: new IR.NodeObject(Map(), query["@context"]),
@@ -167,7 +172,7 @@ const parseNodeObject = async (
     key: string,
     value: unknown
   ]) => {
-    if (isName(key)) {
+    if (isId(key)) {
       if (!isString(value)) throw "TODO: Name must be a string";
       return evolve({
         intermediateResult: addMapping(key, new IR.Name(df.namedNode(value))),

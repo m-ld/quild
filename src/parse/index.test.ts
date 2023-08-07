@@ -195,6 +195,41 @@ describe(parse, () => {
     `);
   });
 
+  it("understands aliases for @id", async () => {
+    const query = {
+      "@context": { id: "@id" },
+      id: "https://swapi.dev/api/people/1/",
+      "http://swapi.dev/documentation#hair_color": "?",
+      "http://swapi.dev/documentation#eye_color": "?",
+    } as const;
+
+    const { intermediateResult, sparql } = await parse(query);
+
+    expect(intermediateResult).toStrictEqual(
+      new IR.NodeObject(
+        Map({
+          id: new IR.Name(df.namedNode("https://swapi.dev/api/people/1/")),
+          "http://swapi.dev/documentation#hair_color": new IR.NativePlaceholder(
+            df.variable("root·hair_color")
+          ),
+          "http://swapi.dev/documentation#eye_color": new IR.NativePlaceholder(
+            df.variable("root·eye_color")
+          ),
+        }),
+        { id: "@id" }
+      )
+    );
+
+    expect(sparql).toBeSparqlEqualTo(/* sparql */ `
+      PREFIX swapi: <http://swapi.dev/documentation#>
+      SELECT ?root·hair_color ?root·eye_color WHERE {
+        <https://swapi.dev/api/people/1/>
+          swapi:hair_color ?root·hair_color;
+          swapi:eye_color ?root·eye_color.
+      }
+    `);
+  });
+
   it("ignores and warns about unmapped keys", async () => {
     const query = [
       {
