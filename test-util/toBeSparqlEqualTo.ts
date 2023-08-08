@@ -1,10 +1,16 @@
 import { expect } from "@jest/globals";
 import matchers from "expect/build/matchers";
+import { uniqWith } from "rambdax";
 import { Algebra, toSparql } from "sparqlalgebrajs";
 import sparqljs from "sparqljs";
 
-import type { MatcherFunction, MatcherUtils } from "expect";
-import type { SparqlQuery } from "sparqljs";
+import type {
+  MatcherFunction,
+  MatcherUtils,
+  Tester,
+  TesterContext,
+} from "expect";
+import type { BgpPattern, SelectQuery, SparqlQuery } from "sparqljs";
 import type { ReadonlyDeep } from "type-fest";
 
 /* eslint-disable-next-line import/no-named-as-default-member
@@ -135,10 +141,63 @@ const toBeSparqlEqualTo: MatcherFunction<[expectedSparql: unknown]> = function (
     prefixes,
   });
 
-  this.equals(expectedSparqlJs, actualSparqlJs);
+  const isBGP = (x: unknown): x is BgpPattern =>
+    !!x &&
+    typeof x === "object" &&
+    "type" in x &&
+    x.type === "bgp" &&
+    "triples" in x &&
+    x.triples instanceof Array;
+
+  function areBGPsEqual(
+    this: TesterContext,
+    a: unknown,
+    b: unknown,
+    customTesters: Tester[]
+  ) {
+    if (isBGP(a) && isBGP(b)) {
+      return orderIndependentEquals(
+        (x, y) => this.equals(x, y, customTesters),
+        a.triples,
+        b.triples
+      );
+    }
+  }
+
+  const isSelectQuery = (x: unknown): x is SelectQuery =>
+    !!x &&
+    typeof x === "object" &&
+    "queryType" in x &&
+    x.queryType === "SELECT" &&
+    "variables" in x &&
+    x.variables instanceof Array;
+
+  function areSelectQueriesEqual(
+    this: TesterContext,
+    a: unknown,
+    b: unknown,
+    customTesters: Tester[]
+  ) {
+    if (isSelectQuery(a) && isSelectQuery(b)) {
+      const { variables: aVariables, ...aRest } = a;
+      const { variables: bVariables, ...bRest } = b;
+      return (
+        this.equals(aRest, bRest, customTesters) &&
+        orderIndependentEquals(
+          (x, y) => this.equals(x, y, customTesters),
+          aVariables,
+          bVariables
+        )
+      );
+    }
+  }
+
   return {
     ...toBe.call(this, actualString, expectedString),
-    pass: this.equals(expectedSparqlJs, actualSparqlJs),
+    pass: this.equals(expectedSparqlJs, actualSparqlJs, [
+      areBGPsEqual,
+      areSelectQueriesEqual,
+    ]),
   };
 };
 /* eslint-enable @typescript-eslint/no-invalid-this -- ^^^ */
@@ -158,3 +217,19 @@ declare module "expect" {
     ): R;
   }
 }
+
+/**
+ * Returns whether the two given arrays contain the same values, as defined by
+ * the given predicate.
+ * @param aValues One array of values to compare
+ * @param bValues The other array of values to compare
+ * @param predicate Returns true iff the given elements should be considered
+ * equal for the comparison.
+ */
+const orderIndependentEquals = (
+  predicate: (x: unknown, y: unknown) => boolean,
+  aValues: unknown[],
+  bValues: unknown[]
+) =>
+  aValues.length === bValues.length &&
+  aValues.length === uniqWith(predicate, [...aValues, ...bValues]).length;

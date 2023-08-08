@@ -113,7 +113,7 @@ Received: "SELECT ?s ?p ?o WHERE { ?s ?p ?o. }""
     const query1 = /* sparql */ `
       SELECT ?s ?p ?o
       WHERE {
-        ?s ?p ?o .
+        ?something ?pretty ?off .
       }
     `;
 
@@ -121,14 +121,14 @@ Received: "SELECT ?s ?p ?o WHERE { ?s ?p ?o. }""
       af.createBgp([
         af.createPattern(df.variable("s"), df.variable("p"), df.variable("o")),
       ]),
-      [df.variable("o"), df.variable("p"), df.variable("s")]
+      [df.variable("s"), df.variable("p"), df.variable("o")]
     );
 
     expect(run(query1, query2)).toMatchInlineSnapshot(`
 "expect(received).toBe(expected) // Object.is equality
 
-Expected: "SELECT ?o ?p ?s WHERE { ?s ?p ?o. }"
-Received: "SELECT ?s ?p ?o WHERE { ?s ?p ?o. }""
+Expected: "SELECT ?s ?p ?o WHERE { ?s ?p ?o. }"
+Received: "SELECT ?s ?p ?o WHERE { ?something ?pretty ?off. }""
 `);
   });
 
@@ -166,7 +166,7 @@ Received: "SELECT ?s ?p ?o WHERE { ?s ?p ?o. }""
     const query1 = /* sparql */ `
       SELECT ?s ?p ?o
       WHERE {
-        ?s ?p ?o .
+        ?something ?pretty ?off .
       }
     `;
 
@@ -186,14 +186,14 @@ Received: "SELECT ?s ?p ?o WHERE { ?s ?p ?o. }""
           ],
         },
       ],
-      variables: [df.variable("o"), df.variable("p"), df.variable("s")],
+      variables: [df.variable("s"), df.variable("p"), df.variable("o")],
     } as const;
 
     expect(run(query1, query2)).toMatchInlineSnapshot(`
 "expect(received).toBe(expected) // Object.is equality
 
-Expected: "SELECT ?o ?p ?s WHERE { ?s ?p ?o. }"
-Received: "SELECT ?s ?p ?o WHERE { ?s ?p ?o. }""
+Expected: "SELECT ?s ?p ?o WHERE { ?s ?p ?o. }"
+Received: "SELECT ?s ?p ?o WHERE { ?something ?pretty ?off. }""
 `);
   });
 
@@ -251,14 +251,58 @@ Received: "SELECT ?s ?p ?o WHERE { ?s ?p ?o. }""
           ],
         },
       ],
-      variables: [df.variable("o"), df.variable("p"), df.variable("s")],
+      variables: [df.variable("s")],
     } as const;
 
     expect(run(query1, query2)).toMatchInlineSnapshot(`
 "expect(received).toBe(expected) // Object.is equality
 
-Expected: "SELECT ?o ?p ?s WHERE { ?s ?p ?o. }"
+Expected: "SELECT ?s WHERE { ?s ?p ?o. }"
 Received: "SELECT ?s ?p ?o WHERE { ?s ?p ?o. }""
 `);
+  });
+
+  it("matches BGPs in any order", () => {
+    const query1 = /* sparql */ `
+      BASE <http://example.com/>
+      SELECT ?name ?homepage
+      WHERE {
+         <alice> <http://xmlns.com/foaf/0.1/name> ?name .
+         <alice> <http://xmlns.com/foaf/0.1/homepage> ?homepage .
+      }
+    `;
+
+    const query2 = /* sparql */ `
+      BASE <http://example.com/>
+      SELECT ?name ?homepage
+      WHERE {
+         <alice> <http://xmlns.com/foaf/0.1/homepage> ?homepage .
+         <alice> <http://xmlns.com/foaf/0.1/name> ?name .
+      }
+    `;
+
+    expect(run(query1, query2)).toMatchInlineSnapshot(`"<Pass>"`);
+  });
+
+  it("matches projections in any order", () => {
+    const query1 = /* sparql */ `
+      BASE <http://example.com/>
+      SELECT ?name ?homepage
+      WHERE {
+         <alice> <http://xmlns.com/foaf/0.1/name> ?name .
+         <alice> <http://xmlns.com/foaf/0.1/homepage> ?homepage .
+      }
+    `;
+
+    const query2 = /* sparql */ `
+      BASE <http://example.com/>
+      SELECT ?homepage ?name
+      WHERE {
+         <alice> <http://xmlns.com/foaf/0.1/name> ?name .
+         <alice> <http://xmlns.com/foaf/0.1/homepage> ?homepage .
+      }
+    `;
+
+    expect(run(query1, query2)).toMatchInlineSnapshot(`"<Pass>"`);
   });
 });
