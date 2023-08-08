@@ -175,7 +175,7 @@ const parseNodeObject = async (
       intermediateResult: addMapping(key, intermediateResult),
       patterns: concat(patterns),
       projections: concat(projections),
-      warnings: concat(warnings),
+      warnings: concat(nestWarningsUnderKey(key)(warnings)),
     });
   };
 
@@ -205,7 +205,7 @@ const parseNodeObject = async (
         warnings: [
           {
             message: "Placeholder ignored at key not defined by context",
-            path: [key],
+            path: [],
           },
         ],
       };
@@ -242,7 +242,7 @@ const parseNodeObject = async (
           ...parsedChild.patterns,
         ],
         projections: parsedChild.projections,
-        warnings: nestWarningsUnderKey(key)(parsedChild.warnings),
+        warnings: parsedChild.warnings,
       };
     } else if (isObject(value)) {
       const variable = variableUnder(parent, key);
