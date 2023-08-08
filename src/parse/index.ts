@@ -10,7 +10,6 @@ import {
   isUndefined,
 } from "lodash-es";
 import {
-  dissoc,
   mapParallelAsync,
   reduce,
   toPairs,
@@ -158,7 +157,7 @@ const parseNodeObject = async (
   const node = id ? df.namedNode(id) : parent;
 
   const init: Parsed<IR.NodeObject> = {
-    intermediateResult: new IR.NodeObject(Map(), query["@context"]),
+    intermediateResult: new IR.NodeObject(Map()),
     patterns: [],
     projections: [],
     warnings: [],
@@ -183,6 +182,16 @@ const parseNodeObject = async (
     key: string,
     value: unknown
   ]): Promise<Parsed<IR.IntermediateResult>> => {
+    if (key === "@context") {
+      return {
+        // TODO: Remove type assertion
+        intermediateResult: new IR.NativeValue(value as JsonValue),
+        patterns: [],
+        projections: [],
+        warnings: [],
+      };
+    }
+
     if (isId(key)) {
       if (!isString(value)) throw "TODO: Name must be a string";
       return {
@@ -268,7 +277,6 @@ const parseNodeObject = async (
 
   return pipedAsync(
     query,
-    dissoc("@context"),
     toPairs,
     mapParallelAsync(operationForEntry),
     reduce((acc, f) => f(acc), init)

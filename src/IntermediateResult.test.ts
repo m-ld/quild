@@ -110,33 +110,6 @@ describe(NodeObject, () => {
       height: 172,
     });
   });
-
-  it("includes any context in its result", () => {
-    const ir = new NodeObject(
-      Map({
-        name: new NativePlaceholder(name),
-        height: new NativePlaceholder(height),
-      }),
-      {
-        name: "http://swapi.dev/documentation#name",
-        height: "http://swapi.dev/documentation#height",
-      }
-    ).addSolution(
-      bf.bindings([
-        [name, df.literal("Luke Skywalker")],
-        [height, df.literal("172", integer)],
-      ])
-    );
-
-    expect(ir.result()).toStrictEqual({
-      "@context": {
-        name: "http://swapi.dev/documentation#name",
-        height: "http://swapi.dev/documentation#height",
-      },
-      name: "Luke Skywalker",
-      height: 172,
-    });
-  });
 });
 
 describe(Plural, () => {

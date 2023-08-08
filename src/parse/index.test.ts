@@ -90,6 +90,9 @@ describe(parse, () => {
     expect(intermediateResult).toStrictEqual(
       new IR.NodeObject(
         Map({
+          "@context": new IR.NativeValue({
+            "@vocab": "http://swapi.dev/documentation#",
+          }),
           name: new IR.NativeValue("Luke Skywalker"),
           homeworld: new IR.NodeObject(
             Map({
@@ -98,8 +101,7 @@ describe(parse, () => {
               ),
             })
           ),
-        }),
-        { "@vocab": "http://swapi.dev/documentation#" }
+        })
       )
     );
 
@@ -130,11 +132,13 @@ describe(parse, () => {
         df.variable("root"),
         new IR.NodeObject(
           Map({
+            "@context": new IR.NativeValue({
+              "@vocab": "http://swapi.dev/documentation#",
+            }),
             eye_color: new IR.NativeValue("blue"),
             name: new IR.NativePlaceholder(df.variable("root·name")),
             height: new IR.NativePlaceholder(df.variable("root·height")),
-          }),
-          { "@vocab": "http://swapi.dev/documentation#" }
+          })
         )
       )
     );
@@ -166,6 +170,9 @@ describe(parse, () => {
         df.variable("root"),
         new IR.NodeObject(
           Map({
+            "@context": new IR.NativeValue({
+              "@vocab": "http://swapi.dev/documentation#",
+            }),
             eye_color: new IR.NativeValue("blue"),
             name: new IR.NativePlaceholder(df.variable("root·name")),
             films: new IR.Plural(
@@ -178,8 +185,7 @@ describe(parse, () => {
                 })
               )
             ),
-          }),
-          { "@vocab": "http://swapi.dev/documentation#" }
+          })
         )
       )
     );
@@ -208,6 +214,7 @@ describe(parse, () => {
     expect(intermediateResult).toStrictEqual(
       new IR.NodeObject(
         Map({
+          "@context": new IR.NativeValue({ id: "@id" }),
           id: new IR.Name(df.namedNode("https://swapi.dev/api/people/1/")),
           "http://swapi.dev/documentation#hair_color": new IR.NativePlaceholder(
             df.variable("root·hair_color")
@@ -215,8 +222,7 @@ describe(parse, () => {
           "http://swapi.dev/documentation#eye_color": new IR.NativePlaceholder(
             df.variable("root·eye_color")
           ),
-        }),
-        { id: "@id" }
+        })
       )
     );
 
@@ -252,6 +258,10 @@ describe(parse, () => {
         df.variable("root"),
         new IR.NodeObject(
           Map({
+            "@context": new IR.NativeValue({
+              name: "http://swapi.dev/documentation#name",
+              films: "http://swapi.dev/documentation#films",
+            }),
             eye_color: new IR.NativeValue("blue"),
             name: new IR.NativePlaceholder(df.variable("root·name")),
             homeworld: new IR.NativeValue({ name: "?" }),
@@ -260,11 +270,7 @@ describe(parse, () => {
               new IR.NodeObject(Map({ title: new IR.NativeValue("?") }))
             ),
             vehicles: new IR.NativeValue([{ name: "?" }]),
-          }),
-          {
-            name: "http://swapi.dev/documentation#name",
-            films: "http://swapi.dev/documentation#films",
-          }
+          })
         )
       )
     );

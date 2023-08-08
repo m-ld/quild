@@ -3,7 +3,6 @@ import { Map } from "immutable";
 import { toJSONNative } from "./representation";
 
 import type * as RDF from "@rdfjs/types";
-import type * as jsonld from "jsonld";
 import type { JsonValue } from "type-fest";
 
 export class ResultError extends Error {}
@@ -110,28 +109,18 @@ export class Plural implements IntermediateResult {
 }
 
 export class NodeObject implements IntermediateResult {
-  constructor(
-    private readonly results: Map<string, IntermediateResult>,
-    private readonly context?: jsonld.ContextSpec
-  ) {}
+  constructor(private readonly results: Map<string, IntermediateResult>) {}
 
   // TODO: Test
   addMapping(k: string, v: IntermediateResult) {
-    return new NodeObject(this.results.set(k, v), this.context);
+    return new NodeObject(this.results.set(k, v));
   }
 
   addSolution(solution: RDF.Bindings): IntermediateResult {
-    return new NodeObject(
-      this.results.map((ir) => ir.addSolution(solution)),
-      this.context
-    );
+    return new NodeObject(this.results.map((ir) => ir.addSolution(solution)));
   }
 
   result(): JsonValue {
-    const propertyResults = this.results.map((r) => r.result()).toObject();
-    if (this.context) {
-      return { "@context": this.context, ...propertyResults };
-    }
-    return propertyResults;
+    return this.results.map((r) => r.result()).toObject();
   }
 }
