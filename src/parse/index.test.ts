@@ -272,19 +272,19 @@ describe(parse, () => {
     expect(sparql).toBeSparqlEqualTo(/* sparql */ `
       PREFIX swapi: <http://swapi.dev/documentation#>
       SELECT ?root ?root·films ?root·name WHERE {
-        ?root swapi:name ?root·name;
-              swapi:films ?root·films.
+        ?root swapi:films ?root·films;
+              swapi:name ?root·name.
       }
     `);
 
     expect(warnings).toStrictEqual([
       {
         message: "Placeholder ignored at key not defined by context",
-        path: [0, "films", 0, "title"],
+        path: [0, "vehicles"],
       },
       {
         message: "Placeholder ignored at key not defined by context",
-        path: [0, "eye_color"],
+        path: [0, "films", 0, "title"],
       },
       {
         message: "Placeholder ignored at key not defined by context",
@@ -292,7 +292,7 @@ describe(parse, () => {
       },
       {
         message: "Placeholder ignored at key not defined by context",
-        path: [0, "vehicles"],
+        path: [0, "eye_color"],
       },
     ]);
   });

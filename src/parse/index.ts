@@ -10,9 +10,7 @@ import {
   isUndefined,
 } from "lodash-es";
 import {
-  append as append_,
   dissoc,
-  pipe,
   mapParallelAsync,
   reduce,
   toPairs,
@@ -27,7 +25,7 @@ import * as IR from "../IntermediateResult";
 import { PLACEHOLDER, af, df } from "../common";
 import { pipedAsync } from "../pipedAsync";
 import { toRdfLiteral } from "../representation";
-import { type Evolver, evolve } from "../upstream/rambda/evolve";
+import { evolve } from "../upstream/rambda/evolve";
 import { keys } from "../upstream/rambda/keys";
 import { prepend } from "../upstream/rambda/prepend";
 import { variableUnder } from "../variableUnder";
@@ -35,9 +33,6 @@ import { variableUnder } from "../variableUnder";
 import type * as RDF from "@rdfjs/types";
 import type { Algebra } from "sparqlalgebrajs";
 import type { JsonValue } from "type-fest";
-
-// Patching: https://github.com/selfrefactor/rambda/pull/694
-const append = append_ as <T>(x: T) => (list: T[]) => T[];
 
 // https://github.com/selfrefactor/rambda/pull/695
 const anyPass = anyPass_ as unknown as <T, U extends T[]>(predicates: {
@@ -172,46 +167,66 @@ const parseNodeObject = async (
   const operationForEntry = async ([key, value]: [
     key: string,
     value: unknown
-  ]) => {
+  ]): Promise<(p: Parsed<IR.NodeObject>) => Parsed<IR.NodeObject>> => {
+    const { intermediateResult, patterns, projections, warnings } =
+      await parseEntry([key, value]);
+
+    return evolve({
+      intermediateResult: addMapping(key, intermediateResult),
+      patterns: concat(patterns),
+      projections: concat(projections),
+      warnings: concat(warnings),
+    });
+  };
+
+  const parseEntry = async ([key, value]: [
+    key: string,
+    value: unknown
+  ]): Promise<Parsed<IR.IntermediateResult>> => {
     if (isId(key)) {
       if (!isString(value)) throw "TODO: Name must be a string";
-      return evolve({
-        intermediateResult: addMapping(key, new IR.Name(df.namedNode(value))),
-      });
+      return {
+        intermediateResult: new IR.Name(df.namedNode(value)),
+        patterns: [],
+        projections: [],
+        warnings: [],
+      };
     }
 
     const predicate = predicateForKey(key, ctx);
 
     if (!predicate) {
       // Key is not defined in the context.
-      return evolve({
+      return {
         // TODO: Remove type assertion
-        intermediateResult: addMapping(
-          key,
-          new IR.NativeValue(value as JsonValue)
-        ),
-        warnings: append<ParseWarning>({
-          message: "Placeholder ignored at key not defined by context",
-          path: [key],
-        }),
-      });
+        intermediateResult: new IR.NativeValue(value as JsonValue),
+        patterns: [],
+        projections: [],
+        warnings: [
+          {
+            message: "Placeholder ignored at key not defined by context",
+            path: [key],
+          },
+        ],
+      };
     }
 
     if (isPlaceholder(value)) {
       const variable = variableUnder(parent, key);
 
-      return evolve({
-        intermediateResult: addMapping(key, new IR.NativePlaceholder(variable)),
-        patterns: append(af.createPattern(node, predicate, variable)),
-        projections: append(variable),
-      });
+      return {
+        intermediateResult: new IR.NativePlaceholder(variable),
+        patterns: [af.createPattern(node, predicate, variable)],
+        projections: [variable],
+        warnings: [],
+      };
     } else if (isLiteral(value)) {
-      return evolve({
-        intermediateResult: addMapping(key, new IR.NativeValue(value)),
-        patterns: append(
-          af.createPattern(node, predicate, toRdfLiteral(value))
-        ),
-      });
+      return {
+        intermediateResult: new IR.NativeValue(value),
+        patterns: [af.createPattern(node, predicate, toRdfLiteral(value))],
+        projections: [],
+        warnings: [],
+      };
     } else if (isArray(value)) {
       const variable = variableUnder(parent, key);
       // TODO: Remove type assertion
@@ -220,15 +235,15 @@ const parseNodeObject = async (
         variable,
         ctx
       );
-      return evolve<Evolver<Parsed<IR.NodeObject>>>({
-        intermediateResult: addMapping(key, parsedChild.intermediateResult),
-        patterns: pipe(
-          append(af.createPattern(node, predicate, variable)),
-          concat(parsedChild.patterns)
-        ),
-        projections: concat(parsedChild.projections),
-        warnings: concat(nestWarningsUnderKey(key)(parsedChild.warnings)),
-      });
+      return {
+        intermediateResult: parsedChild.intermediateResult,
+        patterns: [
+          af.createPattern(node, predicate, variable),
+          ...parsedChild.patterns,
+        ],
+        projections: parsedChild.projections,
+        warnings: nestWarningsUnderKey(key)(parsedChild.warnings),
+      };
     } else if (isObject(value)) {
       const variable = variableUnder(parent, key);
       // TODO: Remove type assertion
@@ -237,14 +252,15 @@ const parseNodeObject = async (
         variable,
         ctx
       );
-      return evolve({
-        intermediateResult: addMapping(key, parsedChild.intermediateResult),
-        patterns: pipe(
-          append(af.createPattern(node, predicate, variable)),
-          concat(parsedChild.patterns)
-        ),
-        projections: concat(parsedChild.projections),
-      });
+      return {
+        intermediateResult: parsedChild.intermediateResult,
+        patterns: [
+          af.createPattern(node, predicate, variable),
+          ...parsedChild.patterns,
+        ],
+        projections: parsedChild.projections,
+        warnings: [],
+      };
     } else {
       throw "TODO: Not yet covered";
     }
