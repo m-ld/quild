@@ -13,7 +13,6 @@ import {
   mapParallelAsync,
   reduce,
   toPairs,
-  anyPass as anyPass_,
   concat,
   map,
   filter,
@@ -22,21 +21,13 @@ import {
 
 import * as IR from "../IntermediateResult";
 import { PLACEHOLDER, af, df } from "../common";
-import { pipedAsync } from "../pipedAsync";
 import { toRdfLiteral } from "../representation";
-import { evolve } from "../upstream/rambda/evolve";
-import { keys } from "../upstream/rambda/keys";
-import { prepend } from "../upstream/rambda/prepend";
+import { anyPass, evolve, keys, pipedAsync, prepend } from "../upstream/rambda";
 import { variableUnder } from "../variableUnder";
 
 import type * as RDF from "@rdfjs/types";
 import type { Algebra } from "sparqlalgebrajs";
 import type { JsonValue } from "type-fest";
-
-// https://github.com/selfrefactor/rambda/pull/695
-const anyPass = anyPass_ as unknown as <T, U extends T[]>(predicates: {
-  [K in keyof U]: (x: T) => x is U[K];
-}) => (input: T) => input is U[number];
 
 const isPlaceholder = (v: unknown): v is typeof PLACEHOLDER =>
   v === PLACEHOLDER;
