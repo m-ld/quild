@@ -34,6 +34,7 @@ import { variableUnder } from "../variableUnder";
 
 import type * as RDF from "@rdfjs/types";
 import type { Algebra } from "sparqlalgebrajs";
+import type { JsonValue } from "type-fest";
 
 // Patching: https://github.com/selfrefactor/rambda/pull/694
 const append = append_ as <T>(x: T) => (list: T[]) => T[];
@@ -184,7 +185,11 @@ const parseNodeObject = async (
     if (!predicate) {
       // Key is not defined in the context.
       return evolve({
-        intermediateResult: addMapping(key, new IR.NativeValue(value)),
+        // TODO: Remove type assertion
+        intermediateResult: addMapping(
+          key,
+          new IR.NativeValue(value as JsonValue)
+        ),
         warnings: append<ParseWarning>({
           message: "Placeholder ignored at key not defined by context",
           path: [key],
@@ -209,7 +214,12 @@ const parseNodeObject = async (
       });
     } else if (isArray(value)) {
       const variable = variableUnder(parent, key);
-      const parsedChild = await parsePlural(value, variable, ctx);
+      // TODO: Remove type assertion
+      const parsedChild = await parsePlural(
+        value as jsonld.NodeObject[],
+        variable,
+        ctx
+      );
       return evolve<Evolver<Parsed<IR.NodeObject>>>({
         intermediateResult: addMapping(key, parsedChild.intermediateResult),
         patterns: pipe(
@@ -221,7 +231,12 @@ const parseNodeObject = async (
       });
     } else if (isObject(value)) {
       const variable = variableUnder(parent, key);
-      const parsedChild = await parseNodeObject(value, variable, ctx);
+      // TODO: Remove type assertion
+      const parsedChild = await parseNodeObject(
+        value as jsonld.NodeObject,
+        variable,
+        ctx
+      );
       return evolve({
         intermediateResult: addMapping(key, parsedChild.intermediateResult),
         patterns: pipe(
