@@ -3,8 +3,7 @@ import jsonld from "jsonld";
 import { isArray } from "lodash-es";
 
 import { type Parsed, isPlainObject } from "./common";
-import { parseNodeObject } from "./parseNodeObject";
-import { parsePlural } from "./parsePlural";
+import { parseNode } from "./parseNode";
 import { af, df } from "../common";
 
 /**
@@ -26,14 +25,8 @@ export const parse = async (
 ) => {
   let parsed: Parsed;
 
-  if (isArray(query)) {
-    parsed = await parsePlural({
-      query,
-      variable: df.variable("root"),
-      ctx: await nullContext(),
-    });
-  } else if (isPlainObject(query)) {
-    parsed = await parseNodeObject({
+  if (isArray(query) || isPlainObject(query)) {
+    parsed = await parseNode({
       query,
       variable: df.variable("root"),
       ctx: await nullContext(),

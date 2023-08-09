@@ -9,11 +9,10 @@ import { mapParallelAsync, reduce, toPairs, concat, filter } from "rambdax";
 import {
   isPlainObject,
   nestWarningsUnderKey,
-  queryMatches,
   type Parsed,
   type QueryInfo,
 } from "./common";
-import { parsePlural } from "./parsePlural";
+import { parseNode } from "./parseNode";
 import * as IR from "../IntermediateResult";
 import { af, df, PLACEHOLDER } from "../common";
 import { toRdfLiteral } from "../representation";
@@ -174,17 +173,6 @@ const parseUnknownKeyEntry = ({ query }: { query: unknown }): ParsedEntry => ({
     },
   ],
 });
-
-// TODO: This thing will be used more broadly
-const parseNode = async (queryInfo: QueryInfo<unknown>): Promise<Parsed> => {
-  if (queryMatches(isArray, queryInfo)) {
-    return parsePlural(queryInfo);
-  } else if (queryMatches(isPlainObject, queryInfo)) {
-    return parseNodeObject(queryInfo);
-  } else {
-    throw "TODO: Unknown type of query";
-  }
-};
 
 const parsePrimitive = ({
   query,
