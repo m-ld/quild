@@ -113,7 +113,16 @@
         ],
         "no-invalid-this": "off",
         "@typescript-eslint/no-invalid-this": "error",
-        "@typescript-eslint/array-type": ["warn", { "default": "array-simple" }]
+        "@typescript-eslint/array-type": [
+          "warn",
+          { "default": "array-simple" }
+        ],
+        "@typescript-eslint/consistent-type-assertions": [
+          "warn",
+          {
+            "assertionStyle": "never"
+          }
+        ]
       }
     },
 

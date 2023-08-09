@@ -285,19 +285,19 @@ describe(parse, () => {
 
     expect(warnings).toStrictEqual([
       {
-        message: "Placeholder ignored at key not defined by context",
+        message: "Key not defined by context and ignored",
         path: [0, "vehicles"],
       },
       {
-        message: "Placeholder ignored at key not defined by context",
+        message: "Key not defined by context and ignored",
         path: [0, "films", 0, "title"],
       },
       {
-        message: "Placeholder ignored at key not defined by context",
+        message: "Key not defined by context and ignored",
         path: [0, "homeworld"],
       },
       {
-        message: "Placeholder ignored at key not defined by context",
+        message: "Key not defined by context and ignored",
         path: [0, "eye_color"],
       },
     ]);

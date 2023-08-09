@@ -1,6 +1,8 @@
+/* eslint-disable @typescript-eslint/no-throw-literal */
 import jsonld from "jsonld";
+import { isArray } from "lodash-es";
 
-import { isArray } from "./common";
+import { type Parsed, isPlainObject } from "./common";
 import { parseNodeObject } from "./parseNodeObject";
 import { parsePlural } from "./parsePlural";
 import { af, df } from "../common";
@@ -14,15 +16,33 @@ const nullContext = (
   // Relies on `jsonld.processContext()` short-circuiting when the local context
   // is `null`. Otherwise, there's no way to get an initial context using the
   // public API.
+  /* eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+     --
+     Only way to make this work. */
   jsonld.processContext(null as unknown as jsonld.ActiveContext, null, options);
 
 export const parse = async (
   query: jsonld.NodeObject | readonly jsonld.NodeObject[]
 ) => {
-  const { intermediateResult, patterns, projections, warnings } =
-    await (isArray(query)
-      ? parsePlural(query, df.variable("root"), await nullContext())
-      : parseNodeObject(query, df.variable("root"), await nullContext()));
+  let parsed: Parsed;
+
+  if (isArray(query)) {
+    parsed = await parsePlural({
+      query,
+      variable: df.variable("root"),
+      ctx: await nullContext(),
+    });
+  } else if (isPlainObject(query)) {
+    parsed = await parseNodeObject({
+      query,
+      variable: df.variable("root"),
+      ctx: await nullContext(),
+    });
+  } else {
+    throw "TODO: Unknown type of query";
+  }
+
+  const { intermediateResult, patterns, projections, warnings } = parsed;
 
   return {
     intermediateResult,
