@@ -10,7 +10,7 @@ import type Context from "jsonld/lib/context";
 
 export const parsePlural = async (
   query: readonly jsonld.NodeObject[],
-  parent: RDF.Variable,
+  variable: RDF.Variable,
   outerCtx: Context.ActiveContext
 ): Promise<Parsed<IR.Plural>> => {
   const soleSubquery = query[0];
@@ -20,10 +20,10 @@ export const parsePlural = async (
 
   return evolve(
     {
-      intermediateResult: (ir) => new IR.Plural(parent, ir),
-      projections: prepend(parent)<RDF.Variable>,
+      intermediateResult: (ir) => new IR.Plural(variable, ir),
+      projections: prepend(variable)<RDF.Variable>,
       warnings: nestWarningsUnderKey(0),
     },
-    await parseNodeObject(soleSubquery, parent, outerCtx)
+    await parseNodeObject(soleSubquery, variable, outerCtx)
   );
 };
