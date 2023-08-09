@@ -16,22 +16,21 @@ export interface ParseWarning {
 export interface Parsed<
   IRType extends IR.IntermediateResult = IR.IntermediateResult
 > {
+  /** The IR which will accept bindings and produce a result. */
   intermediateResult: IRType;
+  /** Patterns to include in the SPARQL query. */
   patterns: Algebra.Pattern[];
+  /**
+   * Variables to project in the SPARQL query. A subset of the variables used
+   * in the {@link patterns}; specifically, those the {@link intermediateResult}
+   * is interested in.
+   */
   projections: RDF.Variable[];
+  /** Warnings generated during parsing. */
   warnings: ParseWarning[];
+  /** A term representing the root of the parsed query. */
+  term: RDF.Term;
 }
-
-// TK: Delete?
-// /**
-//  * Array.isArray, but typed to properly narrow types which may be readonly
-//  * arrays.
-//  *
-//  * @see https://github.com/microsoft/TypeScript/issues/17002
-//  */
-// export const isArray = Array.isArray as (
-//   arg: unknown
-// ) => arg is readonly unknown[];
 
 /**
  * isPlainObject, but typed to narrow the object to a string record.
