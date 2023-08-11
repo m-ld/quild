@@ -6,6 +6,9 @@
 import originalDataset from "@graphy/memory.dataset.fast";
 
 const d = originalDataset();
+/* eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+   ---
+   Only way to grab the constructor type. */
 const FastDataset = d.constructor as new () => typeof d;
 
 class FixedFastDataset extends FastDataset {
@@ -16,7 +19,7 @@ class FixedFastDataset extends FastDataset {
   }
 }
 
-export const dataset = Object.assign(
+export const dataset: typeof originalDataset = Object.assign(
   () => new FixedFastDataset(),
   originalDataset
 );

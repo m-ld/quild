@@ -1,20 +1,22 @@
 // Because the DefinitelyTyped definitions are way out of date:
 // https://github.com/DefinitelyTyped/DefinitelyTyped/blob/master/types/jsonld/index.d.ts
+
 // TODO: Package and push upstream to "@types/jsonld".
 declare module "jsonld" {
   import type { Quad as RDFQuad } from "@rdfjs/types";
   import type {
     NodeObject,
     ContextDefinition,
+    ContextSpec,
     JsonLdDocument,
   } from "jsonld/jsonld";
   import type {
     Url,
-    // JsonLdProcessor,
     RemoteDocument,
-    // NodeObject,
-    // JsonLdArray,
+    Frame,
+    ProcessingOptions,
   } from "jsonld/jsonld-spec";
+  import type { ActiveContext } from "jsonld/lib/context";
 
   // Currently, jsonld returns incomplete Quad-likes.
   export type Quad = {
@@ -25,26 +27,24 @@ declare module "jsonld" {
   };
 
   export type * from "jsonld/jsonld";
+  export type * from "jsonld/jsonld-spec";
+  export type { ActiveContext };
+
   /**
    * Format option: Serialized as N-Quads.
    * @see https://www.w3.org/TR/n-quads/
    */
   type MimeNQuad = "application/n-quads" | "application/nquads";
-  // /*
-  //  * Declares interfaces used to type the methods options object.
-  //  * The interfaces are usefull to avoid code replication.
-  //  */
+
+  /** Something which, when awaited, produces a T. */
+  type Awaitable<T> = T | PromiseLike<T>;
+
   export namespace Options {
     interface DocLoader {
       /**
        * The document loader.
        */
-      documentLoader?:
-        | ((
-            url: Url,
-            callback: (err: Error, remoteDoc: RemoteDocument) => void
-          ) => Promise<RemoteDocument>)
-        | undefined;
+      documentLoader?: (url: Url) => Awaitable<RemoteDocument>;
     }
 
     interface Common extends DocLoader {
@@ -97,13 +97,37 @@ declare module "jsonld" {
     //     keepFreeFloatingNodes?: boolean | undefined;
     //   }
     //   type Flatten = Common;
-    //   interface Frame {
-    //     embed?: "@last" | "@always" | "@never" | "@link" | undefined;
-    //     explicit?: boolean | undefined;
-    //     requireAll?: boolean | undefined;
-    //     omitDefault?: boolean | undefined;
-    //     omitGraph?: boolean | undefined;
-    //   }
+
+    /**
+     * @see https://www.w3.org/TR/json-ld11-framing/#idl-index
+     */
+    interface Frame extends Common {
+      /**
+       * Default `@embed` flag value.
+       * @default '@last'
+       */
+      embed?: "@last" | "@always" | "@never" | "@link";
+      /**
+       * Default `@explicit` flag value.
+       * @default false
+       */
+      explicit?: boolean;
+      /**
+       * Default `@requireAll` flag value.
+       * @default true
+       */
+      requireAll?: boolean;
+      /**
+       * Default `@omitDefault` flag value.
+       * @default false
+       */
+      omitDefault?: boolean;
+      /**
+       * Default `@omitGraph` flag value.
+       * @default false
+       */
+      omitGraph?: boolean;
+    }
     //   interface Normalize extends Common {
     //     algorithm?: "URDNA2015" | `URGNA2012` | undefined;
     //     skipExpansion?: boolean | undefined;
@@ -169,7 +193,7 @@ declare module "jsonld" {
 
   export function compact(
     input: JsonLdDocument,
-    ctx: ContextDefinition,
+    ctx: ContextSpec,
     options?: Options.Compact
   ): Promise<NodeObject>;
 
@@ -203,11 +227,21 @@ declare module "jsonld" {
   //   options?: Options.Flatten
   // ): Promise<NodeObject>;
 
-  // export function frame(
-  //   input: JsonLdDocument,
-  //   frame: Frame,
-  //   options?: Options.Frame
-  // ): Promise<NodeObject>;
+  /**
+   * Performs JSON-LD framing.
+   *
+   * @param input The JSON-LD input to frame.
+   * @param frame The JSON-LD frame to use.
+   * @param options The framing options.
+   *
+   * @return a Promise that resolves to the framed output.
+   * @see https://www.w3.org/TR/json-ld11-framing/
+   */
+  export function frame(
+    input: JsonLdDocument,
+    frame: Frame,
+    options?: Options.Frame
+  ): Promise<NodeObject>;
 
   // export function normalize(
   //   input: JsonLdDocument,
@@ -239,6 +273,12 @@ declare module "jsonld" {
     options?: Options.ToRdf<MimeNQuad>
   ): Promise<string>;
 
+  export function processContext(
+    activeCtx: ActiveContext,
+    localCtx: ContextSpec,
+    options?: ProcessingOptions
+  ): Promise<ActiveContext>;
+
   // export let JsonLdProcessor: JsonLdProcessor;
   // disable autoexport
   // export {};
@@ -269,36 +309,46 @@ declare module "jsonld/jsonld" {
   export type JsonLdDocument = NodeObject | NodeObject[];
 
   /**
+   * The value of an entry in a {@link NodeObject} map whose key is not a
+   * keyword.
+   */
+  export type NodeObjectDataEntryValue = OrArray<
+    | null
+    | boolean
+    | number
+    | string
+    | NodeObject
+    | GraphObject
+    | ValueObject
+    | ListObject
+    | SetObject
+    | LanguageMap
+    | IndexMap
+    | IncludedBlock
+    | IdMap
+    | TypeMap
+  >;
+
+  /**
    * A node object represents zero or more properties of a node
    * in the graph serialized by the JSON-LD document.
    * @see https://www.w3.org/TR/json-ld11/#node-objects
    */
   export interface NodeObject {
-    "@context"?: Keyword["@context"];
-    "@id"?: Keyword["@id"];
-    "@included"?: Keyword["@included"];
-    "@graph"?: Keyword["@included"];
-    "@nest"?: OrArray<JsonObject>;
-    "@type"?: OrArray<Keyword["@type"]>;
-    "@reverse"?: Record<string, Keyword["@reverse"]>;
-    "@index"?: Keyword["@index"];
-    [key: string]:
-      | OrArray<
-          | null
-          | boolean
-          | number
-          | string
-          | NodeObject
-          | GraphObject
-          | ValueObject
-          | ListObject
-          | SetObject
-        >
-      | LanguageMap
-      | IndexMap
-      | IncludedBlock
-      | IdMap
-      | TypeMap
+    readonly "@context"?: ContextSpec;
+    readonly "@id"?: Keyword["@id"];
+    readonly "@included"?: Keyword["@included"];
+    readonly "@graph"?: Keyword["@included"];
+    readonly "@nest"?: OrArray<JsonObject>;
+    readonly "@type"?: OrArray<Keyword["@type"]>;
+    readonly "@reverse"?: Record<string, Keyword["@reverse"]>;
+    readonly "@index"?: Keyword["@index"];
+
+    // When getting a value by an arbitrary string key, the value may be one of
+    // the above (if the key turns out to be a keyword) or a
+    // NodeObjectDataEntryValue.
+    readonly [key: string]:
+      | NodeObjectDataEntryValue
       | NodeObject[keyof NodeObject];
   }
 
@@ -310,7 +360,7 @@ declare module "jsonld/jsonld" {
     "@graph": OrArray<NodeObject>;
     "@index"?: Keyword["@index"];
     "@id"?: Keyword["@id"];
-    "@context"?: Keyword["@context"];
+    "@context"?: ContextSpec;
   }
 
   /**
@@ -320,7 +370,7 @@ declare module "jsonld/jsonld" {
    */
   export type ValueObject = {
     "@index"?: Keyword["@index"] | undefined;
-    "@context"?: Keyword["@context"] | undefined;
+    "@context"?: ContextSpec | undefined;
   } & ( // A string, possibly a language-typed string
     | {
         "@value": Keyword["@value"];
@@ -405,25 +455,25 @@ declare module "jsonld/jsonld" {
    * @see https://www.w3.org/TR/json-ld11/#context-definitions
    */
   export interface ContextDefinition {
-    "@base"?: Keyword["@base"] | undefined;
-    "@direction"?: Keyword["@direction"] | undefined;
-    "@import"?: Keyword["@import"] | undefined;
-    "@language"?: Keyword["@language"] | undefined;
-    "@propagate"?: Keyword["@propagate"] | undefined;
-    "@protected"?: Keyword["@protected"] | undefined;
-    "@type"?:
-      | {
-          "@container": "@set";
-          "@protected"?: Keyword["@protected"] | undefined;
-        }
-      | undefined;
-    "@version"?: Keyword["@version"] | undefined;
-    "@vocab"?: Keyword["@vocab"] | undefined;
+    "@base"?: Keyword["@base"];
+    "@direction"?: Keyword["@direction"];
+    "@import"?: Keyword["@import"];
+    "@language"?: Keyword["@language"];
+    "@propagate"?: Keyword["@propagate"];
+    "@protected"?: Keyword["@protected"];
+    "@type"?: {
+      "@container": "@set";
+      "@protected"?: Keyword["@protected"];
+    };
+    "@version"?: Keyword["@version"];
+    "@vocab"?: Keyword["@vocab"];
     [key: string]:
       | null
       | string
       | ExpandedTermDefinition
-      | ContextDefinition[keyof ContextDefinition];
+      // Only here to be compatible with the explicit keys above, as there's no
+      // good way to write an index signature for "everything but keywords".
+      | Exclude<ContextDefinition[keyof ContextDefinition], undefined>;
   }
 
   /* eslint-disable-next-line @typescript-eslint/no-empty-interface
@@ -472,7 +522,7 @@ declare module "jsonld/jsonld" {
     "@protected"?: Keyword["@protected"];
   } & (
     | {
-        "@id"?: Keyword["@id"] | null;
+        "@id"?: HintedUnion<keyof Keyword, Keyword["@id"]> | null;
         /**
          * @see https://www.w3.org/TR/json-ld11/#nested-properties
          */
@@ -486,6 +536,17 @@ declare module "jsonld/jsonld" {
   );
 
   /**
+   * A description of a context, as used in as the value of a `@context` key.
+   * Can be a `ContextDefinition` object, a URL string pointing to a remote
+   * context, or `null` to reset the context from any inherited context, or an
+   * array of any of these, to be applied in order.
+   *
+   * In addition to being used as the type of the `@context` keyword, this type
+   * is also accepted by some jsonld.js functions.
+   */
+  export type ContextSpec = OrArray<null | string | ContextDefinition>;
+
+  /**
    * A list of keywords and their types.
    * Only used for internal reference; not an actual interface.
    * Not for export.
@@ -497,10 +558,10 @@ declare module "jsonld/jsonld" {
       | OrArray<"@list" | "@set" | ContainerType>
       | ContainerTypeArray
       | null;
-    "@context": OrArray<null | string | ContextDefinition>;
+    "@context": ContextSpec;
     "@direction": "ltr" | "rtl" | null;
     "@graph": OrArray<NodeObject>;
-    "@id": OrArray<string>;
+    "@id": string;
     "@import": string;
     "@included": IncludedBlock;
     "@index": string;
@@ -528,7 +589,7 @@ declare module "jsonld/jsonld" {
    * Helper Types
    * (not for export)
    */
-  type OrArray<T> = T | T[];
+  type OrArray<T> = T | readonly T[];
   type ContainerType = "@language" | "@index" | "@id" | "@graph" | "@type";
   type ContainerTypeArray =
     | ["@graph", "@id"]
@@ -568,33 +629,122 @@ declare module "jsonld/jsonld-spec" {
   export type Iri = Url;
   export type Frame = NodeObject | Url;
 
-  export interface Options {
-    base?: DOMString | null | undefined;
-    compactArrays?: boolean | undefined;
-    documentLoader?: LoadDocumentCallback | null | undefined;
-    expandContext?: ContextDefinition | null | undefined;
-    processingMode?: DOMString | undefined;
+  interface Event {
+    type: ["JsonLdEvent"];
+    code: string;
+    level: "warning" | "info";
+    message: string;
+    details: object;
+  }
+
+  type EventHandlerFn = (args: { event: Event; next: () => void }) => void;
+  type EventHandler = EventHandlerFn | Record<string, EventHandlerFn>;
+
+  export interface ProcessingOptions {
+    base?: DOMString | null;
+    compactArrays?: boolean;
+    documentLoader?: LoadDocumentCallback | null;
+    expandContext?: ContextDefinition | null;
+    processingMode?: DOMString;
+    /**
+     * Top level APIs have a common 'eventHandler' option. This option can be a
+     * function, array of functions, object mapping event.code to functions
+     * (with a default to call next()), or any combination of such handlers.
+     * Handlers will be called with an object with an 'event' entry and a 'next'
+     * function. Custom handlers should process the event as appropriate. The
+     * 'next()' function should be called to let the next handler process the
+     * event.
+     */
+    eventHandler?: EventHandler | EventHandler[];
   }
 
   export interface JsonLdProcessor {
     compact(
       input: JsonLdDocument,
       context: ContextDefinition,
-      options?: Options
+      options?: ProcessingOptions
     ): Promise<NodeObject>;
-    expand(input: JsonLdDocument, options?: Options): Promise<NodeObject[]>;
+    expand(
+      input: JsonLdDocument,
+      options?: ProcessingOptions
+    ): Promise<NodeObject[]>;
     flatten(
       input: JsonLdDocument,
       context?: ContextDefinition | null,
-      options?: Options
+      options?: ProcessingOptions
     ): Promise<NodeObject>;
   }
 
   export interface RemoteDocument {
-    contextUrl?: Url | undefined;
+    /** A context URL found in a Link header, if any. */
+    contextUrl?: Url;
     documentUrl: Url;
     document: JsonLdDocument;
   }
 
   export {};
+}
+
+declare module "jsonld/lib/context" {
+  import type { ContextSpec } from "jsonld/jsonld";
+  import type { ProcessingOptions, Iri } from "jsonld/jsonld-spec";
+
+  /**
+   * A mapping in the context. Left opaque for now.
+   */
+  type Mapping = unknown;
+
+  /**
+   * An object representing a context, which the processor passes around during
+   * processing. Notably, *not* a {@link ContextDefinition}, which is how a
+   * context is defined in a JSON-LD document. Defined here as an opaque type,
+   * because the details of its innards are not worth specifying. Always use
+   * processing functions to create a new `ActiveContext`.
+   */
+  export interface ActiveContext {
+    readonly [contextTag]: typeof contextTag;
+  }
+  const contextTag: unique symbol;
+
+  /**
+   * Gets the initial context.
+   *
+   * @param options Processing options.
+   * @return The initial context.
+   */
+  export function getInitialContext(options: ProcessingOptions): ActiveContext;
+
+  /**
+   * Expands a string to a full IRI. The string may be a term, a prefix, a
+   * relative IRI, or an absolute IRI. The associated absolute IRI will be
+   * returned.
+   *
+   * @param activeCtx The current active context.
+   * @param value The string to expand.
+   * @param relativeTo Options for how to resolve relative IRIs:
+   * @param options Processing options.
+   *
+   * @return The expanded value.
+   */
+  export function expandIri(
+    activeCtx: ActiveContext,
+    value: string,
+    relativeTo: {
+      /** `true` to resolve against the base IRI. */
+      base?: boolean;
+      /** `true` to concatenate after `@vocab`. */
+      vocab?: boolean;
+    },
+    options?: ProcessingOptions
+  ): Iri;
+
+  export function process(args: {
+    activeCtx: ActiveContext;
+    localCtx: ContextSpec;
+    options: ProcessingOptions;
+    /** @default true */
+    propagate?: boolean;
+    /** @default false */
+    overrideProtected?: boolean;
+  }): Promise<ActiveContext>;
 }

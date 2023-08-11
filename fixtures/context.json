@@ -1,0 +1,10 @@
+{
+  "xsd": "http://www.w3.org/2001/XMLSchema#",
+  "@vocab": "http://swapi.dev/documentation#",
+  "films": { "@type": "@id" },
+  "height": { "@type": "xsd:integer" },
+  "homeworld": { "@type": "@id" },
+  "mass": { "@type": "xsd:integer" },
+  "url": "@id",
+  "vehicles": { "@type": "@id" }
+}

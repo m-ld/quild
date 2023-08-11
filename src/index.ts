@@ -1,93 +1,14 @@
 import { QueryEngine } from "@comunica/query-sparql-rdfjs";
-import type { Quad, ResultStream, Source, Term } from "@rdfjs/types";
-import jsonld from "jsonld";
-import { customAlphabet } from "nanoid";
-import { DataFactory } from "rdf-data-factory";
-import type { Algebra } from "sparqlalgebrajs";
-import { Factory as SparqlFactory } from "sparqlalgebrajs";
 
-const PLACEHOLDER = "?";
+import { parse } from "./parse";
+import { readAll } from "./readAll";
+
+import type * as IR from "./IntermediateResult";
+import type { Source } from "@rdfjs/types";
+import type * as JsonLD from "jsonld";
+import type { JsonValue } from "type-fest";
 
 const engine = new QueryEngine();
-const df = new DataFactory();
-
-// This madness is just to cope with the fact that jsonld.toRDF doesn't return
-// real Quads. Namely, the "Quad" itself is missing its `termType`, and it and
-// its terms are all missing the `.equals()` method.
-export const fixQuad = (q: jsonld.Quad): Quad => {
-  const fixTerm = ((term: Term) =>
-    term.termType === "Literal"
-      ? df.literal(term.value, term.datatype)
-      : df.fromTerm(term)) as typeof df.fromTerm;
-
-  // Pretend q is a real quad for a moment.
-  const quad = q as Quad;
-  return df.quad(
-    fixTerm(quad.subject),
-    fixTerm(quad.predicate),
-    fixTerm(quad.object),
-    fixTerm(quad.graph)
-  );
-};
-
-const VARIABLE_NAME_LENGTH = 10;
-const randomVariableName = customAlphabet(
-  "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",
-  VARIABLE_NAME_LENGTH
-);
-
-/**
- * Replaces the given term with a variable if it's either the placeholder value
- * or a blank node. Placeholders are replaced with variables because that's what
- * the placeholder means. Blank nodes are replaced with variables to ensure that
- * the query engine returns a value for them--without this, the query may
- * *match* the right data but not return all of it.
- * @param term The term to possibly replace
- * @returns `term`, or a new variable term if required instead
- */
-const variablize = <T extends Term>(term: T) =>
-  (term.termType === "Literal" && term.value === PLACEHOLDER) ||
-  term.termType === "BlankNode"
-    ? df.variable(randomVariableName())
-    : term;
-
-const sparqlForXQL = async (query: jsonld.NodeObject) => {
-  const sparql = new SparqlFactory();
-
-  const frameRdf = (
-    await jsonld.toRDF(query, { produceGeneralizedRdf: true })
-  ).map(fixQuad);
-
-  const patterns = frameRdf.map((frameQuad: Quad) =>
-    sparql.createPattern(
-      variablize(frameQuad.subject),
-      variablize(frameQuad.predicate),
-      variablize(frameQuad.object)
-    )
-  );
-
-  const algebraQuery: Algebra.Construct = sparql.createConstruct(
-    sparql.createBgp(patterns),
-    patterns
-  );
-
-  return algebraQuery;
-};
-
-/**
- * Read all results from an RDF Stream and return them as a promise of an array.
- */
-export const readAll = <R>(stream: ResultStream<R>) =>
-  new Promise<R[]>((resolve) => {
-    const quads: R[] = [];
-    stream
-      .on("data", (result: R) => {
-        quads.push(result);
-      })
-      .on("end", () => {
-        resolve(quads);
-      });
-  });
 
 /**
  * Reads the query once and returns the result.
@@ -96,12 +17,20 @@ export const readAll = <R>(stream: ResultStream<R>) =>
  */
 export const query = async (
   source: Source,
-  query: jsonld.NodeObject
-): Promise<jsonld.NodeObject> => {
-  const quadsStream = await engine.queryQuads(await sparqlForXQL(query), {
+  query: JsonLD.NodeObject | JsonLD.NodeObject[]
+): Promise<JsonValue> => {
+  const { intermediateResult, sparql } = await parse(query);
+
+  const bindingsStream = await engine.queryBindings(sparql, {
     sources: [source],
   });
 
-  const quads = await readAll(quadsStream);
-  return jsonld.compact(await jsonld.fromRDF(quads), {});
+  const solutions = await readAll(bindingsStream);
+
+  const ir = solutions.reduce<IR.IntermediateResult>(
+    (partialIr, solution) => partialIr.addSolution(solution),
+    intermediateResult
+  );
+
+  return ir.result();
 };
