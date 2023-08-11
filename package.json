@@ -6,11 +6,12 @@
   "license": "MIT",
   "keywords": [],
   "packageManager": "pnpm@8.1.1",
-  "main": "dist/index.js",
+  "main": "dist/src/index.js",
   "type": "module",
   "scripts": {
     "test": "NODE_OPTIONS=--experimental-vm-modules jest",
     "build": "tsc --project tsconfig.build.json",
+    "clean": "rm -rf dist",
     "lint": "eslint ."
   },
   "devDependencies": {

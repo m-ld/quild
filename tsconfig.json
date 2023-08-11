@@ -1,4 +1,5 @@
 {
+  "exclude": ["dist"],
   "compilerOptions": {
     "target": "esnext",
     "module": "esnext",
@@ -9,6 +10,7 @@
     "checkJs": true,
     "forceConsistentCasingInFileNames": true,
     "noEmit": true,
+    "declaration": true,
     "moduleResolution": "node",
     "incremental": true,
     "noErrorTruncation": true,

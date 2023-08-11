@@ -19,7 +19,7 @@ class FixedFastDataset extends FastDataset {
   }
 }
 
-export const dataset = Object.assign(
+export const dataset: typeof originalDataset = Object.assign(
   () => new FixedFastDataset(),
   originalDataset
 );
