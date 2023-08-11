@@ -122,7 +122,8 @@
           {
             "assertionStyle": "never"
           }
-        ]
+        ],
+        "@typescript-eslint/no-import-type-side-effects": "warn"
       }
     },
 

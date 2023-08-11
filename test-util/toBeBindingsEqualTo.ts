@@ -1,13 +1,14 @@
 import { BindingsFactory, type Bindings } from "@comunica/bindings-factory";
 import { expect } from "@jest/globals";
-import { type Term } from "@rdfjs/types";
-import { type MatcherFunction } from "expect";
 import matchers from "expect/build/matchers";
 import { identity, sortBy, zip } from "lodash-es";
 import { DataFactory } from "rdf-data-factory";
-import { type Variable } from "rdf-data-factory";
 import { stringToTerm, termToString } from "rdf-string";
 import { type ColumnUserConfig, table } from "table";
+
+import type { Term } from "@rdfjs/types";
+import type { MatcherFunction } from "expect";
+import type { Variable } from "rdf-data-factory";
 
 // This module's ES module compat is broken, but it's hard to make a case for
 // fixing it, because we're probably not supposed to use it to begin with.
@@ -48,12 +49,12 @@ const isIterableOf = <E>(
 
 /** Returns true if the two sets of bindings contain the same information. */
 const bindingsesMatch = (
-  actual: Readonly<Bindings>[],
-  expected: Readonly<Bindings>[]
+  actual: Array<Readonly<Bindings>>,
+  expected: Array<Readonly<Bindings>>
 ) => {
   const sortedBindingses = (
-    bindings: Readonly<Bindings>[]
-  ): Readonly<Bindings>[] =>
+    bindings: Array<Readonly<Bindings>>
+  ): Array<Readonly<Bindings>> =>
     sortBy(bindings, (b) =>
       sortBy([...b.keys()], (v) => v.value).map((v) => termToString(b.get(v)))
     );
@@ -147,9 +148,11 @@ export const bindingsTables = <BindingsesList extends Bindings[][]>(
 
   const tables = bindingseses.map(tableData).map(makeTable);
 
-  // TypeScript isn't great at preserving tuple types through maps. We'll just
-  // assert to TS that we have this right (while letting it confirm that the
-  // value is at least a `string[]`).
+  /* eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+     ---
+     TypeScript isn't great at preserving tuple types through maps. We'll just
+     assert to TS that we have this right (while letting it confirm that the
+     value is at least a `string[]`). */
   return tables satisfies string[] as {
     [I in keyof BindingsesList]: string;
   };

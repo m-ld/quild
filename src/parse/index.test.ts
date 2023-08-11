@@ -6,8 +6,6 @@ import "../../test-util/toBeSparqlEqualTo";
 import * as IR from "../IntermediateResult";
 import { df } from "../common";
 
-import type jsonld from "jsonld";
-
 describe(parse, () => {
   it("can produce a query for a property by @id", async () => {
     const query = {
@@ -47,7 +45,7 @@ describe(parse, () => {
       "http://swapi.dev/documentation#name": "Luke Skywalker",
       "http://swapi.dev/documentation#hair_color": "?",
       "http://swapi.dev/documentation#eye_color": "?",
-    } as jsonld.NodeObject;
+    };
 
     const { intermediateResult, sparql } = await parse(query);
 

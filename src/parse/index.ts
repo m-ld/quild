@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-throw-literal */
 import jsonld from "jsonld";
 import { isArray } from "lodash-es";
 
@@ -32,6 +31,9 @@ export const parse = async (
       ctx: await nullContext(),
     });
   } else {
+    /* eslint-disable-next-line @typescript-eslint/no-throw-literal
+       ---
+       TODO: https://github.com/m-ld/xql/issues/15 */
     throw "TODO: Unknown type of query";
   }
 

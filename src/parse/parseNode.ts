@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-throw-literal */
-
 import { isArray } from "lodash-es";
 
 import {
@@ -19,6 +17,9 @@ export const parseNode = async (
   } else if (queryMatches(isPlainObject, queryInfo)) {
     return parseNodeObject(queryInfo);
   } else {
+    /* eslint-disable-next-line @typescript-eslint/no-throw-literal
+       ---
+       TODO: https://github.com/m-ld/xql/issues/15 */
     throw "TODO: Unknown type of query";
   }
 };

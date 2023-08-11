@@ -1,8 +1,4 @@
-/* eslint-disable @typescript-eslint/consistent-type-assertions */
-/* eslint-disable @typescript-eslint/no-throw-literal */
-import { isPlainObject } from "lodash-es";
-
-import { nestWarningsUnderKey, type Parsed } from "./common";
+import { isPlainObject, nestWarningsUnderKey, type Parsed } from "./common";
 import { parseNodeObject } from "./parseNodeObject";
 import * as IR from "../IntermediateResult";
 import { evolve, prepend } from "../upstream/rambda";
@@ -21,13 +17,17 @@ export const parsePlural = async ({
 }): Promise<Parsed<IR.Plural>> => {
   const soleSubquery = query[0];
   if (!(soleSubquery && query.length === 1)) {
+    /* eslint-disable-next-line @typescript-eslint/no-throw-literal
+       ---
+       TODO: https://github.com/m-ld/xql/issues/15 */
     throw "TODO: Only exactly one subquery is supported in an array, so far.";
   }
 
   if (!isPlainObject(soleSubquery))
+    /* eslint-disable-next-line @typescript-eslint/no-throw-literal
+       ---
+       TODO: https://github.com/m-ld/xql/issues/15 */
     throw "TODO: Only objects can be in plural nodes, so far.";
-
-  const soleSubqueryPlainObject = soleSubquery as Record<string, unknown>;
 
   return evolve(
     {
@@ -36,7 +36,7 @@ export const parsePlural = async ({
       warnings: nestWarningsUnderKey(0),
     },
     await parseNodeObject({
-      query: soleSubqueryPlainObject,
+      query: soleSubquery,
       variable,
       ctx: outerCtx,
     })

@@ -1,5 +1,3 @@
-// TODO: Plurals are always optional
-
 import { describe, it, expect } from "@jest/globals";
 import jsonld from "jsonld";
 
@@ -10,6 +8,10 @@ import { dataset } from "../test-util/fixedDataset";
 
 import type { Quad, Term } from "@rdfjs/types";
 import type * as JsonLD from "jsonld";
+
+/* eslint-disable @typescript-eslint/consistent-type-assertions
+   ---
+   We need to do a bit of type assertion to prepare the fixture data. */
 
 // This madness is just to cope with the fact that jsonld.toRDF doesn't return
 // real Quads. Namely, the "Quad" itself is missing its `termType`, and it and
@@ -35,10 +37,9 @@ const fixQuad = (q: JsonLD.Quad): Quad => {
 const quads = (await jsonld.toRDF(data as jsonld.JsonLdDocument)).map(fixQuad);
 const source = dataset().addAll(quads);
 
-// TODO: BIG OPEN QUESTION:
-// What happens if something doesn't match?
+/* eslint-enable @typescript-eslint/consistent-type-assertions -- ^^^ */
 
-describe("query()", () => {
+describe(query, () => {
   it("can query for a property by @id", async () => {
     expect(
       await query(source, {

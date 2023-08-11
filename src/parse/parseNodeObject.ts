@@ -1,5 +1,6 @@
-/* eslint-disable @typescript-eslint/consistent-type-assertions */
-/* eslint-disable @typescript-eslint/no-throw-literal */
+/* eslint-disable @typescript-eslint/no-throw-literal
+   ---
+   TODO: https://github.com/m-ld/xql/issues/15 */
 import { Map } from "immutable";
 import jsonld, { type ContextSpec, type ActiveContext } from "jsonld";
 import Context from "jsonld/lib/context";
@@ -16,8 +17,7 @@ import { parseNode } from "./parseNode";
 import * as IR from "../IntermediateResult";
 import { af, df, PLACEHOLDER } from "../common";
 import { toRdfLiteral } from "../representation";
-import { evolve, keys, pipedAsync, anyPass } from "../upstream/rambda";
-import { partial } from "../upstream/rambda/partial";
+import { evolve, keys, pipedAsync, anyPass, partial } from "../upstream/rambda";
 import { variableUnder } from "../variableUnder";
 
 import type * as RDF from "@rdfjs/types";
@@ -55,7 +55,10 @@ export const parseNodeObject = async ({
 }: QueryInfo<Record<string, unknown>>): Promise<Parsed<IR.NodeObject>> => {
   const ctx =
     "@context" in query
-      ? await jsonld.processContext(outerCtx, query["@context"] as ContextSpec)
+      ? /* eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+         ---
+         Goes away when we switch to jsonld-context-parser. */
+        await jsonld.processContext(outerCtx, query["@context"] as ContextSpec)
       : outerCtx;
 
   const [idKey, ...extraIdKeys] = filter(partial(isId, ctx), keys(query));
@@ -144,7 +147,9 @@ const parseEntry = async ({
 };
 
 const parseContextEntry = ({ query }: { query: unknown }): ParsedEntry => ({
-  // TODO: Remove type assertion
+  /* eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+     ---
+     TODO: https://github.com/m-ld/xql/issues/15 */
   intermediateResult: new IR.NativeValue(query as JsonValue),
   patterns: [],
   projections: [],
@@ -162,7 +167,9 @@ const parseIdEntry = ({ query }: { query: unknown }): ParsedEntry => {
 };
 
 const parseUnknownKeyEntry = ({ query }: { query: unknown }): ParsedEntry => ({
-  // TODO: Remove type assertion
+  /* eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+     ---
+     TODO: https://github.com/m-ld/xql/issues/15 */
   intermediateResult: new IR.NativeValue(query as JsonValue),
   patterns: [],
   projections: [],
