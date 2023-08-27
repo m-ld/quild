@@ -3,7 +3,8 @@
     "eslint:recommended",
     "plugin:import/recommended",
     "plugin:@eslint-community/eslint-comments/recommended",
-    "plugin:promise/recommended"
+    "plugin:promise/recommended",
+    "plugin:jest-formatting/strict"
   ],
   "plugins": ["unused-imports"],
   "rules": {
@@ -25,6 +26,8 @@
       { "varsIgnorePattern": "^_", "argsIgnorePattern": "^_" }
     ],
     "no-return-await": "warn",
+    "no-useless-rename": "warn",
+    "object-shorthand": "warn",
 
     "import/no-extraneous-dependencies": [
       "error",
