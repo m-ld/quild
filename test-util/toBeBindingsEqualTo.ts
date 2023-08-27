@@ -1,5 +1,4 @@
 import { BindingsFactory, type Bindings } from "@comunica/bindings-factory";
-import { expect } from "@jest/globals";
 import matchers from "expect/build/matchers";
 import { identity, sortBy, zip } from "lodash-es";
 import { DataFactory } from "rdf-data-factory";
@@ -245,16 +244,6 @@ export const toBeBindingsEqualTo: MatcherFunction<
 };
 /* eslint-enable @typescript-eslint/no-invalid-this -- ^^^ */
 
-expect.extend({ toBeBindingsEqualTo });
-
-declare module "expect" {
-  interface AsymmetricMatchers {
-    toBeBindingsEqualTo(
-      expectedBindings: ExpectedBindings
-    ): AsymmetricMatcher<string>;
-  }
-
-  interface Matchers<R> {
-    toBeBindingsEqualTo(expectedBindings: ExpectedBindings): R;
-  }
+export interface ToBeBindingsEqualToMatchers<R> {
+  toBeBindingsEqualTo(expectedBindings: ExpectedBindings): R;
 }

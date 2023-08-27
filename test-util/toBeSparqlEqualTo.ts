@@ -1,4 +1,3 @@
-import { expect } from "@jest/globals";
 import matchers from "expect/build/matchers";
 import { uniqWith } from "rambdax";
 import { Algebra, toSparql } from "sparqlalgebrajs";
@@ -116,106 +115,94 @@ const normalized = ({
   `MatcherFunction` defines the type of `this`, but
   `@typescript-eslint/no-invalid-this` doesn't recognize it.
  */
-const toBeSparqlEqualTo: MatcherFunction<[expectedSparql: unknown]> = function (
-  actual,
-  expected
-) {
-  // Take the base and prefixes from the expected value...
-  const {
-    sparqlJs: expectedSparqlJs,
-    string: expectedString,
-    base,
-    prefixes,
-  } = normalized({
-    value: expected,
-    name: "Expected",
-    stringify: this.utils.stringify,
-  });
+export const toBeSparqlEqualTo: MatcherFunction<[expectedSparql: unknown]> =
+  function (actual, expected) {
+    // Take the base and prefixes from the expected value...
+    const {
+      sparqlJs: expectedSparqlJs,
+      string: expectedString,
+      base,
+      prefixes,
+    } = normalized({
+      value: expected,
+      name: "Expected",
+      stringify: this.utils.stringify,
+    });
 
-  // ...and use them when formatting the actual value.
-  const { sparqlJs: actualSparqlJs, string: actualString } = normalized({
-    value: actual,
-    name: "Actual",
-    stringify: this.utils.stringify,
-    base: base ?? null,
-    prefixes,
-  });
+    // ...and use them when formatting the actual value.
+    const { sparqlJs: actualSparqlJs, string: actualString } = normalized({
+      value: actual,
+      name: "Actual",
+      stringify: this.utils.stringify,
+      base: base ?? null,
+      prefixes,
+    });
 
-  const isBGP = (x: unknown): x is BgpPattern =>
-    !!x &&
-    typeof x === "object" &&
-    "type" in x &&
-    x.type === "bgp" &&
-    "triples" in x &&
-    x.triples instanceof Array;
+    const isBGP = (x: unknown): x is BgpPattern =>
+      !!x &&
+      typeof x === "object" &&
+      "type" in x &&
+      x.type === "bgp" &&
+      "triples" in x &&
+      x.triples instanceof Array;
 
-  function areBGPsEqual(
-    this: TesterContext,
-    a: unknown,
-    b: unknown,
-    customTesters: Tester[]
-  ) {
-    if (isBGP(a) && isBGP(b)) {
-      return orderIndependentEquals(
-        (x, y) => this.equals(x, y, customTesters),
-        a.triples,
-        b.triples
-      );
-    }
-  }
-
-  const isSelectQuery = (x: unknown): x is SelectQuery =>
-    !!x &&
-    typeof x === "object" &&
-    "queryType" in x &&
-    x.queryType === "SELECT" &&
-    "variables" in x &&
-    x.variables instanceof Array;
-
-  function areSelectQueriesEqual(
-    this: TesterContext,
-    a: unknown,
-    b: unknown,
-    customTesters: Tester[]
-  ) {
-    if (isSelectQuery(a) && isSelectQuery(b)) {
-      const { variables: aVariables, ...aRest } = a;
-      const { variables: bVariables, ...bRest } = b;
-      return (
-        this.equals(aRest, bRest, customTesters) &&
-        orderIndependentEquals(
+    function areBGPsEqual(
+      this: TesterContext,
+      a: unknown,
+      b: unknown,
+      customTesters: Tester[]
+    ) {
+      if (isBGP(a) && isBGP(b)) {
+        return orderIndependentEquals(
           (x, y) => this.equals(x, y, customTesters),
-          aVariables,
-          bVariables
-        )
-      );
+          a.triples,
+          b.triples
+        );
+      }
     }
-  }
 
-  return {
-    ...toBe.call(this, actualString, expectedString),
-    pass: this.equals(expectedSparqlJs, actualSparqlJs, [
-      areBGPsEqual,
-      areSelectQueriesEqual,
-    ]),
+    const isSelectQuery = (x: unknown): x is SelectQuery =>
+      !!x &&
+      typeof x === "object" &&
+      "queryType" in x &&
+      x.queryType === "SELECT" &&
+      "variables" in x &&
+      x.variables instanceof Array;
+
+    function areSelectQueriesEqual(
+      this: TesterContext,
+      a: unknown,
+      b: unknown,
+      customTesters: Tester[]
+    ) {
+      if (isSelectQuery(a) && isSelectQuery(b)) {
+        const { variables: aVariables, ...aRest } = a;
+        const { variables: bVariables, ...bRest } = b;
+        return (
+          this.equals(aRest, bRest, customTesters) &&
+          orderIndependentEquals(
+            (x, y) => this.equals(x, y, customTesters),
+            aVariables,
+            bVariables
+          )
+        );
+      }
+    }
+
+    return {
+      ...toBe.call(this, actualString, expectedString),
+      pass: this.equals(expectedSparqlJs, actualSparqlJs, [
+        areBGPsEqual,
+        areSelectQueriesEqual,
+      ]),
+    };
   };
-};
 /* eslint-enable @typescript-eslint/no-invalid-this -- ^^^ */
 
-expect.extend({ toBeSparqlEqualTo });
-
-declare module "expect" {
-  interface AsymmetricMatchers {
-    toBeSparqlEqualTo(
-      expectedSparql: string | Algebra.Operation | ReadonlyDeep<SparqlQuery>
-    ): AsymmetricMatcher<string>;
-  }
-
-  interface Matchers<R> {
-    toBeSparqlEqualTo(
-      expectedSparql: string | Algebra.Operation | ReadonlyDeep<SparqlQuery>
-    ): R;
-  }
+export interface ToBeSparqlEqualToMatchers<R> {
+  toBeSparqlEqualTo(
+    expectedSparql: string | Algebra.Operation | ReadonlyDeep<SparqlQuery>
+  ): R;
 }
 
 /**

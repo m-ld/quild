@@ -3,7 +3,6 @@ import { DataFactory } from "rdf-data-factory";
 import { Factory as AlgebraFactory } from "sparqlalgebrajs";
 
 import { runMatcher } from "./runMatcher";
-import "./toBeSparqlEqualTo";
 
 const run = runMatcher(expect, "toBeSparqlEqualTo");
 
