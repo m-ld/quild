@@ -1,3 +1,4 @@
+import jsonld from "jsonld";
 import { isPlainObject as isPlainObject_ } from "lodash-es";
 import { map } from "rambdax";
 
@@ -5,8 +6,8 @@ import { evolve, prepend } from "../upstream/rambda";
 
 import type * as IR from "../IntermediateResult";
 import type * as RDF from "@rdfjs/types";
-import type jsonld from "jsonld";
 import type { Algebra } from "sparqlalgebrajs";
+import type { JsonValue } from "type-fest";
 
 export interface ParseWarning {
   message: string;
@@ -59,16 +60,57 @@ export const nestWarningsUnderKey = (
  * An object passed to a parsing function with all the contextual information
  * required to provide a result.
  */
-export interface QueryInfo<Query> {
-  /** The query to parse. */
-  query: Query;
+export interface ToParse<Element extends JsonValue = JsonValue> {
+  /** The query element to parse. */
+  element: Element;
   /** The variable representing the node which this query applies to. */
   variable: RDF.Variable;
   /** The context in which to interpret the query. */
   ctx: jsonld.ActiveContext;
 }
 
-export const queryMatches = <T>(
+export const elementMatches = <T, U extends JsonValue>(
   predicate: (x: unknown) => x is T,
-  queryInfo: QueryInfo<unknown>
-): queryInfo is QueryInfo<T> => predicate(queryInfo.query);
+  toParse: ToParse<U>
+): toParse is ToParse<T & U> => predicate(toParse.element);
+
+/**
+ * Returns a null (empty, initial) `ActiveContext`.
+ */
+export const nullContext = (
+  options?: jsonld.ProcessingOptions
+): Promise<jsonld.ActiveContext> =>
+  // Relies on `jsonld.processContext()` short-circuiting when the local context
+  // is `null`. Otherwise, there's no way to get an initial context using the
+  // public API.
+  /* eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+     --
+     Only way to make this work. */
+  jsonld.processContext(null as unknown as jsonld.ActiveContext, null, options);
+
+/**
+ * Make all properties in `T` optional, *except* keys assignable to `K`.
+ */
+type PartialExcept<T, K extends keyof T> = Partial<Omit<T, K>> & Pick<T, K>;
+
+/**
+ * Creates a {@link Parsed} with default values.
+ */
+export const parsed = <IRType extends IR.IntermediateResult>(
+  partialParsed: PartialExcept<Parsed<IRType>, "intermediateResult" | "term">
+): Parsed<IRType> => ({
+  patterns: [],
+  projections: [],
+  warnings: [],
+  ...partialParsed,
+});
+
+/**
+ * Creates a {@link ParseWarning} with default values.
+ */
+export const parseWarning = (
+  partialParseWarning: PartialExcept<ParseWarning, "message">
+): ParseWarning => ({
+  path: [],
+  ...partialParseWarning,
+});

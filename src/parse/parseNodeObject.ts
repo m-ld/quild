@@ -1,19 +1,20 @@
 /* eslint-disable @typescript-eslint/no-throw-literal
    ---
    TODO: https://github.com/m-ld/xql/issues/15 */
+
 import { Map } from "immutable";
 import jsonld, { type ContextSpec, type ActiveContext } from "jsonld";
 import Context from "jsonld/lib/context";
-import { isUndefined, isString, isNumber, isBoolean, isArray } from "lodash-es";
+import { isUndefined, isString, isNumber, isBoolean } from "lodash-es";
 import { mapParallelAsync, reduce, toPairs, concat, filter } from "rambdax";
 
 import {
-  isPlainObject,
   nestWarningsUnderKey,
+  parsed,
   type Parsed,
-  type QueryInfo,
+  type ToParse,
 } from "./common";
-import { parseNode } from "./parseNode";
+import { parseIriEntryPosition } from "./parseIriEntryPosition";
 import * as IR from "../IntermediateResult";
 import { af, df, PLACEHOLDER } from "../common";
 import { toRdfLiteral } from "../representation";
@@ -21,7 +22,7 @@ import { evolve, keys, pipedAsync, anyPass, partial } from "../upstream/rambda";
 import { variableUnder } from "../variableUnder";
 
 import type * as RDF from "@rdfjs/types";
-import type { JsonValue } from "type-fest";
+import type { JsonObject, JsonValue } from "type-fest";
 
 const isAbsoluteIri = (x: string): boolean => x.includes(":");
 
@@ -39,7 +40,7 @@ const predicateForKey = (key: string, ctx: jsonld.ActiveContext) => {
 const isPlaceholder = (v: unknown): v is typeof PLACEHOLDER =>
   v === PLACEHOLDER;
 
-const isLiteral = anyPass([isString, isNumber, isBoolean]);
+export const isLiteral = anyPass([isString, isNumber, isBoolean]);
 
 const addMapping =
   (k: string, v: IR.IntermediateResult) => (ir: IR.NodeObject) =>
@@ -48,34 +49,34 @@ const addMapping =
 const isId = (ctx: ActiveContext, k: string) =>
   Context.expandIri(ctx, k, { vocab: true }) === "@id";
 
+/**
+ * Parse a JSON-LD Node Object.
+ *
+ * @see https://www.w3.org/TR/json-ld11/#node-objects
+ */
 export const parseNodeObject = async ({
-  query,
+  element,
   variable,
   ctx: outerCtx,
-}: QueryInfo<Record<string, unknown>>): Promise<Parsed<IR.NodeObject>> => {
+}: ToParse<JsonObject>): Promise<Parsed<IR.NodeObject>> => {
   const ctx =
-    "@context" in query
-      ? /* eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-         ---
-         Goes away when we switch to jsonld-context-parser. */
-        await jsonld.processContext(outerCtx, query["@context"] as ContextSpec)
+    "@context" in element
+      ? await jsonld.processContext(
+          outerCtx,
+          /* eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+             ---
+             Goes away when we switch to jsonld-context-parser. */
+          element["@context"] as ContextSpec
+        )
       : outerCtx;
 
-  const [idKey, ...extraIdKeys] = filter(partial(isId, ctx), keys(query));
+  const [idKey, ...extraIdKeys] = filter(partial(isId, ctx), keys(element));
 
   if (extraIdKeys.length)
     throw "TODO: Invalid JSON-LD syntax; colliding keywords detected.";
-  const id = idKey && query[idKey];
+  const id = idKey && element[idKey];
   if (!isUndefined(id) && !isString(id)) throw "TODO: Name must be a string";
   const node = id ? df.namedNode(id) : variable;
-
-  const init: Parsed<IR.NodeObject> = {
-    intermediateResult: new IR.NodeObject(Map()),
-    patterns: [],
-    projections: [],
-    warnings: [],
-    term: variable,
-  };
 
   const operationForEntry = async ([key, value]: [
     key: string,
@@ -85,7 +86,12 @@ export const parseNodeObject = async ({
 
     const { intermediateResult, patterns, projections, warnings } =
       await parseEntry({
-        query: [key, value],
+        /* eslint-disable-next-line
+             @typescript-eslint/consistent-type-assertions
+           ---
+           Assume all the values are JsonValues. Technically, TS can't enforce
+           this for us, because it doesn't do exact types. */
+        query: [key, value as JsonValue],
         variable: childVariable,
         ctx,
         node,
@@ -100,10 +106,16 @@ export const parseNodeObject = async ({
   };
 
   return pipedAsync(
-    query,
+    element,
     toPairs,
     mapParallelAsync(operationForEntry),
-    reduce((acc, f) => f(acc), init)
+    reduce(
+      (acc, f) => f(acc),
+      parsed({
+        intermediateResult: new IR.NodeObject(Map()),
+        term: variable,
+      })
+    )
   );
 };
 
@@ -115,7 +127,7 @@ const parseEntry = async ({
   ctx,
   node,
 }: {
-  query: [key: string, value: unknown];
+  query: [key: string, value: JsonValue];
   variable: RDF.Variable;
   ctx: ActiveContext;
   node: RDF.Variable | RDF.NamedNode;
@@ -137,8 +149,8 @@ const parseEntry = async ({
     return parseUnknownKeyEntry({ query: value });
   }
 
-  return parseDataEntry({
-    query: value,
+  return parseIriEntry({
+    element: value,
     variable,
     ctx,
     node,
@@ -181,10 +193,10 @@ const parseUnknownKeyEntry = ({ query }: { query: unknown }): ParsedEntry => ({
   ],
 });
 
-const parsePrimitive = ({
-  query,
+export const parsePrimitive = ({
+  element: query,
   variable,
-}: QueryInfo<string | number | boolean>): Parsed =>
+}: ToParse<string | number | boolean>): Parsed =>
   isPlaceholder(query)
     ? {
         intermediateResult: new IR.NativePlaceholder(variable),
@@ -204,29 +216,22 @@ const parsePrimitive = ({
 /**
  * A QueryInfo specifically for parsing data entries.
  */
-interface DataEntryInfo<Query> extends QueryInfo<Query> {
+interface DataEntryInfo<Query extends JsonValue = JsonValue>
+  extends ToParse<Query> {
   /** The node which this entry belongs to. */
   node: RDF.Variable | RDF.NamedNode;
   /** The predicate between the node and what this query applies to */
   predicate: RDF.NamedNode;
 }
 
-const parseDataEntry = async ({
-  query,
+const parseIriEntry = async ({
+  element,
   variable,
   ctx,
   node,
   predicate,
-}: DataEntryInfo<unknown>): Promise<ParsedEntry> => {
-  let parsedChild;
-
-  if (isLiteral(query)) {
-    parsedChild = parsePrimitive({ query, variable, ctx });
-  } else if (isArray(query) || isPlainObject(query)) {
-    parsedChild = await parseNode({ query, variable, ctx });
-  } else {
-    throw "TODO: Not yet covered";
-  }
+}: DataEntryInfo): Promise<ParsedEntry> => {
+  const parsedChild = await parseIriEntryPosition({ element, variable, ctx });
 
   return {
     intermediateResult: parsedChild.intermediateResult,

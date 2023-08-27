@@ -1,12 +1,12 @@
 import { describe, it, expect } from "@jest/globals";
 import { Map } from "immutable";
 
-import { parse } from ".";
+import { parseQuery } from ".";
 import "../../test-util/toBeSparqlEqualTo";
 import * as IR from "../IntermediateResult";
 import { df } from "../common";
 
-describe(parse, () => {
+describe(parseQuery, () => {
   it("can produce a query for a property by @id", async () => {
     const query = {
       "@id": "https://swapi.dev/api/people/1/",
@@ -14,7 +14,7 @@ describe(parse, () => {
       "http://swapi.dev/documentation#eye_color": "?",
     } as const;
 
-    const { intermediateResult, sparql } = await parse(query);
+    const { intermediateResult, sparql } = await parseQuery(query);
 
     expect(intermediateResult).toStrictEqual(
       new IR.NodeObject(
@@ -47,7 +47,7 @@ describe(parse, () => {
       "http://swapi.dev/documentation#eye_color": "?",
     };
 
-    const { intermediateResult, sparql } = await parse(query);
+    const { intermediateResult, sparql } = await parseQuery(query);
 
     expect(intermediateResult).toStrictEqual(
       new IR.NodeObject(
@@ -83,7 +83,7 @@ describe(parse, () => {
       homeworld: { name: "?" },
     } as const;
 
-    const { intermediateResult, sparql } = await parse(query);
+    const { intermediateResult, sparql } = await parseQuery(query);
 
     expect(intermediateResult).toStrictEqual(
       new IR.NodeObject(
@@ -123,7 +123,7 @@ describe(parse, () => {
       },
     ] as const;
 
-    const { intermediateResult, sparql } = await parse(query);
+    const { intermediateResult, sparql } = await parseQuery(query);
 
     expect(intermediateResult).toStrictEqual(
       new IR.Plural(
@@ -161,7 +161,7 @@ describe(parse, () => {
       },
     ] as const;
 
-    const { intermediateResult, sparql } = await parse(query);
+    const { intermediateResult, sparql } = await parseQuery(query);
 
     expect(intermediateResult).toStrictEqual(
       new IR.Plural(
@@ -207,7 +207,7 @@ describe(parse, () => {
       "http://swapi.dev/documentation#eye_color": "?",
     } as const;
 
-    const { intermediateResult, sparql } = await parse(query);
+    const { intermediateResult, sparql } = await parseQuery(query);
 
     expect(intermediateResult).toStrictEqual(
       new IR.NodeObject(
@@ -249,7 +249,7 @@ describe(parse, () => {
       },
     ] as const;
 
-    const { intermediateResult, sparql, warnings } = await parse(query);
+    const { intermediateResult, sparql, warnings } = await parseQuery(query);
 
     expect(intermediateResult).toStrictEqual(
       new IR.Plural(

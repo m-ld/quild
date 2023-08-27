@@ -1,11 +1,10 @@
 import { QueryEngine } from "@comunica/query-sparql-rdfjs";
 
-import { parse } from "./parse";
+import { parseQuery } from "./parse";
 import { readAll } from "./readAll";
 
 import type * as IR from "./IntermediateResult";
 import type { Source } from "@rdfjs/types";
-import type * as JsonLD from "jsonld";
 import type { JsonValue } from "type-fest";
 
 const engine = new QueryEngine();
@@ -17,9 +16,9 @@ const engine = new QueryEngine();
  */
 export const query = async (
   source: Source,
-  query: JsonLD.NodeObject | JsonLD.NodeObject[]
+  query: JsonValue
 ): Promise<JsonValue> => {
-  const { intermediateResult, sparql } = await parse(query);
+  const { intermediateResult, sparql } = await parseQuery(query);
 
   const bindingsStream = await engine.queryBindings(sparql, {
     sources: [source],
