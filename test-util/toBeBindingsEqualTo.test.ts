@@ -4,9 +4,9 @@ import { Store } from "n3";
 import { DataFactory } from "rdf-data-factory";
 
 import { runMatcher } from "./runMatcher";
-import "./toBeBindingsEqualTo";
 import { readAll } from "../src/readAll";
 
+import type { ExpectedBindings } from "./toBeBindingsEqualTo";
 import type { Quad } from "@rdfjs/types";
 
 async function query(query: string, quads?: Quad[]) {
@@ -172,6 +172,48 @@ describe("toBeBindingsEqualTo", () => {
   ╟─────┼─────┼─────╢
   ║ "7" │ "8" │ "9" ║
   ╚═════╧═════╧═════╝
+  ↵"
+`);
+  });
+
+  it("displays empty cells when needed", async () => {
+    const actual = await query(/* sparql */ `
+    SELECT ?a ?b ?d
+    WHERE {
+      VALUES (?a ?b ?d) {
+        ("1" "2" UNDEF)
+        ("4" "5" "6")
+        ("7" "8" "9")
+      }
+    }
+  `);
+
+    const expected: ExpectedBindings = [
+      ["a", "b", "c"],
+      [`"1"`, `"2"`, `"3"`],
+      [`"7"`, `"8"`, `"9"`],
+      [`"4"`, `"5"`, undefined],
+    ];
+
+    expect(run(actual, expected)).toMatchInlineSnapshot(`
+"expect(received).toBe(expected) // Object.is equality
+
+- Expected  - 3
++ Received  + 3
+
+  3 bindings:
+  ╔═════╤═════╤═════╤═════╗
+  ║ a   │ b   │ c   │ d   ║
+  ╟─────┼─────┼─────┼─────╢
+- ║ "1" │ "2" │ "3" │     ║
++ ║ "1" │ "2" │     │     ║
+  ╟─────┼─────┼─────┼─────╢
+- ║ "4" │ "5" │     │     ║
++ ║ "4" │ "5" │     │ "6" ║
+  ╟─────┼─────┼─────┼─────╢
+- ║ "7" │ "8" │ "9" │     ║
++ ║ "7" │ "8" │     │ "9" ║
+  ╚═════╧═════╧═════╧═════╝
   ↵"
 `);
   });

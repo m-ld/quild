@@ -29,7 +29,11 @@
     "import/no-extraneous-dependencies": [
       "error",
       {
-        "devDependencies": ["**/*.test.[jt]s?(x)", "test-util/**/*.[jt]s?(x)"]
+        "devDependencies": [
+          "**/*.test.[jt]s?(x)",
+          "test-util/**/*.[jt]s?(x)",
+          "jest.setup.ts"
+        ]
       }
     ],
     "import/order": [

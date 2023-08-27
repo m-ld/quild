@@ -1,5 +1,4 @@
 import { BindingsFactory, type Bindings } from "@comunica/bindings-factory";
-import { expect } from "@jest/globals";
 import matchers from "expect/build/matchers";
 import { identity, sortBy, zip } from "lodash-es";
 import { DataFactory } from "rdf-data-factory";
@@ -24,7 +23,38 @@ type Mutable<T> = {
   -readonly [P in keyof T]: T[P];
 };
 
-type ExpectedBindings = string[][];
+/**
+ * A 2D array describing a set of bindings to expect. The first row is the names
+ * of the variables, and must be all strings. The following rows are the values
+ * for those variables, as [`rdf-string`'s
+ * `stringToTerm()`](https://www.npmjs.com/package/rdf-string) expects to
+ * interpret them (close to Turtle syntax, but slightly different).
+ *
+ * To get TypeScript to allow `undefined` cells in the data, you may need to
+ * type your array explicitly as `ExpectedBindings` (or similar) so that
+ * TypeScript notices that none of the variable names are `undefined`.
+ *
+ * @example <caption>With no `undefined` values:</caption>
+ *
+ * const expected = [
+ *   ["a", "b", "c"],
+ *   [`"1"`, `"2"`, `"3"`],
+ *   [`"4"`, `"5"`, `"6"`],
+ *   [`"7"`, `"8"`, `"9"`],
+ * ];
+ *
+ * @example <caption>With `undefined` values:</caption>
+ *
+ * const expected: ExpectedBindings = [
+ *   ["a", "b", "c"],
+ *   [`"1"`, `"2"`, `"3"`],
+ *   [`"4"`, `"5"`, undefined],
+ *   [`"7"`, `"8"`, `"9"`],
+ * ];
+ */
+export type ExpectedBindings =
+  | string[][]
+  | [string[], ...Array<Array<string | undefined>>];
 
 const isBindings = (o: unknown): o is Bindings =>
   !!o && typeof o === "object" && "type" in o && o.type === "bindings";
@@ -103,8 +133,10 @@ export const bindingsTables = <BindingsesList extends Bindings[][]>(
   const allVariableNames = new Set<string>();
 
   for (const bindingses of bindingseses) {
-    for (const variable of [...(bindingses[0]?.keys() ?? [])]) {
-      allVariableNames.add(variable.value);
+    for (const bindings of bindingses) {
+      for (const variable of [...bindings.keys()]) {
+        allVariableNames.add(variable.value);
+      }
     }
   }
 
@@ -212,16 +244,6 @@ export const toBeBindingsEqualTo: MatcherFunction<
 };
 /* eslint-enable @typescript-eslint/no-invalid-this -- ^^^ */
 
-expect.extend({ toBeBindingsEqualTo });
-
-declare module "expect" {
-  interface AsymmetricMatchers {
-    toBeBindingsEqualTo(
-      expectedBindings: ExpectedBindings
-    ): AsymmetricMatcher<string>;
-  }
-
-  interface Matchers<R> {
-    toBeBindingsEqualTo(expectedBindings: ExpectedBindings): R;
-  }
+export interface ToBeBindingsEqualToMatchers<R> {
+  toBeBindingsEqualTo(expectedBindings: ExpectedBindings): R;
 }
