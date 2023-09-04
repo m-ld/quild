@@ -10,24 +10,21 @@ import { parseValueObject } from "./parseValueObject";
 import * as IR from "../IntermediateResult";
 
 /**
- * Parse a JSON-LD node object IRI entry position.
+ * Parse a JSON-LD Resource (in RDF parlance, anything which may be the object
+ * of a statement).
  *
- * @see https://www.w3.org/TR/json-ld11/#node-objects
+ * @see https://www.w3.org/TR/json-ld11/#dfn-resource
  *
- * > Keys in a [node object][1] that are not [keywords][2] _MAY_ expand to an
- * > [IRI][3] using the [active context][4]. The values associated with keys
- * > that expand to an [IRI][3] _MUST_ be one of the following: [...]
+ * > A [resource][1] denoted by an [IRI][2], a [blank
+ * > node][3] or [literal][4] representing something in the world (the "universe
+ * > of discourse").
  * >
- * > [1]: https://www.w3.org/TR/json-ld11/#dfn-node-object
- * > [2]: https://www.w3.org/TR/json-ld11/#dfn-keyword
- * > [3]: https://tools.ietf.org/html/rfc3987#section-2
- * > [4]: https://www.w3.org/TR/json-ld11/#dfn-active-context
+ * > [1]: https://www.w3.org/TR/rdf11-concepts/#dfn-resource
+ * > [2]: https://tools.ietf.org/html/rfc3987#section-2
+ * > [3]: https://www.w3.org/TR/rdf11-concepts/#dfn-blank-node
+ * > [4]: https://www.w3.org/TR/rdf11-concepts/#dfn-literal
  */
-export const parseIriEntryValue: Parser = async ({
-  element,
-  variable,
-  ctx,
-}) => {
+export const parseResource: Parser = async ({ element, variable, ctx }) => {
   if (isLiteral(element)) {
     return parsePrimitive({ element, variable, ctx });
   } else if (isPlainObject(element)) {

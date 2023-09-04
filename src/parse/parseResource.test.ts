@@ -3,9 +3,9 @@ import { describe, expect, it } from "@jest/globals";
 
 import { type ToParse, nullContext, parsed, parseWarning } from "./common";
 import { parseGraphObject } from "./parseGraphObject";
-import { parseIriEntryValue } from "./parseIriEntryValue";
 import { parseListObject } from "./parseListObject";
 import { parseNodeObject, parsePrimitive } from "./parseNodeObject";
+import { parseResource } from "./parseResource";
 import { parseSetObject } from "./parseSetObject";
 import { parseValueObject } from "./parseValueObject";
 import * as IR from "../IntermediateResult";
@@ -22,12 +22,12 @@ const makeToParse = async <Element extends JsonValue>(
   ctx: await nullContext(),
 });
 
-describe(parseIriEntryValue, () => {
+describe(parseResource, () => {
   it("parses a string, number, or boolean", async () => {
     for (const element of ["Luke Skywalker", 10, true]) {
       const toParse = await makeToParse(element);
 
-      expect(await parseIriEntryValue(toParse)).toStrictEqual(
+      expect(await parseResource(toParse)).toStrictEqual(
         await parsePrimitive(toParse)
       );
     }
@@ -36,7 +36,7 @@ describe(parseIriEntryValue, () => {
   it("parses a null", async () => {
     const toParse = await makeToParse(null);
 
-    expect(await parseIriEntryValue(toParse)).toStrictEqual(
+    expect(await parseResource(toParse)).toStrictEqual(
       parsed({
         intermediateResult: new IR.NativeValue(null),
         term: variable,
@@ -58,7 +58,7 @@ describe(parseIriEntryValue, () => {
       height: "172",
     });
 
-    expect(await parseIriEntryValue(toParse)).toStrictEqual(
+    expect(await parseResource(toParse)).toStrictEqual(
       await parseNodeObject(toParse)
     );
   });
@@ -74,9 +74,7 @@ describe(parseIriEntryValue, () => {
     for (const [parser, element] of elements) {
       const toParse = await makeToParse(element);
 
-      expect(await parseIriEntryValue(toParse)).toStrictEqual(
-        await parser(toParse)
-      );
+      expect(await parseResource(toParse)).toStrictEqual(await parser(toParse));
     }
   });
 });

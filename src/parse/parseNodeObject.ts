@@ -15,7 +15,7 @@ import {
   type Parsed,
   type ToParse,
 } from "./common";
-import { parseIriEntryValue } from "./parseIriEntryValue";
+import { parseResource } from "./parseResource";
 import * as IR from "../IntermediateResult";
 import { af, df, PLACEHOLDER } from "../common";
 import { toRdfLiteral } from "../representation";
@@ -229,7 +229,7 @@ const parseIriEntry = async ({
   node,
   predicate,
 }: DataEntryInfo): Promise<ParsedEntry> => {
-  const parsedChild = await parseIriEntryValue({ element, variable, ctx });
+  const parsedChild = await parseResource({ element, variable, ctx });
 
   return {
     intermediateResult: parsedChild.intermediateResult,
