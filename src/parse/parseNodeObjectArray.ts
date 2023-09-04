@@ -1,9 +1,4 @@
-import {
-  nestWarningsUnderKey,
-  type ToParse,
-  type Parsed,
-  isPlainObject,
-} from "./common";
+import { nestWarningsUnderKey, isPlainObject, type Parser } from "./common";
 import { parseNodeObject } from "./parseNodeObject";
 import * as IR from "../IntermediateResult";
 import { evolve, prepend } from "../upstream/rambda";
@@ -11,11 +6,11 @@ import { evolve, prepend } from "../upstream/rambda";
 import type * as RDF from "@rdfjs/types";
 import type { JsonArray } from "type-fest";
 
-export const parseNodeObjectArray = async ({
+export const parseNodeObjectArray: Parser<JsonArray, IR.Plural> = async ({
   element: query,
   variable,
   ctx,
-}: ToParse<JsonArray>): Promise<Parsed<IR.Plural>> => {
+}) => {
   const soleSubquery = query[0];
   if (!(soleSubquery && query.length === 1)) {
     /* eslint-disable-next-line @typescript-eslint/no-throw-literal

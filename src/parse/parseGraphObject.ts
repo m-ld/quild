@@ -1,7 +1,7 @@
 import { parseWarning, parsed, type Parser } from "./common";
 import * as IR from "../IntermediateResult";
 
-export const parseTopLevelGraphContainer: Parser = ({ element, variable }) =>
+export const parseGraphObject: Parser = ({ element, variable }) =>
   Promise.resolve(
     parsed({
       intermediateResult: new IR.NativeValue(element),
@@ -9,7 +9,7 @@ export const parseTopLevelGraphContainer: Parser = ({ element, variable }) =>
       warnings: [
         parseWarning({
           message:
-            "Top-level @graph containers are not yet supported. (https://github.com/m-ld/xql/issues/21)",
+            "Graph objects are not yet supported. (https://github.com/m-ld/xql/issues/22)",
         }),
       ],
     })

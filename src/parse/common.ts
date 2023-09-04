@@ -114,3 +114,8 @@ export const parseWarning = (
   path: [],
   ...partialParseWarning,
 });
+
+export type Parser<
+  Element extends JsonValue = JsonValue,
+  IRType extends IR.IntermediateResult = IR.IntermediateResult
+> = (toParse: ToParse<Element>) => Promise<Parsed<IRType>>;

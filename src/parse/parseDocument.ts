@@ -1,12 +1,6 @@
 import { isArray } from "lodash-es";
 
-import {
-  isPlainObject,
-  parsed,
-  parseWarning,
-  type Parsed,
-  type ToParse,
-} from "./common";
+import { isPlainObject, parsed, parseWarning, type Parser } from "./common";
 import { parseNodeObject } from "./parseNodeObject";
 import { parseNodeObjectArray } from "./parseNodeObjectArray";
 import { parseTopLevelGraphContainer } from "./parseTopLevelGraphContainer";
@@ -33,11 +27,7 @@ const isTopLevelGraphContainer = (element: JsonObject) =>
  * > [4]: https://infra.spec.whatwg.org/#map-entry
  * > [5]: https://infra.spec.whatwg.org/#list
  */
-export const parseDocument = async ({
-  element,
-  variable,
-  ctx,
-}: ToParse): Promise<Parsed> => {
+export const parseDocument: Parser = async ({ element, variable, ctx }) => {
   if (isArray(element)) {
     return parseNodeObjectArray({ element, variable, ctx });
   } else if (isPlainObject(element)) {

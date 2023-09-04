@@ -11,10 +11,11 @@ import { mapParallelAsync, reduce, toPairs, concat, filter } from "rambdax";
 import {
   nestWarningsUnderKey,
   parsed,
+  type Parser,
   type Parsed,
   type ToParse,
 } from "./common";
-import { parseIriEntryPosition } from "./parseIriEntryPosition";
+import { parseIriEntryValue } from "./parseIriEntryValue";
 import * as IR from "../IntermediateResult";
 import { af, df, PLACEHOLDER } from "../common";
 import { toRdfLiteral } from "../representation";
@@ -193,25 +194,22 @@ const parseUnknownKeyEntry = ({ query }: { query: unknown }): ParsedEntry => ({
   ],
 });
 
-export const parsePrimitive = ({
-  element: query,
-  variable,
-}: ToParse<string | number | boolean>): Parsed =>
-  isPlaceholder(query)
-    ? {
-        intermediateResult: new IR.NativePlaceholder(variable),
-        patterns: [],
-        projections: [variable],
-        warnings: [],
-        term: variable,
-      }
-    : {
-        intermediateResult: new IR.NativeValue(query),
-        patterns: [],
-        projections: [],
-        warnings: [],
-        term: toRdfLiteral(query),
-      };
+export const parsePrimitive: Parser<
+  string | number | boolean,
+  IR.NativePlaceholder | IR.NativeValue
+> = ({ element: query, variable }) =>
+  Promise.resolve(
+    isPlaceholder(query)
+      ? parsed({
+          intermediateResult: new IR.NativePlaceholder(variable),
+          projections: [variable],
+          term: variable,
+        })
+      : parsed({
+          intermediateResult: new IR.NativeValue(query),
+          term: toRdfLiteral(query),
+        })
+  );
 
 /**
  * A QueryInfo specifically for parsing data entries.
@@ -231,7 +229,7 @@ const parseIriEntry = async ({
   node,
   predicate,
 }: DataEntryInfo): Promise<ParsedEntry> => {
-  const parsedChild = await parseIriEntryPosition({ element, variable, ctx });
+  const parsedChild = await parseIriEntryValue({ element, variable, ctx });
 
   return {
     intermediateResult: parsedChild.intermediateResult,
