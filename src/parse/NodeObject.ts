@@ -5,7 +5,7 @@
 import { Map } from "immutable";
 import jsonld, { type ContextSpec, type ActiveContext } from "jsonld";
 import Context from "jsonld/lib/context";
-import { isUndefined, isString, isNumber, isBoolean } from "lodash-es";
+import { isUndefined, isString } from "lodash-es";
 import { mapParallelAsync, reduce, toPairs, concat, filter } from "rambdax";
 
 import {
@@ -13,13 +13,12 @@ import {
   parsed,
   type Parser,
   type Parsed,
+  type Parse,
   type ToParse,
 } from "./common";
-import { parseResource } from "./parseResource";
 import * as IR from "../IntermediateResult";
-import { af, df, PLACEHOLDER } from "../common";
-import { toRdfLiteral } from "../representation";
-import { evolve, keys, pipedAsync, anyPass, partial } from "../upstream/rambda";
+import { af, df } from "../common";
+import { evolve, keys, pipedAsync, partial } from "../upstream/rambda";
 import { variableUnder } from "../variableUnder";
 
 import type * as RDF from "@rdfjs/types";
@@ -38,11 +37,6 @@ const predicateForKey = (key: string, ctx: jsonld.ActiveContext) => {
   return isAbsoluteIri(expanded) ? df.namedNode(expanded) : null;
 };
 
-const isPlaceholder = (v: unknown): v is typeof PLACEHOLDER =>
-  v === PLACEHOLDER;
-
-export const isLiteral = anyPass([isString, isNumber, isBoolean]);
-
 const addMapping =
   (k: string, v: IR.IntermediateResult) => (ir: IR.NodeObject) =>
     ir.addMapping(k, v);
@@ -55,11 +49,11 @@ const isId = (ctx: ActiveContext, k: string) =>
  *
  * @see https://www.w3.org/TR/json-ld11/#node-objects
  */
-export const parseNodeObject = async ({
+export const NodeObject: Parse<JsonObject, IR.NodeObject> = async function ({
   element,
   variable,
   ctx: outerCtx,
-}: ToParse<JsonObject>): Promise<Parsed<IR.NodeObject>> => {
+}) {
   const ctx =
     "@context" in element
       ? await jsonld.processContext(
@@ -86,17 +80,20 @@ export const parseNodeObject = async ({
     const childVariable = variableUnder(variable, key);
 
     const { intermediateResult, patterns, projections, warnings } =
-      await parseEntry({
-        /* eslint-disable-next-line
+      await parseEntry(
+        {
+          /* eslint-disable-next-line
              @typescript-eslint/consistent-type-assertions
            ---
            Assume all the values are JsonValues. Technically, TS can't enforce
            this for us, because it doesn't do exact types. */
-        query: [key, value as JsonValue],
-        variable: childVariable,
-        ctx,
-        node,
-      });
+          element: [key, value as JsonValue],
+          variable: childVariable,
+          ctx,
+          node,
+        },
+        this
+      );
 
     return evolve({
       intermediateResult: addMapping(key, intermediateResult),
@@ -120,116 +117,102 @@ export const parseNodeObject = async ({
   );
 };
 
-type ParsedEntry = Omit<Parsed, "term">;
+type ParsedEntry<IRType extends IR.IntermediateResult = IR.IntermediateResult> =
+  Omit<Parsed<IRType>, "term">;
 
-const parseEntry = async ({
-  query,
-  variable,
-  ctx,
-  node,
-}: {
-  query: [key: string, value: JsonValue];
-  variable: RDF.Variable;
-  ctx: ActiveContext;
+type ParseEntry<
+  EntryValue extends JsonValue = JsonValue,
+  IRType extends IR.IntermediateResult = IR.IntermediateResult
+> = (
+  toParse: ToParseEntry<EntryValue>,
+  parser: Parser
+) => Promise<ParsedEntry<IRType>>;
+
+interface ToParseEntry<Query extends JsonValue = JsonValue>
+  extends ToParse<Query> {
+  /** The node which this entry belongs to. */
   node: RDF.Variable | RDF.NamedNode;
-}): Promise<ParsedEntry> => {
-  const [key, value] = query;
+}
+
+const parseEntry: ParseEntry<[key: string, value: JsonValue]> = async function (
+  toParse,
+  parser
+) {
+  const { element, variable, ctx, node } = toParse;
+  const [key, value] = element;
 
   if (key === "@context") {
-    return parseContextEntry({ query: value });
+    return parseContextEntry({ ...toParse, element: value }, parser);
   }
 
   if (isId(ctx, key)) {
-    return parseIdEntry({ query: value });
+    return parseIdEntry({ ...toParse, element: value }, parser);
   }
 
   const predicate = predicateForKey(key, ctx);
 
   if (!predicate) {
     // Key is not defined in the context.
-    return parseUnknownKeyEntry({ query: value });
+    return parseUnknownKeyEntry({ ...toParse, element: value }, parser);
   }
 
-  return parseIriEntry({
-    element: value,
+  return parseIriEntry(
+    {
+      element: value,
+      variable,
+      ctx,
+      node,
+      predicate,
+    },
+    parser
+  );
+};
+
+const parseContextEntry: ParseEntry = ({ element }) =>
+  Promise.resolve({
+    intermediateResult: new IR.NativeValue(element),
+    patterns: [],
+    projections: [],
+    warnings: [],
+  });
+
+const parseIdEntry: ParseEntry = ({ element }) => {
+  if (!isString(element)) throw "TODO: Name must be a string";
+  return Promise.resolve({
+    intermediateResult: new IR.Name(df.namedNode(element)),
+    patterns: [],
+    projections: [],
+    warnings: [],
+  });
+};
+
+const parseUnknownKeyEntry: ParseEntry = ({ element }) =>
+  Promise.resolve({
+    intermediateResult: new IR.NativeValue(element),
+    patterns: [],
+    projections: [],
+    warnings: [
+      {
+        message: "Key not defined by context and ignored",
+        path: [],
+      },
+    ],
+  });
+
+const parseIriEntry = async (
+  {
+    element,
     variable,
     ctx,
     node,
     predicate,
-  });
-};
-
-const parseContextEntry = ({ query }: { query: unknown }): ParsedEntry => ({
-  /* eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-     ---
-     TODO: https://github.com/m-ld/xql/issues/15 */
-  intermediateResult: new IR.NativeValue(query as JsonValue),
-  patterns: [],
-  projections: [],
-  warnings: [],
-});
-
-const parseIdEntry = ({ query }: { query: unknown }): ParsedEntry => {
-  if (!isString(query)) throw "TODO: Name must be a string";
-  return {
-    intermediateResult: new IR.Name(df.namedNode(query)),
-    patterns: [],
-    projections: [],
-    warnings: [],
-  };
-};
-
-const parseUnknownKeyEntry = ({ query }: { query: unknown }): ParsedEntry => ({
-  /* eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-     ---
-     TODO: https://github.com/m-ld/xql/issues/15 */
-  intermediateResult: new IR.NativeValue(query as JsonValue),
-  patterns: [],
-  projections: [],
-  warnings: [
-    {
-      message: "Key not defined by context and ignored",
-      path: [],
-    },
-  ],
-});
-
-export const parsePrimitive: Parser<
-  string | number | boolean,
-  IR.NativePlaceholder | IR.NativeValue
-> = ({ element: query, variable }) =>
-  Promise.resolve(
-    isPlaceholder(query)
-      ? parsed({
-          intermediateResult: new IR.NativePlaceholder(variable),
-          projections: [variable],
-          term: variable,
-        })
-      : parsed({
-          intermediateResult: new IR.NativeValue(query),
-          term: toRdfLiteral(query),
-        })
-  );
-
-/**
- * A QueryInfo specifically for parsing data entries.
- */
-interface DataEntryInfo<Query extends JsonValue = JsonValue>
-  extends ToParse<Query> {
-  /** The node which this entry belongs to. */
-  node: RDF.Variable | RDF.NamedNode;
-  /** The predicate between the node and what this query applies to */
-  predicate: RDF.NamedNode;
-}
-
-const parseIriEntry = async ({
-  element,
-  variable,
-  ctx,
-  node,
-  predicate,
-}: DataEntryInfo): Promise<ParsedEntry> => {
-  const parsedChild = await parseResource({ element, variable, ctx });
+  }: ToParseEntry & {
+    /** The predicate between the node and what this query applies to */
+    predicate: RDF.NamedNode;
+  },
+  parser: Parser
+) => {
+  const parsedChild = await parser.Resource({ element, variable, ctx });
 
   return {
     intermediateResult: parsedChild.intermediateResult,

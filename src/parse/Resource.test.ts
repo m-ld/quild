@@ -1,13 +1,13 @@
 /* eslint-disable no-await-in-loop -- We use this for grouping `expect()`s */
 import { describe, expect, it } from "@jest/globals";
 
-import { type ToParse, nullContext, parsed, parseWarning } from "./common";
-import { parseGraphObject } from "./parseGraphObject";
-import { parseListObject } from "./parseListObject";
-import { parseNodeObject, parsePrimitive } from "./parseNodeObject";
-import { parseResource } from "./parseResource";
-import { parseSetObject } from "./parseSetObject";
-import { parseValueObject } from "./parseValueObject";
+import {
+  type ToParse,
+  nullContext,
+  parsed,
+  parseWarning,
+  parser,
+} from "./common";
 import * as IR from "../IntermediateResult";
 import { df } from "../common";
 
@@ -22,13 +22,13 @@ const makeToParse = async <Element extends JsonValue>(
   ctx: await nullContext(),
 });
 
-describe(parseResource, () => {
+describe(parser.Resource, () => {
   it("parses a string, number, or boolean", async () => {
     for (const element of ["Luke Skywalker", 10, true]) {
       const toParse = await makeToParse(element);
 
-      expect(await parseResource(toParse)).toStrictEqual(
-        await parsePrimitive(toParse)
+      expect(await parser.Resource(toParse)).toStrictEqual(
+        await parser.Primitive(toParse)
       );
     }
   });
@@ -36,7 +36,7 @@ describe(parseResource, () => {
   it("parses a null", async () => {
     const toParse = await makeToParse(null);
 
-    expect(await parseResource(toParse)).toStrictEqual(
+    expect(await parser.Resource(toParse)).toStrictEqual(
       parsed({
         intermediateResult: new IR.NativeValue(null),
         term: variable,
@@ -58,23 +58,25 @@ describe(parseResource, () => {
       height: "172",
     });
 
-    expect(await parseResource(toParse)).toStrictEqual(
-      await parseNodeObject(toParse)
+    expect(await parser.Resource(toParse)).toStrictEqual(
+      await parser.NodeObject(toParse)
     );
   });
 
   it("parses a Graph Object, Value Object, List Object, or Set Object", async () => {
     const elements = [
-      [parseGraphObject, { "@graph": [] }],
-      [parseValueObject, { "@value": "abc" }],
-      [parseListObject, { "@list": [] }],
-      [parseSetObject, { "@set": [] }],
+      ["GraphObject", { "@graph": [] }],
+      ["ValueObject", { "@value": "abc" }],
+      ["ListObject", { "@list": [] }],
+      ["SetObject", { "@set": [] }],
     ] as const;
 
-    for (const [parser, element] of elements) {
+    for (const [parseName, element] of elements) {
       const toParse = await makeToParse(element);
 
-      expect(await parseResource(toParse)).toStrictEqual(await parser(toParse));
+      expect(await parser.Resource(toParse)).toStrictEqual(
+        await parser[parseName](toParse)
+      );
     }
   });
 });

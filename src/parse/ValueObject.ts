@@ -1,7 +1,7 @@
-import { parseWarning, parsed, type Parser } from "./common";
+import { parseWarning, parsed, type Parse } from "./common";
 import * as IR from "../IntermediateResult";
 
-export const parseSetObject: Parser = ({ element, variable }) =>
+export const ValueObject: Parse = ({ element, variable }) =>
   Promise.resolve(
     parsed({
       intermediateResult: new IR.NativeValue(element),
@@ -9,7 +9,7 @@ export const parseSetObject: Parser = ({ element, variable }) =>
       warnings: [
         parseWarning({
           message:
-            "Set objects are not yet supported. (https://github.com/m-ld/xql/issues/23)",
+            "Value objects are not yet supported. (https://github.com/m-ld/xql/issues/18)",
         }),
       ],
     })

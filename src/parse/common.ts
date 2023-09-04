@@ -2,12 +2,22 @@ import jsonld from "jsonld";
 import { isPlainObject as isPlainObject_ } from "lodash-es";
 import { map } from "rambdax";
 
+import { Document } from "./Document";
+import { GraphObject } from "./GraphObject";
+import { ListObject } from "./ListObject";
+import { NodeObject } from "./NodeObject";
+import { NodeObjectArray } from "./NodeObjectArray";
+import { Primitive } from "./Primitive";
+import { Resource } from "./Resource";
+import { SetObject } from "./SetObject";
+import { TopLevelGraphContainer } from "./TopLevelGraphContainer";
+import { ValueObject } from "./ValueObject";
 import { evolve, prepend } from "../upstream/rambda";
 
 import type * as IR from "../IntermediateResult";
 import type * as RDF from "@rdfjs/types";
 import type { Algebra } from "sparqlalgebrajs";
-import type { JsonValue } from "type-fest";
+import type { JsonArray, JsonObject, JsonValue } from "type-fest";
 
 export interface ParseWarning {
   message: string;
@@ -115,7 +125,36 @@ export const parseWarning = (
   ...partialParseWarning,
 });
 
-export type Parser<
+export type Parse<
   Element extends JsonValue = JsonValue,
   IRType extends IR.IntermediateResult = IR.IntermediateResult
-> = (toParse: ToParse<Element>) => Promise<Parsed<IRType>>;
+> = (this: Parser, toParse: ToParse<Element>) => Promise<Parsed<IRType>>;
+
+export interface Parser {
+  readonly Document: Parse;
+  readonly NodeObjectArray: Parse<JsonArray, IR.Plural>;
+  readonly TopLevelGraphContainer: Parse;
+  readonly NodeObject: Parse<JsonObject, IR.NodeObject>;
+  readonly GraphObject: Parse;
+  readonly ListObject: Parse;
+  readonly Primitive: Parse<
+    string | number | boolean,
+    IR.NativePlaceholder | IR.NativeValue
+  >;
+  readonly SetObject: Parse;
+  readonly ValueObject: Parse;
+  readonly Resource: Parse;
+}
+
+export const parser: Parser = Object.freeze({
+  Document,
+  NodeObjectArray,
+  TopLevelGraphContainer,
+  NodeObject,
+  GraphObject,
+  ListObject,
+  Primitive,
+  SetObject,
+  ValueObject,
+  Resource,
+});

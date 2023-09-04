@@ -1,13 +1,9 @@
 import { describe, expect, it } from "@jest/globals";
 
-import { nullContext } from "./common";
-import { parseDocument } from "./parseDocument";
-import { parseNodeObject } from "./parseNodeObject";
-import { parseNodeObjectArray } from "./parseNodeObjectArray";
-import { parseTopLevelGraphContainer } from "./parseTopLevelGraphContainer";
+import { nullContext, parser } from "./common";
 import { df } from "../common";
 
-describe(parseDocument, () => {
+describe(parser.Document, () => {
   it("parses a Document that's a Node Object", async () => {
     const toParse = {
       element: {
@@ -21,8 +17,8 @@ describe(parseDocument, () => {
       ctx: await nullContext(),
     };
 
-    expect(await parseDocument(toParse)).toStrictEqual(
-      await parseNodeObject(toParse)
+    expect(await parser.Document(toParse)).toStrictEqual(
+      await parser.NodeObject(toParse)
     );
   });
 
@@ -41,8 +37,8 @@ describe(parseDocument, () => {
       ctx: await nullContext(),
     };
 
-    expect(await parseDocument(toParse)).toStrictEqual(
-      await parseNodeObjectArray(toParse)
+    expect(await parser.Document(toParse)).toStrictEqual(
+      await parser.NodeObjectArray(toParse)
     );
   });
 
@@ -63,8 +59,8 @@ describe(parseDocument, () => {
       ctx: await nullContext(),
     };
 
-    expect(await parseDocument(toParse)).toStrictEqual(
-      await parseTopLevelGraphContainer(toParse)
+    expect(await parser.Document(toParse)).toStrictEqual(
+      await parser.TopLevelGraphContainer(toParse)
     );
   });
 });

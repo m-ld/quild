@@ -1,7 +1,7 @@
-import { parseWarning, parsed, type Parser } from "./common";
+import { parseWarning, parsed, type Parse } from "./common";
 import * as IR from "../IntermediateResult";
 
-export const parseGraphObject: Parser = ({ element, variable }) =>
+export const SetObject: Parse = ({ element, variable }) =>
   Promise.resolve(
     parsed({
       intermediateResult: new IR.NativeValue(element),
@@ -9,7 +9,7 @@ export const parseGraphObject: Parser = ({ element, variable }) =>
       warnings: [
         parseWarning({
           message:
-            "Graph objects are not yet supported. (https://github.com/m-ld/xql/issues/22)",
+            "Set objects are not yet supported. (https://github.com/m-ld/xql/issues/23)",
         }),
       ],
     })

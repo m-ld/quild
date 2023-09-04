@@ -1,13 +1,10 @@
-import { isArray, isNull } from "lodash-es";
+import { isString, isNumber, isBoolean, isArray, isNull } from "lodash-es";
 
-import { isPlainObject, parsed, parseWarning, type Parser } from "./common";
-import { parseDocument } from "./parseDocument";
-import { parseGraphObject } from "./parseGraphObject";
-import { parseListObject } from "./parseListObject";
-import { isLiteral, parseNodeObject, parsePrimitive } from "./parseNodeObject";
-import { parseSetObject } from "./parseSetObject";
-import { parseValueObject } from "./parseValueObject";
+import { isPlainObject, parsed, parseWarning, type Parse } from "./common";
 import * as IR from "../IntermediateResult";
+import { anyPass } from "../upstream/rambda";
+
+const isLiteral = anyPass([isString, isNumber, isBoolean]);
 
 /**
  * Parse a JSON-LD Resource (in RDF parlance, anything which may be the object
@@ -24,27 +21,27 @@ import * as IR from "../IntermediateResult";
  * > [3]: https://www.w3.org/TR/rdf11-concepts/#dfn-blank-node
  * > [4]: https://www.w3.org/TR/rdf11-concepts/#dfn-literal
  */
-export const parseResource: Parser = async ({ element, variable, ctx }) => {
+export const Resource: Parse = async function ({ element, variable, ctx }) {
   if (isLiteral(element)) {
-    return parsePrimitive({ element, variable, ctx });
+    return this.Primitive({ element, variable, ctx });
   } else if (isPlainObject(element)) {
     if ("@graph" in element) {
-      return parseGraphObject({ element, variable, ctx });
+      return this.GraphObject({ element, variable, ctx });
     } else if ("@value" in element) {
-      return parseValueObject({ element, variable, ctx });
+      return this.ValueObject({ element, variable, ctx });
     } else if ("@list" in element) {
-      return parseListObject({ element, variable, ctx });
+      return this.ListObject({ element, variable, ctx });
     } else if ("@set" in element) {
-      return parseSetObject({ element, variable, ctx });
+      return this.SetObject({ element, variable, ctx });
     } else {
-      return parseNodeObject({
+      return this.NodeObject({
         element,
         variable,
         ctx,
       });
     }
   } else if (isArray(element)) {
-    return parseDocument({
+    return this.Document({
       element,
       variable,
       ctx,

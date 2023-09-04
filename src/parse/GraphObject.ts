@@ -1,7 +1,7 @@
-import { parseWarning, parsed, type Parser } from "./common";
+import { parseWarning, parsed, type Parse } from "./common";
 import * as IR from "../IntermediateResult";
 
-export const parseListObject: Parser = ({ element, variable }) =>
+export const GraphObject: Parse = ({ element, variable }) =>
   Promise.resolve(
     parsed({
       intermediateResult: new IR.NativeValue(element),
@@ -9,7 +9,7 @@ export const parseListObject: Parser = ({ element, variable }) =>
       warnings: [
         parseWarning({
           message:
-            "List objects are not yet supported. (https://github.com/m-ld/xql/issues/19)",
+            "Graph objects are not yet supported. (https://github.com/m-ld/xql/issues/22)",
         }),
       ],
     })
