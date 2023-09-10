@@ -1,9 +1,13 @@
 import { describe, expect, it } from "@jest/globals";
 
-import { nullContext, parser } from "./common";
+import { Document } from "./Document";
+import { nullContext } from "./common";
+import { defaultParser, inherit } from "./parser";
 import { df } from "../common";
 
-describe(parser.Document, () => {
+describe(Document, () => {
+  const parser = inherit(defaultParser, { Document });
+
   it("parses a Document that's a Node Object", async () => {
     const toParse = {
       element: {

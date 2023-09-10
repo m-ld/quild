@@ -1,13 +1,9 @@
 /* eslint-disable no-await-in-loop -- We use this for grouping `expect()`s */
 import { describe, expect, it } from "@jest/globals";
 
-import {
-  type ToParse,
-  nullContext,
-  parsed,
-  parseWarning,
-  parser,
-} from "./common";
+import { Resource } from "./Resource";
+import { type ToParse, nullContext, parsed, parseWarning } from "./common";
+import { defaultParser, inherit } from "./parser";
 import * as IR from "../IntermediateResult";
 import { df } from "../common";
 
@@ -22,7 +18,9 @@ const makeToParse = async <Element extends JsonValue>(
   ctx: await nullContext(),
 });
 
-describe(parser.Resource, () => {
+describe(Resource, () => {
+  const parser = inherit(defaultParser, { Resource });
+
   it("parses a string, number, or boolean", async () => {
     for (const element of ["Luke Skywalker", 10, true]) {
       const toParse = await makeToParse(element);

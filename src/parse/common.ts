@@ -2,16 +2,6 @@ import jsonld from "jsonld";
 import { isPlainObject as isPlainObject_ } from "lodash-es";
 import { map } from "rambdax";
 
-import { Document } from "./Document";
-import { GraphObject } from "./GraphObject";
-import { ListObject } from "./ListObject";
-import { NodeObject } from "./NodeObject";
-import { NodeObjectArray } from "./NodeObjectArray";
-import { Primitive } from "./Primitive";
-import { Resource } from "./Resource";
-import { SetObject } from "./SetObject";
-import { TopLevelGraphContainer } from "./TopLevelGraphContainer";
-import { ValueObject } from "./ValueObject";
 import { evolve, prepend } from "../upstream/rambda";
 
 import type * as IR from "../IntermediateResult";
@@ -130,6 +120,9 @@ export type Parse<
   IRType extends IR.IntermediateResult = IR.IntermediateResult
 > = (this: Parser, toParse: ToParse<Element>) => Promise<Parsed<IRType>>;
 
+/**
+ * A Parser contains handlers for each type of element found in a query.
+ */
 export interface Parser {
   readonly Document: Parse;
   readonly NodeObjectArray: Parse<JsonArray, IR.Plural>;
@@ -145,16 +138,3 @@ export interface Parser {
   readonly ValueObject: Parse;
   readonly Resource: Parse;
 }
-
-export const parser: Parser = Object.freeze({
-  Document,
-  NodeObjectArray,
-  TopLevelGraphContainer,
-  NodeObject,
-  GraphObject,
-  ListObject,
-  Primitive,
-  SetObject,
-  ValueObject,
-  Resource,
-});
