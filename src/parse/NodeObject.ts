@@ -14,6 +14,7 @@ import {
   type Parsed,
   type Parse,
   type ToParse,
+  parseWarning,
 } from "./common";
 import * as IR from "../IntermediateResult";
 import { af, df } from "../common";
@@ -191,13 +192,37 @@ const parseUnknownKeyEntry: ParseEntry = ({ element }) =>
     patterns: [],
     projections: [],
     warnings: [
-      {
+      parseWarning({
         message: "Key not defined by context and ignored",
-        path: [],
-      },
+      }),
     ],
   });
 
+/**
+ * Parse a Node Object entry whose key expands to an IRI.
+ *
+ * @see https://www.w3.org/TR/json-ld11/#node-objects
+ *
+ * > The values associated with keys that expand to
+ * > an [IRI](https://tools.ietf.org/html/rfc3987#section-2) *MUST* be one of
+ * > the following:
+ * >
+ * > - [string](https://infra.spec.whatwg.org/#javascript-string),
+ * > - [number](https://tc39.es/ecma262/#sec-terms-and-definitions-number-value),
+ * > - `true`,
+ * > - `false`,
+ * > - [null](https://infra.spec.whatwg.org/#nulls),
+ * > - [node object](https://www.w3.org/TR/json-ld11/#dfn-node-object),
+ * > - [graph object](https://www.w3.org/TR/json-ld11/#dfn-graph-object),
+ * > - [value object](https://www.w3.org/TR/json-ld11/#dfn-value-object),
+ * > - [list object](https://www.w3.org/TR/json-ld11/#dfn-list-object),
+ * > - [set object](https://www.w3.org/TR/json-ld11/#dfn-set-object),
+ * > - an [array](https://infra.spec.whatwg.org/#list) of zero or more of any of the possibilities above,
+ * > - a [language map](https://www.w3.org/TR/json-ld11/#dfn-language-map),
+ * > - an [index map](https://www.w3.org/TR/json-ld11/#dfn-index-map),
+ * > - an [included block](https://www.w3.org/TR/json-ld11/#dfn-included-block)
+ * > - an [id map](https://www.w3.org/TR/json-ld11/#dfn-id-map), or
+ * > - a [type map](https://www.w3.org/TR/json-ld11/#dfn-type-map) */
 const parseIriEntry = async (
   {
     element,
