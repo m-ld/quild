@@ -18,7 +18,7 @@ describe(Document, () => {
         height: "172",
       },
       variable: df.variable("luke"),
-      ctx: await nullContext(),
+      ctx: nullContext,
     };
 
     expect(await parser.Document(toParse)).toStrictEqual(
@@ -38,7 +38,7 @@ describe(Document, () => {
         },
       ],
       variable: df.variable("luke"),
-      ctx: await nullContext(),
+      ctx: nullContext,
     };
 
     expect(await parser.Document(toParse)).toStrictEqual(
@@ -60,7 +60,7 @@ describe(Document, () => {
         ],
       },
       variable: df.variable("luke"),
-      ctx: await nullContext(),
+      ctx: nullContext,
     };
 
     expect(await parser.Document(toParse)).toStrictEqual(

@@ -12,7 +12,7 @@ export const parseQuery = async (
     await parser.Document({
       element: query,
       variable: df.variable("root"),
-      ctx: await nullContext(),
+      ctx: nullContext,
     });
 
   return {

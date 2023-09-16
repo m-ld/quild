@@ -2,8 +2,6 @@
    ---
    TODO: https://github.com/m-ld/xql/issues/15 */
 
-import jsonld, { type ContextSpec, type ActiveContext } from "jsonld";
-import Context from "jsonld/lib/context";
 import { isUndefined, isString } from "lodash-es";
 import { mapParallelAsync, reduce, toPairs, concat, filter } from "rambdax";
 
@@ -15,6 +13,7 @@ import {
   type Parse,
   type ToParse,
   parseWarning,
+  contextParser,
 } from "./common";
 import * as IR from "../IntermediateResult";
 import { af, df } from "../common";
@@ -22,6 +21,10 @@ import { evolve, keys, pipedAsync, partial } from "../upstream/rambda";
 import { variableUnder } from "../variableUnder";
 
 import type * as RDF from "@rdfjs/types";
+import type {
+  JsonLdContext,
+  JsonLdContextNormalized,
+} from "jsonld-context-parser";
 import type { JsonObject, JsonValue } from "type-fest";
 
 const isAbsoluteIri = (x: string): boolean => x.includes(":");
@@ -32,17 +35,17 @@ const isAbsoluteIri = (x: string): boolean => x.includes(":");
  * @param key The key to expand.
  * @param ctx The context under which to expand the key.
  */
-const predicateForKey = (key: string, ctx: jsonld.ActiveContext) => {
-  const expanded = Context.expandIri(ctx, key, { vocab: true });
-  return isAbsoluteIri(expanded) ? df.namedNode(expanded) : null;
+const predicateForKey = (key: string, ctx: JsonLdContextNormalized) => {
+  const expanded = ctx.expandTerm(key, true);
+  return expanded && isAbsoluteIri(expanded) ? df.namedNode(expanded) : null;
 };
 
 const addMapping =
   (k: string, v: IR.IntermediateResult) => (ir: IR.NodeObject) =>
     ir.addMapping(k, v);
 
-const isId = (ctx: ActiveContext, k: string) =>
-  Context.expandIri(ctx, k, { vocab: true }) === "@id";
+const isId = (ctx: JsonLdContextNormalized, k: string) =>
+  ctx.expandTerm(k, true) === "@id";
 
 /**
  * Parse a JSON-LD Node Object.
@@ -55,14 +58,13 @@ export const NodeObject: Parse<JsonObject, IR.NodeObject> = async function ({
   ctx: outerCtx,
 }) {
   const ctx =
-    "@context" in element
-      ? await jsonld.processContext(
-          outerCtx,
-          /* eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-             ---
-             Goes away when we switch to jsonld-context-parser. */
-          element["@context"] as ContextSpec
-        )
+    "@context" in element && element["@context"]
+      ? /* eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+           ---
+           Needed until we have better types flowing. */
+        await contextParser.parse(element["@context"] as JsonLdContext, {
+          parentContext: outerCtx.getContextRaw(),
+        })
       : outerCtx;
 
   const [idKey, ...extraIdKeys] = filter(partial(isId, ctx), keys(element));

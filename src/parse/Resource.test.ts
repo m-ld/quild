@@ -10,12 +10,12 @@ import { df } from "../common";
 import type { JsonValue } from "type-fest";
 
 const variable = df.variable("thing");
-const makeToParse = async <Element extends JsonValue>(
+const makeToParse = <Element extends JsonValue>(
   element: Element
-): Promise<ToParse<Element>> => ({
+): ToParse<Element> => ({
   element,
   variable,
-  ctx: await nullContext(),
+  ctx: nullContext,
 });
 
 describe(Resource, () => {
@@ -23,7 +23,7 @@ describe(Resource, () => {
 
   it("parses a string, number, or boolean", async () => {
     for (const element of ["Luke Skywalker", 10, true]) {
-      const toParse = await makeToParse(element);
+      const toParse = makeToParse(element);
 
       expect(await parser.Resource(toParse)).toStrictEqual(
         await parser.Primitive(toParse)
@@ -32,7 +32,7 @@ describe(Resource, () => {
   });
 
   it("parses a null", async () => {
-    const toParse = await makeToParse(null);
+    const toParse = makeToParse(null);
 
     expect(await parser.Resource(toParse)).toStrictEqual(
       parsed({
@@ -48,7 +48,7 @@ describe(Resource, () => {
   });
 
   it("parses a Node Object", async () => {
-    const toParse = await makeToParse({
+    const toParse = makeToParse({
       "@context": {
         "@vocab": "http://swapi.dev/documentation#",
       },
@@ -70,7 +70,7 @@ describe(Resource, () => {
     ] as const;
 
     for (const [parseName, element] of elements) {
-      const toParse = await makeToParse(element);
+      const toParse = makeToParse(element);
 
       expect(await parser.Resource(toParse)).toStrictEqual(
         await parser[parseName](toParse)

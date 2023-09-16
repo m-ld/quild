@@ -1,4 +1,7 @@
-import jsonld from "jsonld";
+import {
+  ContextParser,
+  type JsonLdContextNormalized,
+} from "jsonld-context-parser";
 import { isPlainObject as isPlainObject_ } from "lodash-es";
 import { map } from "rambdax";
 
@@ -66,7 +69,7 @@ export interface ToParse<Element extends JsonValue = JsonValue> {
   /** The variable representing the node which this query applies to. */
   variable: RDF.Variable;
   /** The context in which to interpret the query. */
-  ctx: jsonld.ActiveContext;
+  ctx: JsonLdContextNormalized;
 }
 
 export const elementMatches = <T, U extends JsonValue>(
@@ -74,19 +77,8 @@ export const elementMatches = <T, U extends JsonValue>(
   toParse: ToParse<U>
 ): toParse is ToParse<T & U> => predicate(toParse.element);
 
-/**
- * Returns a null (empty, initial) `ActiveContext`.
- */
-export const nullContext = (
-  options?: jsonld.ProcessingOptions
-): Promise<jsonld.ActiveContext> =>
-  // Relies on `jsonld.processContext()` short-circuiting when the local context
-  // is `null`. Otherwise, there's no way to get an initial context using the
-  // public API.
-  /* eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-     --
-     Only way to make this work. */
-  jsonld.processContext(null as unknown as jsonld.ActiveContext, null, options);
+export const contextParser = new ContextParser();
+export const nullContext = await contextParser.parse({});
 
 /**
  * Make all properties in `T` optional, *except* keys assignable to `K`.

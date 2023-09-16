@@ -1,31 +1,31 @@
 /* eslint-disable no-await-in-loop -- We use this for grouping `expect()`s */
 import { describe, it, expect } from "@jest/globals";
-import jsonld, { type ContextSpec } from "jsonld";
 
 import { NodeObject } from "./NodeObject";
 import {
   type ToParse,
-  nullContext,
   parsed,
   parseWarning,
   nestWarningsUnderKey,
+  contextParser,
 } from "./common";
 import { defaultParser, inherit } from "./parser";
 import * as IR from "../IntermediateResult";
 import { PLACEHOLDER, af, df } from "../common";
 import { variableUnder } from "../variableUnder";
 
+import type { JsonLdContext } from "jsonld-context-parser";
 import type { JsonValue } from "type-fest";
 
 const variable = df.variable("thing");
 
 const makeToParse = async <Element extends JsonValue>(
   element: Element,
-  ctxSpec: ContextSpec = {}
+  ctxDef: JsonLdContext = {}
 ): Promise<ToParse<Element>> => ({
   element,
   variable,
-  ctx: await jsonld.processContext(await nullContext(), ctxSpec),
+  ctx: await contextParser.parse(ctxDef),
 });
 
 describe(NodeObject, () => {
