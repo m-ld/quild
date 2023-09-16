@@ -1,20 +1,24 @@
 import { describe, it, expect } from "@jest/globals";
+import jsonld, { type ContextSpec } from "jsonld";
 
 import { NodeObject } from "./NodeObject";
 import { type ToParse, nullContext, parsed, parseWarning } from "./common";
 import { defaultParser, inherit } from "./parser";
 import * as IR from "../IntermediateResult";
-import { af, df } from "../common";
+import { PLACEHOLDER, af, df } from "../common";
+import { variableUnder } from "../variableUnder";
 
 import type { JsonValue } from "type-fest";
 
 const variable = df.variable("thing");
+
 const makeToParse = async <Element extends JsonValue>(
-  element: Element
+  element: Element,
+  ctxSpec: ContextSpec = {}
 ): Promise<ToParse<Element>> => ({
   element,
   variable,
-  ctx: await nullContext(),
+  ctx: await jsonld.processContext(await nullContext(), ctxSpec),
 });
 
 describe(NodeObject, () => {
@@ -39,7 +43,7 @@ describe(NodeObject, () => {
     );
   });
 
-  it("parses a Resource entry", async () => {
+  it("parses a literal entry", async () => {
     const toParse = await makeToParse({
       "http://swapi.dev/documentation#name": "Luke Skywalker",
     });
@@ -63,21 +67,16 @@ describe(NodeObject, () => {
     );
   });
 
-  it("parses a Resource entry (mapped term)", async () => {
-    const toParse = await makeToParse({
-      "@context": {
-        name: "http://swapi.dev/documentation#name",
-      },
-      name: "Luke Skywalker",
-    });
+  it("parses a literal entry (mapped term)", async () => {
+    const toParse = await makeToParse(
+      { name: "Luke Skywalker" },
+      { name: "http://swapi.dev/documentation#name" }
+    );
 
     expect(await parser.NodeObject(toParse)).toStrictEqual(
       parsed({
         term: variable,
         intermediateResult: new IR.NodeObject({
-          "@context": new IR.NativeValue({
-            name: "http://swapi.dev/documentation#name",
-          }),
           name: new IR.NativeValue("Luke Skywalker"),
         }),
         patterns: [
@@ -91,7 +90,72 @@ describe(NodeObject, () => {
     );
   });
 
-  it.todo("parses a Resource array entry");
+  it("parses a placeholder entry", async () => {
+    const toParse = await makeToParse({
+      "http://swapi.dev/documentation#name": PLACEHOLDER,
+    });
+
+    const nameVariable = variableUnder(
+      variable,
+      "http://swapi.dev/documentation#name"
+    );
+
+    expect(await parser.NodeObject(toParse)).toStrictEqual(
+      parsed({
+        term: variable,
+        intermediateResult: new IR.NodeObject({
+          "http://swapi.dev/documentation#name": new IR.NativePlaceholder(
+            nameVariable
+          ),
+        }),
+        patterns: [
+          af.createPattern(
+            variable,
+            df.namedNode("http://swapi.dev/documentation#name"),
+            nameVariable
+          ),
+        ],
+        projections: [nameVariable],
+      })
+    );
+  });
+
+  it("parses a Node Object array entry", async () => {
+    const toParse = await makeToParse(
+      { film: [{ title: PLACEHOLDER }] },
+      { "@vocab": "http://swapi.dev/documentation#" }
+    );
+
+    const filmVariable = variableUnder(variable, "film");
+    const titleVariable = variableUnder(filmVariable, "title");
+
+    expect(await parser.NodeObject(toParse)).toStrictEqual(
+      parsed({
+        term: variable,
+        intermediateResult: new IR.NodeObject({
+          film: new IR.Plural(
+            filmVariable,
+            new IR.NodeObject({
+              title: new IR.NativePlaceholder(titleVariable),
+            })
+          ),
+        }),
+        patterns: [
+          af.createPattern(
+            variable,
+            df.namedNode("http://swapi.dev/documentation#film"),
+            filmVariable
+          ),
+          af.createPattern(
+            filmVariable,
+            df.namedNode("http://swapi.dev/documentation#title"),
+            titleVariable
+          ),
+        ],
+        projections: [filmVariable, titleVariable],
+      })
+    );
+  });
 
   it("parses an @id entry", async () => {
     const toParse = await makeToParse({
