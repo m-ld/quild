@@ -1,8 +1,15 @@
+/* eslint-disable no-await-in-loop -- We use this for grouping `expect()`s */
 import { describe, it, expect } from "@jest/globals";
 import jsonld, { type ContextSpec } from "jsonld";
 
 import { NodeObject } from "./NodeObject";
-import { type ToParse, nullContext, parsed, parseWarning } from "./common";
+import {
+  type ToParse,
+  nullContext,
+  parsed,
+  parseWarning,
+  nestWarningsUnderKey,
+} from "./common";
 import { defaultParser, inherit } from "./parser";
 import * as IR from "../IntermediateResult";
 import { PLACEHOLDER, af, df } from "../common";
@@ -43,79 +50,95 @@ describe(NodeObject, () => {
     );
   });
 
-  it("parses a literal entry", async () => {
-    const toParse = await makeToParse({
-      "http://swapi.dev/documentation#name": "Luke Skywalker",
-    });
+  it("parses a Resource entry", async () => {
+    const children = [
+      PLACEHOLDER,
+      // string
+      "Luke Skywalker",
+      // number
+      10,
+      // boolean
+      true,
+      // node object,
+      { "http://swapi.dev/documentation#name": "Luke Skywalker" },
+      // graph object,
+      { "@graph": [] },
+      // value object,
+      { "@value": "abc" },
+      // list object,
+      { "@list": [] },
+      // set object,
+      { "@set": [] },
+    ];
 
-    expect(await parser.NodeObject(toParse)).toStrictEqual(
-      parsed({
-        term: variable,
-        intermediateResult: new IR.NodeObject({
-          "http://swapi.dev/documentation#name": new IR.NativeValue(
-            "Luke Skywalker"
+    for (const child of children) {
+      const toParse = await makeToParse({
+        "http://example.com/value": child,
+      });
+
+      const childVariable = variableUnder(variable, "http://example.com/value");
+
+      const resource = await parser.Resource({
+        element: child,
+        variable: childVariable,
+        ctx: toParse.ctx,
+      });
+
+      expect(await parser.NodeObject(toParse)).toStrictEqual(
+        parsed({
+          term: variable,
+          intermediateResult: new IR.NodeObject({
+            "http://example.com/value": resource.intermediateResult,
+          }),
+          patterns: [
+            af.createPattern(
+              variable,
+              df.namedNode("http://example.com/value"),
+              resource.term
+            ),
+            ...resource.patterns,
+          ],
+          projections: resource.projections,
+          warnings: nestWarningsUnderKey("http://example.com/value")(
+            resource.warnings
           ),
-        }),
-        patterns: [
-          af.createPattern(
-            variable,
-            df.namedNode("http://swapi.dev/documentation#name"),
-            df.literal("Luke Skywalker")
-          ),
-        ],
-      })
-    );
+        })
+      );
+    }
   });
 
-  it("parses a literal entry (mapped term)", async () => {
+  it("uses terms in the @context", async () => {
     const toParse = await makeToParse(
       { name: "Luke Skywalker" },
       { name: "http://swapi.dev/documentation#name" }
     );
 
-    expect(await parser.NodeObject(toParse)).toStrictEqual(
-      parsed({
-        term: variable,
-        intermediateResult: new IR.NodeObject({
-          name: new IR.NativeValue("Luke Skywalker"),
-        }),
-        patterns: [
-          af.createPattern(
-            variable,
-            df.namedNode("http://swapi.dev/documentation#name"),
-            df.literal("Luke Skywalker")
-          ),
-        ],
-      })
-    );
-  });
-
-  it("parses a placeholder entry", async () => {
-    const toParse = await makeToParse({
-      "http://swapi.dev/documentation#name": PLACEHOLDER,
-    });
-
-    const nameVariable = variableUnder(
+    const childVariable = variableUnder(
       variable,
       "http://swapi.dev/documentation#name"
     );
 
+    const resource = await parser.Resource({
+      element: "Luke Skywalker",
+      variable: childVariable,
+      ctx: toParse.ctx,
+    });
+
     expect(await parser.NodeObject(toParse)).toStrictEqual(
       parsed({
         term: variable,
         intermediateResult: new IR.NodeObject({
-          "http://swapi.dev/documentation#name": new IR.NativePlaceholder(
-            nameVariable
-          ),
+          name: resource.intermediateResult,
         }),
         patterns: [
           af.createPattern(
             variable,
             df.namedNode("http://swapi.dev/documentation#name"),
-            nameVariable
+            resource.term
           ),
+          ...resource.patterns,
         ],
-        projections: [nameVariable],
+        projections: resource.projections,
       })
     );
   });
