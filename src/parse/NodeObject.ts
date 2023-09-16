@@ -2,7 +2,6 @@
    ---
    TODO: https://github.com/m-ld/xql/issues/15 */
 
-import { Map } from "immutable";
 import jsonld, { type ContextSpec, type ActiveContext } from "jsonld";
 import Context from "jsonld/lib/context";
 import { isUndefined, isString } from "lodash-es";
@@ -110,7 +109,7 @@ export const NodeObject: Parse<JsonObject, IR.NodeObject> = async function ({
     reduce(
       (acc, f) => f(acc),
       parsed({
-        intermediateResult: new IR.NodeObject(Map()),
+        intermediateResult: new IR.NodeObject({}),
         term: variable,
       })
     )

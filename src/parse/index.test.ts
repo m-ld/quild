@@ -1,5 +1,4 @@
 import { describe, it, expect } from "@jest/globals";
-import { Map } from "immutable";
 
 import { parseQuery } from ".";
 import "../../test-util/toBeSparqlEqualTo";
@@ -17,17 +16,15 @@ describe(parseQuery, () => {
     const { intermediateResult, sparql } = await parseQuery(query);
 
     expect(intermediateResult).toStrictEqual(
-      new IR.NodeObject(
-        Map({
-          "@id": new IR.Name(df.namedNode("https://swapi.dev/api/people/1/")),
-          "http://swapi.dev/documentation#hair_color": new IR.NativePlaceholder(
-            df.variable("root·hair_color")
-          ),
-          "http://swapi.dev/documentation#eye_color": new IR.NativePlaceholder(
-            df.variable("root·eye_color")
-          ),
-        })
-      )
+      new IR.NodeObject({
+        "@id": new IR.Name(df.namedNode("https://swapi.dev/api/people/1/")),
+        "http://swapi.dev/documentation#hair_color": new IR.NativePlaceholder(
+          df.variable("root·hair_color")
+        ),
+        "http://swapi.dev/documentation#eye_color": new IR.NativePlaceholder(
+          df.variable("root·eye_color")
+        ),
+      })
     );
 
     expect(sparql).toBeSparqlEqualTo(/* sparql */ `
@@ -50,19 +47,17 @@ describe(parseQuery, () => {
     const { intermediateResult, sparql } = await parseQuery(query);
 
     expect(intermediateResult).toStrictEqual(
-      new IR.NodeObject(
-        Map({
-          "http://swapi.dev/documentation#name": new IR.NativeValue(
-            "Luke Skywalker"
-          ),
-          "http://swapi.dev/documentation#hair_color": new IR.NativePlaceholder(
-            df.variable("root·hair_color")
-          ),
-          "http://swapi.dev/documentation#eye_color": new IR.NativePlaceholder(
-            df.variable("root·eye_color")
-          ),
-        })
-      )
+      new IR.NodeObject({
+        "http://swapi.dev/documentation#name": new IR.NativeValue(
+          "Luke Skywalker"
+        ),
+        "http://swapi.dev/documentation#hair_color": new IR.NativePlaceholder(
+          df.variable("root·hair_color")
+        ),
+        "http://swapi.dev/documentation#eye_color": new IR.NativePlaceholder(
+          df.variable("root·eye_color")
+        ),
+      })
     );
 
     expect(sparql).toBeSparqlEqualTo(/* sparql */ `
@@ -86,21 +81,15 @@ describe(parseQuery, () => {
     const { intermediateResult, sparql } = await parseQuery(query);
 
     expect(intermediateResult).toStrictEqual(
-      new IR.NodeObject(
-        Map({
-          "@context": new IR.NativeValue({
-            "@vocab": "http://swapi.dev/documentation#",
-          }),
-          name: new IR.NativeValue("Luke Skywalker"),
-          homeworld: new IR.NodeObject(
-            Map({
-              name: new IR.NativePlaceholder(
-                df.variable("root·homeworld·name")
-              ),
-            })
-          ),
-        })
-      )
+      new IR.NodeObject({
+        "@context": new IR.NativeValue({
+          "@vocab": "http://swapi.dev/documentation#",
+        }),
+        name: new IR.NativeValue("Luke Skywalker"),
+        homeworld: new IR.NodeObject({
+          name: new IR.NativePlaceholder(df.variable("root·homeworld·name")),
+        }),
+      })
     );
 
     expect(sparql).toBeSparqlEqualTo(/* sparql */ `
@@ -128,16 +117,14 @@ describe(parseQuery, () => {
     expect(intermediateResult).toStrictEqual(
       new IR.Plural(
         df.variable("root"),
-        new IR.NodeObject(
-          Map({
-            "@context": new IR.NativeValue({
-              "@vocab": "http://swapi.dev/documentation#",
-            }),
-            eye_color: new IR.NativeValue("blue"),
-            name: new IR.NativePlaceholder(df.variable("root·name")),
-            height: new IR.NativePlaceholder(df.variable("root·height")),
-          })
-        )
+        new IR.NodeObject({
+          "@context": new IR.NativeValue({
+            "@vocab": "http://swapi.dev/documentation#",
+          }),
+          eye_color: new IR.NativeValue("blue"),
+          name: new IR.NativePlaceholder(df.variable("root·name")),
+          height: new IR.NativePlaceholder(df.variable("root·height")),
+        })
       )
     );
 
@@ -166,25 +153,19 @@ describe(parseQuery, () => {
     expect(intermediateResult).toStrictEqual(
       new IR.Plural(
         df.variable("root"),
-        new IR.NodeObject(
-          Map({
-            "@context": new IR.NativeValue({
-              "@vocab": "http://swapi.dev/documentation#",
-            }),
-            eye_color: new IR.NativeValue("blue"),
-            name: new IR.NativePlaceholder(df.variable("root·name")),
-            films: new IR.Plural(
-              df.variable("root·films"),
-              new IR.NodeObject(
-                Map({
-                  title: new IR.NativePlaceholder(
-                    df.variable("root·films·title")
-                  ),
-                })
-              )
-            ),
-          })
-        )
+        new IR.NodeObject({
+          "@context": new IR.NativeValue({
+            "@vocab": "http://swapi.dev/documentation#",
+          }),
+          eye_color: new IR.NativeValue("blue"),
+          name: new IR.NativePlaceholder(df.variable("root·name")),
+          films: new IR.Plural(
+            df.variable("root·films"),
+            new IR.NodeObject({
+              title: new IR.NativePlaceholder(df.variable("root·films·title")),
+            })
+          ),
+        })
       )
     );
 
@@ -210,18 +191,16 @@ describe(parseQuery, () => {
     const { intermediateResult, sparql } = await parseQuery(query);
 
     expect(intermediateResult).toStrictEqual(
-      new IR.NodeObject(
-        Map({
-          "@context": new IR.NativeValue({ id: "@id" }),
-          id: new IR.Name(df.namedNode("https://swapi.dev/api/people/1/")),
-          "http://swapi.dev/documentation#hair_color": new IR.NativePlaceholder(
-            df.variable("root·hair_color")
-          ),
-          "http://swapi.dev/documentation#eye_color": new IR.NativePlaceholder(
-            df.variable("root·eye_color")
-          ),
-        })
-      )
+      new IR.NodeObject({
+        "@context": new IR.NativeValue({ id: "@id" }),
+        id: new IR.Name(df.namedNode("https://swapi.dev/api/people/1/")),
+        "http://swapi.dev/documentation#hair_color": new IR.NativePlaceholder(
+          df.variable("root·hair_color")
+        ),
+        "http://swapi.dev/documentation#eye_color": new IR.NativePlaceholder(
+          df.variable("root·eye_color")
+        ),
+      })
     );
 
     expect(sparql).toBeSparqlEqualTo(/* sparql */ `
@@ -254,22 +233,20 @@ describe(parseQuery, () => {
     expect(intermediateResult).toStrictEqual(
       new IR.Plural(
         df.variable("root"),
-        new IR.NodeObject(
-          Map({
-            "@context": new IR.NativeValue({
-              name: "http://swapi.dev/documentation#name",
-              films: "http://swapi.dev/documentation#films",
-            }),
-            eye_color: new IR.NativeValue("blue"),
-            name: new IR.NativePlaceholder(df.variable("root·name")),
-            homeworld: new IR.NativeValue({ name: "?" }),
-            films: new IR.Plural(
-              df.variable("root·films"),
-              new IR.NodeObject(Map({ title: new IR.NativeValue("?") }))
-            ),
-            vehicles: new IR.NativeValue([{ name: "?" }]),
-          })
-        )
+        new IR.NodeObject({
+          "@context": new IR.NativeValue({
+            name: "http://swapi.dev/documentation#name",
+            films: "http://swapi.dev/documentation#films",
+          }),
+          eye_color: new IR.NativeValue("blue"),
+          name: new IR.NativePlaceholder(df.variable("root·name")),
+          homeworld: new IR.NativeValue({ name: "?" }),
+          films: new IR.Plural(
+            df.variable("root·films"),
+            new IR.NodeObject({ title: new IR.NativeValue("?") })
+          ),
+          vehicles: new IR.NativeValue([{ name: "?" }]),
+        })
       )
     );
 

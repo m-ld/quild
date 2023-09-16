@@ -1,4 +1,4 @@
-import { Map } from "immutable";
+import { map } from "rambdax";
 
 import { toJSONNative } from "./representation";
 
@@ -8,6 +8,14 @@ import type { JsonValue } from "type-fest";
 export class ResultError extends Error {}
 
 const termString = (term: RDF.Term) => `<${term.termType}: ${term.value}>`;
+
+// In the style of Clojure's `update`
+// https://clojuredocs.org/clojure.core/update
+const update = <K extends keyof O, O extends object>(
+  obj: O,
+  key: K,
+  replaceFn: (previousValue: O[K] | undefined) => O[K]
+): O => ({ ...obj, [key]: replaceFn(obj[key]) });
 
 export class IncompleteResultError extends ResultError {
   constructor(readonly variable: RDF.Variable) {
@@ -79,7 +87,7 @@ export class Plural implements IntermediateResult {
   constructor(
     private readonly variable: RDF.Variable,
     private readonly template: IntermediateResult,
-    private readonly results: Map<string, IntermediateResult> = Map()
+    private readonly results: Record<string, IntermediateResult> = {}
   ) {}
 
   addSolution(solution: RDF.Bindings): IntermediateResult {
@@ -94,33 +102,30 @@ export class Plural implements IntermediateResult {
     return new Plural(
       this.variable,
       this.template,
-      this.results.update(JSON.stringify(v), this.template, (ir) =>
-        ir.addSolution(solution)
+      update(this.results, JSON.stringify(v), (ir) =>
+        (ir ?? this.template).addSolution(solution)
       )
     );
   }
 
   result(): JsonValue {
-    return this.results
-      .valueSeq()
-      .map((r) => r.result())
-      .toArray();
+    return Object.values(this.results).map((r) => r.result());
   }
 }
 
 export class NodeObject implements IntermediateResult {
-  constructor(private readonly results: Map<string, IntermediateResult>) {}
+  constructor(private readonly results: Record<string, IntermediateResult>) {}
 
   // TODO: Test
   addMapping(k: string, v: IntermediateResult) {
-    return new NodeObject(this.results.set(k, v));
+    return new NodeObject({ ...this.results, [k]: v });
   }
 
   addSolution(solution: RDF.Bindings): IntermediateResult {
-    return new NodeObject(this.results.map((ir) => ir.addSolution(solution)));
+    return new NodeObject(map((ir) => ir.addSolution(solution), this.results));
   }
 
   result(): JsonValue {
-    return this.results.map((r) => r.result()).toObject();
+    return map((r) => r.result(), this.results);
   }
 }
