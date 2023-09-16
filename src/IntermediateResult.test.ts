@@ -8,7 +8,6 @@ import {
   type IntermediateResult,
   IncompleteResultError,
   NativeValue,
-  Name,
   BadNativeValueError,
 } from "./IntermediateResult";
 import { df, integer } from "./common";
@@ -74,24 +73,6 @@ describe(NativeValue, () => {
     );
 
     expect(ir.result()).toBe("Luke Skywalker");
-  });
-});
-
-describe(Name, () => {
-  it("returns its result", () => {
-    const ir = new Name(df.namedNode("https://swapi.dev/api/people/1/"));
-
-    expect(ir.result()).toBe("https://swapi.dev/api/people/1/");
-  });
-
-  it("ignores additional solutions", () => {
-    const ir = new Name(
-      df.namedNode("https://swapi.dev/api/people/1/")
-    ).addSolution(
-      bf.bindings([[root, df.namedNode("https://swapi.dev/api/people/6/")]])
-    );
-
-    expect(ir.result()).toBe("https://swapi.dev/api/people/1/");
   });
 });
 

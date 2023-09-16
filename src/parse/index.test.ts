@@ -17,7 +17,7 @@ describe(parseQuery, () => {
 
     expect(intermediateResult).toStrictEqual(
       new IR.NodeObject({
-        "@id": new IR.Name(df.namedNode("https://swapi.dev/api/people/1/")),
+        "@id": new IR.NativeValue("https://swapi.dev/api/people/1/"),
         "http://swapi.dev/documentation#hair_color": new IR.NativePlaceholder(
           df.variable("root·hair_color")
         ),
@@ -193,7 +193,7 @@ describe(parseQuery, () => {
     expect(intermediateResult).toStrictEqual(
       new IR.NodeObject({
         "@context": new IR.NativeValue({ id: "@id" }),
-        id: new IR.Name(df.namedNode("https://swapi.dev/api/people/1/")),
+        id: new IR.NativeValue("https://swapi.dev/api/people/1/"),
         "http://swapi.dev/documentation#hair_color": new IR.NativePlaceholder(
           df.variable("root·hair_color")
         ),

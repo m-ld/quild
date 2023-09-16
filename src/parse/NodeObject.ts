@@ -178,7 +178,7 @@ const parseContextEntry: ParseEntry = ({ element }) =>
 const parseIdEntry: ParseEntry = ({ element }) => {
   if (!isString(element)) throw "TODO: Name must be a string";
   return Promise.resolve({
-    intermediateResult: new IR.Name(df.namedNode(element)),
+    intermediateResult: new IR.NativeValue(element),
     patterns: [],
     projections: [],
     warnings: [],

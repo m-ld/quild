@@ -71,18 +71,6 @@ export class NativeValue implements IntermediateResult {
   }
 }
 
-export class Name implements IntermediateResult {
-  constructor(private readonly value: RDF.NamedNode) {}
-
-  addSolution(_solution: RDF.Bindings): IntermediateResult {
-    return this;
-  }
-
-  result(): JsonValue {
-    return this.value.value;
-  }
-}
-
 export class Plural implements IntermediateResult {
   constructor(
     private readonly variable: RDF.Variable,
