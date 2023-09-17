@@ -143,6 +143,89 @@ describe(NodeObject, () => {
     );
   });
 
+  it("parses a context-defined Named Graph, List, or Set", async () => {
+    const tk = [
+      // Named Graph
+      {
+        value: [
+          { "http://swapi.dev/documentation#name": "Luke Skywalker" },
+          { "http://swapi.dev/documentation#name": "Owen Lars" },
+        ],
+        termDefinition: { "@container": "@graph" },
+        expandedValue: {
+          "@graph": [
+            { "http://swapi.dev/documentation#name": "Luke Skywalker" },
+            { "http://swapi.dev/documentation#name": "Owen Lars" },
+          ],
+        },
+      },
+      // List
+      {
+        value: [
+          { "http://swapi.dev/documentation#name": "Luke Skywalker" },
+          { "http://swapi.dev/documentation#name": "Owen Lars" },
+        ],
+        termDefinition: { "@container": "@list" },
+        expandedValue: {
+          "@list": [
+            { "http://swapi.dev/documentation#name": "Luke Skywalker" },
+            { "http://swapi.dev/documentation#name": "Owen Lars" },
+          ],
+        },
+      },
+      // Set
+      {
+        value: [
+          { "http://swapi.dev/documentation#name": "Luke Skywalker" },
+          { "http://swapi.dev/documentation#name": "Owen Lars" },
+        ],
+        termDefinition: { "@container": "@set" },
+        expandedValue: {
+          "@set": [
+            { "http://swapi.dev/documentation#name": "Luke Skywalker" },
+            { "http://swapi.dev/documentation#name": "Owen Lars" },
+          ],
+        },
+      },
+    ] as const;
+
+    for (const { value, termDefinition, expandedValue } of tk) {
+      const toParse = await makeToParse(
+        { "http://example.com/thing": value },
+        { "http://example.com/thing": termDefinition }
+      );
+
+      const childVariable = variableUnder(variable, "http://example.com/thing");
+
+      const resource = await parser.Resource({
+        element: expandedValue,
+        variable: childVariable,
+        ctx: toParse.ctx,
+      });
+
+      expect(await parser.NodeObject(toParse)).toStrictEqual(
+        parsed({
+          term: variable,
+          intermediateResult: new IR.NodeObject({
+            "http://example.com/thing": resource.intermediateResult,
+          }),
+          patterns: [
+            af.createPattern(
+              variable,
+              df.namedNode("http://example.com/thing"),
+              resource.term
+            ),
+            ...resource.patterns,
+          ],
+          projections: resource.projections,
+          warnings: nestWarningsUnderKey("http://example.com/thing")(
+            resource.warnings
+          ),
+        })
+      );
+    }
+  });
+
   it("parses a Node Object array entry", async () => {
     const toParse = await makeToParse(
       { film: [{ title: PLACEHOLDER }] },

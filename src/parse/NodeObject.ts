@@ -3,7 +3,15 @@
    TODO: https://github.com/m-ld/xql/issues/15 */
 
 import { isUndefined, isString } from "lodash-es";
-import { mapParallelAsync, reduce, toPairs, concat, filter } from "rambdax";
+import {
+  mapParallelAsync,
+  reduce,
+  toPairs,
+  concat,
+  filter,
+  equals,
+  mapToObject,
+} from "rambdax";
 
 import {
   nestWarningsUnderKey,
@@ -22,6 +30,7 @@ import { variableUnder } from "../variableUnder";
 
 import type * as RDF from "@rdfjs/types";
 import type {
+  Containers,
   JsonLdContext,
   JsonLdContextNormalized,
 } from "jsonld-context-parser";
@@ -35,7 +44,7 @@ const isAbsoluteIri = (x: string): boolean => x.includes(":");
  * @param key The key to expand.
  * @param ctx The context under which to expand the key.
  */
-const predicateForKey = (key: string, ctx: JsonLdContextNormalized) => {
+const predicateForKey = (ctx: JsonLdContextNormalized, key: string) => {
   const expanded = ctx.expandTerm(key, true);
   return expanded && isAbsoluteIri(expanded) ? df.namedNode(expanded) : null;
 };
@@ -46,6 +55,30 @@ const addMapping =
 
 const isId = (ctx: JsonLdContextNormalized, k: string) =>
   ctx.expandTerm(k, true) === "@id";
+
+/**
+ * Returns true iff the `@container` of `term` in `ctx` is exactly `container`.
+ */
+const termIsContainer = (
+  ctx: JsonLdContextNormalized,
+  term: string,
+  container: Containers
+) => {
+  const rawCtx: Record<string, unknown> = ctx.getContextRaw();
+  const termDef = rawCtx[term];
+  if (termDef && typeof termDef === "object" && "@container" in termDef) {
+    const actualContainer = termDef["@container"];
+    return equals(
+      mapToObject(
+        (c) => ({ [c]: true }),
+        Array.isArray(container) ? container : [container]
+      ),
+      actualContainer
+    );
+  } else {
+    return false;
+  }
+};
 
 /**
  * Parse a JSON-LD Node Object.
@@ -151,16 +184,24 @@ const parseEntry: ParseEntry<[key: string, value: JsonValue]> = async function (
     return parseIdEntry({ ...toParse, element: value }, parser);
   }
 
-  const predicate = predicateForKey(key, ctx);
+  const predicate = predicateForKey(ctx, key);
 
   if (!predicate) {
     // Key is not defined in the context.
     return parseUnknownKeyEntry({ ...toParse, element: value }, parser);
   }
 
+  const resourceElement = termIsContainer(ctx, key, "@graph")
+    ? { "@graph": value }
+    : termIsContainer(ctx, key, "@list")
+    ? { "@list": value }
+    : termIsContainer(ctx, key, "@set")
+    ? { "@set": value }
+    : value;
+
   return parseIriEntry(
     {
-      element: value,
+      element: resourceElement,
       variable,
       ctx,
       node,
