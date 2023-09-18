@@ -1,43 +1,19 @@
-import jsonld from "jsonld";
-import { isArray } from "lodash-es";
-
-import { type Parsed, isPlainObject } from "./common";
-import { parseNode } from "./parseNode";
+import { type Parser, nullContext } from "./common";
+import { defaultParser } from "./parser";
 import { af, df } from "../common";
 
-/**
- * Returns a null (empty, initial) `ActiveContext`.
- */
-const nullContext = (
-  options?: jsonld.ProcessingOptions
-): Promise<jsonld.ActiveContext> =>
-  // Relies on `jsonld.processContext()` short-circuiting when the local context
-  // is `null`. Otherwise, there's no way to get an initial context using the
-  // public API.
-  /* eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-     --
-     Only way to make this work. */
-  jsonld.processContext(null as unknown as jsonld.ActiveContext, null, options);
+import type { JsonValue } from "type-fest";
 
-export const parse = async (
-  query: jsonld.NodeObject | readonly jsonld.NodeObject[]
+export const parseQuery = async (
+  query: JsonValue,
+  parser: Parser = defaultParser
 ) => {
-  let parsed: Parsed;
-
-  if (isArray(query) || isPlainObject(query)) {
-    parsed = await parseNode({
-      query,
+  const { intermediateResult, patterns, projections, warnings } =
+    await parser.Document({
+      element: query,
       variable: df.variable("root"),
-      ctx: await nullContext(),
+      ctx: nullContext,
     });
-  } else {
-    /* eslint-disable-next-line @typescript-eslint/no-throw-literal
-       ---
-       TODO: https://github.com/m-ld/xql/issues/15 */
-    throw "TODO: Unknown type of query";
-  }
-
-  const { intermediateResult, patterns, projections, warnings } = parsed;
 
   return {
     intermediateResult,

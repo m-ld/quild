@@ -1,6 +1,5 @@
 import { BindingsFactory } from "@comunica/bindings-factory";
 import { describe, it, expect } from "@jest/globals";
-import { Map } from "immutable";
 
 import {
   NativePlaceholder,
@@ -9,7 +8,6 @@ import {
   type IntermediateResult,
   IncompleteResultError,
   NativeValue,
-  Name,
   BadNativeValueError,
 } from "./IntermediateResult";
 import { df, integer } from "./common";
@@ -35,6 +33,7 @@ describe(NativePlaceholder, () => {
     const ir = new NativePlaceholder(filmsTitle).addSolution(
       bf.bindings([[filmsTitle, df.literal("A New Hope")]])
     );
+
     expect(ir.result()).toBe("A New Hope");
   });
 
@@ -64,6 +63,7 @@ describe(NativePlaceholder, () => {
 describe(NativeValue, () => {
   it("returns its result", () => {
     const ir = new NativeValue("blue");
+
     expect(ir.result()).toBe("blue");
   });
 
@@ -71,34 +71,17 @@ describe(NativeValue, () => {
     const ir = new NativeValue("Luke Skywalker").addSolution(
       bf.bindings([[name, df.literal("Owen Lars")]])
     );
+
     expect(ir.result()).toBe("Luke Skywalker");
-  });
-});
-
-describe(Name, () => {
-  it("returns its result", () => {
-    const ir = new Name(df.namedNode("https://swapi.dev/api/people/1/"));
-    expect(ir.result()).toBe("https://swapi.dev/api/people/1/");
-  });
-
-  it("ignores additional solutions", () => {
-    const ir = new Name(
-      df.namedNode("https://swapi.dev/api/people/1/")
-    ).addSolution(
-      bf.bindings([[root, df.namedNode("https://swapi.dev/api/people/6/")]])
-    );
-    expect(ir.result()).toBe("https://swapi.dev/api/people/1/");
   });
 });
 
 describe(NodeObject, () => {
   it("distributes solutions", () => {
-    const ir = new NodeObject(
-      Map({
-        name: new NativePlaceholder(name),
-        height: new NativePlaceholder(height),
-      })
-    ).addSolution(
+    const ir = new NodeObject({
+      name: new NativePlaceholder(name),
+      height: new NativePlaceholder(height),
+    }).addSolution(
       bf.bindings([
         [name, df.literal("Luke Skywalker")],
         [height, df.literal("172", integer)],
@@ -141,12 +124,10 @@ describe(Plural, () => {
     it("puts its results in an array", () => {
       const ir = new Plural(
         root,
-        new NodeObject(
-          Map({
-            name: new NativePlaceholder(name),
-            height: new NativePlaceholder(height),
-          })
-        )
+        new NodeObject({
+          name: new NativePlaceholder(name),
+          height: new NativePlaceholder(height),
+        })
       ).addSolution(
         bf.bindings([
           [root, df.namedNode("https://swapi.dev/api/people/1/")],
@@ -166,12 +147,10 @@ describe(Plural, () => {
     it("accepts multiple solutions", () => {
       const ir = new Plural(
         root,
-        new NodeObject(
-          Map({
-            name: new NativePlaceholder(name),
-            height: new NativePlaceholder(height),
-          })
-        )
+        new NodeObject({
+          name: new NativePlaceholder(name),
+          height: new NativePlaceholder(height),
+        })
       )
         .addSolution(
           bf.bindings([
@@ -203,15 +182,13 @@ describe(Plural, () => {
     it("nests properly", () => {
       const initialIr = new Plural(
         root,
-        new NodeObject(
-          Map({
-            name: new NativePlaceholder(name),
-            films: new Plural(
-              films,
-              new NodeObject(Map({ title: new NativePlaceholder(filmsTitle) }))
-            ),
-          })
-        )
+        new NodeObject({
+          name: new NativePlaceholder(name),
+          films: new Plural(
+            films,
+            new NodeObject({ title: new NativePlaceholder(filmsTitle) })
+          ),
+        })
       );
 
       const solutions: Array<Array<[Variable, Term]>> = [

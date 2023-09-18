@@ -1,20 +1,15 @@
-import { isPlainObject, nestWarningsUnderKey, type Parsed } from "./common";
-import { parseNodeObject } from "./parseNodeObject";
+import { nestWarningsUnderKey, isPlainObject, type Parse } from "./common";
 import * as IR from "../IntermediateResult";
 import { evolve, prepend } from "../upstream/rambda";
 
 import type * as RDF from "@rdfjs/types";
-import type Context from "jsonld/lib/context";
+import type { JsonArray } from "type-fest";
 
-export const parsePlural = async ({
-  query,
+export const NodeObjectArray: Parse<JsonArray, IR.Plural> = async function ({
+  element: query,
   variable,
-  ctx: outerCtx,
-}: {
-  query: unknown[];
-  variable: RDF.Variable;
-  ctx: Context.ActiveContext;
-}): Promise<Parsed<IR.Plural>> => {
+  ctx,
+}) {
   const soleSubquery = query[0];
   if (!(soleSubquery && query.length === 1)) {
     /* eslint-disable-next-line @typescript-eslint/no-throw-literal
@@ -35,10 +30,10 @@ export const parsePlural = async ({
       projections: prepend(variable)<RDF.Variable>,
       warnings: nestWarningsUnderKey(0),
     },
-    await parseNodeObject({
-      query: soleSubquery,
+    await this.NodeObject({
+      element: soleSubquery,
       variable,
-      ctx: outerCtx,
+      ctx,
     })
   );
 };
