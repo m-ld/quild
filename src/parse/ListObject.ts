@@ -1,7 +1,9 @@
-import { parseWarning, parsed, type Parse } from "./common";
+import { parseWarning, parsed } from "./common";
 import * as IR from "../IntermediateResult";
 
-export const ListObject: Parse = ({ element, variable }) =>
+import type { Parser } from "./common";
+
+export const ListObject: Parser["ListObject"] = ({ element, variable }) =>
   Promise.resolve(
     parsed({
       intermediateResult: new IR.NativeValue(element),

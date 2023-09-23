@@ -1,7 +1,10 @@
-import { parseWarning, parsed, type Parse } from "./common";
+import { type Parser, parseWarning, parsed } from "./common";
 import * as IR from "../IntermediateResult";
 
-export const TopLevelGraphContainer: Parse = ({ element, variable }) =>
+export const TopLevelGraphContainer: Parser["TopLevelGraphContainer"] = ({
+  element,
+  variable,
+}) =>
   Promise.resolve(
     parsed({
       intermediateResult: new IR.NativeValue(element),

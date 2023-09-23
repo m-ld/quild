@@ -1,7 +1,7 @@
-import { parseWarning, parsed, type Parse } from "./common";
+import { type Parser, parseWarning, parsed } from "./common";
 import * as IR from "../IntermediateResult";
 
-export const GraphObject: Parse = ({ element, variable }) =>
+export const GraphObject: Parser["GraphObject"] = ({ element, variable }) =>
   Promise.resolve(
     parsed({
       intermediateResult: new IR.NativeValue(element),

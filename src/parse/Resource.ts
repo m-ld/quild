@@ -1,6 +1,6 @@
 import { isString, isNumber, isBoolean, isArray, isNull } from "lodash-es";
 
-import { isPlainObject, parsed, parseWarning, type Parse } from "./common";
+import { type Parser, isPlainObject, parsed, parseWarning } from "./common";
 import * as IR from "../IntermediateResult";
 import { anyPass } from "../upstream/rambda";
 
@@ -21,7 +21,11 @@ const isLiteral = anyPass([isString, isNumber, isBoolean]);
  * > [3]: https://www.w3.org/TR/rdf11-concepts/#dfn-blank-node
  * > [4]: https://www.w3.org/TR/rdf11-concepts/#dfn-literal
  */
-export const Resource: Parse = async function ({ element, variable, ctx }) {
+export const Resource: Parser["Resource"] = async function ({
+  element,
+  variable,
+  ctx,
+}) {
   if (isLiteral(element)) {
     return this.Primitive({ element, variable, ctx });
   } else if (isPlainObject(element)) {

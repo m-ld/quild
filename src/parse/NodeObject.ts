@@ -18,7 +18,6 @@ import {
   parsed,
   type Parser,
   type Parsed,
-  type Parse,
   type ToParse,
   parseWarning,
   contextParser,
@@ -34,7 +33,7 @@ import type {
   JsonLdContext,
   JsonLdContextNormalized,
 } from "jsonld-context-parser";
-import type { JsonObject, JsonValue } from "type-fest";
+import type { JsonValue } from "type-fest";
 
 const isAbsoluteIri = (x: string): boolean => x.includes(":");
 
@@ -85,7 +84,7 @@ const termIsContainer = (
  *
  * @see https://www.w3.org/TR/json-ld11/#node-objects
  */
-export const NodeObject: Parse<JsonObject, IR.NodeObject> = async function ({
+export const NodeObject: Parser["NodeObject"] = async function ({
   element,
   variable,
   ctx: outerCtx,
