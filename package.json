@@ -12,7 +12,8 @@
     "test": "NODE_OPTIONS=--experimental-vm-modules jest",
     "build": "tsc --project tsconfig.build.json",
     "clean": "rm -rf dist",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "fetch-fixtures": "fixtures/fetchSwapiData.sh"
   },
   "devDependencies": {
     "@comunica/bindings-factory": "2.7.0",
