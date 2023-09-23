@@ -6,5 +6,6 @@
   "homeworld": { "@type": "@id" },
   "mass": { "@type": "xsd:integer" },
   "url": "@id",
-  "vehicles": { "@type": "@id" }
+  "vehicles": { "@type": "@id" },
+  "opening_crawl": { "@language": "en" }
 }
