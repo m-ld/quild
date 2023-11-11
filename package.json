@@ -13,6 +13,7 @@
     "build": "tsc --project tsconfig.build.json",
     "clean": "rm -rf dist",
     "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
     "fetch-fixtures": "fixtures/fetchSwapiData.sh"
   },
   "devDependencies": {
