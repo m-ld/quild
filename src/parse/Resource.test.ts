@@ -1,13 +1,18 @@
-/* eslint-disable no-await-in-loop -- We use this for grouping `expect()`s */
 import { describe, expect, it } from "@jest/globals";
 
 import { Resource } from "./Resource";
-import { type ToParse, nullContext, parsed, parseWarning } from "./common";
+import {
+  type ToParse,
+  nullContext,
+  parsed,
+  parseWarning,
+  type Parse,
+} from "./common";
 import { defaultParser, inherit } from "./parser";
 import * as IR from "../IntermediateResult";
 import { df } from "../common";
 
-import type { JsonValue } from "type-fest";
+import type { JsonValue, ValueOf } from "type-fest";
 
 const variable = df.variable("thing");
 const makeToParse = <Element extends JsonValue>(
@@ -20,16 +25,6 @@ const makeToParse = <Element extends JsonValue>(
 
 describe(Resource, () => {
   const parser = inherit(defaultParser, { Resource });
-
-  it("parses a string, number, or boolean", async () => {
-    for (const element of ["Luke Skywalker", 10, true]) {
-      const toParse = makeToParse(element);
-
-      expect(await parser.Resource(toParse)).toStrictEqual(
-        await parser.Primitive(toParse)
-      );
-    }
-  });
 
   it("parses a null", async () => {
     const toParse = makeToParse(null);
@@ -47,34 +42,48 @@ describe(Resource, () => {
     );
   });
 
-  it("parses a Node Object", async () => {
-    const toParse = makeToParse({
-      "@context": {
-        "@vocab": "http://swapi.dev/documentation#",
+  type TestCase = ValueOf<{
+    [ParseName in keyof typeof parser]: {
+      name: string;
+      parse: (typeof parser)[ParseName];
+      element: (typeof parser)[ParseName] extends Parse<infer Element>
+        ? Element
+        : never;
+    };
+  }>;
+
+  it.each([
+    { name: "string", parse: parser.Primitive, element: "Luke Skywalker" },
+    { name: "number", parse: parser.Primitive, element: 10 },
+    { name: "boolean", parse: parser.Primitive, element: true },
+    {
+      name: "Node Object",
+      parse: parser.NodeObject,
+      element: {
+        "@context": { "@vocab": "http://swapi.dev/documentation#" },
+        name: "Luke Skywalker",
+        height: "172",
       },
-      name: "Luke Skywalker",
-      height: "172",
-    });
+    },
+    {
+      name: "Graph Object",
+      parse: parser.GraphObject,
+      element: { "@graph": [] },
+    },
+    {
+      name: "Value Object",
+      parse: parser.ValueObject,
+      element: { "@value": "abc" },
+    },
+    { name: "List Object", parse: parser.ListObject, element: { "@list": [] } },
+    { name: "Set Object", parse: parser.SetObject, element: { "@set": [] } },
+  ] satisfies TestCase[])("parses a $name", async ({ element, parse }) => {
+    const toParse = makeToParse(element);
 
     expect(await parser.Resource(toParse)).toStrictEqual(
-      await parser.NodeObject(toParse)
+      // @ts-expect-error - It seems to be impossible to convince TS that
+      // `toParse` will always be an appropriate value for `parse` to parse.
+      await parse.bind(parser)(toParse)
     );
-  });
-
-  it("parses a Graph Object, Value Object, List Object, or Set Object", async () => {
-    const elements = [
-      ["GraphObject", { "@graph": [] }],
-      ["ValueObject", { "@value": "abc" }],
-      ["ListObject", { "@list": [] }],
-      ["SetObject", { "@set": [] }],
-    ] as const;
-
-    for (const [parseName, element] of elements) {
-      const toParse = makeToParse(element);
-
-      expect(await parser.Resource(toParse)).toStrictEqual(
-        await parser[parseName](toParse)
-      );
-    }
   });
 });
