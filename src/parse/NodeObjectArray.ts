@@ -1,11 +1,10 @@
-import { nestWarningsUnderKey, isPlainObject, type Parse } from "./common";
+import { type Parser, nestWarningsUnderKey, isPlainObject } from "./common";
 import * as IR from "../IntermediateResult";
 import { evolve, prepend } from "../upstream/rambda";
 
 import type * as RDF from "@rdfjs/types";
-import type { JsonArray } from "type-fest";
 
-export const NodeObjectArray: Parse<JsonArray, IR.Plural> = async function ({
+export const NodeObjectArray: Parser["NodeObjectArray"] = async function ({
   element: query,
   variable,
   ctx,

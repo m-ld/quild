@@ -1,4 +1,3 @@
-/* eslint-disable no-await-in-loop -- We use this for grouping `expect()`s */
 import { describe, it, expect } from "@jest/globals";
 
 import { NodeObject } from "./NodeObject";
@@ -50,61 +49,58 @@ describe(NodeObject, () => {
     );
   });
 
-  it("parses a Resource entry", async () => {
-    const children = [
-      PLACEHOLDER,
-      // string
-      "Luke Skywalker",
-      // number
-      10,
-      // boolean
-      true,
-      // node object,
-      { "http://swapi.dev/documentation#name": "Luke Skywalker" },
-      // graph object,
-      { "@graph": [] },
-      // value object,
-      { "@value": "abc" },
-      // list object,
-      { "@list": [] },
-      // set object,
-      { "@set": [] },
-    ];
+  it.each([
+    [PLACEHOLDER],
+    // string
+    ["Luke Skywalker"],
+    // number
+    [10],
+    // boolean
+    [true],
+    // node object,
+    [{ "http://swapi.dev/documentation#name": "Luke Skywalker" }],
+    // graph object,
+    [{ "@graph": [] }],
+    // value object,
+    [{ "@value": "abc" }],
+    // list object,
+    [{ "@list": [] }],
+    // set object,
+    [{ "@set": [] }],
+    // BOOKMARK: Give these tests unique names
+  ])("parses a Resource entry", async (child) => {
+    const toParse = await makeToParse({
+      "http://example.com/value": child,
+    });
 
-    for (const child of children) {
-      const toParse = await makeToParse({
-        "http://example.com/value": child,
-      });
+    const childVariable = variableUnder(variable, "http://example.com/value");
 
-      const childVariable = variableUnder(variable, "http://example.com/value");
+    const resource = await parser.Resource({
+      element: child,
+      variable: childVariable,
+      ctx: toParse.ctx,
+    });
 
-      const resource = await parser.Resource({
-        element: child,
-        variable: childVariable,
-        ctx: toParse.ctx,
-      });
-
-      expect(await parser.NodeObject(toParse)).toStrictEqual(
-        parsed({
-          term: variable,
-          intermediateResult: new IR.NodeObject({
-            "http://example.com/value": resource.intermediateResult,
-          }),
-          patterns: [
-            af.createPattern(
-              variable,
-              df.namedNode("http://example.com/value"),
-              resource.term
-            ),
-            ...resource.patterns,
-          ],
-          projections: resource.projections,
-          warnings: nestWarningsUnderKey("http://example.com/value")(
-            resource.warnings
+    expect(await parser.NodeObject(toParse)).toStrictEqual(
+      parsed({
+        term: variable,
+        intermediateResult: new IR.NodeObject({
+          "http://example.com/value": resource.intermediateResult,
+        }),
+        patterns: [
+          af.createPattern(
+            variable,
+            df.namedNode("http://example.com/value"),
+            resource.term
           ),
-        })
-      );
-    }
+          ...resource.patterns,
+        ],
+        projections: resource.projections,
+        warnings: nestWarningsUnderKey("http://example.com/value")(
+          resource.warnings
+        ),
+      })
+    );
   });
 
   it("uses terms in the @context", async () => {
@@ -143,53 +139,52 @@ describe(NodeObject, () => {
     );
   });
 
-  it("parses a context-defined Named Graph, List, or Set", async () => {
-    const tk = [
-      // Named Graph
-      {
-        value: [
+  it.each([
+    {
+      description: "Named Graph",
+      value: [
+        { "http://swapi.dev/documentation#name": "Luke Skywalker" },
+        { "http://swapi.dev/documentation#name": "Owen Lars" },
+      ],
+      termDefinition: { "@container": "@graph" },
+      expandedValue: {
+        "@graph": [
           { "http://swapi.dev/documentation#name": "Luke Skywalker" },
           { "http://swapi.dev/documentation#name": "Owen Lars" },
         ],
-        termDefinition: { "@container": "@graph" },
-        expandedValue: {
-          "@graph": [
-            { "http://swapi.dev/documentation#name": "Luke Skywalker" },
-            { "http://swapi.dev/documentation#name": "Owen Lars" },
-          ],
-        },
       },
-      // List
-      {
-        value: [
+    },
+    {
+      description: "List",
+      value: [
+        { "http://swapi.dev/documentation#name": "Luke Skywalker" },
+        { "http://swapi.dev/documentation#name": "Owen Lars" },
+      ],
+      termDefinition: { "@container": "@list" },
+      expandedValue: {
+        "@list": [
           { "http://swapi.dev/documentation#name": "Luke Skywalker" },
           { "http://swapi.dev/documentation#name": "Owen Lars" },
         ],
-        termDefinition: { "@container": "@list" },
-        expandedValue: {
-          "@list": [
-            { "http://swapi.dev/documentation#name": "Luke Skywalker" },
-            { "http://swapi.dev/documentation#name": "Owen Lars" },
-          ],
-        },
       },
-      // Set
-      {
-        value: [
+    },
+    {
+      description: "Set",
+      value: [
+        { "http://swapi.dev/documentation#name": "Luke Skywalker" },
+        { "http://swapi.dev/documentation#name": "Owen Lars" },
+      ],
+      termDefinition: { "@container": "@set" },
+      expandedValue: {
+        "@set": [
           { "http://swapi.dev/documentation#name": "Luke Skywalker" },
           { "http://swapi.dev/documentation#name": "Owen Lars" },
         ],
-        termDefinition: { "@container": "@set" },
-        expandedValue: {
-          "@set": [
-            { "http://swapi.dev/documentation#name": "Luke Skywalker" },
-            { "http://swapi.dev/documentation#name": "Owen Lars" },
-          ],
-        },
       },
-    ] as const;
-
-    for (const { value, termDefinition, expandedValue } of tk) {
+    },
+  ])(
+    "parses a context-defined $description",
+    async ({ value, termDefinition, expandedValue }) => {
       const toParse = await makeToParse(
         { "http://example.com/thing": value },
         { "http://example.com/thing": termDefinition }
@@ -224,7 +219,7 @@ describe(NodeObject, () => {
         })
       );
     }
-  });
+  );
 
   it("parses a Node Object array entry", async () => {
     const toParse = await makeToParse(
