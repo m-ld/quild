@@ -9,6 +9,8 @@ import {
   IncompleteResultError,
   NativeValue,
   BadNativeValueError,
+  NamePlaceholder,
+  NotANamedNodeError,
 } from "./IntermediateResult";
 import { df, integer } from "./common";
 
@@ -57,6 +59,42 @@ describe(NativePlaceholder, () => {
     }).toThrow(
       new BadNativeValueError(df.namedNode("https://swapi.dev/api/films/1/"))
     );
+  });
+});
+
+describe(NamePlaceholder, () => {
+  it("throws when it hasn't received a solution", () => {
+    expect(() => {
+      new NamePlaceholder(root).result();
+    }).toThrow(new IncompleteResultError(root));
+  });
+
+  it("accepts one solution", () => {
+    const ir = new NamePlaceholder(root).addSolution(
+      bf.bindings([[root, df.namedNode("https://swapi.dev/api/films/1/")]])
+    );
+
+    expect(ir.result()).toBe("https://swapi.dev/api/films/1/");
+  });
+
+  it("ignores additional solutions", () => {
+    const ir = new NamePlaceholder(root)
+      .addSolution(
+        bf.bindings([[root, df.namedNode("https://swapi.dev/api/films/1/")]])
+      )
+      .addSolution(
+        bf.bindings([[root, df.namedNode("https://swapi.dev/api/films/2/")]])
+      );
+
+    expect(ir.result()).toBe("https://swapi.dev/api/films/1/");
+  });
+
+  it("throws trying to represent a non-name value", () => {
+    expect(() => {
+      new NamePlaceholder(root).addSolution(
+        bf.bindings([[root, df.literal("A New Hope")]])
+      );
+    }).toThrow(new NotANamedNodeError(df.literal("A New Hope")));
   });
 });
 

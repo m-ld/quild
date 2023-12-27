@@ -258,7 +258,7 @@ describe(NodeObject, () => {
     );
   });
 
-  it("parses an @id entry", async () => {
+  it("parses an @id entry with a value", async () => {
     const toParse = await makeToParse({
       "@id": "https://swapi.dev/api/people/1/",
       "http://swapi.dev/documentation#name": "Luke Skywalker",
@@ -280,6 +280,33 @@ describe(NodeObject, () => {
             df.literal("Luke Skywalker")
           ),
         ],
+      })
+    );
+  });
+
+  it("parses an @id entry with a placeholder", async () => {
+    const toParse = await makeToParse({
+      "@id": "?",
+      "http://swapi.dev/documentation#name": "Luke Skywalker",
+    });
+
+    expect(await parser.NodeObject(toParse)).toStrictEqual(
+      parsed({
+        term: variable,
+        intermediateResult: new IR.NodeObject({
+          "@id": new IR.NamePlaceholder(variable),
+          "http://swapi.dev/documentation#name": new IR.NativeValue(
+            "Luke Skywalker"
+          ),
+        }),
+        patterns: [
+          af.createPattern(
+            variable,
+            df.namedNode("http://swapi.dev/documentation#name"),
+            df.literal("Luke Skywalker")
+          ),
+        ],
+        projections: [variable],
       })
     );
   });
