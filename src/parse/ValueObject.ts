@@ -9,7 +9,7 @@ export const ValueObject: Parser["ValueObject"] = ({ element, variable }) =>
       warnings: [
         parseWarning({
           message:
-            "Value objects are not yet supported. (https://github.com/m-ld/xql/issues/18)",
+            "Value objects are not yet supported. (https://github.com/m-ld/quild/issues/18)",
         }),
       ],
     })

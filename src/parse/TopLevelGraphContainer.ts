@@ -12,7 +12,7 @@ export const TopLevelGraphContainer: Parser["TopLevelGraphContainer"] = ({
       warnings: [
         parseWarning({
           message:
-            "Top-level @graph containers are not yet supported. (https://github.com/m-ld/xql/issues/21)",
+            "Top-level @graph containers are not yet supported. (https://github.com/m-ld/quild/issues/21)",
         }),
       ],
     })

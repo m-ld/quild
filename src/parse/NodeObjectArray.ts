@@ -13,14 +13,14 @@ export const NodeObjectArray: Parser["NodeObjectArray"] = async function ({
   if (!(soleSubquery && query.length === 1)) {
     /* eslint-disable-next-line @typescript-eslint/no-throw-literal
        ---
-       TODO: https://github.com/m-ld/xql/issues/15 */
+       TODO: https://github.com/m-ld/quild/issues/15 */
     throw "TODO: Only exactly one subquery is supported in an array, so far.";
   }
 
   if (!isPlainObject(soleSubquery))
     /* eslint-disable-next-line @typescript-eslint/no-throw-literal
        ---
-       TODO: https://github.com/m-ld/xql/issues/15 */
+       TODO: https://github.com/m-ld/quild/issues/15 */
     throw "TODO: Only objects can be in plural nodes, so far.";
 
   return evolve(

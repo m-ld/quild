@@ -9,7 +9,7 @@ export const GraphObject: Parser["GraphObject"] = ({ element, variable }) =>
       warnings: [
         parseWarning({
           message:
-            "Graph objects are not yet supported. (https://github.com/m-ld/xql/issues/22)",
+            "Graph objects are not yet supported. (https://github.com/m-ld/quild/issues/22)",
         }),
       ],
     })
