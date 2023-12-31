@@ -159,6 +159,16 @@ describe(query, () => {
     ]);
   });
 
+  it("can fail to match a singular query", async () => {
+    expect(
+      await query(source, {
+        "@context": { "@vocab": "http://swapi.dev/documentation#" },
+        eye_color: "purple",
+        name: "?",
+      })
+    ).toStrictEqual(null);
+  });
+
   it("preserves the contexts used in the query", async () => {
     expect(
       await query(source, {

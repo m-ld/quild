@@ -1,9 +1,9 @@
 import { QueryEngine } from "@comunica/query-sparql-rdfjs";
 
+import * as IR from "./IntermediateResult";
 import { parseQuery } from "./parse";
 import { readAll } from "./readAll";
 
-import type * as IR from "./IntermediateResult";
 import type { Source } from "@rdfjs/types";
 import type { JsonValue } from "type-fest";
 
@@ -31,5 +31,15 @@ export const query = async (
     intermediateResult
   );
 
-  return ir.result();
+  let result;
+  try {
+    result = ir.result();
+  } catch (e) {
+    if (e instanceof IR.IncompleteResultError) {
+      return null;
+    } else {
+      throw e;
+    }
+  }
+  return result;
 };
