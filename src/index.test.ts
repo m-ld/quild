@@ -54,6 +54,20 @@ describe(query, () => {
     });
   });
 
+  it("can query for an @id by property", async () => {
+    expect(
+      await query(source, {
+        "@id": "?",
+        "http://swapi.dev/documentation#hair_color": "blond",
+        "http://swapi.dev/documentation#eye_color": "blue",
+      })
+    ).toStrictEqual({
+      "@id": "https://swapi.dev/api/people/1/",
+      "http://swapi.dev/documentation#hair_color": "blond",
+      "http://swapi.dev/documentation#eye_color": "blue",
+    });
+  });
+
   it("can query for a property by other properties", async () => {
     expect(
       await query(source, {

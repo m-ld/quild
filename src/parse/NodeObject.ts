@@ -23,7 +23,7 @@ import {
   contextParser,
 } from "./common";
 import * as IR from "../IntermediateResult";
-import { af, df } from "../common";
+import { PLACEHOLDER, af, df } from "../common";
 import { evolve, keys, pipedAsync, partial } from "../upstream/rambda";
 import { variableUnder } from "../variableUnder";
 
@@ -105,7 +105,9 @@ export const NodeObject: Parser["NodeObject"] = async function ({
     throw "TODO: Invalid JSON-LD syntax; colliding keywords detected.";
   const id = idKey && element[idKey];
   if (!isUndefined(id) && !isString(id)) throw "TODO: Name must be a string";
-  const node = id ? df.namedNode(id) : variable;
+
+  const projectNodeName = id === PLACEHOLDER;
+  const node = id && !projectNodeName ? df.namedNode(id) : variable;
 
   const operationForEntry = async ([key, value]: [
     key: string,
@@ -146,6 +148,7 @@ export const NodeObject: Parser["NodeObject"] = async function ({
       parsed({
         intermediateResult: new IR.NodeObject({}),
         term: variable,
+        projections: projectNodeName ? [variable] : [],
       })
     )
   );
@@ -218,14 +221,23 @@ const parseContextEntry: ParseEntry = ({ element }) =>
     warnings: [],
   });
 
-const parseIdEntry: ParseEntry = ({ element }) => {
+const parseIdEntry: ParseEntry = ({ element, variable, node }) => {
   if (!isString(element)) throw "TODO: Name must be a string";
-  return Promise.resolve({
-    intermediateResult: new IR.NativeValue(element),
-    patterns: [],
-    projections: [],
-    warnings: [],
-  });
+  if (node.termType === "Variable") {
+    return Promise.resolve({
+      intermediateResult: new IR.NamePlaceholder(node),
+      patterns: [],
+      projections: [],
+      warnings: [],
+    });
+  } else {
+    return Promise.resolve({
+      intermediateResult: new IR.NativeValue(element),
+      patterns: [],
+      projections: [],
+      warnings: [],
+    });
+  }
 };
 
 const parseUnknownKeyEntry: ParseEntry = ({ element }) =>

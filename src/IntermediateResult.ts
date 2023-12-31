@@ -1,3 +1,4 @@
+import { isUndefined } from "lodash-es";
 import { map } from "rambdax";
 
 import { toJSONNative } from "./representation";
@@ -29,6 +30,12 @@ export class BadNativeValueError extends ResultError {
   }
 }
 
+export class NotANamedNodeError extends ResultError {
+  constructor(readonly value: RDF.Term) {
+    super(`Expected a NamedNode, but got ${termString(value)}`);
+  }
+}
+
 export interface IntermediateResult {
   addSolution(solution: RDF.Bindings): IntermediateResult;
   result(): JsonValue;
@@ -47,10 +54,34 @@ export class NativePlaceholder implements IntermediateResult {
     }
 
     const rep = toJSONNative(value);
-    if (rep) {
-      return new NativeValue(rep);
-    } else {
+    if (isUndefined(rep)) {
       throw new BadNativeValueError(value);
+    } else {
+      return new NativeValue(rep);
+    }
+  }
+
+  result(): JsonValue {
+    throw new IncompleteResultError(this.variable);
+  }
+}
+
+export class NamePlaceholder implements IntermediateResult {
+  constructor(private readonly variable: RDF.Variable) {}
+
+  addSolution(solution: RDF.Bindings): IntermediateResult {
+    const value = solution.get(this.variable);
+
+    // If there's no binding for us in the solution, ignore it.
+    // TODO: Is this the correct thing to do?
+    if (!value) {
+      return this;
+    }
+
+    if (value.termType !== "NamedNode") {
+      throw new NotANamedNodeError(value);
+    } else {
+      return new NativeValue(value.value);
     }
   }
 
