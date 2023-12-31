@@ -9,7 +9,7 @@ export const SetObject: Parser["SetObject"] = ({ element, variable }) =>
       warnings: [
         parseWarning({
           message:
-            "Set objects are not yet supported. (https://github.com/m-ld/xql/issues/23)",
+            "Set objects are not yet supported. (https://github.com/m-ld/quild/issues/23)",
         }),
       ],
     })

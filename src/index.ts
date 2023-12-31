@@ -12,7 +12,7 @@ const engine = new QueryEngine();
 /**
  * Reads the query once and returns the result.
  * @param graph The RDF data to query.
- * @param query The xQL query to read.
+ * @param query The Quild query to read.
  */
 export const query = async (
   source: Source,

@@ -11,7 +11,7 @@ export const ListObject: Parser["ListObject"] = ({ element, variable }) =>
       warnings: [
         parseWarning({
           message:
-            "List objects are not yet supported. (https://github.com/m-ld/xql/issues/19)",
+            "List objects are not yet supported. (https://github.com/m-ld/quild/issues/19)",
         }),
       ],
     })

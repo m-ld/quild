@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-throw-literal
    ---
-   TODO: https://github.com/m-ld/xql/issues/15 */
+   TODO: https://github.com/m-ld/quild/issues/15 */
 
 import { isUndefined, isString } from "lodash-es";
 import {
