@@ -174,8 +174,9 @@ describe(parseQuery, () => {
       SELECT ?root ?root·films ?root·films·title ?root·name WHERE {
         ?root·films swapi:title ?root·films·title.
         ?root swapi:eye_color "blue";
-              swapi:name ?root·name;
-              swapi:films ?root·films.
+              swapi:name ?root·name.
+
+        OPTIONAL { ?root swapi:films ?root·films. } .
       }
     `);
   });

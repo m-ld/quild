@@ -295,6 +295,8 @@ const parseIriEntry = async (
   return {
     intermediateResult: parsedChild.intermediateResult,
     patterns: [
+      // BOOKMARK
+      // af.createLeftJoin()
       af.createPattern(node, predicate, parsedChild.term),
       ...parsedChild.patterns,
     ],
