@@ -8,7 +8,7 @@ export const parseQuery = async (
   query: JsonValue,
   parser: Parser = defaultParser
 ) => {
-  const { intermediateResult, patterns, projections, warnings } =
+  const { intermediateResult, operation, projections, warnings } =
     await parser.Document({
       element: query,
       variable: df.variable("root"),
@@ -17,7 +17,7 @@ export const parseQuery = async (
 
   return {
     intermediateResult,
-    sparql: af.createProject(af.createBgp(patterns), projections),
+    sparql: af.createProject(operation, projections),
     warnings,
   };
 };

@@ -45,7 +45,7 @@ export const Resource: Parser["Resource"] = async function ({
       });
     }
   } else if (isArray(element)) {
-    return this.Document({
+    return this.NodeObjectArray({
       element,
       variable,
       ctx,

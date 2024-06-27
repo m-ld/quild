@@ -87,14 +87,16 @@ describe(NodeObject, () => {
         intermediateResult: new IR.NodeObject({
           "http://example.com/value": resource.intermediateResult,
         }),
-        patterns: [
-          af.createPattern(
-            variable,
-            df.namedNode("http://example.com/value"),
-            resource.term
-          ),
-          ...resource.patterns,
-        ],
+        operation: af.createJoin([
+          af.createBgp([
+            af.createPattern(
+              variable,
+              df.namedNode("http://example.com/value"),
+              resource.term
+            ),
+          ]),
+          resource.operation,
+        ]),
         projections: resource.projections,
         warnings: nestWarningsUnderKey("http://example.com/value")(
           resource.warnings
@@ -126,14 +128,16 @@ describe(NodeObject, () => {
         intermediateResult: new IR.NodeObject({
           name: resource.intermediateResult,
         }),
-        patterns: [
-          af.createPattern(
-            variable,
-            df.namedNode("http://swapi.dev/documentation#name"),
-            resource.term
-          ),
-          ...resource.patterns,
-        ],
+        operation: af.createJoin([
+          af.createBgp([
+            af.createPattern(
+              variable,
+              df.namedNode("http://swapi.dev/documentation#name"),
+              resource.term
+            ),
+          ]),
+          resource.operation,
+        ]),
         projections: resource.projections,
       })
     );
@@ -204,14 +208,19 @@ describe(NodeObject, () => {
           intermediateResult: new IR.NodeObject({
             "http://example.com/thing": resource.intermediateResult,
           }),
-          patterns: [
-            af.createPattern(
-              variable,
-              df.namedNode("http://example.com/thing"),
-              resource.term
-            ),
-            ...resource.patterns,
-          ],
+          operation: af.createLeftJoin(
+            af.createJoin([]),
+            af.createJoin([
+              af.createBgp([
+                af.createPattern(
+                  variable,
+                  df.namedNode("http://example.com/thing"),
+                  resource.term
+                ),
+              ]),
+              resource.operation,
+            ])
+          ),
           projections: resource.projections,
           warnings: nestWarningsUnderKey("http://example.com/thing")(
             resource.warnings
@@ -241,18 +250,25 @@ describe(NodeObject, () => {
             })
           ),
         }),
-        patterns: [
-          af.createPattern(
-            variable,
-            df.namedNode("http://swapi.dev/documentation#film"),
-            filmVariable
-          ),
-          af.createPattern(
-            filmVariable,
-            df.namedNode("http://swapi.dev/documentation#title"),
-            titleVariable
-          ),
-        ],
+        operation: af.createLeftJoin(
+          af.createJoin([]),
+          af.createJoin([
+            af.createBgp([
+              af.createPattern(
+                variable,
+                df.namedNode("http://swapi.dev/documentation#film"),
+                filmVariable
+              ),
+            ]),
+            af.createBgp([
+              af.createPattern(
+                filmVariable,
+                df.namedNode("http://swapi.dev/documentation#title"),
+                titleVariable
+              ),
+            ]),
+          ])
+        ),
         projections: [filmVariable, titleVariable],
       })
     );
@@ -273,13 +289,15 @@ describe(NodeObject, () => {
             "Luke Skywalker"
           ),
         }),
-        patterns: [
-          af.createPattern(
-            df.namedNode("https://swapi.dev/api/people/1/"),
-            df.namedNode("http://swapi.dev/documentation#name"),
-            df.literal("Luke Skywalker")
-          ),
-        ],
+        operation: af.createJoin([
+          af.createBgp([
+            af.createPattern(
+              df.namedNode("https://swapi.dev/api/people/1/"),
+              df.namedNode("http://swapi.dev/documentation#name"),
+              df.literal("Luke Skywalker")
+            ),
+          ]),
+        ]),
       })
     );
   });
@@ -299,13 +317,15 @@ describe(NodeObject, () => {
             "Luke Skywalker"
           ),
         }),
-        patterns: [
-          af.createPattern(
-            variable,
-            df.namedNode("http://swapi.dev/documentation#name"),
-            df.literal("Luke Skywalker")
-          ),
-        ],
+        operation: af.createJoin([
+          af.createBgp([
+            af.createPattern(
+              variable,
+              df.namedNode("http://swapi.dev/documentation#name"),
+              df.literal("Luke Skywalker")
+            ),
+          ]),
+        ]),
         projections: [variable],
       })
     );
@@ -332,13 +352,15 @@ describe(NodeObject, () => {
             "Luke Skywalker"
           ),
         }),
-        patterns: [
-          af.createPattern(
-            df.namedNode("https://swapi.dev/api/people/1/"),
-            df.namedNode("http://swapi.dev/documentation#name"),
-            df.literal("Luke Skywalker")
-          ),
-        ],
+        operation: af.createJoin([
+          af.createBgp([
+            af.createPattern(
+              df.namedNode("https://swapi.dev/api/people/1/"),
+              df.namedNode("http://swapi.dev/documentation#name"),
+              df.literal("Luke Skywalker")
+            ),
+          ]),
+        ]),
       })
     );
   });

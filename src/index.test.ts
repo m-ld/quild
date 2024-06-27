@@ -169,6 +169,55 @@ describe(query, () => {
     ).toStrictEqual(null);
   });
 
+  it("requires singular child nodes to match", async () => {
+    expect(
+      await query(source, [
+        {
+          "@context": { "@vocab": "http://swapi.dev/documentation#" },
+          eye_color: "blue",
+          name: "?",
+          films: { title: "The Phantom Menace" },
+        },
+      ])
+    ).toStrictEqual([]);
+  });
+
+  it("allows plural child nodes not to match", async () => {
+    expect(
+      await query(source, [
+        {
+          "@context": { "@vocab": "http://swapi.dev/documentation#" },
+          eye_color: "blue",
+          name: "?",
+          films: [
+            {
+              title: "The Empire Strikes Back",
+              director: "?",
+            },
+          ],
+        },
+      ])
+    ).toStrictEqual([
+      {
+        "@context": { "@vocab": "http://swapi.dev/documentation#" },
+        eye_color: "blue",
+        name: "Luke Skywalker",
+        films: [
+          {
+            title: "The Empire Strikes Back",
+            director: "Irvin Kershner",
+          },
+        ],
+      },
+      {
+        "@context": { "@vocab": "http://swapi.dev/documentation#" },
+        eye_color: "blue",
+        name: "Owen Lars",
+        films: [],
+      },
+    ]);
+  });
+
   it("preserves the contexts used in the query", async () => {
     expect(
       await query(source, {

@@ -6,6 +6,7 @@ import { isPlainObject as isPlainObject_ } from "lodash-es";
 import { map } from "rambdax";
 
 import { evolve, prepend } from "../upstream/rambda";
+import { af } from "../common";
 
 import type * as IR from "../IntermediateResult";
 import type * as RDF from "@rdfjs/types";
@@ -17,16 +18,22 @@ export interface ParseWarning {
   path: Array<string | number>;
 }
 
+/**
+ * An {@link Algebra.Operation} which can sensically be the first input in an
+ * {@link Algebra.Project}.
+ */
+export type ProjectableOperation = Algebra.Join | Algebra.LeftJoin;
+
 export interface Parsed<
   IRType extends IR.IntermediateResult = IR.IntermediateResult
 > {
   /** The IR which will accept bindings and produce a result. */
   intermediateResult: IRType;
-  /** Patterns to include in the SPARQL query. */
-  patterns: Algebra.Pattern[];
+  /** The operation from which the {@link projections} will be projected. */
+  operation: ProjectableOperation;
   /**
    * Variables to project in the SPARQL query. A subset of the variables used
-   * in the {@link patterns}; specifically, those the {@link intermediateResult}
+   * in the {@link operation}; specifically, those the {@link intermediateResult}
    * is interested in.
    */
   projections: RDF.Variable[];
@@ -91,7 +98,7 @@ type PartialExcept<T, K extends keyof T> = Partial<Omit<T, K>> & Pick<T, K>;
 export const parsed = <IRType extends IR.IntermediateResult>(
   partialParsed: PartialExcept<Parsed<IRType>, "intermediateResult" | "term">
 ): Parsed<IRType> => ({
-  patterns: [],
+  operation: af.createJoin([]),
   projections: [],
   warnings: [],
   ...partialParsed,
