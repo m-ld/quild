@@ -50,25 +50,19 @@ describe(NodeObject, () => {
   });
 
   it.each([
-    [PLACEHOLDER],
-    // string
-    ["Luke Skywalker"],
-    // number
-    [10],
-    // boolean
-    [true],
-    // node object,
-    [{ "http://swapi.dev/documentation#name": "Luke Skywalker" }],
-    // graph object,
-    [{ "@graph": [] }],
-    // value object,
-    [{ "@value": "abc" }],
-    // list object,
-    [{ "@list": [] }],
-    // set object,
-    [{ "@set": [] }],
-    // BOOKMARK: Give these tests unique names
-  ])("parses a Resource entry", async (child) => {
+    { desc: "placeholder", child: PLACEHOLDER },
+    { desc: "string", child: "Luke Skywalker" },
+    { desc: "number", child: 10 },
+    { desc: "boolean", child: true },
+    {
+      desc: "node object",
+      child: { "http://swapi.dev/documentation#name": "Luke Skywalker" },
+    },
+    { desc: "graph object", child: { "@graph": [] } },
+    { desc: "value object", child: { "@value": "abc" } },
+    { desc: "list object", child: { "@list": [] } },
+    { desc: "set object", child: { "@set": [] } },
+  ])("parses a $desc entry", async ({ child }) => {
     const toParse = await makeToParse({
       "http://example.com/value": child,
     });
