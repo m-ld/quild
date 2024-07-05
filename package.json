@@ -1,5 +1,5 @@
 {
-  "name": "xql",
+  "name": "quild",
   "version": "0.0.0",
   "description": "",
   "author": "Petra Jaros <peeja@peeja.com>",
@@ -10,7 +10,7 @@
     "node": "18||19||20"
   },
   "main": "dist/src/index.js",
-  "type": "module",
+  "browser": "dist/src/index.js",
   "scripts": {
     "test": "NODE_OPTIONS=--experimental-vm-modules jest",
     "build": "tsc --project tsconfig.build.json",
