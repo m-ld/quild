@@ -21,6 +21,7 @@ import {
   type ToParse,
   parseWarning,
   contextParser,
+  ProjectableOperation,
 } from "./common";
 import * as IR from "../IntermediateResult";
 import { PLACEHOLDER, af, df } from "../common";
@@ -115,7 +116,7 @@ export const NodeObject: Parser["NodeObject"] = async function ({
   ]): Promise<(p: Parsed<IR.NodeObject>) => Parsed<IR.NodeObject>> => {
     const childVariable = variableUnder(variable, key);
 
-    const { intermediateResult, patterns, projections, warnings } =
+    const { intermediateResult, operation, projections, warnings } =
       await parseEntry(
         {
           /* eslint-disable-next-line
@@ -131,9 +132,14 @@ export const NodeObject: Parser["NodeObject"] = async function ({
         this
       );
 
+    const isOptional = Array.isArray(value);
+
     return evolve({
       intermediateResult: addMapping(key, intermediateResult),
-      patterns: concat(patterns),
+      operation: (previousOp: ProjectableOperation): ProjectableOperation =>
+        isOptional
+          ? af.createLeftJoin(previousOp, operation)
+          : af.createJoin([previousOp, operation]),
       projections: concat(projections),
       warnings: concat(nestWarningsUnderKey(key)(warnings)),
     });
@@ -216,7 +222,7 @@ const parseEntry: ParseEntry<[key: string, value: JsonValue]> = async function (
 const parseContextEntry: ParseEntry = ({ element }) =>
   Promise.resolve({
     intermediateResult: new IR.NativeValue(element),
-    patterns: [],
+    operation: af.createJoin([]),
     projections: [],
     warnings: [],
   });
@@ -226,14 +232,14 @@ const parseIdEntry: ParseEntry = ({ element, variable, node }) => {
   if (node.termType === "Variable") {
     return Promise.resolve({
       intermediateResult: new IR.NamePlaceholder(node),
-      patterns: [],
+      operation: af.createJoin([]),
       projections: [],
       warnings: [],
     });
   } else {
     return Promise.resolve({
       intermediateResult: new IR.NativeValue(element),
-      patterns: [],
+      operation: af.createJoin([]),
       projections: [],
       warnings: [],
     });
@@ -243,7 +249,7 @@ const parseIdEntry: ParseEntry = ({ element, variable, node }) => {
 const parseUnknownKeyEntry: ParseEntry = ({ element }) =>
   Promise.resolve({
     intermediateResult: new IR.NativeValue(element),
-    patterns: [],
+    operation: af.createJoin([]),
     projections: [],
     warnings: [
       parseWarning({
@@ -289,15 +295,15 @@ const parseIriEntry = async (
     predicate: RDF.NamedNode;
   },
   parser: Parser
-) => {
+): Promise<ParsedEntry> => {
   const parsedChild = await parser.Resource({ element, variable, ctx });
 
   return {
     intermediateResult: parsedChild.intermediateResult,
-    patterns: [
-      af.createPattern(node, predicate, parsedChild.term),
-      ...parsedChild.patterns,
-    ],
+    operation: af.createJoin([
+      af.createBgp([af.createPattern(node, predicate, parsedChild.term)]),
+      parsedChild.operation,
+    ]),
     projections: parsedChild.projections,
     warnings: parsedChild.warnings,
   };

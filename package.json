@@ -5,9 +5,12 @@
   "author": "Petra Jaros <peeja@peeja.com>",
   "license": "MIT",
   "keywords": [],
-  "packageManager": "pnpm@8.1.1",
+  "packageManager": "pnpm@9.4.0+sha256.b6fd0bfda555e7e584ad7e56b30c68b01d5a04f9ee93989f4b93ca8473c49c74",
+  "engines": {
+    "node": "18||19||20"
+  },
   "main": "dist/src/index.js",
-  "type": "module",
+  "browser": "dist/src/index.js",
   "scripts": {
     "test": "NODE_OPTIONS=--experimental-vm-modules jest",
     "build": "tsc --project tsconfig.build.json",
@@ -21,7 +24,6 @@
     "@eslint-community/eslint-plugin-eslint-comments": "3.2.1",
     "@jest/globals": "^29.5.0",
     "@rdfjs/types": "1.1.0",
-    "@types/lodash-es": "^4.17.8",
     "@types/n3": "^1.16.0",
     "@types/sparqljs": "^3.1.4",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
@@ -47,8 +49,9 @@
     "@comunica/query-sparql-rdfjs": "^2.10.0",
     "@graphy/memory.dataset.fast": "4.3.6",
     "@m-ld/m-ld": "^0.10.0",
-    "jsonld": "8.1.1",
+    "@types/lodash-es": "^4.17.8",
     "jsonld-context-parser": "^2.3.0",
+    "jsonld": "8.1.1",
     "lodash-es": "4.17.21",
     "rambdax": "^10.0.0",
     "rdf-data-factory": "1.1.1",
