@@ -6,19 +6,25 @@ import { readAll } from "./readAll";
 
 import type { Source } from "@rdfjs/types";
 import type { JsonValue } from "type-fest";
+import type { ParseWarning } from "./parse/common";
 
 const engine = new QueryEngine();
+
+export type ReadQueryResult<Data> = {
+  data: Data;
+  parseWarnings: ParseWarning[];
+};
 
 /**
  * Reads the query once and returns the result.
  * @param graph The RDF data to query.
  * @param query The Quild query to read.
  */
-export const query = async (
+export const readQuery = async (
   source: Source,
   query: JsonValue
-): Promise<JsonValue> => {
-  const { intermediateResult, sparql } = await parseQuery(query);
+): Promise<ReadQueryResult<JsonValue>> => {
+  const { intermediateResult, sparql, warnings } = await parseQuery(query);
 
   const bindingsStream = await engine.queryBindings(sparql, {
     sources: [source],
@@ -31,15 +37,15 @@ export const query = async (
     intermediateResult
   );
 
-  let result;
+  let data;
   try {
-    result = ir.result();
+    data = ir.result();
   } catch (e) {
     if (e instanceof IR.IncompleteResultError) {
-      return null;
+      data = null;
     } else {
       throw e;
     }
   }
-  return result;
+  return { data, parseWarnings: warnings };
 };
