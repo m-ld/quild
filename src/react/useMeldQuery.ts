@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
-import { Observable, from, map, mergeMap } from "rxjs";
+import { Observable, OperatorFunction, mergeMap } from "rxjs";
 
 import { type ReadQueryResult, readQuery } from "..";
 
 import type { MeldClone, MeldReadState, MeldUpdate } from "@m-ld/m-ld";
 import type { JsonValue } from "type-fest";
 
-const observeMeld = (meld: MeldClone) => {
-  return new Observable<[MeldUpdate | null, MeldReadState]>((subscriber) => {
+const observeMeld = (meld: MeldClone) =>
+  new Observable<[MeldUpdate | null, MeldReadState]>((subscriber) => {
     const subscription = meld.read(
       async (state: MeldReadState) => {
         subscriber.next([null, state]);
@@ -21,18 +21,18 @@ const observeMeld = (meld: MeldClone) => {
       subscription.unsubscribe();
     };
   });
-};
 
-const observeMeldQuery = <Data>(meld: MeldClone, query: JsonValue) => {
-  return observeMeld(meld).pipe(
-    map(([_update, state]) => {
+const queryMap = <Data>(
+  query: JsonValue
+): OperatorFunction<
+  [MeldUpdate | null, MeldReadState],
+  ReadQueryResult<Data>
+> =>
+  mergeMap(
+    ([_update, state]) =>
       // TODO: Replace this type assertion with actually derived types.
-      return readQuery(state, query) as Promise<ReadQueryResult<Data>>;
-    }),
-    // Await promises.
-    mergeMap((resultPromise) => from(resultPromise))
+      readQuery(state, query) as Promise<ReadQueryResult<Data>>
   );
-};
 
 // Use `Data` to explicitly assert the shape of the returned data.
 export const useMeldQuery = <Data>(
@@ -43,7 +43,7 @@ export const useMeldQuery = <Data>(
 
   useEffect(() => {
     if (meld) {
-      const o = observeMeldQuery<Data>(meld, query);
+      const o = observeMeld(meld).pipe(queryMap<Data>(query));
       const subscription = o.subscribe(setResult);
 
       return () => {
