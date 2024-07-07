@@ -1,8 +1,9 @@
 import {
   ContextParser,
+  JsonLdContext,
   type JsonLdContextNormalized,
 } from "jsonld-context-parser";
-import { isPlainObject as isPlainObject_ } from "lodash-es";
+import { isArray, isPlainObject as isPlainObject_, isString } from "lodash-es";
 import { map } from "rambdax";
 
 import { evolve, prepend } from "../upstream/rambda";
@@ -54,6 +55,37 @@ export interface Parsed<
 export const isPlainObject = isPlainObject_ as (
   value: unknown
 ) => value is Record<string, unknown>;
+
+export type TopLevelGraphContainer = {
+  "@context"?: JsonObject;
+  "@graph": JsonValue[];
+};
+
+export const isTopLevelGraphContainer = (
+  element: JsonObject
+): element is TopLevelGraphContainer =>
+  // "a map consisting of only the entries `@context` and/or `@graph`"
+  !Object.keys(element).some((key) => !["@context", "@graph"].includes(key)) &&
+  isArray(element["@graph"]) &&
+  (isPlainObject(element["@context"]) ||
+    isString(element["@context"]) ||
+    element["@context"] === undefined ||
+    element["@context"] === null);
+
+export const propagateContext = async (
+  innerCtxDef: JsonValue | null | undefined,
+  outerCtx: JsonLdContextNormalized
+) =>
+  innerCtxDef === undefined
+    ? outerCtx
+    : innerCtxDef === null
+    ? nullContext
+    : /* eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+         ---
+         Needed until we have better types flowing. */
+      await contextParser.parse(innerCtxDef as JsonLdContext, {
+        parentContext: outerCtx.getContextRaw(),
+      });
 
 export const nestWarningsUnderKey = (
   key: ParseWarning["path"][number]
@@ -125,7 +157,7 @@ export type Parse<
 export interface Parser {
   readonly Document: Parse;
   readonly NodeObjectArray: Parse<JsonArray, IR.Plural>;
-  readonly TopLevelGraphContainer: Parse;
+  readonly TopLevelGraphContainer: Parse<TopLevelGraphContainer, IR.NodeObject>;
   readonly NodeObject: Parse<JsonObject, IR.NodeObject>;
   readonly GraphObject: Parse;
   readonly ListObject: Parse;

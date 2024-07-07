@@ -20,7 +20,6 @@ import {
   type Parsed,
   type ToParse,
   parseWarning,
-  contextParser,
   ProjectableOperation,
 } from "./common";
 import * as IR from "../IntermediateResult";
@@ -31,10 +30,10 @@ import { variableUnder } from "../variableUnder";
 import type * as RDF from "@rdfjs/types";
 import type {
   Containers,
-  JsonLdContext,
   JsonLdContextNormalized,
 } from "jsonld-context-parser";
 import type { JsonValue } from "type-fest";
+import { propagateContext } from "./common";
 
 const isAbsoluteIri = (x: string): boolean => x.includes(":");
 
@@ -90,15 +89,7 @@ export const NodeObject: Parser["NodeObject"] = async function ({
   variable,
   ctx: outerCtx,
 }) {
-  const ctx =
-    "@context" in element && element["@context"]
-      ? /* eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-           ---
-           Needed until we have better types flowing. */
-        await contextParser.parse(element["@context"] as JsonLdContext, {
-          parentContext: outerCtx.getContextRaw(),
-        })
-      : outerCtx;
+  const ctx = await propagateContext(element["@context"], outerCtx);
 
   const [idKey, ...extraIdKeys] = filter(partial(isId, ctx), keys(element));
 
