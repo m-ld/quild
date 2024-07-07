@@ -1,25 +1,37 @@
 import { useEffect, useState } from "react";
-import { Observable } from "rxjs";
+import { Observable, from, map, mergeMap } from "rxjs";
 
 import { type ReadQueryResult, readQuery } from "..";
 
-import type { MeldClone, MeldReadState } from "@m-ld/m-ld";
+import type { MeldClone, MeldReadState, MeldUpdate } from "@m-ld/m-ld";
 import type { JsonValue } from "type-fest";
 
-const observeMeldQuery = <Data>(meld: MeldClone, query: JsonValue) => {
-  return new Observable<ReadQueryResult<Data>>((subscriber) => {
-    const doRead = async (state: MeldReadState) => {
-      return readQuery(state, query).then((results) => {
-        // TODO: Replace this type assertion with actually derived
-        // types.
-        subscriber.next(results as ReadQueryResult<Data>);
-      });
-    };
-    const subscription = meld.read(doRead, (_update, state) => doRead(state));
+const observeMeld = (meld: MeldClone) => {
+  return new Observable<[MeldUpdate | null, MeldReadState]>((subscriber) => {
+    const subscription = meld.read(
+      async (state: MeldReadState) => {
+        subscriber.next([null, state]);
+      },
+      (update, state) =>
+        (async (state: MeldReadState) => {
+          subscriber.next([update, state]);
+        })(state)
+    );
     return () => {
       subscription.unsubscribe();
     };
   });
+};
+
+const observeMeldQuery = <Data>(meld: MeldClone, query: JsonValue) => {
+  return observeMeld(meld).pipe(
+    map(([_update, state]) => {
+      // TODO: Replace this type assertion with actually derived types.
+      return readQuery(state, query) as Promise<ReadQueryResult<Data>>;
+    }),
+    // Await promises.
+    mergeMap((resultPromise) => from(resultPromise))
+  );
 };
 
 // Use `Data` to explicitly assert the shape of the returned data.
