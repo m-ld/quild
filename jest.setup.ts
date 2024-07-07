@@ -17,3 +17,7 @@ declare module "expect" {
     extends ToBeBindingsEqualToMatchers<R>,
       ToBeSparqlEqualToMatchers<R> {}
 }
+
+import { TextEncoder, TextDecoder } from "util";
+
+Object.assign(global, { TextDecoder, TextEncoder });
