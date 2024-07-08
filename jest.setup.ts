@@ -1,3 +1,5 @@
+import { TextEncoder, TextDecoder } from "util";
+
 import { expect } from "@jest/globals";
 
 import {
@@ -12,12 +14,9 @@ import {
 expect.extend({ toBeBindingsEqualTo, toBeSparqlEqualTo });
 
 declare module "expect" {
-  // eslint-disable-next-line @typescript-eslint/no-empty-interface
   interface Matchers<R>
     extends ToBeBindingsEqualToMatchers<R>,
       ToBeSparqlEqualToMatchers<R> {}
 }
-
-import { TextEncoder, TextDecoder } from "util";
 
 Object.assign(global, { TextDecoder, TextEncoder });

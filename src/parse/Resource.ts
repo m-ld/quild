@@ -61,7 +61,14 @@ export const Resource: Parser["Resource"] = async function ({
       ],
     });
   } else {
-    // eslint-disable-next-line @typescript-eslint/no-throw-literal
-    throw "TODO: Not yet covered";
+    return parsed({
+      intermediateResult: new IR.NativeValue(element),
+      term: variable,
+      warnings: [
+        parseWarning({
+          message: "Unsupported element parsed as a Resource",
+        }),
+      ],
+    });
   }
 };

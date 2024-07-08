@@ -1,11 +1,11 @@
-import { MeldConfig } from "@m-ld/m-ld";
-import {
+import { NEVER, type Observable, concat, of } from "rxjs";
+
+import type {
   MeldLocal,
   MeldRemotes,
   OperationMessage,
 } from "@m-ld/m-ld/ext/engine";
-import { LiveValue } from "@m-ld/m-ld/ext/engine/api-support";
-import { NEVER, Observable, concat, of } from "rxjs";
+import type { LiveValue } from "@m-ld/m-ld/ext/engine/api-support";
 
 class NotImplementedError extends Error {
   constructor(methodName: string) {
@@ -18,6 +18,9 @@ class NotImplementedError extends Error {
 const constantLiveValue = <T>(value: T): LiveValue<T> => {
   // Emit `value`, then never complete.
   const observable = concat(of(value), NEVER);
+  /* eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+    ---
+    TS doesn't know about Object.defineProperty(). */
   return Object.defineProperty(observable, "value", {
     value,
     writable: false,
@@ -25,13 +28,14 @@ const constantLiveValue = <T>(value: T): LiveValue<T> => {
 };
 
 export class NullRemotes implements MeldRemotes {
-  constructor(config: MeldConfig) {}
-
   readonly operations: Observable<OperationMessage> = NEVER;
   readonly updates: Observable<OperationMessage> = NEVER;
   readonly live: LiveValue<boolean | null> = constantLiveValue(false);
 
-  setLocal(clone: MeldLocal | null): void {}
+  /* eslint-disable-next-line @typescript-eslint/no-empty-function
+    ---
+    We don't need a local. */
+  setLocal(_clone: MeldLocal | null): void {}
 
   newClock(): never {
     throw new NotImplementedError("newClock");

@@ -3,15 +3,15 @@
  */
 
 import { describe, it, expect } from "@jest/globals";
-import { MemoryLevel } from "memory-level";
-import { act, renderHook, waitFor } from "@testing-library/react";
 import { clone, uuid } from "@m-ld/m-ld";
+import { act, renderHook, waitFor } from "@testing-library/react";
+import { MemoryLevel } from "memory-level";
 
 import { useMeldQuery } from "./useMeldQuery";
 import { NullRemotes } from "../../test-util/react/NullRemotes";
 
 const createMeldClone = async () =>
-  await clone(new MemoryLevel(), NullRemotes, {
+  clone(new MemoryLevel(), NullRemotes, {
     "@id": uuid(),
     "@domain": "directory.example.edu",
     genesis: true,

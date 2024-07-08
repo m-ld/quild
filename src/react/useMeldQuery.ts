@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 
-import { type ReadQueryResult } from "..";
 import { observeMeldQuery } from "../observable/observeMeldQuery";
 
+import type { ReadQueryResult } from "..";
 import type { MeldClone } from "@m-ld/m-ld";
 import type { JsonValue } from "type-fest";
 
@@ -34,5 +34,5 @@ export const useMeldQuery = <Data extends JsonValue>(
     }
   }, [meld]);
 
-  return result || { data: undefined, parseWarnings: undefined };
+  return result ?? { data: undefined, parseWarnings: undefined };
 };

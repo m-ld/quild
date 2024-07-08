@@ -1,7 +1,9 @@
-import { OperatorFunction, concatMap } from "rxjs";
+import { type OperatorFunction, concatMap } from "rxjs";
+
 import { type ReadQueryResult, readQuery } from "..";
+
+import type * as RDF from "@rdfjs/types";
 import type { JsonValue } from "type-fest";
-import * as RDF from "@rdfjs/types";
 
 /**
  * Maps an Observable of RDF sources (taken as sequential states of a mutable
@@ -15,9 +17,11 @@ import * as RDF from "@rdfjs/types";
  */
 export const queryMap = <Data extends JsonValue>(
   query: JsonValue
-): OperatorFunction<RDF.Source<RDF.Quad>, ReadQueryResult<Data>> =>
+): OperatorFunction<RDF.Source, ReadQueryResult<Data>> =>
   concatMap(
     (state) =>
-      // TODO: Replace this type assertion with actually derived types.
+      /* eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+         ---
+         The type of `readQuery` is not yet derived from the query. */
       readQuery(state, query) as Promise<ReadQueryResult<Data>>
   );

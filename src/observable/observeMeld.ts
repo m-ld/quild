@@ -1,4 +1,5 @@
 import { Observable } from "rxjs";
+
 import type { MeldClone, MeldReadState, MeldUpdate } from "@m-ld/m-ld";
 
 /**
@@ -13,13 +14,14 @@ import type { MeldClone, MeldReadState, MeldUpdate } from "@m-ld/m-ld";
 export const observeMeld = (meld: MeldClone) =>
   new Observable<[MeldUpdate | null, MeldReadState]>((subscriber) => {
     const subscription = meld.read(
-      async (state: MeldReadState) => {
+      (state: MeldReadState) => {
         subscriber.next([null, state]);
       },
-      (update, state) =>
-        (async (state: MeldReadState) => {
+      (update, state) => {
+        ((state: MeldReadState) => {
           subscriber.next([update, state]);
-        })(state)
+        })(state);
+      }
     );
     return () => {
       subscription.unsubscribe();

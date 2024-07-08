@@ -20,8 +20,9 @@ import {
   type Parsed,
   type ToParse,
   parseWarning,
-  ProjectableOperation,
+  type ProjectableOperation,
 } from "./common";
+import { propagateContext } from "./common";
 import * as IR from "../IntermediateResult";
 import { PLACEHOLDER, af, df } from "../common";
 import { evolve, keys, pipedAsync, partial } from "../upstream/rambda";
@@ -33,7 +34,6 @@ import type {
   JsonLdContextNormalized,
 } from "jsonld-context-parser";
 import type { JsonValue } from "type-fest";
-import { propagateContext } from "./common";
 
 const isAbsoluteIri = (x: string): boolean => x.includes(":");
 
@@ -218,7 +218,7 @@ const parseContextEntry: ParseEntry = ({ element }) =>
     warnings: [],
   });
 
-const parseIdEntry: ParseEntry = ({ element, variable, node }) => {
+const parseIdEntry: ParseEntry = ({ element, node }) => {
   if (!isString(element)) throw "TODO: Name must be a string";
   if (node.termType === "Variable") {
     return Promise.resolve({

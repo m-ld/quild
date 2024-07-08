@@ -1,9 +1,9 @@
 import { describe, expect, it } from "@jest/globals";
 
-import * as IR from "../IntermediateResult";
 import { TopLevelGraphContainer } from "./TopLevelGraphContainer";
-import { Parsed, contextParser, nullContext } from "./common";
+import { type Parsed, contextParser, nullContext } from "./common";
 import { defaultParser, inherit } from "./parser";
+import * as IR from "../IntermediateResult";
 import { df } from "../common";
 
 describe(TopLevelGraphContainer, () => {

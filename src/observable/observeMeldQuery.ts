@@ -1,8 +1,10 @@
-import type { MeldClone } from "@m-ld/m-ld";
-import type { JsonValue } from "type-fest";
+import { map } from "rxjs";
+
 import { observeMeld } from "./observeMeld";
 import { queryMap } from "./queryMap";
-import { map } from "rxjs";
+
+import type { MeldClone } from "@m-ld/m-ld";
+import type { JsonValue } from "type-fest";
 
 /**
  * Observe the results of a Quild query over a m-ld clone, emitting the latest

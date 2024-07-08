@@ -1,13 +1,13 @@
 import {
   ContextParser,
-  JsonLdContext,
+  type JsonLdContext,
   type JsonLdContextNormalized,
 } from "jsonld-context-parser";
 import { isArray, isPlainObject as isPlainObject_, isString } from "lodash-es";
 import { map } from "rambdax";
 
-import { evolve, prepend } from "../upstream/rambda";
 import { af } from "../common";
+import { evolve, prepend } from "../upstream/rambda";
 
 import type * as IR from "../IntermediateResult";
 import type * as RDF from "@rdfjs/types";
@@ -56,10 +56,10 @@ export const isPlainObject = isPlainObject_ as (
   value: unknown
 ) => value is Record<string, unknown>;
 
-export type TopLevelGraphContainer = {
+export interface TopLevelGraphContainer extends JsonObject {
   "@context"?: JsonObject;
   "@graph": JsonValue[];
-};
+}
 
 export const isTopLevelGraphContainer = (
   element: JsonObject
@@ -83,7 +83,7 @@ export const propagateContext = async (
     : /* eslint-disable-next-line @typescript-eslint/consistent-type-assertions
          ---
          Needed until we have better types flowing. */
-      await contextParser.parse(innerCtxDef as JsonLdContext, {
+      contextParser.parse(innerCtxDef as JsonLdContext, {
         parentContext: outerCtx.getContextRaw(),
       });
 

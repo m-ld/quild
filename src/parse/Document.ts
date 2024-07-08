@@ -1,9 +1,8 @@
 import { isArray } from "lodash-es";
 
 import { isPlainObject, parsed, parseWarning, type Parser } from "./common";
-import * as IR from "../IntermediateResult";
-
 import { isTopLevelGraphContainer } from "./common";
+import * as IR from "../IntermediateResult";
 
 /**
  * Parse a JSON-LD Document.

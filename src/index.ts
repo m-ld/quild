@@ -4,16 +4,16 @@ import * as IR from "./IntermediateResult";
 import { parseQuery } from "./parse";
 import { readAll } from "./readAll";
 
+import type { ParseWarning } from "./parse/common";
 import type { Source } from "@rdfjs/types";
 import type { JsonValue } from "type-fest";
-import type { ParseWarning } from "./parse/common";
 
 const engine = new QueryEngine();
 
-export type ReadQueryResult<Data> = {
+export interface ReadQueryResult<Data> {
   data: Data;
   parseWarnings: ParseWarning[];
-};
+}
 
 /**
  * Reads the query once and returns the result.

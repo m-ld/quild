@@ -1,4 +1,5 @@
-import N3 from "n3";
+import * as N3 from "n3";
+
 import type * as RDF from "@rdfjs/types";
 
 /**
@@ -9,10 +10,10 @@ import type * as RDF from "@rdfjs/types";
  * @returns A promise that resolves with the Turtle string.
  */
 export const toTurtle = (
-  stream: RDF.Stream<RDF.Quad>,
+  stream: RDF.Stream,
   { prefixes }: Pick<N3.WriterOptions, "prefixes"> = {}
-) => {
-  return new Promise((resolve) => {
+) =>
+  new Promise((resolve) => {
     let turtleCode = "";
     const streamWriter = new N3.StreamWriter({ prefixes });
 
@@ -26,4 +27,3 @@ export const toTurtle = (
 
     streamWriter.import(stream);
   });
-};

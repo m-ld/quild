@@ -1,6 +1,5 @@
-import { type Parser, parseWarning, parsed, propagateContext } from "./common";
+import { type Parser, propagateContext } from "./common";
 import * as IR from "../IntermediateResult";
-import { isObject } from "lodash-es";
 
 export const TopLevelGraphContainer: Parser["TopLevelGraphContainer"] =
   async function ({ element, variable, ctx }) {
