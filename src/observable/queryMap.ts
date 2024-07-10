@@ -19,10 +19,4 @@ import type { JsonValue } from "type-fest";
 export const queryMap = <Data extends JsonValue>(
   query: JsonValue
 ): OperatorFunction<RDF.Source, ReadQueryResult<Data>> =>
-  concatMap(
-    (state) =>
-      /* eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-         ---
-         The type of `readQuery` is not yet derived from the query. */
-      readQuery(state, query) as Promise<ReadQueryResult<Data>>
-  );
+  concatMap((state) => readQuery<Data>(state, query));
