@@ -16,7 +16,7 @@ describe(parseQuery, () => {
     const { intermediateResult, sparql } = await parseQuery(query);
 
     expect(intermediateResult).toStrictEqual(
-      new IR.NodeObject({
+      new IR.Object({
         "@id": new IR.NativeValue("https://swapi.dev/api/people/1/"),
         "http://swapi.dev/documentation#hair_color": new IR.NativePlaceholder(
           df.variable("root·hair_color")
@@ -47,7 +47,7 @@ describe(parseQuery, () => {
     const { intermediateResult, sparql } = await parseQuery(query);
 
     expect(intermediateResult).toStrictEqual(
-      new IR.NodeObject({
+      new IR.Object({
         "http://swapi.dev/documentation#name": new IR.NativeValue(
           "Luke Skywalker"
         ),
@@ -81,12 +81,12 @@ describe(parseQuery, () => {
     const { intermediateResult, sparql } = await parseQuery(query);
 
     expect(intermediateResult).toStrictEqual(
-      new IR.NodeObject({
+      new IR.Object({
         "@context": new IR.NativeValue({
           "@vocab": "http://swapi.dev/documentation#",
         }),
         name: new IR.NativeValue("Luke Skywalker"),
-        homeworld: new IR.NodeObject({
+        homeworld: new IR.Object({
           name: new IR.NativePlaceholder(df.variable("root·homeworld·name")),
         }),
       })
@@ -117,7 +117,7 @@ describe(parseQuery, () => {
     expect(intermediateResult).toStrictEqual(
       new IR.Plural(
         df.variable("root"),
-        new IR.NodeObject({
+        new IR.Object({
           "@context": new IR.NativeValue({
             "@vocab": "http://swapi.dev/documentation#",
           }),
@@ -153,7 +153,7 @@ describe(parseQuery, () => {
     expect(intermediateResult).toStrictEqual(
       new IR.Plural(
         df.variable("root"),
-        new IR.NodeObject({
+        new IR.Object({
           "@context": new IR.NativeValue({
             "@vocab": "http://swapi.dev/documentation#",
           }),
@@ -161,7 +161,7 @@ describe(parseQuery, () => {
           name: new IR.NativePlaceholder(df.variable("root·name")),
           films: new IR.Plural(
             df.variable("root·films"),
-            new IR.NodeObject({
+            new IR.Object({
               title: new IR.NativePlaceholder(df.variable("root·films·title")),
             })
           ),
@@ -194,7 +194,7 @@ describe(parseQuery, () => {
     const { intermediateResult, sparql } = await parseQuery(query);
 
     expect(intermediateResult).toStrictEqual(
-      new IR.NodeObject({
+      new IR.Object({
         "@context": new IR.NativeValue({ id: "@id" }),
         id: new IR.NativeValue("https://swapi.dev/api/people/1/"),
         "http://swapi.dev/documentation#hair_color": new IR.NativePlaceholder(
@@ -236,7 +236,7 @@ describe(parseQuery, () => {
     expect(intermediateResult).toStrictEqual(
       new IR.Plural(
         df.variable("root"),
-        new IR.NodeObject({
+        new IR.Object({
           "@context": new IR.NativeValue({
             name: "http://swapi.dev/documentation#name",
             films: "http://swapi.dev/documentation#films",
@@ -246,7 +246,7 @@ describe(parseQuery, () => {
           homeworld: new IR.NativeValue({ name: "?" }),
           films: new IR.Plural(
             df.variable("root·films"),
-            new IR.NodeObject({ title: new IR.NativeValue("?") })
+            new IR.Object({ title: new IR.NativeValue("?") })
           ),
           vehicles: new IR.NativeValue([{ name: "?" }]),
         })

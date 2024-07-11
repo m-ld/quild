@@ -2,7 +2,7 @@ import { BindingsFactory } from "@comunica/bindings-factory";
 import { describe, it, expect } from "@jest/globals";
 
 import { NativePlaceholder } from "./NativePlaceholder";
-import { NodeObject } from "./NodeObject";
+import { IRObject } from "./IRObject";
 import { Plural } from "./Plural";
 import { df, integer } from "../common";
 
@@ -42,11 +42,11 @@ describe(Plural, () => {
     });
   });
 
-  describe(`of a ${NodeObject.name}`, () => {
+  describe(`of a ${IRObject.name}`, () => {
     it("puts its results in an array", () => {
       const ir = new Plural(
         root,
-        new NodeObject({
+        new IRObject({
           name: new NativePlaceholder(name),
           height: new NativePlaceholder(height),
         })
@@ -69,7 +69,7 @@ describe(Plural, () => {
     it("accepts multiple solutions", () => {
       const ir = new Plural(
         root,
-        new NodeObject({
+        new IRObject({
           name: new NativePlaceholder(name),
           height: new NativePlaceholder(height),
         })
@@ -104,11 +104,11 @@ describe(Plural, () => {
     it("nests properly", () => {
       const initialIr = new Plural(
         root,
-        new NodeObject({
+        new IRObject({
           name: new NativePlaceholder(name),
           films: new Plural(
             films,
-            new NodeObject({ title: new NativePlaceholder(filmsTitle) })
+            new IRObject({ title: new NativePlaceholder(filmsTitle) })
           ),
         })
       );

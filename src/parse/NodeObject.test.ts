@@ -40,7 +40,7 @@ describe(NodeObject, () => {
     expect(await parser.NodeObject(toParse)).toStrictEqual(
       parsed({
         term: variable,
-        intermediateResult: new IR.NodeObject({
+        intermediateResult: new IR.Object({
           "@context": new IR.NativeValue({
             "@vocab": "http://swapi.dev/documentation#",
           }),
@@ -78,7 +78,7 @@ describe(NodeObject, () => {
     expect(await parser.NodeObject(toParse)).toStrictEqual(
       parsed({
         term: variable,
-        intermediateResult: new IR.NodeObject({
+        intermediateResult: new IR.Object({
           "http://example.com/value": resource.intermediateResult,
         }),
         operation: af.createJoin([
@@ -119,7 +119,7 @@ describe(NodeObject, () => {
     expect(await parser.NodeObject(toParse)).toStrictEqual(
       parsed({
         term: variable,
-        intermediateResult: new IR.NodeObject({
+        intermediateResult: new IR.Object({
           name: resource.intermediateResult,
         }),
         operation: af.createJoin([
@@ -199,7 +199,7 @@ describe(NodeObject, () => {
       expect(await parser.NodeObject(toParse)).toStrictEqual(
         parsed({
           term: variable,
-          intermediateResult: new IR.NodeObject({
+          intermediateResult: new IR.Object({
             "http://example.com/thing": resource.intermediateResult,
           }),
           operation: af.createLeftJoin(
@@ -236,10 +236,10 @@ describe(NodeObject, () => {
     expect(await parser.NodeObject(toParse)).toStrictEqual(
       parsed({
         term: variable,
-        intermediateResult: new IR.NodeObject({
+        intermediateResult: new IR.Object({
           film: new IR.Plural(
             filmVariable,
-            new IR.NodeObject({
+            new IR.Object({
               title: new IR.NativePlaceholder(titleVariable),
             })
           ),
@@ -277,7 +277,7 @@ describe(NodeObject, () => {
     expect(await parser.NodeObject(toParse)).toStrictEqual(
       parsed({
         term: variable,
-        intermediateResult: new IR.NodeObject({
+        intermediateResult: new IR.Object({
           "@id": new IR.NativeValue("https://swapi.dev/api/people/1/"),
           "http://swapi.dev/documentation#name": new IR.NativeValue(
             "Luke Skywalker"
@@ -305,7 +305,7 @@ describe(NodeObject, () => {
     expect(await parser.NodeObject(toParse)).toStrictEqual(
       parsed({
         term: variable,
-        intermediateResult: new IR.NodeObject({
+        intermediateResult: new IR.Object({
           "@id": new IR.NamePlaceholder(variable),
           "http://swapi.dev/documentation#name": new IR.NativeValue(
             "Luke Skywalker"
@@ -337,7 +337,7 @@ describe(NodeObject, () => {
     expect(await parser.NodeObject(toParse)).toStrictEqual(
       parsed({
         term: variable,
-        intermediateResult: new IR.NodeObject({
+        intermediateResult: new IR.Object({
           "@context": new IR.NativeValue({
             url: "@id",
           }),
@@ -379,7 +379,7 @@ describe(NodeObject, () => {
     expect(await parser.NodeObject(toParse)).toStrictEqual(
       parsed({
         term: variable,
-        intermediateResult: new IR.NodeObject({
+        intermediateResult: new IR.Object({
           bogus: new IR.NativeValue("abc123"),
         }),
         warnings: [

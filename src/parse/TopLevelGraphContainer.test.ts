@@ -38,11 +38,11 @@ describe(TopLevelGraphContainer, () => {
       ctx: nullContext,
     });
 
-    expect<Parsed<IR.NodeObject>>(
+    expect<Parsed<IR.Object>>(
       await parser.TopLevelGraphContainer(toParse)
     ).toStrictEqual({
       ...parsedNodeObjectArray,
-      intermediateResult: new IR.NodeObject({
+      intermediateResult: new IR.Object({
         "@graph": parsedNodeObjectArray.intermediateResult,
       }),
     });
@@ -78,11 +78,11 @@ describe(TopLevelGraphContainer, () => {
       }),
     });
 
-    expect<Parsed<IR.NodeObject>>(
+    expect<Parsed<IR.Object>>(
       await parser.TopLevelGraphContainer(toParse)
     ).toStrictEqual({
       ...parsedNodeObjectArray,
-      intermediateResult: new IR.NodeObject({
+      intermediateResult: new IR.Object({
         "@context": new IR.NativeValue({
           "@vocab": "http://swapi.dev/documentation#",
         }),

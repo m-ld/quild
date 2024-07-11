@@ -48,9 +48,8 @@ const predicateForKey = (ctx: JsonLdContextNormalized, key: string) => {
   return expanded && isAbsoluteIri(expanded) ? df.namedNode(expanded) : null;
 };
 
-const addMapping =
-  (k: string, v: IR.IntermediateResult) => (ir: IR.NodeObject) =>
-    ir.addMapping(k, v);
+const addMapping = (k: string, v: IR.IntermediateResult) => (ir: IR.Object) =>
+  ir.addMapping(k, v);
 
 const isId = (ctx: JsonLdContextNormalized, k: string) =>
   ctx.expandTerm(k, true) === "@id";
@@ -104,7 +103,7 @@ export const NodeObject: Parser["NodeObject"] = async function ({
   const operationForEntry = async ([key, value]: [
     key: string,
     value: unknown
-  ]): Promise<(p: Parsed<IR.NodeObject>) => Parsed<IR.NodeObject>> => {
+  ]): Promise<(p: Parsed<IR.Object>) => Parsed<IR.Object>> => {
     const childVariable = variableUnder(variable, key);
 
     const { intermediateResult, operation, projections, warnings } =
@@ -143,7 +142,7 @@ export const NodeObject: Parser["NodeObject"] = async function ({
     reduce(
       (acc, f) => f(acc),
       parsed({
-        intermediateResult: new IR.NodeObject({}),
+        intermediateResult: new IR.Object({}),
         term: variable,
         projections: projectNodeName ? [variable] : [],
       })
