@@ -4,21 +4,31 @@ import * as IR from "./IntermediateResult";
 import { parseQuery } from "./parse";
 import { readAll } from "./readAll";
 
+import type { ParseWarning } from "./parse/common";
 import type { Source } from "@rdfjs/types";
 import type { JsonValue } from "type-fest";
 
 const engine = new QueryEngine();
 
+export interface ReadQueryResult<Data> {
+  data: Data | null;
+  parseWarnings: ParseWarning[];
+}
+
 /**
  * Reads the query once and returns the result.
+ *
+ * @template Data The expected shape of the data returned by the query.
+ *                Eventually, this will be derived from the query itself. For
+ *                now, it must be given explicitly.
  * @param graph The RDF data to query.
  * @param query The Quild query to read.
  */
-export const query = async (
+export const readQuery = async <Data extends JsonValue>(
   source: Source,
   query: JsonValue
-): Promise<JsonValue> => {
-  const { intermediateResult, sparql } = await parseQuery(query);
+): Promise<ReadQueryResult<Data>> => {
+  const { intermediateResult, sparql, warnings } = await parseQuery(query);
 
   const bindingsStream = await engine.queryBindings(sparql, {
     sources: [source],
@@ -31,15 +41,18 @@ export const query = async (
     intermediateResult
   );
 
-  let result;
+  let data: Data | null;
   try {
-    result = ir.result();
+    /* eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+       ---
+       The type of `readQuery` is not yet derived from the query. */
+    data = ir.result() as Data;
   } catch (e) {
     if (e instanceof IR.IncompleteResultError) {
-      return null;
+      data = null;
     } else {
       throw e;
     }
   }
-  return result;
+  return { data, parseWarnings: warnings };
 };

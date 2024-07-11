@@ -1,13 +1,8 @@
 import { isArray } from "lodash-es";
 
 import { isPlainObject, parsed, parseWarning, type Parser } from "./common";
+import { isTopLevelGraphContainer } from "./common";
 import * as IR from "../IntermediateResult";
-
-import type { JsonObject } from "type-fest";
-
-const isTopLevelGraphContainer = (element: JsonObject) =>
-  // "a map consisting of only the entries `@context` and/or `@graph`"
-  !Object.keys(element).some((key) => !["@context", "@graph"].includes(key));
 
 /**
  * Parse a JSON-LD Document.

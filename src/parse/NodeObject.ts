@@ -20,9 +20,9 @@ import {
   type Parsed,
   type ToParse,
   parseWarning,
-  contextParser,
-  ProjectableOperation,
+  type ProjectableOperation,
 } from "./common";
+import { propagateContext } from "./common";
 import * as IR from "../IntermediateResult";
 import { PLACEHOLDER, af, df } from "../common";
 import { evolve, keys, pipedAsync, partial } from "../upstream/rambda";
@@ -31,7 +31,6 @@ import { variableUnder } from "../variableUnder";
 import type * as RDF from "@rdfjs/types";
 import type {
   Containers,
-  JsonLdContext,
   JsonLdContextNormalized,
 } from "jsonld-context-parser";
 import type { JsonValue } from "type-fest";
@@ -90,15 +89,7 @@ export const NodeObject: Parser["NodeObject"] = async function ({
   variable,
   ctx: outerCtx,
 }) {
-  const ctx =
-    "@context" in element && element["@context"]
-      ? /* eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-           ---
-           Needed until we have better types flowing. */
-        await contextParser.parse(element["@context"] as JsonLdContext, {
-          parentContext: outerCtx.getContextRaw(),
-        })
-      : outerCtx;
+  const ctx = await propagateContext(element["@context"], outerCtx);
 
   const [idKey, ...extraIdKeys] = filter(partial(isId, ctx), keys(element));
 
@@ -227,7 +218,7 @@ const parseContextEntry: ParseEntry = ({ element }) =>
     warnings: [],
   });
 
-const parseIdEntry: ParseEntry = ({ element, variable, node }) => {
+const parseIdEntry: ParseEntry = ({ element, node }) => {
   if (!isString(element)) throw "TODO: Name must be a string";
   if (node.termType === "Variable") {
     return Promise.resolve({

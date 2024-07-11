@@ -1,19 +1,23 @@
-import { type Parser, parseWarning, parsed } from "./common";
+import { type Parser, propagateContext } from "./common";
 import * as IR from "../IntermediateResult";
 
-export const TopLevelGraphContainer: Parser["TopLevelGraphContainer"] = ({
-  element,
-  variable,
-}) =>
-  Promise.resolve(
-    parsed({
-      intermediateResult: new IR.NativeValue(element),
-      term: variable,
-      warnings: [
-        parseWarning({
-          message:
-            "Top-level @graph containers are not yet supported. (https://github.com/m-ld/quild/issues/21)",
+export const TopLevelGraphContainer: Parser["TopLevelGraphContainer"] =
+  async function ({ element, variable, ctx }) {
+    const graph = element["@graph"];
+
+    const parsedNodeObjectArray = await this.NodeObjectArray({
+      element: graph,
+      variable,
+      ctx: await propagateContext(element["@context"], ctx),
+    });
+
+    return {
+      ...parsedNodeObjectArray,
+      intermediateResult: new IR.NodeObject({
+        ...(element["@context"] && {
+          "@context": new IR.NativeValue(element["@context"]),
         }),
-      ],
-    })
-  );
+        "@graph": parsedNodeObjectArray.intermediateResult,
+      }),
+    };
+  };

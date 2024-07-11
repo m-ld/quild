@@ -2,7 +2,7 @@ import { describe, it, expect } from "@jest/globals";
 import jsonld from "jsonld";
 
 import { df } from "./common";
-import { query } from "./index";
+import { readQuery } from "./index";
 import data from "../fixtures/data.json";
 import { dataset } from "../test-util/fixedDataset";
 
@@ -39,68 +39,80 @@ const source = dataset().addAll(quads);
 
 /* eslint-enable @typescript-eslint/consistent-type-assertions -- ^^^ */
 
-describe(query, () => {
+describe(readQuery, () => {
   it("can query for a property by @id", async () => {
     expect(
-      await query(source, {
+      await readQuery(source, {
         "@id": "https://swapi.dev/api/people/1/",
         "http://swapi.dev/documentation#hair_color": "?",
         "http://swapi.dev/documentation#eye_color": "?",
       })
     ).toStrictEqual({
-      "@id": "https://swapi.dev/api/people/1/",
-      "http://swapi.dev/documentation#hair_color": "blond",
-      "http://swapi.dev/documentation#eye_color": "blue",
+      data: {
+        "@id": "https://swapi.dev/api/people/1/",
+        "http://swapi.dev/documentation#hair_color": "blond",
+        "http://swapi.dev/documentation#eye_color": "blue",
+      },
+      parseWarnings: [],
     });
   });
 
   it("can query for an @id by property", async () => {
     expect(
-      await query(source, {
+      await readQuery(source, {
         "@id": "?",
         "http://swapi.dev/documentation#hair_color": "blond",
         "http://swapi.dev/documentation#eye_color": "blue",
       })
     ).toStrictEqual({
-      "@id": "https://swapi.dev/api/people/1/",
-      "http://swapi.dev/documentation#hair_color": "blond",
-      "http://swapi.dev/documentation#eye_color": "blue",
+      data: {
+        "@id": "https://swapi.dev/api/people/1/",
+        "http://swapi.dev/documentation#hair_color": "blond",
+        "http://swapi.dev/documentation#eye_color": "blue",
+      },
+      parseWarnings: [],
     });
   });
 
   it("can query for a property by other properties", async () => {
     expect(
-      await query(source, {
+      await readQuery(source, {
         "http://swapi.dev/documentation#name": "Luke Skywalker",
         "http://swapi.dev/documentation#hair_color": "?",
         "http://swapi.dev/documentation#eye_color": "?",
       })
     ).toStrictEqual({
-      "http://swapi.dev/documentation#name": "Luke Skywalker",
-      "http://swapi.dev/documentation#hair_color": "blond",
-      "http://swapi.dev/documentation#eye_color": "blue",
+      data: {
+        "http://swapi.dev/documentation#name": "Luke Skywalker",
+        "http://swapi.dev/documentation#hair_color": "blond",
+        "http://swapi.dev/documentation#eye_color": "blue",
+      },
+      parseWarnings: [],
     });
   });
 
   it("can access a singular related node", async () => {
     expect(
-      await query(source, {
+      await readQuery(source, {
         "@context": { "@vocab": "http://swapi.dev/documentation#" },
         name: "Luke Skywalker",
         homeworld: { name: "?" },
       })
     ).toStrictEqual({
-      "@context": { "@vocab": "http://swapi.dev/documentation#" },
-      name: "Luke Skywalker",
-      homeworld: {
-        name: "Tatooine",
+      data: {
+        "@context": { "@vocab": "http://swapi.dev/documentation#" },
+        name: "Luke Skywalker",
+        homeworld: {
+          name: "Tatooine",
+        },
       },
+      parseWarnings: [],
     });
   });
 
   it("can query for multiple results", async () => {
     expect(
-      await query(source, [
+      await readQuery(source, [
         {
           "@context": { "@vocab": "http://swapi.dev/documentation#" },
           eye_color: "blue",
@@ -108,25 +120,28 @@ describe(query, () => {
           height: "?",
         },
       ])
-    ).toStrictEqual([
-      {
-        "@context": { "@vocab": "http://swapi.dev/documentation#" },
-        eye_color: "blue",
-        name: "Luke Skywalker",
-        height: 172,
-      },
-      {
-        "@context": { "@vocab": "http://swapi.dev/documentation#" },
-        eye_color: "blue",
-        name: "Owen Lars",
-        height: 178,
-      },
-    ]);
+    ).toStrictEqual({
+      data: [
+        {
+          "@context": { "@vocab": "http://swapi.dev/documentation#" },
+          eye_color: "blue",
+          name: "Luke Skywalker",
+          height: 172,
+        },
+        {
+          "@context": { "@vocab": "http://swapi.dev/documentation#" },
+          eye_color: "blue",
+          name: "Owen Lars",
+          height: 178,
+        },
+      ],
+      parseWarnings: [],
+    });
   });
 
   it("can access a plural related node", async () => {
     expect(
-      await query(source, [
+      await readQuery(source, [
         {
           "@context": { "@vocab": "http://swapi.dev/documentation#" },
           eye_color: "blue",
@@ -134,44 +149,47 @@ describe(query, () => {
           films: [{ title: "?" }],
         },
       ])
-    ).toStrictEqual([
-      {
-        "@context": { "@vocab": "http://swapi.dev/documentation#" },
-        eye_color: "blue",
-        name: "Luke Skywalker",
-        films: [
-          { title: "A New Hope" },
-          { title: "The Empire Strikes Back" },
-          { title: "Return of the Jedi" },
-          { title: "Revenge of the Sith" },
-        ],
-      },
-      {
-        "@context": { "@vocab": "http://swapi.dev/documentation#" },
-        eye_color: "blue",
-        name: "Owen Lars",
-        films: [
-          { title: "A New Hope" },
-          { title: "Attack of the Clones" },
-          { title: "Revenge of the Sith" },
-        ],
-      },
-    ]);
+    ).toStrictEqual({
+      data: [
+        {
+          "@context": { "@vocab": "http://swapi.dev/documentation#" },
+          eye_color: "blue",
+          name: "Luke Skywalker",
+          films: [
+            { title: "A New Hope" },
+            { title: "The Empire Strikes Back" },
+            { title: "Return of the Jedi" },
+            { title: "Revenge of the Sith" },
+          ],
+        },
+        {
+          "@context": { "@vocab": "http://swapi.dev/documentation#" },
+          eye_color: "blue",
+          name: "Owen Lars",
+          films: [
+            { title: "A New Hope" },
+            { title: "Attack of the Clones" },
+            { title: "Revenge of the Sith" },
+          ],
+        },
+      ],
+      parseWarnings: [],
+    });
   });
 
   it("can fail to match a singular query", async () => {
     expect(
-      await query(source, {
+      await readQuery(source, {
         "@context": { "@vocab": "http://swapi.dev/documentation#" },
         eye_color: "purple",
         name: "?",
       })
-    ).toStrictEqual(null);
+    ).toStrictEqual({ data: null, parseWarnings: [] });
   });
 
   it("requires singular child nodes to match", async () => {
     expect(
-      await query(source, [
+      await readQuery(source, [
         {
           "@context": { "@vocab": "http://swapi.dev/documentation#" },
           eye_color: "blue",
@@ -179,12 +197,12 @@ describe(query, () => {
           films: { title: "The Phantom Menace" },
         },
       ])
-    ).toStrictEqual([]);
+    ).toStrictEqual({ data: [], parseWarnings: [] });
   });
 
   it("allows plural child nodes not to match", async () => {
     expect(
-      await query(source, [
+      await readQuery(source, [
         {
           "@context": { "@vocab": "http://swapi.dev/documentation#" },
           eye_color: "blue",
@@ -197,30 +215,33 @@ describe(query, () => {
           ],
         },
       ])
-    ).toStrictEqual([
-      {
-        "@context": { "@vocab": "http://swapi.dev/documentation#" },
-        eye_color: "blue",
-        name: "Luke Skywalker",
-        films: [
-          {
-            title: "The Empire Strikes Back",
-            director: "Irvin Kershner",
-          },
-        ],
-      },
-      {
-        "@context": { "@vocab": "http://swapi.dev/documentation#" },
-        eye_color: "blue",
-        name: "Owen Lars",
-        films: [],
-      },
-    ]);
+    ).toStrictEqual({
+      data: [
+        {
+          "@context": { "@vocab": "http://swapi.dev/documentation#" },
+          eye_color: "blue",
+          name: "Luke Skywalker",
+          films: [
+            {
+              title: "The Empire Strikes Back",
+              director: "Irvin Kershner",
+            },
+          ],
+        },
+        {
+          "@context": { "@vocab": "http://swapi.dev/documentation#" },
+          eye_color: "blue",
+          name: "Owen Lars",
+          films: [],
+        },
+      ],
+      parseWarnings: [],
+    });
   });
 
   it("preserves the contexts used in the query", async () => {
     expect(
-      await query(source, {
+      await readQuery(source, {
         "@context": { "@vocab": "http://swapi.dev/documentation#" },
         "@id": "https://swapi.dev/api/people/1/",
         hair_color: "?",
@@ -230,13 +251,16 @@ describe(query, () => {
         },
       })
     ).toStrictEqual({
-      "@context": { "@vocab": "http://swapi.dev/documentation#" },
-      "@id": "https://swapi.dev/api/people/1/",
-      hair_color: "blond",
-      homeworld: {
-        "@context": { planetName: "http://swapi.dev/documentation#name" },
-        planetName: "Tatooine",
+      data: {
+        "@context": { "@vocab": "http://swapi.dev/documentation#" },
+        "@id": "https://swapi.dev/api/people/1/",
+        hair_color: "blond",
+        homeworld: {
+          "@context": { planetName: "http://swapi.dev/documentation#name" },
+          planetName: "Tatooine",
+        },
       },
+      parseWarnings: [],
     });
   });
 });

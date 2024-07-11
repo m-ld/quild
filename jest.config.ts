@@ -1,6 +1,6 @@
-import type { Config } from "jest";
+import type { Config } from "@jest/types";
 
-const config: Config = {
+const config: Config.InitialOptions = {
   preset: "ts-jest/presets/default-esm",
   testEnvironment: "node",
   extensionsToTreatAsEsm: [".ts"],
@@ -11,6 +11,12 @@ const config: Config = {
         useESM: true,
       },
     ],
+  },
+  moduleNameMapper: {
+    // Force module rxjs to resolve with the CJS entry point, because Jest does
+    // not support package.json.exports. See
+    // https://github.com/uuidjs/uuid/issues/451
+    rxjs: require.resolve("rxjs"),
   },
   setupFilesAfterEnv: ["<rootDir>/jest.setup.ts"],
 };
