@@ -8,7 +8,7 @@ import {
   nestWarningsUnderKey,
   contextParser,
 } from "./common";
-import { defaultParser, inherit } from "./parser";
+import { makeParser } from "./parser";
 import * as IR from "../IntermediateResult";
 import { PLACEHOLDER, af, df } from "../common";
 import { variableUnder } from "../variableUnder";
@@ -28,7 +28,7 @@ const makeToParse = async <Element extends JsonValue>(
 });
 
 describe(NodeObject, () => {
-  const parser = inherit(defaultParser, { NodeObject });
+  const parser = makeParser({ NodeObject });
 
   it("parses a @context entry", async () => {
     const toParse = await makeToParse({
@@ -40,8 +40,8 @@ describe(NodeObject, () => {
     expect(await parser.NodeObject(toParse)).toStrictEqual(
       parsed({
         term: variable,
-        intermediateResult: new IR.NodeObject({
-          "@context": new IR.NativeValue({
+        intermediateResult: new IR.Object({
+          "@context": new IR.LiteralValue({
             "@vocab": "http://swapi.dev/documentation#",
           }),
         }),
@@ -61,7 +61,7 @@ describe(NodeObject, () => {
     { desc: "graph object", child: { "@graph": [] } },
     { desc: "value object", child: { "@value": "abc" } },
     { desc: "list object", child: { "@list": [] } },
-    { desc: "set object", child: { "@set": [] } },
+    { desc: "set object", child: { "@set": [{}] } },
   ])("parses a $desc entry", async ({ child }) => {
     const toParse = await makeToParse({
       "http://example.com/value": child,
@@ -78,7 +78,7 @@ describe(NodeObject, () => {
     expect(await parser.NodeObject(toParse)).toStrictEqual(
       parsed({
         term: variable,
-        intermediateResult: new IR.NodeObject({
+        intermediateResult: new IR.Object({
           "http://example.com/value": resource.intermediateResult,
         }),
         operation: af.createJoin([
@@ -119,7 +119,7 @@ describe(NodeObject, () => {
     expect(await parser.NodeObject(toParse)).toStrictEqual(
       parsed({
         term: variable,
-        intermediateResult: new IR.NodeObject({
+        intermediateResult: new IR.Object({
           name: resource.intermediateResult,
         }),
         operation: af.createJoin([
@@ -154,30 +154,18 @@ describe(NodeObject, () => {
     },
     {
       description: "List",
-      value: [
-        { "http://swapi.dev/documentation#name": "Luke Skywalker" },
-        { "http://swapi.dev/documentation#name": "Owen Lars" },
-      ],
+      value: [{ "http://swapi.dev/documentation#name": "Luke Skywalker" }],
       termDefinition: { "@container": "@list" },
       expandedValue: {
-        "@list": [
-          { "http://swapi.dev/documentation#name": "Luke Skywalker" },
-          { "http://swapi.dev/documentation#name": "Owen Lars" },
-        ],
+        "@list": [{ "http://swapi.dev/documentation#name": "Luke Skywalker" }],
       },
     },
     {
       description: "Set",
-      value: [
-        { "http://swapi.dev/documentation#name": "Luke Skywalker" },
-        { "http://swapi.dev/documentation#name": "Owen Lars" },
-      ],
+      value: [{ "http://swapi.dev/documentation#name": "Luke Skywalker" }],
       termDefinition: { "@container": "@set" },
       expandedValue: {
-        "@set": [
-          { "http://swapi.dev/documentation#name": "Luke Skywalker" },
-          { "http://swapi.dev/documentation#name": "Owen Lars" },
-        ],
+        "@set": [{ "http://swapi.dev/documentation#name": "Luke Skywalker" }],
       },
     },
   ])(
@@ -199,7 +187,7 @@ describe(NodeObject, () => {
       expect(await parser.NodeObject(toParse)).toStrictEqual(
         parsed({
           term: variable,
-          intermediateResult: new IR.NodeObject({
+          intermediateResult: new IR.Object({
             "http://example.com/thing": resource.intermediateResult,
           }),
           operation: af.createLeftJoin(
@@ -236,10 +224,10 @@ describe(NodeObject, () => {
     expect(await parser.NodeObject(toParse)).toStrictEqual(
       parsed({
         term: variable,
-        intermediateResult: new IR.NodeObject({
-          film: new IR.Plural(
+        intermediateResult: new IR.Object({
+          film: new IR.Array(
             filmVariable,
-            new IR.NodeObject({
+            new IR.Object({
               title: new IR.NativePlaceholder(titleVariable),
             })
           ),
@@ -277,9 +265,9 @@ describe(NodeObject, () => {
     expect(await parser.NodeObject(toParse)).toStrictEqual(
       parsed({
         term: variable,
-        intermediateResult: new IR.NodeObject({
-          "@id": new IR.NativeValue("https://swapi.dev/api/people/1/"),
-          "http://swapi.dev/documentation#name": new IR.NativeValue(
+        intermediateResult: new IR.Object({
+          "@id": new IR.LiteralValue("https://swapi.dev/api/people/1/"),
+          "http://swapi.dev/documentation#name": new IR.LiteralValue(
             "Luke Skywalker"
           ),
         }),
@@ -305,9 +293,9 @@ describe(NodeObject, () => {
     expect(await parser.NodeObject(toParse)).toStrictEqual(
       parsed({
         term: variable,
-        intermediateResult: new IR.NodeObject({
+        intermediateResult: new IR.Object({
           "@id": new IR.NamePlaceholder(variable),
-          "http://swapi.dev/documentation#name": new IR.NativeValue(
+          "http://swapi.dev/documentation#name": new IR.LiteralValue(
             "Luke Skywalker"
           ),
         }),
@@ -337,12 +325,12 @@ describe(NodeObject, () => {
     expect(await parser.NodeObject(toParse)).toStrictEqual(
       parsed({
         term: variable,
-        intermediateResult: new IR.NodeObject({
-          "@context": new IR.NativeValue({
+        intermediateResult: new IR.Object({
+          "@context": new IR.LiteralValue({
             url: "@id",
           }),
-          "@id": new IR.NativeValue("https://swapi.dev/api/people/1/"),
-          "http://swapi.dev/documentation#name": new IR.NativeValue(
+          "@id": new IR.LiteralValue("https://swapi.dev/api/people/1/"),
+          "http://swapi.dev/documentation#name": new IR.LiteralValue(
             "Luke Skywalker"
           ),
         }),
@@ -379,8 +367,8 @@ describe(NodeObject, () => {
     expect(await parser.NodeObject(toParse)).toStrictEqual(
       parsed({
         term: variable,
-        intermediateResult: new IR.NodeObject({
-          bogus: new IR.NativeValue("abc123"),
+        intermediateResult: new IR.Object({
+          bogus: new IR.LiteralValue("abc123"),
         }),
         warnings: [
           parseWarning({

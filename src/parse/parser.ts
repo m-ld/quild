@@ -11,20 +11,7 @@ import { ValueObject } from "./ValueObject";
 
 import type { Parser } from "./common";
 
-/**
- * Creates a frozen object which inherits from `orig`, with `overrides` added.
- * Particularly intended for creating a new parser implementation.
- *
- * @example
- * // Creating a new parser:
- * const myParser = inherit(defaultParser, {
- *   ListObject(toParse) {
- *     console.log("Parsing a list object...");
- *     return defaultParser.ListObject(toParse);
- *   },
- * });
- */
-export const inherit = <T extends object, O extends Partial<T>>(
+const inherit = <T extends object, O extends Partial<T>>(
   orig: T,
   overrides: O
 ) =>
@@ -34,6 +21,21 @@ export const inherit = <T extends object, O extends Partial<T>>(
        `Object.create()` returns `any`. */
     Object.create(orig, Object.getOwnPropertyDescriptors(overrides)) as T
   );
+
+/**
+ * Creates a parser which inherits from the default parser.
+ *
+ * @example
+ * // Creating a new parser:
+ * const myParser = makeParser({
+ *   ListObject(toParse) {
+ *     console.log("Parsing a list object...");
+ *     return defaultParser.ListObject(toParse);
+ *   },
+ * });
+ */
+export const makeParser = (overrides: Partial<Parser>) =>
+  inherit(defaultParser, overrides);
 
 /**
  * The default {@link Parser} implementation.

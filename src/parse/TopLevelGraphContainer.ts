@@ -13,9 +13,9 @@ export const TopLevelGraphContainer: Parser["TopLevelGraphContainer"] =
 
     return {
       ...parsedNodeObjectArray,
-      intermediateResult: new IR.NodeObject({
+      intermediateResult: new IR.Object({
         ...(element["@context"] && {
-          "@context": new IR.NativeValue(element["@context"]),
+          "@context": new IR.LiteralValue(element["@context"]),
         }),
         "@graph": parsedNodeObjectArray.intermediateResult,
       }),

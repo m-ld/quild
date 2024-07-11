@@ -177,6 +177,48 @@ describe(readQuery, () => {
     });
   });
 
+  it("can access a @set", async () => {
+    expect(
+      await readQuery(source, [
+        {
+          "@context": { "@vocab": "http://swapi.dev/documentation#" },
+          eye_color: "blue",
+          name: "?",
+          films: { "@set": [{ title: "?" }] },
+        },
+      ])
+    ).toStrictEqual({
+      data: [
+        {
+          "@context": { "@vocab": "http://swapi.dev/documentation#" },
+          eye_color: "blue",
+          name: "Luke Skywalker",
+          films: {
+            "@set": [
+              { title: "A New Hope" },
+              { title: "The Empire Strikes Back" },
+              { title: "Return of the Jedi" },
+              { title: "Revenge of the Sith" },
+            ],
+          },
+        },
+        {
+          "@context": { "@vocab": "http://swapi.dev/documentation#" },
+          eye_color: "blue",
+          name: "Owen Lars",
+          films: {
+            "@set": [
+              { title: "A New Hope" },
+              { title: "Attack of the Clones" },
+              { title: "Revenge of the Sith" },
+            ],
+          },
+        },
+      ],
+      parseWarnings: [],
+    });
+  });
+
   it("can fail to match a singular query", async () => {
     expect(
       await readQuery(source, {

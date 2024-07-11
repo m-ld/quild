@@ -5,12 +5,12 @@ import { evolve, prepend } from "../upstream/rambda";
 import type * as RDF from "@rdfjs/types";
 
 export const NodeObjectArray: Parser["NodeObjectArray"] = async function ({
-  element: query,
+  element,
   variable,
   ctx,
 }) {
-  const soleSubquery = query[0];
-  if (!(soleSubquery && query.length === 1)) {
+  const soleSubquery = element[0];
+  if (!(soleSubquery && element.length === 1)) {
     /* eslint-disable-next-line @typescript-eslint/no-throw-literal
        ---
        TODO: https://github.com/m-ld/quild/issues/15 */
@@ -25,7 +25,7 @@ export const NodeObjectArray: Parser["NodeObjectArray"] = async function ({
 
   return evolve(
     {
-      intermediateResult: (ir) => new IR.Plural(variable, ir),
+      intermediateResult: (ir) => new IR.Array(variable, ir),
       projections: prepend(variable)<RDF.Variable>,
       warnings: nestWarningsUnderKey(0),
     },

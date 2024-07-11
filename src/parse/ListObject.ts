@@ -6,7 +6,7 @@ import type { Parser } from "./common";
 export const ListObject: Parser["ListObject"] = ({ element, variable }) =>
   Promise.resolve(
     parsed({
-      intermediateResult: new IR.NativeValue(element),
+      intermediateResult: new IR.LiteralValue(element),
       term: variable,
       warnings: [
         parseWarning({

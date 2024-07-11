@@ -8,7 +8,7 @@ import {
   parseWarning,
   type Parse,
 } from "./common";
-import { defaultParser, inherit } from "./parser";
+import { makeParser } from "./parser";
 import * as IR from "../IntermediateResult";
 import { df } from "../common";
 
@@ -24,14 +24,14 @@ const makeToParse = <Element extends JsonValue>(
 });
 
 describe(Resource, () => {
-  const parser = inherit(defaultParser, { Resource });
+  const parser = makeParser({ Resource });
 
   it("parses a null", async () => {
     const toParse = makeToParse(null);
 
     expect(await parser.Resource(toParse)).toStrictEqual(
       parsed({
-        intermediateResult: new IR.NativeValue(null),
+        intermediateResult: new IR.LiteralValue(null),
         term: variable,
         warnings: [
           parseWarning({
@@ -76,7 +76,7 @@ describe(Resource, () => {
       element: { "@value": "abc" },
     },
     { name: "List Object", parse: parser.ListObject, element: { "@list": [] } },
-    { name: "Set Object", parse: parser.SetObject, element: { "@set": [] } },
+    { name: "Set Object", parse: parser.SetObject, element: { "@set": [{}] } },
   ] satisfies TestCase[])("parses a $name", async ({ element, parse }) => {
     const toParse = makeToParse(element);
 

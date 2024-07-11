@@ -15,7 +15,7 @@ export const Primitive: Parser["Primitive"] = ({ element: query, variable }) =>
           term: variable,
         })
       : parsed({
-          intermediateResult: new IR.NativeValue(query),
+          intermediateResult: new IR.LiteralValue(query),
           term: toRdfLiteral(query),
         })
   );
