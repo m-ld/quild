@@ -72,6 +72,13 @@ export const isTopLevelGraphContainer = (
     element["@context"] === undefined ||
     element["@context"] === null);
 
+type SetObject = JsonObject & {
+  "@set": JsonValue[];
+};
+
+export const isSetObject = (element: JsonObject): element is SetObject =>
+  isPlainObject(element) && isArray(element["@set"]);
+
 export const propagateContext = async (
   innerCtxDef: JsonValue | null | undefined,
   outerCtx: JsonLdContextNormalized
@@ -165,7 +172,7 @@ export interface Parser {
     string | number | boolean,
     IR.NativePlaceholder | IR.LiteralValue
   >;
-  readonly SetObject: Parse;
+  readonly SetObject: Parse<SetObject, IR.Object>;
   readonly ValueObject: Parse;
   readonly Resource: Parse;
 }

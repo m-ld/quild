@@ -61,7 +61,7 @@ describe(NodeObject, () => {
     { desc: "graph object", child: { "@graph": [] } },
     { desc: "value object", child: { "@value": "abc" } },
     { desc: "list object", child: { "@list": [] } },
-    { desc: "set object", child: { "@set": [] } },
+    { desc: "set object", child: { "@set": [{}] } },
   ])("parses a $desc entry", async ({ child }) => {
     const toParse = await makeToParse({
       "http://example.com/value": child,
@@ -154,30 +154,18 @@ describe(NodeObject, () => {
     },
     {
       description: "List",
-      value: [
-        { "http://swapi.dev/documentation#name": "Luke Skywalker" },
-        { "http://swapi.dev/documentation#name": "Owen Lars" },
-      ],
+      value: [{ "http://swapi.dev/documentation#name": "Luke Skywalker" }],
       termDefinition: { "@container": "@list" },
       expandedValue: {
-        "@list": [
-          { "http://swapi.dev/documentation#name": "Luke Skywalker" },
-          { "http://swapi.dev/documentation#name": "Owen Lars" },
-        ],
+        "@list": [{ "http://swapi.dev/documentation#name": "Luke Skywalker" }],
       },
     },
     {
       description: "Set",
-      value: [
-        { "http://swapi.dev/documentation#name": "Luke Skywalker" },
-        { "http://swapi.dev/documentation#name": "Owen Lars" },
-      ],
+      value: [{ "http://swapi.dev/documentation#name": "Luke Skywalker" }],
       termDefinition: { "@container": "@set" },
       expandedValue: {
-        "@set": [
-          { "http://swapi.dev/documentation#name": "Luke Skywalker" },
-          { "http://swapi.dev/documentation#name": "Owen Lars" },
-        ],
+        "@set": [{ "http://swapi.dev/documentation#name": "Luke Skywalker" }],
       },
     },
   ])(

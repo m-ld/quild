@@ -76,7 +76,7 @@ describe(Resource, () => {
       element: { "@value": "abc" },
     },
     { name: "List Object", parse: parser.ListObject, element: { "@list": [] } },
-    { name: "Set Object", parse: parser.SetObject, element: { "@set": [] } },
+    { name: "Set Object", parse: parser.SetObject, element: { "@set": [{}] } },
   ] satisfies TestCase[])("parses a $name", async ({ element, parse }) => {
     const toParse = makeToParse(element);
 
