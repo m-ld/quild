@@ -1,6 +1,12 @@
 import { isString, isNumber, isBoolean, isArray, isNull } from "lodash-es";
 
-import { type Parser, isPlainObject, parsed, parseWarning } from "./common";
+import {
+  type Parser,
+  isPlainObject,
+  isSetObject,
+  parsed,
+  parseWarning,
+} from "./common";
 import * as IR from "../IntermediateResult";
 import { anyPass } from "../upstream/rambda";
 
@@ -35,7 +41,7 @@ export const Resource: Parser["Resource"] = async function ({
       return this.ValueObject({ element, variable, ctx });
     } else if ("@list" in element) {
       return this.ListObject({ element, variable, ctx });
-    } else if ("@set" in element) {
+    } else if (isSetObject(element)) {
       return this.SetObject({ element, variable, ctx });
     } else {
       return this.NodeObject({

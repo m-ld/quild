@@ -272,7 +272,8 @@ const parseUnknownKeyEntry: ParseEntry = ({ element }) =>
  * > - an [index map](https://www.w3.org/TR/json-ld11/#dfn-index-map),
  * > - an [included block](https://www.w3.org/TR/json-ld11/#dfn-included-block)
  * > - an [id map](https://www.w3.org/TR/json-ld11/#dfn-id-map), or
- * > - a [type map](https://www.w3.org/TR/json-ld11/#dfn-type-map) */
+ * > - a [type map](https://www.w3.org/TR/json-ld11/#dfn-type-map)
+ */
 const parseIriEntry = async (
   {
     element,
