@@ -2,12 +2,12 @@ import { describe, expect, it } from "@jest/globals";
 
 import { TopLevelGraphContainer } from "./TopLevelGraphContainer";
 import { type Parsed, contextParser, nullContext } from "./common";
-import { defaultParser, inherit } from "./parser";
+import { makeParser } from "./parser";
 import * as IR from "../IntermediateResult";
 import { df } from "../common";
 
 describe(TopLevelGraphContainer, () => {
-  const parser = inherit(defaultParser, { TopLevelGraphContainer });
+  const parser = makeParser({ TopLevelGraphContainer });
 
   it("parses a top-level graph container without a @context", async () => {
     const toParse = {

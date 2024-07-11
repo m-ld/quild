@@ -8,7 +8,7 @@ import {
   nestWarningsUnderKey,
   contextParser,
 } from "./common";
-import { defaultParser, inherit } from "./parser";
+import { makeParser } from "./parser";
 import * as IR from "../IntermediateResult";
 import { PLACEHOLDER, af, df } from "../common";
 import { variableUnder } from "../variableUnder";
@@ -28,7 +28,7 @@ const makeToParse = async <Element extends JsonValue>(
 });
 
 describe(NodeObject, () => {
-  const parser = inherit(defaultParser, { NodeObject });
+  const parser = makeParser({ NodeObject });
 
   it("parses a @context entry", async () => {
     const toParse = await makeToParse({

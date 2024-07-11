@@ -8,7 +8,7 @@ import {
   parseWarning,
   type Parse,
 } from "./common";
-import { defaultParser, inherit } from "./parser";
+import { makeParser } from "./parser";
 import * as IR from "../IntermediateResult";
 import { df } from "../common";
 
@@ -24,7 +24,7 @@ const makeToParse = <Element extends JsonValue>(
 });
 
 describe(Resource, () => {
-  const parser = inherit(defaultParser, { Resource });
+  const parser = makeParser({ Resource });
 
   it("parses a null", async () => {
     const toParse = makeToParse(null);
