@@ -115,7 +115,7 @@ describe(parseQuery, () => {
     const { intermediateResult, sparql } = await parseQuery(query);
 
     expect(intermediateResult).toStrictEqual(
-      new IR.Plural(
+      new IR.Array(
         df.variable("root"),
         new IR.Object({
           "@context": new IR.NativeValue({
@@ -151,7 +151,7 @@ describe(parseQuery, () => {
     const { intermediateResult, sparql } = await parseQuery(query);
 
     expect(intermediateResult).toStrictEqual(
-      new IR.Plural(
+      new IR.Array(
         df.variable("root"),
         new IR.Object({
           "@context": new IR.NativeValue({
@@ -159,7 +159,7 @@ describe(parseQuery, () => {
           }),
           eye_color: new IR.NativeValue("blue"),
           name: new IR.NativePlaceholder(df.variable("root·name")),
-          films: new IR.Plural(
+          films: new IR.Array(
             df.variable("root·films"),
             new IR.Object({
               title: new IR.NativePlaceholder(df.variable("root·films·title")),
@@ -234,7 +234,7 @@ describe(parseQuery, () => {
     const { intermediateResult, sparql, warnings } = await parseQuery(query);
 
     expect(intermediateResult).toStrictEqual(
-      new IR.Plural(
+      new IR.Array(
         df.variable("root"),
         new IR.Object({
           "@context": new IR.NativeValue({
@@ -244,7 +244,7 @@ describe(parseQuery, () => {
           eye_color: new IR.NativeValue("blue"),
           name: new IR.NativePlaceholder(df.variable("root·name")),
           homeworld: new IR.NativeValue({ name: "?" }),
-          films: new IR.Plural(
+          films: new IR.Array(
             df.variable("root·films"),
             new IR.Object({ title: new IR.NativeValue("?") })
           ),

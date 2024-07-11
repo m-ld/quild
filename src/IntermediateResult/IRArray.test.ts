@@ -1,9 +1,9 @@
 import { BindingsFactory } from "@comunica/bindings-factory";
 import { describe, it, expect } from "@jest/globals";
 
-import { NativePlaceholder } from "./NativePlaceholder";
+import { IRArray } from "./IRArray";
 import { IRObject } from "./IRObject";
-import { Plural } from "./Plural";
+import { NativePlaceholder } from "./NativePlaceholder";
 import { df, integer } from "../common";
 
 import type { IntermediateResult } from "./types";
@@ -17,10 +17,10 @@ const height = df.variable("root·height");
 const films = df.variable("root·films");
 const filmsTitle = df.variable("root·films·title");
 
-describe(Plural, () => {
+describe(IRArray, () => {
   describe(`of a ${NativePlaceholder.name}`, () => {
     it("puts its results in an array", () => {
-      const ir = new Plural(
+      const ir = new IRArray(
         filmsTitle,
         new NativePlaceholder(filmsTitle)
       ).addSolution(bf.bindings([[filmsTitle, df.literal("A New Hope")]]));
@@ -29,7 +29,7 @@ describe(Plural, () => {
     });
 
     it("accepts multiple solutions", () => {
-      const ir = new Plural(filmsTitle, new NativePlaceholder(filmsTitle))
+      const ir = new IRArray(filmsTitle, new NativePlaceholder(filmsTitle))
         .addSolution(bf.bindings([[filmsTitle, df.literal("A New Hope")]]))
         .addSolution(
           bf.bindings([[filmsTitle, df.literal("The Empire Strikes Back")]])
@@ -44,7 +44,7 @@ describe(Plural, () => {
 
   describe(`of a ${IRObject.name}`, () => {
     it("puts its results in an array", () => {
-      const ir = new Plural(
+      const ir = new IRArray(
         root,
         new IRObject({
           name: new NativePlaceholder(name),
@@ -67,7 +67,7 @@ describe(Plural, () => {
     });
 
     it("accepts multiple solutions", () => {
-      const ir = new Plural(
+      const ir = new IRArray(
         root,
         new IRObject({
           name: new NativePlaceholder(name),
@@ -102,11 +102,11 @@ describe(Plural, () => {
     });
 
     it("nests properly", () => {
-      const initialIr = new Plural(
+      const initialIr = new IRArray(
         root,
         new IRObject({
           name: new NativePlaceholder(name),
-          films: new Plural(
+          films: new IRArray(
             films,
             new IRObject({ title: new NativePlaceholder(filmsTitle) })
           ),

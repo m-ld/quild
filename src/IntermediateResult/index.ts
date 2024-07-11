@@ -4,7 +4,7 @@ export { NamePlaceholder } from "./NamePlaceholder";
 export { NativePlaceholder } from "./NativePlaceholder";
 export { NativeValue } from "./NativeValue";
 export { IRObject as Object } from "./IRObject";
-export { Plural } from "./Plural";
+export { IRArray as Array } from "./IRArray";
 
 export {
   ResultError,

@@ -237,7 +237,7 @@ describe(NodeObject, () => {
       parsed({
         term: variable,
         intermediateResult: new IR.Object({
-          film: new IR.Plural(
+          film: new IR.Array(
             filmVariable,
             new IR.Object({
               title: new IR.NativePlaceholder(titleVariable),
