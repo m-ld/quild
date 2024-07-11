@@ -163,7 +163,7 @@ export interface Parser {
   readonly ListObject: Parse;
   readonly Primitive: Parse<
     string | number | boolean,
-    IR.NativePlaceholder | IR.NativeValue
+    IR.NativePlaceholder | IR.LiteralValue
   >;
   readonly SetObject: Parse;
   readonly ValueObject: Parse;

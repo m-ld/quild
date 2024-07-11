@@ -31,7 +31,7 @@ describe(Resource, () => {
 
     expect(await parser.Resource(toParse)).toStrictEqual(
       parsed({
-        intermediateResult: new IR.NativeValue(null),
+        intermediateResult: new IR.LiteralValue(null),
         term: variable,
         warnings: [
           parseWarning({

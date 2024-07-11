@@ -211,7 +211,7 @@ const parseEntry: ParseEntry<[key: string, value: JsonValue]> = async function (
 
 const parseContextEntry: ParseEntry = ({ element }) =>
   Promise.resolve({
-    intermediateResult: new IR.NativeValue(element),
+    intermediateResult: new IR.LiteralValue(element),
     operation: af.createJoin([]),
     projections: [],
     warnings: [],
@@ -228,7 +228,7 @@ const parseIdEntry: ParseEntry = ({ element, node }) => {
     });
   } else {
     return Promise.resolve({
-      intermediateResult: new IR.NativeValue(element),
+      intermediateResult: new IR.LiteralValue(element),
       operation: af.createJoin([]),
       projections: [],
       warnings: [],
@@ -238,7 +238,7 @@ const parseIdEntry: ParseEntry = ({ element, node }) => {
 
 const parseUnknownKeyEntry: ParseEntry = ({ element }) =>
   Promise.resolve({
-    intermediateResult: new IR.NativeValue(element),
+    intermediateResult: new IR.LiteralValue(element),
     operation: af.createJoin([]),
     projections: [],
     warnings: [

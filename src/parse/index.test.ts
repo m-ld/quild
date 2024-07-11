@@ -17,7 +17,7 @@ describe(parseQuery, () => {
 
     expect(intermediateResult).toStrictEqual(
       new IR.Object({
-        "@id": new IR.NativeValue("https://swapi.dev/api/people/1/"),
+        "@id": new IR.LiteralValue("https://swapi.dev/api/people/1/"),
         "http://swapi.dev/documentation#hair_color": new IR.NativePlaceholder(
           df.variable("root·hair_color")
         ),
@@ -48,7 +48,7 @@ describe(parseQuery, () => {
 
     expect(intermediateResult).toStrictEqual(
       new IR.Object({
-        "http://swapi.dev/documentation#name": new IR.NativeValue(
+        "http://swapi.dev/documentation#name": new IR.LiteralValue(
           "Luke Skywalker"
         ),
         "http://swapi.dev/documentation#hair_color": new IR.NativePlaceholder(
@@ -82,10 +82,10 @@ describe(parseQuery, () => {
 
     expect(intermediateResult).toStrictEqual(
       new IR.Object({
-        "@context": new IR.NativeValue({
+        "@context": new IR.LiteralValue({
           "@vocab": "http://swapi.dev/documentation#",
         }),
-        name: new IR.NativeValue("Luke Skywalker"),
+        name: new IR.LiteralValue("Luke Skywalker"),
         homeworld: new IR.Object({
           name: new IR.NativePlaceholder(df.variable("root·homeworld·name")),
         }),
@@ -118,10 +118,10 @@ describe(parseQuery, () => {
       new IR.Array(
         df.variable("root"),
         new IR.Object({
-          "@context": new IR.NativeValue({
+          "@context": new IR.LiteralValue({
             "@vocab": "http://swapi.dev/documentation#",
           }),
-          eye_color: new IR.NativeValue("blue"),
+          eye_color: new IR.LiteralValue("blue"),
           name: new IR.NativePlaceholder(df.variable("root·name")),
           height: new IR.NativePlaceholder(df.variable("root·height")),
         })
@@ -154,10 +154,10 @@ describe(parseQuery, () => {
       new IR.Array(
         df.variable("root"),
         new IR.Object({
-          "@context": new IR.NativeValue({
+          "@context": new IR.LiteralValue({
             "@vocab": "http://swapi.dev/documentation#",
           }),
-          eye_color: new IR.NativeValue("blue"),
+          eye_color: new IR.LiteralValue("blue"),
           name: new IR.NativePlaceholder(df.variable("root·name")),
           films: new IR.Array(
             df.variable("root·films"),
@@ -195,8 +195,8 @@ describe(parseQuery, () => {
 
     expect(intermediateResult).toStrictEqual(
       new IR.Object({
-        "@context": new IR.NativeValue({ id: "@id" }),
-        id: new IR.NativeValue("https://swapi.dev/api/people/1/"),
+        "@context": new IR.LiteralValue({ id: "@id" }),
+        id: new IR.LiteralValue("https://swapi.dev/api/people/1/"),
         "http://swapi.dev/documentation#hair_color": new IR.NativePlaceholder(
           df.variable("root·hair_color")
         ),
@@ -237,18 +237,18 @@ describe(parseQuery, () => {
       new IR.Array(
         df.variable("root"),
         new IR.Object({
-          "@context": new IR.NativeValue({
+          "@context": new IR.LiteralValue({
             name: "http://swapi.dev/documentation#name",
             films: "http://swapi.dev/documentation#films",
           }),
-          eye_color: new IR.NativeValue("blue"),
+          eye_color: new IR.LiteralValue("blue"),
           name: new IR.NativePlaceholder(df.variable("root·name")),
-          homeworld: new IR.NativeValue({ name: "?" }),
+          homeworld: new IR.LiteralValue({ name: "?" }),
           films: new IR.Array(
             df.variable("root·films"),
-            new IR.Object({ title: new IR.NativeValue("?") })
+            new IR.Object({ title: new IR.LiteralValue("?") })
           ),
-          vehicles: new IR.NativeValue([{ name: "?" }]),
+          vehicles: new IR.LiteralValue([{ name: "?" }]),
         })
       )
     );

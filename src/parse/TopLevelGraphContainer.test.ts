@@ -83,7 +83,7 @@ describe(TopLevelGraphContainer, () => {
     ).toStrictEqual({
       ...parsedNodeObjectArray,
       intermediateResult: new IR.Object({
-        "@context": new IR.NativeValue({
+        "@context": new IR.LiteralValue({
           "@vocab": "http://swapi.dev/documentation#",
         }),
         "@graph": parsedNodeObjectArray.intermediateResult,

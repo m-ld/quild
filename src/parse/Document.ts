@@ -34,7 +34,7 @@ export const Document: Parser["Document"] = async function ({
     }
   } else {
     return parsed({
-      intermediateResult: new IR.NativeValue(element),
+      intermediateResult: new IR.LiteralValue(element),
       term: variable,
       warnings: [
         parseWarning({

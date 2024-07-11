@@ -41,7 +41,7 @@ describe(NodeObject, () => {
       parsed({
         term: variable,
         intermediateResult: new IR.Object({
-          "@context": new IR.NativeValue({
+          "@context": new IR.LiteralValue({
             "@vocab": "http://swapi.dev/documentation#",
           }),
         }),
@@ -278,8 +278,8 @@ describe(NodeObject, () => {
       parsed({
         term: variable,
         intermediateResult: new IR.Object({
-          "@id": new IR.NativeValue("https://swapi.dev/api/people/1/"),
-          "http://swapi.dev/documentation#name": new IR.NativeValue(
+          "@id": new IR.LiteralValue("https://swapi.dev/api/people/1/"),
+          "http://swapi.dev/documentation#name": new IR.LiteralValue(
             "Luke Skywalker"
           ),
         }),
@@ -307,7 +307,7 @@ describe(NodeObject, () => {
         term: variable,
         intermediateResult: new IR.Object({
           "@id": new IR.NamePlaceholder(variable),
-          "http://swapi.dev/documentation#name": new IR.NativeValue(
+          "http://swapi.dev/documentation#name": new IR.LiteralValue(
             "Luke Skywalker"
           ),
         }),
@@ -338,11 +338,11 @@ describe(NodeObject, () => {
       parsed({
         term: variable,
         intermediateResult: new IR.Object({
-          "@context": new IR.NativeValue({
+          "@context": new IR.LiteralValue({
             url: "@id",
           }),
-          "@id": new IR.NativeValue("https://swapi.dev/api/people/1/"),
-          "http://swapi.dev/documentation#name": new IR.NativeValue(
+          "@id": new IR.LiteralValue("https://swapi.dev/api/people/1/"),
+          "http://swapi.dev/documentation#name": new IR.LiteralValue(
             "Luke Skywalker"
           ),
         }),
@@ -380,7 +380,7 @@ describe(NodeObject, () => {
       parsed({
         term: variable,
         intermediateResult: new IR.Object({
-          bogus: new IR.NativeValue("abc123"),
+          bogus: new IR.LiteralValue("abc123"),
         }),
         warnings: [
           parseWarning({

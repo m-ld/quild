@@ -1,6 +1,6 @@
 import { isUndefined } from "lodash-es";
 
-import { NativeValue } from "./NativeValue";
+import { LiteralValue } from "./LiteralValue";
 import { BadNativeValueError, IncompleteResultError } from "./errors";
 import { toJSONNative } from "../representation";
 
@@ -24,7 +24,7 @@ export class NativePlaceholder implements IntermediateResult {
     if (isUndefined(rep)) {
       throw new BadNativeValueError(value);
     } else {
-      return new NativeValue(rep);
+      return new LiteralValue(rep);
     }
   }
 

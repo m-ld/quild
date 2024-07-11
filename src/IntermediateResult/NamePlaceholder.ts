@@ -1,4 +1,4 @@
-import { NativeValue } from "./NativeValue";
+import { LiteralValue } from "./LiteralValue";
 import { IncompleteResultError, NotANamedNodeError } from "./errors";
 
 import type { IntermediateResult } from "./types";
@@ -20,7 +20,7 @@ export class NamePlaceholder implements IntermediateResult {
     if (value.termType !== "NamedNode") {
       throw new NotANamedNodeError(value);
     } else {
-      return new NativeValue(value.value);
+      return new LiteralValue(value.value);
     }
   }
 

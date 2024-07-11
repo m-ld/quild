@@ -19,11 +19,30 @@ resources=(
 # Do everything in the fixtures directory.
 cd "$(dirname "${BASH_SOURCE[0]}")" || exit 1
 
+read -r -d '' JQ <<'EOF'
+# Mapping of URL segments to type names
+{
+  "people": "Person",
+  "planets": "Planet",
+  "films": "Film"
+} as $types |
+
+# Add a @type to each object
+[inputs] |
+map(
+  {
+    "@type": $types[.url | capture("https://swapi.dev/api/(?<type>[^/]*)/.*") | .type],
+  } + .
+) |
+{
+  "@context": $context,
+  "@graph": .
+}
+EOF
+
 (
   for resource in "${resources[@]}"; do
     curl -s "$prefix$resource"
   done
 ) | jq -n \
-  --slurpfile context context.json \
-  '{"@context": $context, "@graph": [inputs]}' \
-  >data.json
+  --slurpfile context context.json "$JQ" >data.json

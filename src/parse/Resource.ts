@@ -52,7 +52,7 @@ export const Resource: Parser["Resource"] = async function ({
     });
   } else if (isNull(element)) {
     return parsed({
-      intermediateResult: new IR.NativeValue(element),
+      intermediateResult: new IR.LiteralValue(element),
       term: variable,
       warnings: [
         parseWarning({
@@ -62,7 +62,7 @@ export const Resource: Parser["Resource"] = async function ({
     });
   } else {
     return parsed({
-      intermediateResult: new IR.NativeValue(element),
+      intermediateResult: new IR.LiteralValue(element),
       term: variable,
       warnings: [
         parseWarning({
