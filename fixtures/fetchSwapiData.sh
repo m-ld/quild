@@ -7,6 +7,7 @@ prefix="https://swapi.dev/api/"
 resources=(
   people/1
   people/6
+  people/18
   planets/1
   films/1
   films/2
@@ -14,6 +15,7 @@ resources=(
   films/4
   films/5
   films/6
+  vehicles/14
 )
 
 # Do everything in the fixtures directory.
@@ -24,7 +26,8 @@ read -r -d '' JQ <<'EOF'
 {
   "people": "Person",
   "planets": "Planet",
-  "films": "Film"
+  "films": "Film",
+  "vehicles": "Vehicle"
 } as $types |
 
 # Add a @type to each object

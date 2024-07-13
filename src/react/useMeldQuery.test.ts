@@ -8,7 +8,7 @@ import { act, renderHook, waitFor } from "@testing-library/react";
 import { MemoryLevel } from "memory-level";
 
 import { useMeldQuery } from "./useMeldQuery";
-import { NullRemotes } from "../../test-util/react/NullRemotes";
+import { NullRemotes } from "../../test-util/NullRemotes";
 
 const createMeldClone = async () =>
   clone(new MemoryLevel(), NullRemotes, {

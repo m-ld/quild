@@ -2,9 +2,10 @@ import { QueryEngine } from "@comunica/query-sparql-rdfjs";
 
 import * as IR from "./IntermediateResult";
 import { parseQuery } from "./parse";
+import { defaultParser } from "./parse/parser";
 import { readAll } from "./readAll";
 
-import type { ParseWarning } from "./parse/common";
+import type { Parser, ParseWarning } from "./parse/common";
 import type { Source } from "@rdfjs/types";
 import type { JsonValue } from "type-fest";
 
@@ -26,9 +27,13 @@ export interface ReadQueryResult<Data> {
  */
 export const readQuery = async <Data extends JsonValue>(
   source: Source,
-  query: JsonValue
+  query: JsonValue,
+  { parser = defaultParser }: { parser?: Parser } = {}
 ): Promise<ReadQueryResult<Data>> => {
-  const { intermediateResult, sparql, warnings } = await parseQuery(query);
+  const { intermediateResult, sparql, warnings } = await parseQuery(
+    query,
+    parser
+  );
 
   const bindingsStream = await engine.queryBindings(sparql, {
     sources: [source],
