@@ -144,7 +144,7 @@ describe(NodeObject, () => {
         { "http://swapi.dev/documentation#name": "Luke Skywalker" },
         { "http://swapi.dev/documentation#name": "Owen Lars" },
       ],
-      termDefinition: { "@container": "@graph" },
+      container: "@graph",
       expandedValue: {
         "@graph": [
           { "http://swapi.dev/documentation#name": "Luke Skywalker" },
@@ -155,7 +155,7 @@ describe(NodeObject, () => {
     {
       description: "List",
       value: [{ "http://swapi.dev/documentation#name": "Luke Skywalker" }],
-      termDefinition: { "@container": "@list" },
+      container: "@list",
       expandedValue: {
         "@list": [{ "http://swapi.dev/documentation#name": "Luke Skywalker" }],
       },
@@ -163,17 +163,17 @@ describe(NodeObject, () => {
     {
       description: "Set",
       value: [{ "http://swapi.dev/documentation#name": "Luke Skywalker" }],
-      termDefinition: { "@container": "@set" },
+      container: "@set",
       expandedValue: {
         "@set": [{ "http://swapi.dev/documentation#name": "Luke Skywalker" }],
       },
     },
   ])(
     "parses a context-defined $description",
-    async ({ value, termDefinition, expandedValue }) => {
+    async ({ value, container, expandedValue }) => {
       const toParse = await makeToParse(
         { "http://example.com/thing": value },
-        { "http://example.com/thing": termDefinition }
+        { "http://example.com/thing": { "@container": container } }
       );
 
       const childVariable = variableUnder(variable, "http://example.com/thing");
@@ -188,7 +188,10 @@ describe(NodeObject, () => {
         parsed({
           term: variable,
           intermediateResult: new IR.Object({
-            "http://example.com/thing": resource.intermediateResult,
+            "http://example.com/thing": new IR.Unwrapped(
+              container,
+              resource.intermediateResult
+            ),
           }),
           operation: af.createLeftJoin(
             af.createJoin([]),

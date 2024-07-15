@@ -219,6 +219,53 @@ describe(readQuery, () => {
     });
   });
 
+  it("can access a context-defined @set", async () => {
+    expect(
+      await readQuery(source, [
+        {
+          "@context": {
+            "@vocab": "http://swapi.dev/documentation#",
+            films: { "@container": "@set" },
+          },
+          eye_color: "blue",
+          name: "?",
+          films: [{ title: "?" }],
+        },
+      ])
+    ).toStrictEqual({
+      data: [
+        {
+          "@context": {
+            "@vocab": "http://swapi.dev/documentation#",
+            films: { "@container": "@set" },
+          },
+          eye_color: "blue",
+          name: "Luke Skywalker",
+          films: [
+            { title: "A New Hope" },
+            { title: "The Empire Strikes Back" },
+            { title: "Return of the Jedi" },
+            { title: "Revenge of the Sith" },
+          ],
+        },
+        {
+          "@context": {
+            "@vocab": "http://swapi.dev/documentation#",
+            films: { "@container": "@set" },
+          },
+          eye_color: "blue",
+          name: "Owen Lars",
+          films: [
+            { title: "A New Hope" },
+            { title: "Attack of the Clones" },
+            { title: "Revenge of the Sith" },
+          ],
+        },
+      ],
+      parseWarnings: [],
+    });
+  });
+
   it("can fail to match a singular query", async () => {
     expect(
       await readQuery(source, {
@@ -305,4 +352,25 @@ describe(readQuery, () => {
       parseWarnings: [],
     });
   });
+
+  // it.skip("can query for a @list", async () => {
+  //   expect(
+  //     await readQuery(source, {
+  //       "@context": { "@vocab": "http://swapi.dev/documentation#" },
+  //       "@id": "https://swapi.dev/api/vehicles/14/",
+  //       pilots: {
+  //         "@list": [{ name: "?" }],
+  //       },
+  //     })
+  //   ).toStrictEqual({
+  //     data: {
+  //       "@context": { "@vocab": "http://swapi.dev/documentation#" },
+  //       "@id": "https://swapi.dev/api/vehicles/14/",
+  //       pilots: {
+  //         "@list": [{ name: "Luke Skywalker" }, { name: "Wedge Antilles" }],
+  //       },
+  //     },
+  //     parseWarnings: [],
+  //   });
+  // });
 });

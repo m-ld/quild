@@ -55,4 +55,31 @@ describe(readQuery, () => {
       parseWarnings: [],
     });
   });
+
+  it("can query for a context-defined @list", async () => {
+    expect(
+      await readQuery(
+        meldState,
+        {
+          "@context": {
+            "@vocab": "http://swapi.dev/documentation#",
+            pilots: { "@container": "@list" },
+          },
+          "@id": "https://swapi.dev/api/vehicles/14/",
+          pilots: [{ name: "?" }],
+        },
+        { parser: meldParser }
+      )
+    ).toStrictEqual({
+      data: {
+        "@context": {
+          "@vocab": "http://swapi.dev/documentation#",
+          pilots: { "@container": "@list" },
+        },
+        "@id": "https://swapi.dev/api/vehicles/14/",
+        pilots: [{ name: "Luke Skywalker" }, { name: "Wedge Antilles" }],
+      },
+      parseWarnings: [],
+    });
+  });
 });
