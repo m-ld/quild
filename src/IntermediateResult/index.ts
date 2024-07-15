@@ -1,6 +1,6 @@
 export type { IntermediateResult } from "./types";
 
-export { IRArray as Array } from "./IRArray";
+export { IRSet as Set } from "./IRSet";
 export { IRObject as Object } from "./IRObject";
 export { LiteralValue } from "./LiteralValue";
 export { NamePlaceholder } from "./NamePlaceholder";

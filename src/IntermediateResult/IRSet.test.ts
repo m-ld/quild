@@ -1,8 +1,8 @@
 import { BindingsFactory } from "@comunica/bindings-factory";
 import { describe, it, expect } from "@jest/globals";
 
-import { IRArray } from "./IRArray";
 import { IRObject } from "./IRObject";
+import { IRSet } from "./IRSet";
 import { NativePlaceholder } from "./NativePlaceholder";
 import { df, integer } from "../common";
 
@@ -17,10 +17,10 @@ const height = df.variable("root·height");
 const films = df.variable("root·films");
 const filmsTitle = df.variable("root·films·title");
 
-describe(IRArray, () => {
+describe(IRSet, () => {
   describe(`of a ${NativePlaceholder.name}`, () => {
     it("puts its results in an array", () => {
-      const ir = new IRArray(
+      const ir = new IRSet(
         filmsTitle,
         new NativePlaceholder(filmsTitle)
       ).addSolution(bf.bindings([[filmsTitle, df.literal("A New Hope")]]));
@@ -29,7 +29,7 @@ describe(IRArray, () => {
     });
 
     it("accepts multiple solutions", () => {
-      const ir = new IRArray(filmsTitle, new NativePlaceholder(filmsTitle))
+      const ir = new IRSet(filmsTitle, new NativePlaceholder(filmsTitle))
         .addSolution(bf.bindings([[filmsTitle, df.literal("A New Hope")]]))
         .addSolution(
           bf.bindings([[filmsTitle, df.literal("The Empire Strikes Back")]])
@@ -44,7 +44,7 @@ describe(IRArray, () => {
 
   describe(`of a ${IRObject.name}`, () => {
     it("puts its results in an array", () => {
-      const ir = new IRArray(
+      const ir = new IRSet(
         root,
         new IRObject({
           name: new NativePlaceholder(name),
@@ -67,7 +67,7 @@ describe(IRArray, () => {
     });
 
     it("accepts multiple solutions", () => {
-      const ir = new IRArray(
+      const ir = new IRSet(
         root,
         new IRObject({
           name: new NativePlaceholder(name),
@@ -102,11 +102,11 @@ describe(IRArray, () => {
     });
 
     it("nests properly", () => {
-      const initialIr = new IRArray(
+      const initialIr = new IRSet(
         root,
         new IRObject({
           name: new NativePlaceholder(name),
-          films: new IRArray(
+          films: new IRSet(
             films,
             new IRObject({ title: new NativePlaceholder(filmsTitle) })
           ),

@@ -25,7 +25,7 @@ export const NodeObjectArray: Parser["NodeObjectArray"] = async function ({
 
   return evolve(
     {
-      intermediateResult: (ir) => new IR.Array(variable, ir),
+      intermediateResult: (ir) => new IR.Set(variable, ir),
       projections: prepend(variable)<RDF.Variable>,
       warnings: nestWarningsUnderKey(0),
     },

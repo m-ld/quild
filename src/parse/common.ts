@@ -170,7 +170,7 @@ export type Parse<
  */
 export interface Parser {
   readonly Document: Parse;
-  readonly NodeObjectArray: Parse<JsonArray, IR.Array>;
+  readonly NodeObjectArray: Parse<JsonArray, IR.Set>;
   readonly TopLevelGraphContainer: Parse<TopLevelGraphContainer, IR.Object>;
   readonly NodeObject: Parse<JsonObject, IR.Object>;
   readonly GraphObject: Parse;

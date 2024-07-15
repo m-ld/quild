@@ -18,7 +18,7 @@ describe(IndexedList, () => {
       index,
       new IR.Object({
         name: new IR.NativePlaceholder(name),
-        starships: new IR.Array(
+        starships: new IR.Set(
           starship,
           new IR.Object({ name: new IR.NativePlaceholder(starshipName) })
         ),
@@ -65,7 +65,7 @@ describe(IndexedList, () => {
       index,
       new IR.Object({
         name: new IR.NativePlaceholder(name),
-        starships: new IR.Array(
+        starships: new IR.Set(
           starship,
           new IR.Object({ name: new IR.NativePlaceholder(starshipName) })
         ),
