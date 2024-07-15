@@ -1,24 +1,22 @@
 import { concat } from "rambdax";
 
-import * as IR from "../../IntermediateResult";
 import { af, df } from "../../common";
 import {
-  type ListObject,
-  type Parse,
   isPlainObject,
   nestWarningsUnderKey,
+  type Parser,
 } from "../../parse/common";
 import { evolve } from "../../upstream/rambda";
 import { variableUnder } from "../../variableUnder";
 import { IndexedList } from "../IntermediateResult/IndexedList";
 
-export const MeldListObject: Parse<ListObject, IR.Object> = async function ({
+export const MeldListArray: Parser["ListArray"] = async function ({
   element,
   variable,
   ctx,
 }) {
-  const soleSubquery = element["@list"][0];
-  if (!(soleSubquery && element["@list"].length === 1)) {
+  const soleSubquery = element[0];
+  if (!(soleSubquery && element.length === 1)) {
     /* eslint-disable-next-line @typescript-eslint/no-throw-literal
        ---
        TODO: https://github.com/m-ld/quild/issues/15 */
@@ -69,13 +67,5 @@ export const MeldListObject: Parse<ListObject, IR.Object> = async function ({
     parsedSubquery
   );
 
-  const parsedListObject = evolve(
-    {
-      intermediateResult: (ir) => new IR.Object({ "@list": ir }),
-      warnings: nestWarningsUnderKey("@list"),
-    },
-    parsedList
-  );
-
-  return parsedListObject;
+  return parsedList;
 };

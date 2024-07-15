@@ -23,16 +23,18 @@ export const NodeObjectArray: Parser["NodeObjectArray"] = async function ({
        TODO: https://github.com/m-ld/quild/issues/15 */
     throw "TODO: Only objects can be in plural nodes, so far.";
 
+  const parsedSubquery = await this.NodeObject({
+    element: soleSubquery,
+    variable,
+    ctx,
+  });
+
   return evolve(
     {
       intermediateResult: (ir) => new IR.Set(variable, ir),
       projections: prepend(variable)<RDF.Variable>,
       warnings: nestWarningsUnderKey(0),
     },
-    await this.NodeObject({
-      element: soleSubquery,
-      variable,
-      ctx,
-    })
+    parsedSubquery
   );
 };

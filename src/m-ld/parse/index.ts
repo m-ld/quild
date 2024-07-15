@@ -1,6 +1,6 @@
-import { MeldListObject } from "./MeldListObject";
+import { MeldListArray } from "./MeldListArray";
 import { makeParser } from "../../parse";
 
-export { MeldListObject } from "./MeldListObject";
+export { MeldListArray } from "./MeldListArray";
 
-export const parser = makeParser({ ListObject: MeldListObject });
+export const parser = makeParser({ ListArray: MeldListArray });

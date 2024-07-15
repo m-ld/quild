@@ -1,5 +1,6 @@
 import { Document } from "./Document";
 import { GraphObject } from "./GraphObject";
+import { ListArray } from "./ListArray";
 import { ListObject } from "./ListObject";
 import { NodeObject } from "./NodeObject";
 import { NodeObjectArray } from "./NodeObjectArray";
@@ -61,6 +62,7 @@ export const defaultParser: Parser = Object.freeze({
   NodeObject,
   GraphObject,
   ListObject,
+  ListArray,
   Primitive,
   SetObject,
   ValueObject,

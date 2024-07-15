@@ -207,8 +207,11 @@ describe(NodeObject, () => {
             ])
           ),
           projections: resource.projections,
-          warnings: nestWarningsUnderKey("http://example.com/thing")(
-            resource.warnings
+          warnings: resource.warnings.map(
+            ({ message, path: [_containerKey, ...path] }) => ({
+              message,
+              path: ["http://example.com/thing", ...path],
+            })
           ),
         })
       );
