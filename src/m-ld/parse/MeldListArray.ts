@@ -1,6 +1,8 @@
 import { concat } from "rambdax";
 
-import { af, df } from "../../common";
+import { index, item } from "./common";
+import * as IR from "../../IntermediateResult";
+import { af } from "../../common";
 import {
   isPlainObject,
   nestWarningsUnderKey,
@@ -8,7 +10,6 @@ import {
 } from "../../parse/common";
 import { evolve } from "../../upstream/rambda";
 import { variableUnder } from "../../variableUnder";
-import { IndexedList } from "../IntermediateResult/IndexedList";
 
 export const MeldListArray: Parser["ListArray"] = async function ({
   element,
@@ -42,22 +43,14 @@ export const MeldListArray: Parser["ListArray"] = async function ({
 
   const parsedList = evolve(
     {
-      intermediateResult: (ir) => new IndexedList(indexVariable, ir),
+      intermediateResult: (ir) => new IR.IndexedList(indexVariable, ir),
       warnings: nestWarningsUnderKey(0),
       operation: (op) =>
         af.createJoin([
           af.createBgp([
             af.createPattern(variable, LseqSlotPredicateVariable, slotVariable),
-            af.createPattern(
-              slotVariable,
-              df.namedNode("http://json-rql.org/#index"),
-              indexVariable
-            ),
-            af.createPattern(
-              slotVariable,
-              df.namedNode("http://json-rql.org/#item"),
-              itemVariable
-            ),
+            af.createPattern(slotVariable, index, indexVariable),
+            af.createPattern(slotVariable, item, itemVariable),
           ]),
           op,
         ]),

@@ -1,7 +1,8 @@
 export type { IntermediateResult } from "./types";
 
-export { IRSet as Set } from "./IRSet";
+export { IndexedList } from "./IndexedList";
 export { IRObject as Object } from "./IRObject";
+export { IRSet as Set } from "./IRSet";
 export { LiteralValue } from "./LiteralValue";
 export { NamePlaceholder } from "./NamePlaceholder";
 export { NativePlaceholder } from "./NativePlaceholder";

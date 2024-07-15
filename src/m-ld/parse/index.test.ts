@@ -3,9 +3,9 @@ import { describe, it, expect } from "@jest/globals";
 import { parser as meldParser } from ".";
 import "../../../test-util/toBeSparqlEqualTo";
 import * as IR from "../../IntermediateResult";
+import { IndexedList } from "../../IntermediateResult/IndexedList";
 import { df } from "../../common";
 import { parseQuery } from "../../parse";
-import { IndexedList } from "../IntermediateResult/IndexedList";
 
 describe(`${parseQuery.name} with a m-ld parser`, () => {
   it("can query for a @list", async () => {

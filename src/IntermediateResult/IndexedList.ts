@@ -1,6 +1,6 @@
-import { integer } from "../../common";
+import { integer } from "../common";
 
-import type { IntermediateResult } from "../../IntermediateResult/types";
+import type { IntermediateResult } from "./types";
 import type * as RDF from "@rdfjs/types";
 import type { JsonArray } from "type-fest";
 

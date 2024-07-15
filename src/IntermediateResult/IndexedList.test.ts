@@ -1,9 +1,9 @@
 import { BindingsFactory } from "@comunica/bindings-factory";
 import { describe, it, expect } from "@jest/globals";
 
+import * as IR from ".";
 import { IndexedList } from "./IndexedList";
-import * as IR from "../../IntermediateResult";
-import { df, integer } from "../../common";
+import { df, integer } from "../common";
 
 const bf = new BindingsFactory(df);
 
