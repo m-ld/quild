@@ -25,14 +25,16 @@ describe(`${parseQuery.name} with a m-ld parser`, () => {
           "@vocab": "http://swapi.dev/documentation#",
         }),
         "@id": new IR.LiteralValue("https://swapi.dev/api/vehicles/14/"),
-        pilots: new IndexedList(
-          df.variable("root·pilots·slot·index"),
-          new IR.Object({
-            name: new IR.NativePlaceholder(
-              df.variable("root·pilots·slot·item·name")
-            ),
-          })
-        ),
+        pilots: new IR.Object({
+          "@list": new IndexedList(
+            df.variable("root·pilots·slot·index"),
+            new IR.Object({
+              name: new IR.NativePlaceholder(
+                df.variable("root·pilots·slot·item·name")
+              ),
+            })
+          ),
+        }),
       })
     );
 

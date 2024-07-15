@@ -174,7 +174,7 @@ export interface Parser {
   readonly TopLevelGraphContainer: Parse<TopLevelGraphContainer, IR.Object>;
   readonly NodeObject: Parse<JsonObject, IR.Object>;
   readonly GraphObject: Parse;
-  readonly ListObject: Parse<ListObject>;
+  readonly ListObject: Parse<ListObject, IR.Object>;
   readonly Primitive: Parse<
     string | number | boolean,
     IR.NativePlaceholder | IR.LiteralValue

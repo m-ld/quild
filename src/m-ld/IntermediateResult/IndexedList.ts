@@ -2,7 +2,7 @@ import { integer } from "../../common";
 
 import type { IntermediateResult } from "../../IntermediateResult/types";
 import type * as RDF from "@rdfjs/types";
-import type { JsonObject } from "type-fest";
+import type { JsonArray } from "type-fest";
 
 /**
  * Represents a JSON-LD list in the query and result, in which the positions of
@@ -61,7 +61,7 @@ export class IndexedList implements IntermediateResult {
     return new IndexedList(this.indexVariable, this.template, newResults);
   }
 
-  result(): JsonObject {
-    return { "@list": this.results.map((r) => r.result()) };
+  result(): JsonArray {
+    return this.results.map((r) => r.result());
   }
 }

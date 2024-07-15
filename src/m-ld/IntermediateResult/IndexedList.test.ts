@@ -49,15 +49,13 @@ describe(IndexedList, () => {
         ])
       );
 
-    expect(ir.result()).toStrictEqual({
-      "@list": [
-        {
-          name: "Luke Skywalker",
-          starships: [{ name: "X-wing" }, { name: "Imperial shuttle" }],
-        },
-        { name: "Wedge Antilles", starships: [{ name: "X-wing" }] },
-      ],
-    });
+    expect(ir.result()).toStrictEqual([
+      {
+        name: "Luke Skywalker",
+        starships: [{ name: "X-wing" }, { name: "Imperial shuttle" }],
+      },
+      { name: "Wedge Antilles", starships: [{ name: "X-wing" }] },
+    ]);
   });
 
   it("puts accepts solutions in any order", () => {
@@ -96,14 +94,12 @@ describe(IndexedList, () => {
         ])
       );
 
-    expect(ir.result()).toStrictEqual({
-      "@list": [
-        {
-          name: "Luke Skywalker",
-          starships: [{ name: "X-wing" }, { name: "Imperial shuttle" }],
-        },
-        { name: "Wedge Antilles", starships: [{ name: "X-wing" }] },
-      ],
-    });
+    expect(ir.result()).toStrictEqual([
+      {
+        name: "Luke Skywalker",
+        starships: [{ name: "X-wing" }, { name: "Imperial shuttle" }],
+      },
+      { name: "Wedge Antilles", starships: [{ name: "X-wing" }] },
+    ]);
   });
 });

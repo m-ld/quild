@@ -1,5 +1,6 @@
-import { compose, concat } from "rambdax";
+import { concat } from "rambdax";
 
+import * as IR from "../../IntermediateResult";
 import { af, df } from "../../common";
 import {
   type ListObject,
@@ -11,7 +12,7 @@ import { evolve } from "../../upstream/rambda";
 import { variableUnder } from "../../variableUnder";
 import { IndexedList } from "../IntermediateResult/IndexedList";
 
-export const MeldListObject: Parse<ListObject, IndexedList> = async function ({
+export const MeldListObject: Parse<ListObject, IR.Object> = async function ({
   element,
   variable,
   ctx,
@@ -35,10 +36,16 @@ export const MeldListObject: Parse<ListObject, IndexedList> = async function ({
   const indexVariable = variableUnder(slotVariable, "index");
   const itemVariable = variableUnder(slotVariable, "item");
 
-  return evolve(
+  const parsedSubquery = await this.NodeObject({
+    element: soleSubquery,
+    variable: itemVariable,
+    ctx,
+  });
+
+  const parsedList = evolve(
     {
       intermediateResult: (ir) => new IndexedList(indexVariable, ir),
-      warnings: compose(nestWarningsUnderKey("@list"), nestWarningsUnderKey(0)),
+      warnings: nestWarningsUnderKey(0),
       operation: (op) =>
         af.createJoin([
           af.createBgp([
@@ -59,10 +66,16 @@ export const MeldListObject: Parse<ListObject, IndexedList> = async function ({
       projections: concat([variable, indexVariable]),
       term: () => variable,
     },
-    await this.NodeObject({
-      element: soleSubquery,
-      variable: itemVariable,
-      ctx,
-    })
+    parsedSubquery
   );
+
+  const parsedListObject = evolve(
+    {
+      intermediateResult: (ir) => new IR.Object({ "@list": ir }),
+      warnings: nestWarningsUnderKey("@list"),
+    },
+    parsedList
+  );
+
+  return parsedListObject;
 };
