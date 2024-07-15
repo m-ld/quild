@@ -1,4 +1,4 @@
-import { concat } from "rambdax";
+import { compose, concat } from "rambdax";
 
 import { af, df } from "../../common";
 import {
@@ -38,7 +38,7 @@ export const MeldListObject: Parse<ListObject, IndexedList> = async function ({
   return evolve(
     {
       intermediateResult: (ir) => new IndexedList(indexVariable, ir),
-      warnings: nestWarningsUnderKey("@list"),
+      warnings: compose(nestWarningsUnderKey("@list"), nestWarningsUnderKey(0)),
       operation: (op) =>
         af.createJoin([
           af.createBgp([

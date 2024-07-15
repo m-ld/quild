@@ -11,6 +11,7 @@ import {
   filter,
   equals,
   mapToObject,
+  map,
 } from "rambdax";
 
 import {
@@ -21,6 +22,7 @@ import {
   type ToParse,
   parseWarning,
   type ProjectableOperation,
+  type ParseWarning,
 } from "./common";
 import { propagateContext } from "./common";
 import * as IR from "../IntermediateResult";
@@ -217,7 +219,15 @@ const parseEntry: ParseEntry<[key: string, value: JsonValue]> = async function (
       );
       if (container) {
         return evolve(
-          { intermediateResult: (ir) => new IR.Unwrapped(container, ir) },
+          {
+            intermediateResult: (ir) => new IR.Unwrapped(container, ir),
+            // Unwrap warning paths as well
+            warnings: map(
+              evolve({
+                path: (p: Array<ParseWarning["path"][number]>) => p.slice(1),
+              })
+            ),
+          },
           await parseIriEntry(
             {
               element: { [container]: value },
