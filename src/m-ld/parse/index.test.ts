@@ -46,7 +46,10 @@ describe(`${parseQuery.name} with a m-ld parser`, () => {
         ?root·pilots ?root·pilots·rdfLseqSlot ?root·pilots·slot.
         ?root·pilots·slot jrql:index ?root·pilots·slot·index;
                           jrql:item ?root·pilots·slot·item.
-        ?root·pilots·slot·item swapi:name ?root·pilots·slot·item·name.
+
+        OPTIONAL {
+          ?root·pilots·slot·item swapi:name ?root·pilots·slot·item·name.
+        }
       }
     `);
   });

@@ -46,14 +46,14 @@ export const MeldListArray: Parser["ListArray"] = async function ({
       intermediateResult: (ir) => new IR.IndexedList(indexVariable, ir),
       warnings: nestWarningsUnderKey(0),
       operation: (op) =>
-        af.createJoin([
+        af.createLeftJoin(
           af.createBgp([
             af.createPattern(variable, LseqSlotPredicateVariable, slotVariable),
             af.createPattern(slotVariable, index, indexVariable),
             af.createPattern(slotVariable, item, itemVariable),
           ]),
-          op,
-        ]),
+          op
+        ),
       projections: concat([variable, indexVariable]),
       term: () => variable,
     },
