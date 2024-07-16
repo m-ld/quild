@@ -9,8 +9,6 @@ import {
   toPairs,
   concat,
   filter,
-  equals,
-  mapToObject,
   map,
 } from "rambdax";
 
@@ -55,30 +53,6 @@ const addMapping = (k: string, v: IR.IntermediateResult) => (ir: IR.Object) =>
 
 const isId = (ctx: JsonLdContextNormalized, k: string) =>
   ctx.expandTerm(k, true) === "@id";
-
-/**
- * Returns true iff the `@container` of `term` in `ctx` is exactly `container`.
- */
-const termIsContainer = (
-  ctx: JsonLdContextNormalized,
-  term: string,
-  container: Containers
-) => {
-  const rawCtx: Record<string, unknown> = ctx.getContextRaw();
-  const termDef = rawCtx[term];
-  if (termDef && typeof termDef === "object" && "@container" in termDef) {
-    const actualContainer = termDef["@container"];
-    return equals(
-      mapToObject(
-        (c) => ({ [c]: true }),
-        Array.isArray(container) ? container : [container]
-      ),
-      actualContainer
-    );
-  } else {
-    return false;
-  }
-};
 
 /**
  * Returns the term definition for the given term in the given context. Note
