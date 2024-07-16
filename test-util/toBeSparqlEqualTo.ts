@@ -142,9 +142,9 @@ export const toBeSparqlEqualTo: MatcherFunction<[expectedSparql: unknown]> =
       !!x &&
       typeof x === "object" &&
       "type" in x &&
-      x.type === "bgp" &&
+      x.type === Algebra.types.BGP &&
       "triples" in x &&
-      x.triples instanceof Array;
+      Array.isArray(x.triples);
 
     function areBGPsEqual(
       this: TesterContext,
