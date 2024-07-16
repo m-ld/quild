@@ -5,8 +5,10 @@ import type * as RDF from "@rdfjs/types";
 import type { JsonArray } from "type-fest";
 
 /**
- * Represents a JSON-LD list in the query and result, in which the positions of
- * the elements are bound to a variable in the solutions.
+ * Represents a JSON-LD list in the query and result, in which the indexes of
+ * the elements are bound to a variable in the solutions. In each solution
+ * `indexVariable` should be bound to the index of the item which the solution
+ * applies to.
  *
  * @example
  * ### Query

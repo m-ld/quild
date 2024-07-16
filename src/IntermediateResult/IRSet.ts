@@ -1,14 +1,8 @@
+import { update } from "./common";
+
 import type { IntermediateResult } from "./types";
 import type * as RDF from "@rdfjs/types";
 import type { JsonArray } from "type-fest";
-
-// In the style of Clojure's `update`
-// https://clojuredocs.org/clojure.core/update
-const update = <K extends keyof O, O extends object>(
-  obj: O,
-  key: K,
-  replaceFn: (previousValue: O[K] | undefined) => O[K]
-): O => ({ ...obj, [key]: replaceFn(obj[key]) });
 
 /**
  * Represents a JSON array in the query and result which corresponds to a set in

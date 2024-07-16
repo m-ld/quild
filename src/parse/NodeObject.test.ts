@@ -60,7 +60,7 @@ describe(NodeObject, () => {
     },
     { desc: "graph object", child: { "@graph": [] } },
     { desc: "value object", child: { "@value": "abc" } },
-    { desc: "list object", child: { "@list": [] } },
+    { desc: "list object", child: { "@list": [{}] } },
     { desc: "set object", child: { "@set": [{}] } },
   ])("parses a $desc entry", async ({ child }) => {
     const toParse = await makeToParse({

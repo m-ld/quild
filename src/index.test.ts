@@ -353,24 +353,24 @@ describe(readQuery, () => {
     });
   });
 
-  // it.skip("can query for a @list", async () => {
-  //   expect(
-  //     await readQuery(source, {
-  //       "@context": { "@vocab": "http://swapi.dev/documentation#" },
-  //       "@id": "https://swapi.dev/api/vehicles/14/",
-  //       pilots: {
-  //         "@list": [{ name: "?" }],
-  //       },
-  //     })
-  //   ).toStrictEqual({
-  //     data: {
-  //       "@context": { "@vocab": "http://swapi.dev/documentation#" },
-  //       "@id": "https://swapi.dev/api/vehicles/14/",
-  //       pilots: {
-  //         "@list": [{ name: "Luke Skywalker" }, { name: "Wedge Antilles" }],
-  //       },
-  //     },
-  //     parseWarnings: [],
-  //   });
-  // });
+  it("can query for a @list", async () => {
+    expect(
+      await readQuery(source, {
+        "@context": { "@vocab": "http://swapi.dev/documentation#" },
+        "@id": "https://swapi.dev/api/vehicles/14/",
+        pilots: {
+          "@list": [{ name: "?" }],
+        },
+      })
+    ).toStrictEqual({
+      data: {
+        "@context": { "@vocab": "http://swapi.dev/documentation#" },
+        "@id": "https://swapi.dev/api/vehicles/14/",
+        pilots: {
+          "@list": [{ name: "Luke Skywalker" }, { name: "Wedge Antilles" }],
+        },
+      },
+      parseWarnings: [],
+    });
+  });
 });

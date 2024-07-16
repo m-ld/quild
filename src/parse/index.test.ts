@@ -183,6 +183,55 @@ describe(parseQuery, () => {
     `);
   });
 
+  it("can produce a query for a list", async () => {
+    const query = {
+      "@context": { "@vocab": "http://swapi.dev/documentation#" },
+      "@id": "https://swapi.dev/api/vehicles/14/",
+      pilots: {
+        "@list": [{ name: "?" }],
+      },
+    } as const;
+
+    const { intermediateResult, sparql } = await parseQuery(query);
+
+    expect(intermediateResult).toStrictEqual(
+      new IR.Object({
+        "@context": new IR.LiteralValue({
+          "@vocab": "http://swapi.dev/documentation#",
+        }),
+        "@id": new IR.LiteralValue("https://swapi.dev/api/vehicles/14/"),
+        pilots: new IR.Object({
+          "@list": new IR.LinkedList(
+            df.variable("root·pilots"),
+            df.variable("root·pilots·slot"),
+            df.variable("root·pilots·slot·rest"),
+            new IR.Object({
+              name: new IR.NativePlaceholder(
+                df.variable("root·pilots·slot·item·name")
+              ),
+            })
+          ),
+        }),
+      })
+    );
+
+    expect(sparql).toBeSparqlEqualTo(/* sparql */ `
+      PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+      PREFIX swapi: <http://swapi.dev/documentation#>
+
+      SELECT ?root·pilots ?root·pilots·slot ?root·pilots·slot·rest ?root·pilots·slot·item·name WHERE {
+        <https://swapi.dev/api/vehicles/14/> swapi:pilots ?root·pilots.
+        ?root·pilots rdf:rest* ?root·pilots·slot.
+        ?root·pilots·slot rdf:first ?root·pilots·slot·item.
+        ?root·pilots·slot rdf:rest ?root·pilots·slot·rest.
+
+        OPTIONAL {
+          ?root·pilots·slot·item swapi:name ?root·pilots·slot·item·name.
+        } .
+      }
+    `);
+  });
+
   it("understands aliases for @id", async () => {
     const query = {
       "@context": { id: "@id" },
