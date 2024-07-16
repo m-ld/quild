@@ -12,6 +12,7 @@ import {
   map,
 } from "rambdax";
 
+import { addToRight } from "./addToRight";
 import {
   nestWarningsUnderKey,
   parsed,
@@ -117,14 +118,10 @@ export const NodeObject: Parser["NodeObject"] = async function ({
         this
       );
 
-    const isOptional = Array.isArray(value);
-
     return evolve({
       intermediateResult: addMapping(key, intermediateResult),
       operation: (previousOp: ProjectableOperation): ProjectableOperation =>
-        isOptional
-          ? af.createLeftJoin(previousOp, operation)
-          : af.createJoin([previousOp, operation]),
+        af.createJoin([previousOp, operation]),
       projections: concat(projections),
       warnings: concat(nestWarningsUnderKey(key)(warnings)),
     });
@@ -311,10 +308,10 @@ const parseIriEntry = async (
 
   return {
     intermediateResult: parsedChild.intermediateResult,
-    operation: af.createJoin([
+    operation: addToRight(
       af.createBgp([af.createPattern(node, predicate, parsedChild.term)]),
-      parsedChild.operation,
-    ]),
+      parsedChild.operation
+    ),
     projections: parsedChild.projections,
     warnings: parsedChild.warnings,
   };

@@ -1,6 +1,7 @@
 import { describe, it, expect } from "@jest/globals";
 
 import { NodeObject } from "./NodeObject";
+import { addToRight } from "./addToRight";
 import {
   type ToParse,
   parsed,
@@ -82,14 +83,16 @@ describe(NodeObject, () => {
           "http://example.com/value": resource.intermediateResult,
         }),
         operation: af.createJoin([
-          af.createBgp([
-            af.createPattern(
-              variable,
-              df.namedNode("http://example.com/value"),
-              resource.term
-            ),
-          ]),
-          resource.operation,
+          addToRight(
+            af.createBgp([
+              af.createPattern(
+                variable,
+                df.namedNode("http://example.com/value"),
+                resource.term
+              ),
+            ]),
+            resource.operation
+          ),
         ]),
         projections: resource.projections,
         warnings: nestWarningsUnderKey("http://example.com/value")(
@@ -193,9 +196,8 @@ describe(NodeObject, () => {
               resource.intermediateResult
             ),
           }),
-          operation: af.createLeftJoin(
-            af.createJoin([]),
-            af.createJoin([
+          operation: af.createJoin([
+            addToRight(
               af.createBgp([
                 af.createPattern(
                   variable,
@@ -203,9 +205,9 @@ describe(NodeObject, () => {
                   resource.term
                 ),
               ]),
-              resource.operation,
-            ])
-          ),
+              resource.operation
+            ),
+          ]),
           projections: resource.projections,
           warnings: resource.warnings.map(
             ({ message, path: [_containerKey, ...path] }) => ({
@@ -238,25 +240,27 @@ describe(NodeObject, () => {
             })
           ),
         }),
-        operation: af.createLeftJoin(
-          af.createJoin([]),
-          af.createJoin([
-            af.createBgp([
-              af.createPattern(
-                variable,
-                df.namedNode("http://swapi.dev/documentation#film"),
-                filmVariable
-              ),
-            ]),
-            af.createBgp([
-              af.createPattern(
-                filmVariable,
-                df.namedNode("http://swapi.dev/documentation#title"),
-                titleVariable
-              ),
-            ]),
-          ])
-        ),
+        operation: af.createJoin([
+          af.createLeftJoin(
+            af.createJoin([]),
+            af.createJoin([
+              af.createBgp([
+                af.createPattern(
+                  variable,
+                  df.namedNode("http://swapi.dev/documentation#film"),
+                  filmVariable
+                ),
+              ]),
+              af.createBgp([
+                af.createPattern(
+                  filmVariable,
+                  df.namedNode("http://swapi.dev/documentation#title"),
+                  titleVariable
+                ),
+              ]),
+            ])
+          ),
+        ]),
         projections: [filmVariable, titleVariable],
       })
     );
