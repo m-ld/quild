@@ -13,7 +13,7 @@ const starship = df.variable("starship");
 const starshipName = df.variable("starshipName");
 
 describe(IndexedList, () => {
-  it("puts its results in a @list", () => {
+  it("puts its results in an array", () => {
     const ir = new IndexedList(
       index,
       new IR.Object({
