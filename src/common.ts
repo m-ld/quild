@@ -6,6 +6,8 @@ import * as IR from "./IntermediateResult";
 import type { JsonValue } from "type-fest";
 
 export const PLACEHOLDER = "?";
+export const isPlaceholder = (v: unknown): v is typeof PLACEHOLDER =>
+  v === PLACEHOLDER;
 
 export const df = new DataFactory();
 export const af = new AlgebraFactory(df);
@@ -23,6 +25,10 @@ export const first = df.namedNode(
 );
 export const rest = df.namedNode(
   "http://www.w3.org/1999/02/22-rdf-syntax-ns#rest"
+);
+
+export const type = df.namedNode(
+  "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
 );
 
 /**

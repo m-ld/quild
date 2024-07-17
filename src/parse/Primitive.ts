@@ -1,10 +1,7 @@
 import { type Parser, parsed } from "./common";
 import * as IR from "../IntermediateResult";
-import { PLACEHOLDER } from "../common";
+import { isPlaceholder } from "../common";
 import { toRdfLiteral } from "../representation";
-
-const isPlaceholder = (v: unknown): v is typeof PLACEHOLDER =>
-  v === PLACEHOLDER;
 
 export const Primitive: Parser["Primitive"] = ({ element: query, variable }) =>
   Promise.resolve(

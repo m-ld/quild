@@ -91,6 +91,48 @@ describe(readQuery, () => {
     });
   });
 
+  it("can query by @type", async () => {
+    expect(
+      await readQuery(source, [
+        {
+          "http://swapi.dev/documentation#name": "?",
+          "@type": "http://swapi.dev/documentation#Person",
+        },
+      ])
+    ).toStrictEqual({
+      data: [
+        {
+          "@type": "http://swapi.dev/documentation#Person",
+          "http://swapi.dev/documentation#name": "Luke Skywalker",
+        },
+        {
+          "@type": "http://swapi.dev/documentation#Person",
+          "http://swapi.dev/documentation#name": "Wedge Antilles",
+        },
+        {
+          "@type": "http://swapi.dev/documentation#Person",
+          "http://swapi.dev/documentation#name": "Owen Lars",
+        },
+      ],
+      parseWarnings: [],
+    });
+  });
+
+  it("can query for @type", async () => {
+    expect(
+      await readQuery(source, {
+        "http://swapi.dev/documentation#name": "Luke Skywalker",
+        "@type": "?",
+      })
+    ).toStrictEqual({
+      data: {
+        "http://swapi.dev/documentation#name": "Luke Skywalker",
+        "@type": "http://swapi.dev/documentation#Person",
+      },
+      parseWarnings: [],
+    });
+  });
+
   it("can access a singular related node", async () => {
     expect(
       await readQuery(source, {

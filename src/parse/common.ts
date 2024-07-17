@@ -23,7 +23,10 @@ export interface ParseWarning {
  * An {@link Algebra.Operation} which can sensically be the first input in an
  * {@link Algebra.Project}.
  */
-export type ProjectableOperation = Algebra.Join | Algebra.LeftJoin;
+export type ProjectableOperation =
+  | Algebra.Bgp
+  | Algebra.Join
+  | Algebra.LeftJoin;
 
 export interface Parsed<
   IRType extends IR.IntermediateResult = IR.IntermediateResult
