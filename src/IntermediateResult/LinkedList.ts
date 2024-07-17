@@ -1,5 +1,7 @@
+import { termToString } from "rdf-string";
+
 import { update } from "./common";
-import { nil } from "../common";
+import { getCompleteResult, nil } from "../common";
 
 import type { IntermediateResult } from "./types";
 import type * as RDF from "@rdfjs/types";
@@ -11,24 +13,25 @@ import type { JsonArray } from "type-fest";
  * @param results The links in the list. The keys are the JSON-serialized
  *                {@link RDF.Term}s, to differentiate between Named Nodes and
  *                Blank Nodes.
+//  TODO: v These references are not correct
  * @param results.ir The result, which will go into the returned array.
  * @param results.next The next link in the list.
+//  BOOKMARK: Should this be a string? ^
  * @throws If a link is missing in the list.
  * @returns The linearized list.
  */
 const linearizeList = function* (
-  head: RDF.Term,
-  results: Record<string, { ir: IntermediateResult; next: RDF.Term | null }>
+  head: string,
+  results: Record<string, { ir: IntermediateResult; next: string | null }>
 ) {
-  let current: RDF.Term | null = head;
+  let current: string | null = head;
   while (current !== null) {
-    const result: (typeof results)[string] | undefined =
-      results[JSON.stringify(current)];
+    const result: (typeof results)[string] | undefined = results[current];
     if (!result) {
       /* eslint-disable-next-line @typescript-eslint/no-throw-literal
        ---
        TODO: https://github.com/m-ld/quild/issues/15 */
-      throw `Missing result for ${JSON.stringify(current)}`;
+      throw `Missing result for ${current}`;
     }
     yield result.ir;
     current = result.next;
@@ -77,7 +80,7 @@ export class LinkedList implements IntermediateResult {
     private readonly head: RDF.Term | null = null,
     private readonly results: Record<
       string,
-      { ir: IntermediateResult; next: RDF.Term | null }
+      { ir: IntermediateResult; next: string | null }
     > = {}
   ) {}
 
@@ -108,11 +111,11 @@ export class LinkedList implements IntermediateResult {
         this.restVariable,
         this.template,
         this.head,
-        update(this.results, JSON.stringify(slot), (entry) =>
+        update(this.results, termToString(slot), (entry) =>
           entry
             ? { ...entry, ir: entry.ir.addSolution(solution) }
             : {
-                next: rest.equals(nil) ? null : rest,
+                next: rest.equals(nil) ? null : termToString(rest),
                 ir: this.template.addSolution(solution),
               }
         )
@@ -127,6 +130,8 @@ export class LinkedList implements IntermediateResult {
        TODO: https://github.com/m-ld/quild/issues/15 */
       throw "List is incomplete";
     }
-    return [...linearizeList(this.head, this.results)].map((ir) => ir.result());
+    return [...linearizeList(termToString(this.head), this.results)].map(
+      (ir) => getCompleteResult(ir) ?? {}
+    );
   }
 }

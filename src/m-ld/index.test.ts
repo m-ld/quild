@@ -82,4 +82,29 @@ describe(readQuery, () => {
       parseWarnings: [],
     });
   });
+
+  it("can filter a @list", async () => {
+    expect(
+      await readQuery(
+        meldState,
+        {
+          "@context": { "@vocab": "http://swapi.dev/documentation#" },
+          "@id": "https://swapi.dev/api/vehicles/14/",
+          pilots: {
+            "@list": [{ hair_color: "brown", name: "?" }],
+          },
+        },
+        { parser: meldParser }
+      )
+    ).toStrictEqual({
+      data: {
+        "@context": { "@vocab": "http://swapi.dev/documentation#" },
+        "@id": "https://swapi.dev/api/vehicles/14/",
+        pilots: {
+          "@list": [{}, { hair_color: "brown", name: "Wedge Antilles" }],
+        },
+      },
+      parseWarnings: [],
+    });
+  });
 });

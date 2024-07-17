@@ -1,4 +1,4 @@
-import { integer } from "../common";
+import { getCompleteResult, integer } from "../common";
 
 import type { IntermediateResult } from "./types";
 import type * as RDF from "@rdfjs/types";
@@ -64,6 +64,6 @@ export class IndexedList implements IntermediateResult {
   }
 
   result(): JsonArray {
-    return this.results.map((r) => r.result());
+    return this.results.map((ir) => getCompleteResult(ir) ?? {});
   }
 }

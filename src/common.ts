@@ -1,6 +1,10 @@
 import { DataFactory } from "rdf-data-factory";
 import { Factory as AlgebraFactory } from "sparqlalgebrajs";
 
+import * as IR from "./IntermediateResult";
+
+import type { JsonValue } from "type-fest";
+
 export const PLACEHOLDER = "?";
 
 export const df = new DataFactory();
@@ -20,3 +24,23 @@ export const first = df.namedNode(
 export const rest = df.namedNode(
   "http://www.w3.org/1999/02/22-rdf-syntax-ns#rest"
 );
+
+/**
+ * Returns the complete result of an intermediate result, or `null` if it is not
+ * yet complete.
+ * @param ir The intermediate result.
+ * @returns The complete result, or `null` if it is not yet complete.
+ */
+export const getCompleteResult = (ir: IR.IntermediateResult) => {
+  let data: JsonValue | null;
+  try {
+    data = ir.result();
+  } catch (e) {
+    if (e instanceof IR.IncompleteResultError) {
+      data = null;
+    } else {
+      throw e;
+    }
+  }
+  return data;
+};

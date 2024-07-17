@@ -1,10 +1,11 @@
 import { QueryEngine } from "@comunica/query-sparql-rdfjs";
 
-import * as IR from "./IntermediateResult";
+import { getCompleteResult } from "./common";
 import { parseQuery } from "./parse";
 import { defaultParser } from "./parse/parser";
 import { readAll } from "./readAll";
 
+import type * as IR from "./IntermediateResult";
 import type { Parser, ParseWarning } from "./parse/common";
 import type { Source } from "@rdfjs/types";
 import type { JsonValue } from "type-fest";
@@ -46,18 +47,10 @@ export const readQuery = async <Data extends JsonValue>(
     intermediateResult
   );
 
-  let data: Data | null;
-  try {
-    /* eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-       ---
-       The type of `readQuery` is not yet derived from the query. */
-    data = ir.result() as Data;
-  } catch (e) {
-    if (e instanceof IR.IncompleteResultError) {
-      data = null;
-    } else {
-      throw e;
-    }
-  }
+  /* eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+     ---
+     The type of `readQuery` is not yet derived from the query. */
+  const data = getCompleteResult(ir) as Data | null;
+
   return { data, parseWarnings: warnings };
 };
