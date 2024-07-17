@@ -1,18 +1,8 @@
-import { ResultError } from "./errors";
+import { BadUnwrapError } from "./errors";
 
 import type { IntermediateResult } from "./types";
 import type * as RDF from "@rdfjs/types";
 import type { JsonValue } from "type-fest";
-
-export class BadUnwrapError extends ResultError {
-  constructor(readonly key: string, readonly result: JsonValue) {
-    super(
-      `Tried to unwrap key ${key}, but it wasn't present in the result: ${JSON.stringify(
-        result
-      )}`
-    );
-  }
-}
 
 // Workaround:
 // https://github.com/microsoft/TypeScript/issues/17002#issuecomment-494937708

@@ -1,4 +1,5 @@
 import type * as RDF from "@rdfjs/types";
+import type { JsonValue } from "type-fest";
 
 const termString = (term: RDF.Term) => `<${term.termType}: ${term.value}>`;
 
@@ -19,5 +20,15 @@ export class BadNativeValueError extends ResultError {
 export class NotANamedNodeError extends ResultError {
   constructor(readonly value: RDF.Term) {
     super(`Expected a NamedNode, but got ${termString(value)}`);
+  }
+}
+
+export class BadUnwrapError extends ResultError {
+  constructor(readonly key: string, readonly result: JsonValue) {
+    super(
+      `Tried to unwrap key ${key}, but it wasn't present in the result: ${JSON.stringify(
+        result
+      )}`
+    );
   }
 }
