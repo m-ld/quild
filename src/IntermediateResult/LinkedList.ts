@@ -1,42 +1,12 @@
 import { termToString } from "rdf-string";
 
 import { update } from "./common";
+import { type LinkedListObject, linearizeList } from "./linearizeList";
 import { getCompleteResult, nil } from "../common";
 
 import type { IntermediateResult } from "./types";
 import type * as RDF from "@rdfjs/types";
 import type { JsonArray } from "type-fest";
-
-/**
- * Linearizes a linked list of results into an array.
- * @param head The head of the list.
- * @param results The links in the list. The keys are the JSON-serialized
- *                {@link RDF.Term}s, to differentiate between Named Nodes and
- *                Blank Nodes.
-//  TODO: v These references are not correct
- * @param results.ir The result, which will go into the returned array.
- * @param results.next The next link in the list.
-//  BOOKMARK: Should this be a string? ^
- * @throws If a link is missing in the list.
- * @returns The linearized list.
- */
-const linearizeList = function* (
-  head: string,
-  results: Record<string, { ir: IntermediateResult; next: string | null }>
-) {
-  let current: string | null = head;
-  while (current !== null) {
-    const result: (typeof results)[string] | undefined = results[current];
-    if (!result) {
-      /* eslint-disable-next-line @typescript-eslint/no-throw-literal
-       ---
-       TODO: https://github.com/m-ld/quild/issues/15 */
-      throw `Missing result for ${current}`;
-    }
-    yield result.ir;
-    current = result.next;
-  }
-};
 
 /**
  * Represents a JSON-LD list in the query and result, in which the slots form a
@@ -78,10 +48,7 @@ export class LinkedList implements IntermediateResult {
     private readonly restVariable: RDF.Variable,
     private readonly template: IntermediateResult,
     private readonly head: RDF.Term | null = null,
-    private readonly results: Record<
-      string,
-      { ir: IntermediateResult; next: string | null }
-    > = {}
+    private readonly results: LinkedListObject<IntermediateResult> = {}
   ) {}
 
   addSolution(solution: RDF.Bindings): IntermediateResult {
@@ -113,10 +80,10 @@ export class LinkedList implements IntermediateResult {
         this.head,
         update(this.results, termToString(slot), (entry) =>
           entry
-            ? { ...entry, ir: entry.ir.addSolution(solution) }
+            ? { ...entry, value: entry.value.addSolution(solution) }
             : {
                 next: rest.equals(nil) ? null : termToString(rest),
-                ir: this.template.addSolution(solution),
+                value: this.template.addSolution(solution),
               }
         )
       );
