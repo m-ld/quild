@@ -57,6 +57,25 @@ describe(readQuery, () => {
     });
   });
 
+  it("can use names relative to a @base", async () => {
+    expect(
+      await readQuery(source, {
+        "@context": { "@base": "https://swapi.dev/api/" },
+        "@id": "people/1/",
+        "http://swapi.dev/documentation#hair_color": "?",
+        "http://swapi.dev/documentation#eye_color": "?",
+      })
+    ).toStrictEqual({
+      data: {
+        "@context": { "@base": "https://swapi.dev/api/" },
+        "@id": "people/1/",
+        "http://swapi.dev/documentation#hair_color": "blond",
+        "http://swapi.dev/documentation#eye_color": "blue",
+      },
+      parseWarnings: [],
+    });
+  });
+
   it("can query for an @id by property", async () => {
     expect(
       await readQuery(source, {
@@ -86,6 +105,105 @@ describe(readQuery, () => {
         "http://swapi.dev/documentation#name": "Luke Skywalker",
         "http://swapi.dev/documentation#hair_color": "blond",
         "http://swapi.dev/documentation#eye_color": "blue",
+      },
+      parseWarnings: [],
+    });
+  });
+
+  it("can query by @type", async () => {
+    expect(
+      await readQuery(source, [
+        {
+          "http://swapi.dev/documentation#name": "?",
+          "@type": "http://swapi.dev/documentation#Person",
+        },
+      ])
+    ).toStrictEqual({
+      data: [
+        {
+          "@type": "http://swapi.dev/documentation#Person",
+          "http://swapi.dev/documentation#name": "Luke Skywalker",
+        },
+        {
+          "@type": "http://swapi.dev/documentation#Person",
+          "http://swapi.dev/documentation#name": "Wedge Antilles",
+        },
+        {
+          "@type": "http://swapi.dev/documentation#Person",
+          "http://swapi.dev/documentation#name": "Owen Lars",
+        },
+      ],
+      parseWarnings: [],
+    });
+  });
+
+  it("can query for @type", async () => {
+    expect(
+      await readQuery(source, {
+        "http://swapi.dev/documentation#name": "Luke Skywalker",
+        "@type": "?",
+      })
+    ).toStrictEqual({
+      data: {
+        "http://swapi.dev/documentation#name": "Luke Skywalker",
+        "@type": "http://swapi.dev/documentation#Person",
+      },
+      parseWarnings: [],
+    });
+  });
+
+  it("respects @vocab when interpreting @type", async () => {
+    expect(
+      await readQuery(source, {
+        "@context": {
+          "@vocab": "http://swapi.dev/documentation#",
+        },
+        "@graph": [
+          {
+            "@type": "Person",
+            name: "?",
+            films: [
+              {
+                "@type": "?",
+                title: "?",
+              },
+            ],
+          },
+        ],
+      })
+    ).toStrictEqual({
+      data: {
+        "@context": { "@vocab": "http://swapi.dev/documentation#" },
+        "@graph": [
+          {
+            "@type": "Person",
+            name: "Luke Skywalker",
+            films: [
+              { "@type": "Film", title: "A New Hope" },
+              { "@type": "Film", title: "The Empire Strikes Back" },
+              { "@type": "Film", title: "Return of the Jedi" },
+              { "@type": "Film", title: "Revenge of the Sith" },
+            ],
+          },
+          {
+            "@type": "Person",
+            name: "Wedge Antilles",
+            films: [
+              { "@type": "Film", title: "A New Hope" },
+              { "@type": "Film", title: "The Empire Strikes Back" },
+              { "@type": "Film", title: "Return of the Jedi" },
+            ],
+          },
+          {
+            "@type": "Person",
+            name: "Owen Lars",
+            films: [
+              { "@type": "Film", title: "A New Hope" },
+              { "@type": "Film", title: "Attack of the Clones" },
+              { "@type": "Film", title: "Revenge of the Sith" },
+            ],
+          },
+        ],
       },
       parseWarnings: [],
     });

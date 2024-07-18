@@ -70,7 +70,6 @@
     "@eslint-community/eslint-comments/no-duplicate-disable": "warn",
     "@eslint-community/eslint-comments/no-unlimited-disable": "warn",
     "@eslint-community/eslint-comments/no-unused-enable": "warn",
-
     "@eslint-community/eslint-comments/no-unused-disable": "warn",
     "@eslint-community/eslint-comments/require-description": "warn"
   },
@@ -130,7 +129,11 @@
             "assertionStyle": "never"
           }
         ],
-        "@typescript-eslint/no-import-type-side-effects": "warn"
+        "@typescript-eslint/no-import-type-side-effects": "warn",
+
+        // We use namespaces at least once to declare an enum inside of a class
+        // object, which seems legitimate.
+        "@typescript-eslint/no-namespace": "off"
       }
     },
 

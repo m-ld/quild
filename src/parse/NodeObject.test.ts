@@ -8,10 +8,11 @@ import {
   parseWarning,
   nestWarningsUnderKey,
   contextParser,
+  nullContext,
 } from "./common";
 import { makeParser } from "./parser";
 import * as IR from "../IntermediateResult";
-import { PLACEHOLDER, af, df } from "../common";
+import { PLACEHOLDER, af, df, type } from "../common";
 import { variableUnder } from "../variableUnder";
 
 import type { JsonLdContext } from "jsonld-context-parser";
@@ -304,7 +305,11 @@ describe(NodeObject, () => {
       parsed({
         term: variable,
         intermediateResult: new IR.Object({
-          "@id": new IR.NamePlaceholder(variable),
+          "@id": new IR.NamePlaceholder(
+            variable,
+            nullContext,
+            IR.NamePlaceholder.Compaction.BASE
+          ),
           "http://swapi.dev/documentation#name": new IR.LiteralValue(
             "Luke Skywalker"
           ),
@@ -328,7 +333,7 @@ describe(NodeObject, () => {
       "@context": {
         url: "@id",
       },
-      "@id": "https://swapi.dev/api/people/1/",
+      url: "https://swapi.dev/api/people/1/",
       "http://swapi.dev/documentation#name": "Luke Skywalker",
     });
 
@@ -339,7 +344,7 @@ describe(NodeObject, () => {
           "@context": new IR.LiteralValue({
             url: "@id",
           }),
-          "@id": new IR.LiteralValue("https://swapi.dev/api/people/1/"),
+          url: new IR.LiteralValue("https://swapi.dev/api/people/1/"),
           "http://swapi.dev/documentation#name": new IR.LiteralValue(
             "Luke Skywalker"
           ),
@@ -348,6 +353,118 @@ describe(NodeObject, () => {
           af.createBgp([
             af.createPattern(
               df.namedNode("https://swapi.dev/api/people/1/"),
+              df.namedNode("http://swapi.dev/documentation#name"),
+              df.literal("Luke Skywalker")
+            ),
+          ]),
+        ]),
+      })
+    );
+  });
+
+  it("parses an @type entry with a value", async () => {
+    const toParse = await makeToParse({
+      "@type": "http://swapi.dev/documentation#Person",
+      "http://swapi.dev/documentation#name": "Luke Skywalker",
+    });
+
+    expect(await parser.NodeObject(toParse)).toStrictEqual(
+      parsed({
+        term: variable,
+        intermediateResult: new IR.Object({
+          "@type": new IR.LiteralValue("http://swapi.dev/documentation#Person"),
+          "http://swapi.dev/documentation#name": new IR.LiteralValue(
+            "Luke Skywalker"
+          ),
+        }),
+        operation: af.createJoin([
+          af.createBgp([
+            af.createPattern(
+              variable,
+              type,
+              df.namedNode("http://swapi.dev/documentation#Person")
+            ),
+          ]),
+          af.createBgp([
+            af.createPattern(
+              variable,
+              df.namedNode("http://swapi.dev/documentation#name"),
+              df.literal("Luke Skywalker")
+            ),
+          ]),
+        ]),
+      })
+    );
+  });
+
+  it("parses an @type entry with a placeholder", async () => {
+    const toParse = await makeToParse({
+      "@type": "?",
+      "http://swapi.dev/documentation#name": "Luke Skywalker",
+    });
+
+    expect(await parser.NodeObject(toParse)).toStrictEqual(
+      parsed({
+        term: variable,
+        intermediateResult: new IR.Object({
+          "@type": new IR.NamePlaceholder(
+            df.variable("thing·type"),
+            nullContext,
+            IR.NamePlaceholder.Compaction.VOCAB
+          ),
+          "http://swapi.dev/documentation#name": new IR.LiteralValue(
+            "Luke Skywalker"
+          ),
+        }),
+        operation: af.createJoin([
+          af.createBgp([
+            af.createPattern(variable, type, df.variable("thing·type")),
+          ]),
+          af.createBgp([
+            af.createPattern(
+              variable,
+              df.namedNode("http://swapi.dev/documentation#name"),
+              df.literal("Luke Skywalker")
+            ),
+          ]),
+        ]),
+        projections: [df.variable("thing·type")],
+      })
+    );
+  });
+
+  it("parses an @type entry (mapped term)", async () => {
+    const toParse = await makeToParse({
+      "@context": {
+        kind: "@type",
+      },
+      kind: "http://swapi.dev/documentation#Person",
+      "http://swapi.dev/documentation#name": "Luke Skywalker",
+    });
+
+    expect(await parser.NodeObject(toParse)).toStrictEqual(
+      parsed({
+        term: variable,
+        intermediateResult: new IR.Object({
+          "@context": new IR.LiteralValue({
+            kind: "@type",
+          }),
+          kind: new IR.LiteralValue("http://swapi.dev/documentation#Person"),
+          "http://swapi.dev/documentation#name": new IR.LiteralValue(
+            "Luke Skywalker"
+          ),
+        }),
+        operation: af.createJoin([
+          af.createBgp([
+            af.createPattern(
+              variable,
+              type,
+              df.namedNode("http://swapi.dev/documentation#Person")
+            ),
+          ]),
+          af.createBgp([
+            af.createPattern(
+              variable,
               df.namedNode("http://swapi.dev/documentation#name"),
               df.literal("Luke Skywalker")
             ),

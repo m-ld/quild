@@ -25,7 +25,7 @@ import {
 } from "./common";
 import { propagateContext } from "./common";
 import * as IR from "../IntermediateResult";
-import { PLACEHOLDER, af, df } from "../common";
+import { PLACEHOLDER, af, df, isPlaceholder, type } from "../common";
 import { evolve, keys, pipedAsync, partial } from "../upstream/rambda";
 import { variableUnder } from "../variableUnder";
 
@@ -54,6 +54,9 @@ const addMapping = (k: string, v: IR.IntermediateResult) => (ir: IR.Object) =>
 
 const isId = (ctx: JsonLdContextNormalized, k: string) =>
   ctx.expandTerm(k, true) === "@id";
+
+const isType = (ctx: JsonLdContextNormalized, k: string) =>
+  ctx.expandTerm(k, true) === "@type";
 
 /**
  * Returns the term definition for the given term in the given context. Note
@@ -94,7 +97,12 @@ export const NodeObject: Parser["NodeObject"] = async function ({
   if (!isUndefined(id) && !isString(id)) throw "TODO: Name must be a string";
 
   const projectNodeName = id === PLACEHOLDER;
-  const node = id && !projectNodeName ? df.namedNode(id) : variable;
+  // Note: `ctx.expandTerm(id)` should never be `null`, as we're
+  // `@base`-expanding it. But `jsonld-context-parser` is faulty, and will
+  // return `null` if `id` is assigned `null` in the context---which *should*
+  // return null when *`@vocab`*-expanding, but not when *`@base`*-expanding.
+  const node =
+    id && !projectNodeName ? df.namedNode(ctx.expandTerm(id) ?? id) : variable;
 
   const operationForEntry = async ([key, value]: [
     key: string,
@@ -163,8 +171,10 @@ const parseEntry: ParseEntry<[key: string, value: JsonValue]> = async function (
   toParse,
   parser
 ) {
-  const { element, variable, ctx, node } = toParse;
-  const [key, value] = element;
+  const {
+    element: [key, value],
+    ctx,
+  } = toParse;
 
   if (key === "@context") {
     return parseContextEntry({ ...toParse, element: value }, parser);
@@ -172,6 +182,10 @@ const parseEntry: ParseEntry<[key: string, value: JsonValue]> = async function (
 
   if (isId(ctx, key)) {
     return parseIdEntry({ ...toParse, element: value }, parser);
+  }
+
+  if (isType(ctx, key)) {
+    return parseTypeEntry({ ...toParse, element: value }, parser);
   }
 
   const predicate = predicateForKey(ctx, key);
@@ -201,10 +215,8 @@ const parseEntry: ParseEntry<[key: string, value: JsonValue]> = async function (
           },
           await parseIriEntry(
             {
+              ...toParse,
               element: { [container]: value },
-              variable,
-              ctx,
-              node,
               predicate,
             },
             parser
@@ -216,10 +228,8 @@ const parseEntry: ParseEntry<[key: string, value: JsonValue]> = async function (
 
   return parseIriEntry(
     {
+      ...toParse,
       element: value,
-      variable,
-      ctx,
-      node,
       predicate,
     },
     parser
@@ -234,11 +244,15 @@ const parseContextEntry: ParseEntry = ({ element }) =>
     warnings: [],
   });
 
-const parseIdEntry: ParseEntry = ({ element, node }) => {
+const parseIdEntry: ParseEntry = ({ element, node, ctx }) => {
   if (!isString(element)) throw "TODO: Name must be a string";
   if (node.termType === "Variable") {
     return Promise.resolve({
-      intermediateResult: new IR.NamePlaceholder(node),
+      intermediateResult: new IR.NamePlaceholder(
+        node,
+        ctx,
+        IR.NamePlaceholder.Compaction.BASE
+      ),
       operation: af.createJoin([]),
       projections: [],
       warnings: [],
@@ -247,6 +261,33 @@ const parseIdEntry: ParseEntry = ({ element, node }) => {
     return Promise.resolve({
       intermediateResult: new IR.LiteralValue(element),
       operation: af.createJoin([]),
+      projections: [],
+      warnings: [],
+    });
+  }
+};
+
+const parseTypeEntry: ParseEntry = ({ element, variable, node, ctx }) => {
+  if (!isString(element)) throw "TODO: Type must be a string";
+  if (isPlaceholder(element)) {
+    return Promise.resolve({
+      intermediateResult: new IR.NamePlaceholder(
+        variable,
+        ctx,
+        IR.NamePlaceholder.Compaction.VOCAB
+      ),
+      operation: af.createBgp([af.createPattern(node, type, variable)]),
+      projections: [variable],
+      warnings: [],
+    });
+  } else {
+    const expandedTypeName = ctx.expandTerm(element, true);
+    if (!expandedTypeName) throw "TODO: Unknown type";
+    return Promise.resolve({
+      intermediateResult: new IR.LiteralValue(element),
+      operation: af.createBgp([
+        af.createPattern(node, type, df.namedNode(expandedTypeName)),
+      ]),
       projections: [],
       warnings: [],
     });

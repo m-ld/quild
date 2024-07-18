@@ -4,6 +4,7 @@ import { describe, it, expect } from "@jest/globals";
 import { NamePlaceholder } from "./NamePlaceholder";
 import { IncompleteResultError, NotANamedNodeError } from "./errors";
 import { df } from "../common";
+import { contextParser, nullContext } from "../parse/common";
 
 const bf = new BindingsFactory(df);
 
@@ -12,20 +13,60 @@ const root = df.variable("root");
 describe(NamePlaceholder, () => {
   it("throws when it hasn't received a solution", () => {
     expect(() => {
-      new NamePlaceholder(root).result();
+      new NamePlaceholder(
+        root,
+        nullContext,
+        NamePlaceholder.Compaction.BASE
+      ).result();
     }).toThrow(new IncompleteResultError(root));
   });
 
   it("accepts one solution", () => {
-    const ir = new NamePlaceholder(root).addSolution(
+    const ir = new NamePlaceholder(
+      root,
+      nullContext,
+      NamePlaceholder.Compaction.BASE
+    ).addSolution(
       bf.bindings([[root, df.namedNode("https://swapi.dev/api/films/1/")]])
     );
 
     expect(ir.result()).toBe("https://swapi.dev/api/films/1/");
   });
 
+  it("compacts using the context, relative to the @base", async () => {
+    const ir = new NamePlaceholder(
+      root,
+      await contextParser.parse({
+        "@base": "https://swapi.dev/api/",
+      }),
+      NamePlaceholder.Compaction.BASE
+    ).addSolution(
+      bf.bindings([[root, df.namedNode("https://swapi.dev/api/films/1/")]])
+    );
+
+    expect(ir.result()).toBe("films/1/");
+  });
+
+  it("compacts using the context, relative to the @vocab", async () => {
+    const ir = new NamePlaceholder(
+      root,
+      await contextParser.parse({
+        "@vocab": "http://swapi.dev/documentation#",
+      }),
+      NamePlaceholder.Compaction.VOCAB
+    ).addSolution(
+      bf.bindings([[root, df.namedNode("http://swapi.dev/documentation#Film")]])
+    );
+
+    expect(ir.result()).toBe("Film");
+  });
+
   it("ignores additional solutions", () => {
-    const ir = new NamePlaceholder(root)
+    const ir = new NamePlaceholder(
+      root,
+      nullContext,
+      NamePlaceholder.Compaction.BASE
+    )
       .addSolution(
         bf.bindings([[root, df.namedNode("https://swapi.dev/api/films/1/")]])
       )
@@ -38,9 +79,11 @@ describe(NamePlaceholder, () => {
 
   it("throws trying to represent a non-name value", () => {
     expect(() => {
-      new NamePlaceholder(root).addSolution(
-        bf.bindings([[root, df.literal("A New Hope")]])
-      );
+      new NamePlaceholder(
+        root,
+        nullContext,
+        NamePlaceholder.Compaction.BASE
+      ).addSolution(bf.bindings([[root, df.literal("A New Hope")]]));
     }).toThrow(new NotANamedNodeError(df.literal("A New Hope")));
   });
 });
