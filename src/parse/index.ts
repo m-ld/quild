@@ -21,3 +21,6 @@ export const parseQuery = async (
     warnings,
   };
 };
+
+export { defaultParser, makeParser } from "./parser";
+export type { Parser } from "./common";

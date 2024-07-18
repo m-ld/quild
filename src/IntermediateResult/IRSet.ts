@@ -1,18 +1,12 @@
+import { update } from "./common";
+
 import type { IntermediateResult } from "./types";
 import type * as RDF from "@rdfjs/types";
 import type { JsonArray } from "type-fest";
 
-// In the style of Clojure's `update`
-// https://clojuredocs.org/clojure.core/update
-const update = <K extends keyof O, O extends object>(
-  obj: O,
-  key: K,
-  replaceFn: (previousValue: O[K] | undefined) => O[K]
-): O => ({ ...obj, [key]: replaceFn(obj[key]) });
-
 /**
- * Represents a JSON array in the query and result---specifically where the
- * query has a single element which applies to each element in the result.
+ * Represents a JSON array in the query and result which corresponds to a set in
+ * the data.
  *
  * @example
  * ### Query
@@ -31,12 +25,21 @@ const update = <K extends keyof O, O extends object>(
  *   {
  *     "eye_color": "blue",
  *     "name": "Luke Skywalker",
+ *   },
+ *   {
+ *     "eye_color": "blue",
+ *     "name": "Owen Lars",
  *   }
  * ]
  */
-// Named `IRArray` to avoid conflict with the global `Array` type. Used as
-// `IR.Array` elsewhere.
-export class IRArray implements IntermediateResult {
+// Named `IRSet` to avoid conflict with the global `Set` type. Used as
+// `IR.Set` elsewhere.
+export class IRSet implements IntermediateResult {
+  /**
+   * @param variable The variable that elements of this set are bound to.
+   * @param template The template to apply to each element of this set.
+   * @param results The results so far, indexed by node names.
+   */
   constructor(
     private readonly variable: RDF.Variable,
     private readonly template: IntermediateResult,
@@ -52,7 +55,7 @@ export class IRArray implements IntermediateResult {
       return this;
     }
 
-    return new IRArray(
+    return new IRSet(
       this.variable,
       this.template,
       update(this.results, JSON.stringify(v), (ir) =>

@@ -19,6 +19,10 @@
       "vehicles": {
         "@type": "@id"
       },
+      "pilots": {
+        "@type": "@id",
+        "@container": "@list"
+      },
       "opening_crawl": {
         "@language": "en"
       }
@@ -77,6 +81,29 @@
       "created": "2014-12-10T15:52:14.024000Z",
       "edited": "2014-12-20T21:17:50.317000Z",
       "url": "https://swapi.dev/api/people/6/"
+    },
+    {
+      "@type": "Person",
+      "name": "Wedge Antilles",
+      "height": "170",
+      "mass": "77",
+      "hair_color": "brown",
+      "skin_color": "fair",
+      "eye_color": "hazel",
+      "birth_year": "21BBY",
+      "gender": "male",
+      "homeworld": "https://swapi.dev/api/planets/22/",
+      "films": [
+        "https://swapi.dev/api/films/1/",
+        "https://swapi.dev/api/films/2/",
+        "https://swapi.dev/api/films/3/"
+      ],
+      "species": [],
+      "vehicles": ["https://swapi.dev/api/vehicles/14/"],
+      "starships": ["https://swapi.dev/api/starships/12/"],
+      "created": "2014-12-12T11:08:06.469000Z",
+      "edited": "2014-12-20T21:17:50.341000Z",
+      "url": "https://swapi.dev/api/people/18/"
     },
     {
       "@type": "Planet",
@@ -615,6 +642,28 @@
       "created": "2014-12-20T18:49:38.403000Z",
       "edited": "2014-12-20T20:47:52.073000Z",
       "url": "https://swapi.dev/api/films/6/"
+    },
+    {
+      "@type": "Vehicle",
+      "name": "Snowspeeder",
+      "model": "t-47 airspeeder",
+      "manufacturer": "Incom corporation",
+      "cost_in_credits": "unknown",
+      "length": "4.5",
+      "max_atmosphering_speed": "650",
+      "crew": "2",
+      "passengers": "0",
+      "cargo_capacity": "10",
+      "consumables": "none",
+      "vehicle_class": "airspeeder",
+      "pilots": [
+        "https://swapi.dev/api/people/1/",
+        "https://swapi.dev/api/people/18/"
+      ],
+      "films": ["https://swapi.dev/api/films/2/"],
+      "created": "2014-12-15T12:22:12Z",
+      "edited": "2014-12-20T21:30:21.672000Z",
+      "url": "https://swapi.dev/api/vehicles/14/"
     }
   ]
 }

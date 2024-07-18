@@ -7,5 +7,6 @@
   "mass": { "@type": "xsd:integer" },
   "url": "@id",
   "vehicles": { "@type": "@id" },
+  "pilots": { "@type": "@id", "@container": "@list" },
   "opening_crawl": { "@language": "en" }
 }

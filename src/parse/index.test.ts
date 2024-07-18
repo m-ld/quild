@@ -115,7 +115,7 @@ describe(parseQuery, () => {
     const { intermediateResult, sparql } = await parseQuery(query);
 
     expect(intermediateResult).toStrictEqual(
-      new IR.Array(
+      new IR.Set(
         df.variable("root"),
         new IR.Object({
           "@context": new IR.LiteralValue({
@@ -131,53 +131,141 @@ describe(parseQuery, () => {
     expect(sparql).toBeSparqlEqualTo(/* sparql */ `
       PREFIX swapi: <http://swapi.dev/documentation#>
       SELECT ?root ?root·name ?root·height WHERE {
-        ?root swapi:eye_color "blue";
-              swapi:name ?root·name;
-              swapi:height ?root·height.
+        OPTIONAL {
+          ?root swapi:eye_color "blue";
+                swapi:name ?root·name;
+                swapi:height ?root·height.
+        }
       }
     `);
   });
 
   it("can produce a query for a plural related node", async () => {
-    const query = [
-      {
-        "@context": { "@vocab": "http://swapi.dev/documentation#" },
-        eye_color: "blue",
-        name: "?",
-        films: [{ title: "?" }],
-      },
-    ] as const;
+    const query = {
+      "@context": { "@vocab": "http://swapi.dev/documentation#" },
+      eye_color: "blue",
+      name: "?",
+      films: [{ title: "?" }],
+    } as const;
 
     const { intermediateResult, sparql } = await parseQuery(query);
 
     expect(intermediateResult).toStrictEqual(
-      new IR.Array(
-        df.variable("root"),
-        new IR.Object({
-          "@context": new IR.LiteralValue({
-            "@vocab": "http://swapi.dev/documentation#",
-          }),
-          eye_color: new IR.LiteralValue("blue"),
-          name: new IR.NativePlaceholder(df.variable("root·name")),
-          films: new IR.Array(
-            df.variable("root·films"),
-            new IR.Object({
-              title: new IR.NativePlaceholder(df.variable("root·films·title")),
-            })
-          ),
-        })
-      )
+      new IR.Object({
+        "@context": new IR.LiteralValue({
+          "@vocab": "http://swapi.dev/documentation#",
+        }),
+        eye_color: new IR.LiteralValue("blue"),
+        name: new IR.NativePlaceholder(df.variable("root·name")),
+        films: new IR.Set(
+          df.variable("root·films"),
+          new IR.Object({
+            title: new IR.NativePlaceholder(df.variable("root·films·title")),
+          })
+        ),
+      })
     );
 
     expect(sparql).toBeSparqlEqualTo(/* sparql */ `
       PREFIX swapi: <http://swapi.dev/documentation#>
-      SELECT ?root ?root·films ?root·films·title ?root·name WHERE {
+      SELECT ?root·films ?root·films·title ?root·name WHERE {
         ?root swapi:eye_color "blue";
               swapi:name ?root·name.
 
         OPTIONAL {
           ?root swapi:films ?root·films.
           ?root·films swapi:title ?root·films·title.
+        } .
+      }
+    `);
+  });
+
+  it("can produce a query for a @set", async () => {
+    const query = {
+      "@context": { "@vocab": "http://swapi.dev/documentation#" },
+      eye_color: "blue",
+      name: "?",
+      films: { "@set": [{ title: "?" }] },
+    } as const;
+
+    const { intermediateResult, sparql } = await parseQuery(query);
+
+    expect(intermediateResult).toStrictEqual(
+      new IR.Object({
+        "@context": new IR.LiteralValue({
+          "@vocab": "http://swapi.dev/documentation#",
+        }),
+        eye_color: new IR.LiteralValue("blue"),
+        name: new IR.NativePlaceholder(df.variable("root·name")),
+        films: new IR.Object({
+          "@set": new IR.Set(
+            df.variable("root·films"),
+            new IR.Object({
+              title: new IR.NativePlaceholder(df.variable("root·films·title")),
+            })
+          ),
+        }),
+      })
+    );
+
+    expect(sparql).toBeSparqlEqualTo(/* sparql */ `
+      PREFIX swapi: <http://swapi.dev/documentation#>
+      SELECT ?root·films ?root·films·title ?root·name WHERE {
+        ?root swapi:eye_color "blue";
+              swapi:name ?root·name.
+
+        OPTIONAL {
+          ?root swapi:films ?root·films.
+          ?root·films swapi:title ?root·films·title.
+        } .
+      }
+    `);
+  });
+
+  it("can produce a query for a list", async () => {
+    const query = {
+      "@context": { "@vocab": "http://swapi.dev/documentation#" },
+      "@id": "https://swapi.dev/api/vehicles/14/",
+      pilots: {
+        "@list": [{ name: "?" }],
+      },
+    } as const;
+
+    const { intermediateResult, sparql } = await parseQuery(query);
+
+    expect(intermediateResult).toStrictEqual(
+      new IR.Object({
+        "@context": new IR.LiteralValue({
+          "@vocab": "http://swapi.dev/documentation#",
+        }),
+        "@id": new IR.LiteralValue("https://swapi.dev/api/vehicles/14/"),
+        pilots: new IR.Object({
+          "@list": new IR.LinkedList(
+            df.variable("root·pilots"),
+            df.variable("root·pilots·slot"),
+            df.variable("root·pilots·slot·rest"),
+            new IR.Object({
+              name: new IR.NativePlaceholder(
+                df.variable("root·pilots·slot·item·name")
+              ),
+            })
+          ),
+        }),
+      })
+    );
+
+    expect(sparql).toBeSparqlEqualTo(/* sparql */ `
+      PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+      PREFIX swapi: <http://swapi.dev/documentation#>
+
+      SELECT ?root·pilots ?root·pilots·slot ?root·pilots·slot·rest ?root·pilots·slot·item·name WHERE {
+        <https://swapi.dev/api/vehicles/14/> swapi:pilots ?root·pilots.
+        ?root·pilots rdf:rest* ?root·pilots·slot.
+        ?root·pilots·slot rdf:first ?root·pilots·slot·item.
+        ?root·pilots·slot rdf:rest ?root·pilots·slot·rest.
+
+        OPTIONAL {
+          ?root·pilots·slot·item swapi:name ?root·pilots·slot·item·name.
         } .
       }
     `);
@@ -217,67 +305,61 @@ describe(parseQuery, () => {
   });
 
   it("ignores and warns about unmapped keys", async () => {
-    const query = [
-      {
-        "@context": {
-          name: "http://swapi.dev/documentation#name",
-          films: "http://swapi.dev/documentation#films",
-        },
-        eye_color: "blue",
-        name: "?",
-        homeworld: { name: "?" },
-        films: [{ title: "?" }],
-        vehicles: [{ name: "?" }],
+    const query = {
+      "@context": {
+        name: "http://swapi.dev/documentation#name",
+        films: "http://swapi.dev/documentation#films",
       },
-    ] as const;
+      eye_color: "blue",
+      name: "?",
+      homeworld: { name: "?" },
+      films: [{ title: "?" }],
+      vehicles: [{ name: "?" }],
+    } as const;
 
     const { intermediateResult, sparql, warnings } = await parseQuery(query);
 
     expect(intermediateResult).toStrictEqual(
-      new IR.Array(
-        df.variable("root"),
-        new IR.Object({
-          "@context": new IR.LiteralValue({
-            name: "http://swapi.dev/documentation#name",
-            films: "http://swapi.dev/documentation#films",
-          }),
-          eye_color: new IR.LiteralValue("blue"),
-          name: new IR.NativePlaceholder(df.variable("root·name")),
-          homeworld: new IR.LiteralValue({ name: "?" }),
-          films: new IR.Array(
-            df.variable("root·films"),
-            new IR.Object({ title: new IR.LiteralValue("?") })
-          ),
-          vehicles: new IR.LiteralValue([{ name: "?" }]),
-        })
-      )
+      new IR.Object({
+        "@context": new IR.LiteralValue({
+          name: "http://swapi.dev/documentation#name",
+          films: "http://swapi.dev/documentation#films",
+        }),
+        eye_color: new IR.LiteralValue("blue"),
+        name: new IR.NativePlaceholder(df.variable("root·name")),
+        homeworld: new IR.LiteralValue({ name: "?" }),
+        films: new IR.Set(
+          df.variable("root·films"),
+          new IR.Object({ title: new IR.LiteralValue("?") })
+        ),
+        vehicles: new IR.LiteralValue([{ name: "?" }]),
+      })
     );
 
     expect(sparql).toBeSparqlEqualTo(/* sparql */ `
       PREFIX swapi: <http://swapi.dev/documentation#>
-      SELECT ?root ?root·films ?root·name WHERE {
+      SELECT ?root·films ?root·name WHERE {
         ?root swapi:name ?root·name.
         OPTIONAL { ?root swapi:films ?root·films. }
-        OPTIONAL {  }
       }
     `);
 
     expect(warnings).toStrictEqual([
       {
         message: "Key not defined by context and ignored",
-        path: [0, "vehicles"],
+        path: ["vehicles"],
       },
       {
         message: "Key not defined by context and ignored",
-        path: [0, "films", 0, "title"],
+        path: ["films", 0, "title"],
       },
       {
         message: "Key not defined by context and ignored",
-        path: [0, "homeworld"],
+        path: ["homeworld"],
       },
       {
         message: "Key not defined by context and ignored",
-        path: [0, "eye_color"],
+        path: ["eye_color"],
       },
     ]);
   });

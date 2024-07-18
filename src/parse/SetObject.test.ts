@@ -22,7 +22,7 @@ const makeToParse = async <Element extends JsonValue>(
 describe(SetObject, () => {
   const parser = makeParser({ SetObject });
 
-  it("TK", async () => {
+  it(`behaves like a ${parser.NodeObjectArray.name}, under the \`@set\` key`, async () => {
     const toParse = await makeToParse(
       { "@set": [{ name: "?" }] },
       { "@vocab": "http://swapi.dev/documentation#" }

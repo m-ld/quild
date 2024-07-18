@@ -38,6 +38,9 @@ importers:
       rdf-data-factory:
         specifier: 1.1.1
         version: 1.1.1
+      rdf-string:
+        specifier: ^1.6.3
+        version: 1.6.3
       rxjs:
         specifier: ^7.8.1
         version: 7.8.1
@@ -114,9 +117,6 @@ importers:
       n3:
         specifier: 1.16.4
         version: 1.16.4
-      rdf-string:
-        specifier: 1.6.3
-        version: 1.6.3
       react:
         specifier: ^18.3.1
         version: 18.3.1

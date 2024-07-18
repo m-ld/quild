@@ -9,10 +9,10 @@ import {
   toPairs,
   concat,
   filter,
-  equals,
-  mapToObject,
+  map,
 } from "rambdax";
 
+import { addToRight } from "./addToRight";
 import {
   nestWarningsUnderKey,
   parsed,
@@ -21,6 +21,7 @@ import {
   type ToParse,
   parseWarning,
   type ProjectableOperation,
+  type ParseWarning,
 } from "./common";
 import { propagateContext } from "./common";
 import * as IR from "../IntermediateResult";
@@ -55,27 +56,22 @@ const isId = (ctx: JsonLdContextNormalized, k: string) =>
   ctx.expandTerm(k, true) === "@id";
 
 /**
- * Returns true iff the `@container` of `term` in `ctx` is exactly `container`.
+ * Returns the term definition for the given term in the given context. Note
+ * that this is `jsonld-context-parser`'s "normalized" context, which (among
+ * other things) has the `@container` values expanded into objects.
+ *
+ * @see https://www.npmjs.com/package/jsonld-context-parser
+ *
+ * @param ctx The context to look up the term in.
+ * @param term The term to look up.
+ * @returns The term definition, or `undefined` if the term is not defined.
  */
-const termIsContainer = (
-  ctx: JsonLdContextNormalized,
-  term: string,
-  container: Containers
-) => {
-  const rawCtx: Record<string, unknown> = ctx.getContextRaw();
-  const termDef = rawCtx[term];
-  if (termDef && typeof termDef === "object" && "@container" in termDef) {
-    const actualContainer = termDef["@container"];
-    return equals(
-      mapToObject(
-        (c) => ({ [c]: true }),
-        Array.isArray(container) ? container : [container]
-      ),
-      actualContainer
-    );
-  } else {
-    return false;
-  }
+const termDefinition = (ctx: JsonLdContextNormalized, term: string) => {
+  const rawCtx: Record<
+    string,
+    { "@container"?: Record<Extract<Containers, string>, boolean> }
+  > = ctx.getContextRaw();
+  return rawCtx[term];
 };
 
 /**
@@ -122,14 +118,10 @@ export const NodeObject: Parser["NodeObject"] = async function ({
         this
       );
 
-    const isOptional = Array.isArray(value);
-
     return evolve({
       intermediateResult: addMapping(key, intermediateResult),
       operation: (previousOp: ProjectableOperation): ProjectableOperation =>
-        isOptional
-          ? af.createLeftJoin(previousOp, operation)
-          : af.createJoin([previousOp, operation]),
+        af.createJoin([previousOp, operation]),
       projections: concat(projections),
       warnings: concat(nestWarningsUnderKey(key)(warnings)),
     });
@@ -189,17 +181,42 @@ const parseEntry: ParseEntry<[key: string, value: JsonValue]> = async function (
     return parseUnknownKeyEntry({ ...toParse, element: value }, parser);
   }
 
-  const resourceElement = termIsContainer(ctx, key, "@graph")
-    ? { "@graph": value }
-    : termIsContainer(ctx, key, "@list")
-    ? { "@list": value }
-    : termIsContainer(ctx, key, "@set")
-    ? { "@set": value }
-    : value;
+  const termDef = termDefinition(ctx, key);
+  if (termDef) {
+    const containerDefinition = termDef["@container"];
+    if (containerDefinition) {
+      const container = (["@graph", "@set", "@list"] as const).find(
+        (c) => containerDefinition[c]
+      );
+      if (container) {
+        return evolve(
+          {
+            intermediateResult: (ir) => new IR.Unwrapped(container, ir),
+            // Unwrap warning paths as well
+            warnings: map(
+              evolve({
+                path: (p: Array<ParseWarning["path"][number]>) => p.slice(1),
+              })
+            ),
+          },
+          await parseIriEntry(
+            {
+              element: { [container]: value },
+              variable,
+              ctx,
+              node,
+              predicate,
+            },
+            parser
+          )
+        );
+      }
+    }
+  }
 
   return parseIriEntry(
     {
-      element: resourceElement,
+      element: value,
       variable,
       ctx,
       node,
@@ -291,10 +308,10 @@ const parseIriEntry = async (
 
   return {
     intermediateResult: parsedChild.intermediateResult,
-    operation: af.createJoin([
+    operation: addToRight(
       af.createBgp([af.createPattern(node, predicate, parsedChild.term)]),
-      parsedChild.operation,
-    ]),
+      parsedChild.operation
+    ),
     projections: parsedChild.projections,
     warnings: parsedChild.warnings,
   };

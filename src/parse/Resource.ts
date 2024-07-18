@@ -2,6 +2,7 @@ import { isString, isNumber, isBoolean, isArray, isNull } from "lodash-es";
 
 import {
   type Parser,
+  isListObject,
   isPlainObject,
   isSetObject,
   parsed,
@@ -39,7 +40,7 @@ export const Resource: Parser["Resource"] = async function ({
       return this.GraphObject({ element, variable, ctx });
     } else if ("@value" in element) {
       return this.ValueObject({ element, variable, ctx });
-    } else if ("@list" in element) {
+    } else if (isListObject(element)) {
       return this.ListObject({ element, variable, ctx });
     } else if (isSetObject(element)) {
       return this.SetObject({ element, variable, ctx });

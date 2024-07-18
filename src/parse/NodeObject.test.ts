@@ -1,6 +1,7 @@
 import { describe, it, expect } from "@jest/globals";
 
 import { NodeObject } from "./NodeObject";
+import { addToRight } from "./addToRight";
 import {
   type ToParse,
   parsed,
@@ -60,7 +61,7 @@ describe(NodeObject, () => {
     },
     { desc: "graph object", child: { "@graph": [] } },
     { desc: "value object", child: { "@value": "abc" } },
-    { desc: "list object", child: { "@list": [] } },
+    { desc: "list object", child: { "@list": [{}] } },
     { desc: "set object", child: { "@set": [{}] } },
   ])("parses a $desc entry", async ({ child }) => {
     const toParse = await makeToParse({
@@ -82,14 +83,16 @@ describe(NodeObject, () => {
           "http://example.com/value": resource.intermediateResult,
         }),
         operation: af.createJoin([
-          af.createBgp([
-            af.createPattern(
-              variable,
-              df.namedNode("http://example.com/value"),
-              resource.term
-            ),
-          ]),
-          resource.operation,
+          addToRight(
+            af.createBgp([
+              af.createPattern(
+                variable,
+                df.namedNode("http://example.com/value"),
+                resource.term
+              ),
+            ]),
+            resource.operation
+          ),
         ]),
         projections: resource.projections,
         warnings: nestWarningsUnderKey("http://example.com/value")(
@@ -144,7 +147,7 @@ describe(NodeObject, () => {
         { "http://swapi.dev/documentation#name": "Luke Skywalker" },
         { "http://swapi.dev/documentation#name": "Owen Lars" },
       ],
-      termDefinition: { "@container": "@graph" },
+      container: "@graph",
       expandedValue: {
         "@graph": [
           { "http://swapi.dev/documentation#name": "Luke Skywalker" },
@@ -155,7 +158,7 @@ describe(NodeObject, () => {
     {
       description: "List",
       value: [{ "http://swapi.dev/documentation#name": "Luke Skywalker" }],
-      termDefinition: { "@container": "@list" },
+      container: "@list",
       expandedValue: {
         "@list": [{ "http://swapi.dev/documentation#name": "Luke Skywalker" }],
       },
@@ -163,17 +166,17 @@ describe(NodeObject, () => {
     {
       description: "Set",
       value: [{ "http://swapi.dev/documentation#name": "Luke Skywalker" }],
-      termDefinition: { "@container": "@set" },
+      container: "@set",
       expandedValue: {
         "@set": [{ "http://swapi.dev/documentation#name": "Luke Skywalker" }],
       },
     },
   ])(
     "parses a context-defined $description",
-    async ({ value, termDefinition, expandedValue }) => {
+    async ({ value, container, expandedValue }) => {
       const toParse = await makeToParse(
         { "http://example.com/thing": value },
-        { "http://example.com/thing": termDefinition }
+        { "http://example.com/thing": { "@container": container } }
       );
 
       const childVariable = variableUnder(variable, "http://example.com/thing");
@@ -188,11 +191,13 @@ describe(NodeObject, () => {
         parsed({
           term: variable,
           intermediateResult: new IR.Object({
-            "http://example.com/thing": resource.intermediateResult,
+            "http://example.com/thing": new IR.Unwrapped(
+              container,
+              resource.intermediateResult
+            ),
           }),
-          operation: af.createLeftJoin(
-            af.createJoin([]),
-            af.createJoin([
+          operation: af.createJoin([
+            addToRight(
               af.createBgp([
                 af.createPattern(
                   variable,
@@ -200,12 +205,15 @@ describe(NodeObject, () => {
                   resource.term
                 ),
               ]),
-              resource.operation,
-            ])
-          ),
+              resource.operation
+            ),
+          ]),
           projections: resource.projections,
-          warnings: nestWarningsUnderKey("http://example.com/thing")(
-            resource.warnings
+          warnings: resource.warnings.map(
+            ({ message, path: [_containerKey, ...path] }) => ({
+              message,
+              path: ["http://example.com/thing", ...path],
+            })
           ),
         })
       );
@@ -225,32 +233,34 @@ describe(NodeObject, () => {
       parsed({
         term: variable,
         intermediateResult: new IR.Object({
-          film: new IR.Array(
+          film: new IR.Set(
             filmVariable,
             new IR.Object({
               title: new IR.NativePlaceholder(titleVariable),
             })
           ),
         }),
-        operation: af.createLeftJoin(
-          af.createJoin([]),
-          af.createJoin([
-            af.createBgp([
-              af.createPattern(
-                variable,
-                df.namedNode("http://swapi.dev/documentation#film"),
-                filmVariable
-              ),
-            ]),
-            af.createBgp([
-              af.createPattern(
-                filmVariable,
-                df.namedNode("http://swapi.dev/documentation#title"),
-                titleVariable
-              ),
-            ]),
-          ])
-        ),
+        operation: af.createJoin([
+          af.createLeftJoin(
+            af.createJoin([]),
+            af.createJoin([
+              af.createBgp([
+                af.createPattern(
+                  variable,
+                  df.namedNode("http://swapi.dev/documentation#film"),
+                  filmVariable
+                ),
+              ]),
+              af.createBgp([
+                af.createPattern(
+                  filmVariable,
+                  df.namedNode("http://swapi.dev/documentation#title"),
+                  titleVariable
+                ),
+              ]),
+            ])
+          ),
+        ]),
         projections: [filmVariable, titleVariable],
       })
     );

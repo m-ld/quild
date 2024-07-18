@@ -72,12 +72,19 @@ export const isTopLevelGraphContainer = (
     element["@context"] === undefined ||
     element["@context"] === null);
 
-type SetObject = JsonObject & {
+export type SetObject = JsonObject & {
   "@set": JsonValue[];
 };
 
 export const isSetObject = (element: JsonObject): element is SetObject =>
   isPlainObject(element) && isArray(element["@set"]);
+
+export type ListObject = JsonObject & {
+  "@list": JsonValue[];
+};
+
+export const isListObject = (element: JsonObject): element is ListObject =>
+  isPlainObject(element) && isArray(element["@list"]);
 
 export const propagateContext = async (
   innerCtxDef: JsonValue | null | undefined,
@@ -163,11 +170,12 @@ export type Parse<
  */
 export interface Parser {
   readonly Document: Parse;
-  readonly NodeObjectArray: Parse<JsonArray, IR.Array>;
+  readonly NodeObjectArray: Parse<JsonArray, IR.Set>;
+  readonly ListArray: Parse<JsonArray>;
   readonly TopLevelGraphContainer: Parse<TopLevelGraphContainer, IR.Object>;
   readonly NodeObject: Parse<JsonObject, IR.Object>;
   readonly GraphObject: Parse;
-  readonly ListObject: Parse;
+  readonly ListObject: Parse<ListObject, IR.Object>;
   readonly Primitive: Parse<
     string | number | boolean,
     IR.NativePlaceholder | IR.LiteralValue
