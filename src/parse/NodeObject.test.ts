@@ -8,6 +8,7 @@ import {
   parseWarning,
   nestWarningsUnderKey,
   contextParser,
+  nullContext,
 } from "./common";
 import { makeParser } from "./parser";
 import * as IR from "../IntermediateResult";
@@ -304,7 +305,11 @@ describe(NodeObject, () => {
       parsed({
         term: variable,
         intermediateResult: new IR.Object({
-          "@id": new IR.NamePlaceholder(variable),
+          "@id": new IR.NamePlaceholder(
+            variable,
+            nullContext,
+            IR.NamePlaceholder.Compaction.BASE
+          ),
           "http://swapi.dev/documentation#name": new IR.LiteralValue(
             "Luke Skywalker"
           ),
@@ -402,7 +407,11 @@ describe(NodeObject, () => {
       parsed({
         term: variable,
         intermediateResult: new IR.Object({
-          "@type": new IR.NamePlaceholder(df.variable("thing·type")),
+          "@type": new IR.NamePlaceholder(
+            df.variable("thing·type"),
+            nullContext,
+            IR.NamePlaceholder.Compaction.VOCAB
+          ),
           "http://swapi.dev/documentation#name": new IR.LiteralValue(
             "Luke Skywalker"
           ),

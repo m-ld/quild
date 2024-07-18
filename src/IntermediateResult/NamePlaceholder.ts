@@ -3,6 +3,7 @@ import { IncompleteResultError, NotANamedNodeError } from "./errors";
 
 import type { IntermediateResult } from "./types";
 import type * as RDF from "@rdfjs/types";
+import type { JsonLdContextNormalized } from "jsonld-context-parser";
 import type { JsonValue } from "type-fest";
 
 /**
@@ -24,7 +25,11 @@ import type { JsonValue } from "type-fest";
  * ```
  */
 export class NamePlaceholder implements IntermediateResult {
-  constructor(private readonly variable: RDF.Variable) {}
+  constructor(
+    private readonly variable: RDF.Variable,
+    private readonly ctx: JsonLdContextNormalized,
+    private readonly compaction: NamePlaceholder.Compaction
+  ) {}
 
   addSolution(solution: RDF.Bindings): IntermediateResult {
     const value = solution.get(this.variable);
@@ -38,11 +43,23 @@ export class NamePlaceholder implements IntermediateResult {
     if (value.termType !== "NamedNode") {
       throw new NotANamedNodeError(value);
     } else {
-      return new LiteralValue(value.value);
+      return new LiteralValue(
+        this.ctx.compactIri(
+          value.value,
+          this.compaction === NamePlaceholder.Compaction.VOCAB
+        )
+      );
     }
   }
 
   result(): JsonValue {
     throw new IncompleteResultError(this.variable);
+  }
+}
+
+export namespace NamePlaceholder {
+  export enum Compaction {
+    BASE = "BASE",
+    VOCAB = "VOCAB",
   }
 }
