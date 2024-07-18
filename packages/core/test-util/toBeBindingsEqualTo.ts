@@ -190,11 +190,6 @@ export const bindingsTables = <BindingsesList extends Bindings[][]>(
   };
 };
 
-/* eslint-disable @typescript-eslint/no-invalid-this
-   --
-  `MatcherFunction` defines the type of `this`, but
-  `@typescript-eslint/no-invalid-this` doesn't recognize it.
- */
 export const toBeBindingsEqualTo: MatcherFunction<
   [expectedBindings: ExpectedBindings]
 > = function (actual, expected) {
@@ -242,7 +237,6 @@ export const toBeBindingsEqualTo: MatcherFunction<
     pass,
   };
 };
-/* eslint-enable @typescript-eslint/no-invalid-this -- ^^^ */
 
 export interface ToBeBindingsEqualToMatchers<R> {
   toBeBindingsEqualTo(expectedBindings: ExpectedBindings): R;

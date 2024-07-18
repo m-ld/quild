@@ -24,7 +24,7 @@ export const linearizeList = function* <Value>(
   while (current !== null) {
     const result: (typeof links)[string] | undefined = links[current];
     if (!result) {
-      /* eslint-disable-next-line @typescript-eslint/no-throw-literal
+      /* eslint-disable-next-line @typescript-eslint/only-throw-error
        ---
        TODO: https://github.com/m-ld/quild/issues/15 */
       throw `Missing link for ${current}`;

@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-throw-literal
+/* eslint-disable @typescript-eslint/only-throw-error
    ---
    TODO: https://github.com/m-ld/quild/issues/15 */
 

@@ -11,7 +11,7 @@
     "forceConsistentCasingInFileNames": true,
     "noEmit": true,
     "declaration": true,
-    "moduleResolution": "node",
+    "moduleResolution": "Bundler",
     "incremental": true,
     "noErrorTruncation": true,
     "exactOptionalPropertyTypes": true,

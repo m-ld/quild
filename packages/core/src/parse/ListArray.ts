@@ -15,14 +15,14 @@ export const ListArray: Parser["ListArray"] = async function ({
 }) {
   const soleSubquery = element[0];
   if (!(soleSubquery && element.length === 1)) {
-    /* eslint-disable-next-line @typescript-eslint/no-throw-literal
+    /* eslint-disable-next-line @typescript-eslint/only-throw-error
        ---
        TODO: https://github.com/m-ld/quild/issues/15 */
     throw "TODO: Only exactly one subquery is supported in an array, so far.";
   }
 
   if (!isPlainObject(soleSubquery))
-    /* eslint-disable-next-line @typescript-eslint/no-throw-literal
+    /* eslint-disable-next-line @typescript-eslint/only-throw-error
        ---
        TODO: https://github.com/m-ld/quild/issues/15 */
     throw "TODO: Only objects can be in plural nodes, so far.";

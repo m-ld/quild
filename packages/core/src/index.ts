@@ -36,14 +36,6 @@ export const readQuery = async <Data extends JsonValue>(
     parser
   );
 
-  // console.log(toSparql(sparql));
-
-  // console.log(
-  //   await toTurtle(
-  //     source.match(df.namedNode("https://swapi.dev/api/people/1/"))
-  //   )
-  // );
-
   const bindingsStream = await engine.queryBindings(sparql, {
     sources: [source],
   });

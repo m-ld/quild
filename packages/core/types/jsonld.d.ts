@@ -476,7 +476,7 @@ declare module "jsonld/jsonld" {
       | Exclude<ContextDefinition[keyof ContextDefinition], undefined>;
   }
 
-  /* eslint-disable-next-line @typescript-eslint/no-empty-interface
+  /* eslint-disable-next-line @typescript-eslint/no-empty-object-type
      --------
      Must be an interface to make HintedUnion behave correctly.
    */

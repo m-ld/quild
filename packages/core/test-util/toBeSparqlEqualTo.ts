@@ -12,10 +12,6 @@ import type {
 import type { BgpPattern, SelectQuery, SparqlQuery } from "sparqljs";
 import type { ReadonlyDeep } from "type-fest";
 
-/* eslint-disable-next-line import/no-named-as-default-member
-   ---
-   sparqljs's ES module compat is broken until this is merged:
-   https://github.com/RubenVerborgh/SPARQL.js/pull/171 */
 const { Parser, Generator } = sparqljs;
 
 // This module's ES module compat is even weirder, but it's hard to make a case
@@ -110,11 +106,6 @@ const normalized = ({
   };
 };
 
-/* eslint-disable @typescript-eslint/no-invalid-this
-   --
-  `MatcherFunction` defines the type of `this`, but
-  `@typescript-eslint/no-invalid-this` doesn't recognize it.
- */
 export const toBeSparqlEqualTo: MatcherFunction<[expectedSparql: unknown]> =
   function (actual, expected) {
     // Take the base and prefixes from the expected value...
@@ -197,7 +188,6 @@ export const toBeSparqlEqualTo: MatcherFunction<[expectedSparql: unknown]> =
       ]),
     };
   };
-/* eslint-enable @typescript-eslint/no-invalid-this -- ^^^ */
 
 export interface ToBeSparqlEqualToMatchers<R> {
   toBeSparqlEqualTo(

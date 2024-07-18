@@ -4,11 +4,11 @@
 
 import { describe, it, expect } from "@jest/globals";
 import { clone, uuid } from "@m-ld/m-ld";
+import { NullRemotes } from "@m-ld/m-ld/ext/null";
 import { act, renderHook, waitFor } from "@testing-library/react";
 import { MemoryLevel } from "memory-level";
 
 import { useMeldQuery } from "./useMeldQuery";
-import { NullRemotes } from "../../test-util/NullRemotes";
 
 const createMeldClone = async () =>
   clone(new MemoryLevel(), NullRemotes, {

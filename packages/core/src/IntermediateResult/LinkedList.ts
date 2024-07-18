@@ -92,7 +92,7 @@ export class LinkedList implements IntermediateResult {
 
   result(): JsonArray {
     if (this.head === null) {
-      /* eslint-disable-next-line @typescript-eslint/no-throw-literal
+      /* eslint-disable-next-line @typescript-eslint/only-throw-error
        ---
        TODO: https://github.com/m-ld/quild/issues/15 */
       throw "List is incomplete";

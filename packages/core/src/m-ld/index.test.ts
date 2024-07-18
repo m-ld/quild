@@ -1,11 +1,11 @@
 import { describe, it, expect, beforeAll, afterAll } from "@jest/globals";
 import { clone, type MeldClone, type MeldState, uuid } from "@m-ld/m-ld";
+import { NullRemotes } from "@m-ld/m-ld/ext/null";
 import jsonld, { type JsonLdDocument } from "jsonld";
 import { MemoryLevel } from "memory-level";
 
 import { parser as meldParser } from "./parse";
 import data from "../../fixtures/data.json";
-import { NullRemotes } from "../../test-util/NullRemotes";
 import { readQuery } from "../index";
 
 describe(readQuery, () => {
