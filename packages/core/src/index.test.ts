@@ -3,8 +3,8 @@ import jsonld from "jsonld";
 
 import { df } from "./common";
 import { readQuery } from "./index";
+import { dataset } from "./test-util/fixedDataset";
 import data from "../fixtures/data.json";
-import { dataset } from "../test-util/fixedDataset";
 
 import type { Quad, Term } from "@rdfjs/types";
 import type * as JsonLD from "jsonld";

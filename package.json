@@ -7,10 +7,10 @@
   "browser": "dist/src/index.js",
   "scripts": {
     "test": "NODE_OPTIONS=--experimental-vm-modules jest",
-    "build": "tsc --project tsconfig.build.json",
-    "clean": "rm -rf dist",
+    "build": "tsc --build",
+    "clean": "pnpm recursive run clean",
     "lint": "eslint .",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "pnpm recursive run typecheck",
     "fetch-fixtures": "fixtures/fetchSwapiData.sh"
   },
   "pnpm": {
@@ -18,5 +18,9 @@
       "@types/node": "20.3.1",
       "@typescript-eslint/utils": "8.0.0-alpha.45"
     }
+  },
+  "devDependencies": {
+    "@jest/types": "^29.6.3",
+    "typescript": "^5.5.3"
   }
 }

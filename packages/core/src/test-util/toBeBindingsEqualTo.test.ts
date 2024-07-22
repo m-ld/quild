@@ -3,8 +3,8 @@ import { describe, expect, it } from "@jest/globals";
 import { Store } from "n3";
 import { DataFactory } from "rdf-data-factory";
 
-import { runMatcher } from "./runMatcher";
-import { readAll } from "../src/readAll";
+import { matcherResult } from "./matcherResult";
+import { readAll } from "../readAll";
 
 import type { ExpectedBindings } from "./toBeBindingsEqualTo";
 import type { Quad } from "@rdfjs/types";
@@ -19,8 +19,6 @@ async function query(query: string, quads?: Quad[]) {
   const bindings = await readAll(bindingsStream);
   return bindings;
 }
-
-const run = runMatcher(expect, "toBeBindingsEqualTo");
 
 describe("toBeBindingsEqualTo", () => {
   it("matches when the expected matches", async () => {
@@ -40,7 +38,11 @@ describe("toBeBindingsEqualTo", () => {
       [`"4"`, `"5"`, `"6"`],
     ];
 
-    expect(run(actual, expected)).toMatchInlineSnapshot(`"<Pass>"`);
+    expect(
+      matcherResult(() => {
+        expect(actual).toBeBindingsEqualTo(expected);
+      })
+    ).toMatchInlineSnapshot(`"<Pass>"`);
   });
 
   it("matches in any order, in either dimension", async () => {
@@ -60,7 +62,11 @@ describe("toBeBindingsEqualTo", () => {
       [`"3"`, `"1"`, `"2"`],
     ];
 
-    expect(run(actual, expected)).toMatchInlineSnapshot(`"<Pass>"`);
+    expect(
+      matcherResult(() => {
+        expect(actual).toBeBindingsEqualTo(expected);
+      })
+    ).toMatchInlineSnapshot(`"<Pass>"`);
   });
 
   it("shows a diff when it doesn't match", async () => {
@@ -80,7 +86,11 @@ describe("toBeBindingsEqualTo", () => {
       [`"4"`, `"5"`, `"6"`],
     ];
 
-    expect(run(actual, expected)).toMatchInlineSnapshot(`
+    expect(
+      matcherResult(() => {
+        expect(actual).toBeBindingsEqualTo(expected);
+      })
+    ).toMatchInlineSnapshot(`
 "expect(received).toBe(expected) // Object.is equality
 
 - Expected  - 1
@@ -116,7 +126,11 @@ describe("toBeBindingsEqualTo", () => {
       [`"6"`, `"4"`, `"5"`],
     ];
 
-    expect(run(actual, expected)).toMatchInlineSnapshot(`
+    expect(
+      matcherResult(() => {
+        expect(actual).toBeBindingsEqualTo(expected);
+      })
+    ).toMatchInlineSnapshot(`
 "expect(received).toBe(expected) // Object.is equality
 
 - Expected  - 2
@@ -155,7 +169,11 @@ describe("toBeBindingsEqualTo", () => {
       [`"4"`, `"5"`, `"0"`],
     ];
 
-    expect(run(actual, expected)).toMatchInlineSnapshot(`
+    expect(
+      matcherResult(() => {
+        expect(actual).toBeBindingsEqualTo(expected);
+      })
+    ).toMatchInlineSnapshot(`
 "expect(received).toBe(expected) // Object.is equality
 
 - Expected  - 1
@@ -195,7 +213,11 @@ describe("toBeBindingsEqualTo", () => {
       [`"4"`, `"5"`, undefined],
     ];
 
-    expect(run(actual, expected)).toMatchInlineSnapshot(`
+    expect(
+      matcherResult(() => {
+        expect(actual).toBeBindingsEqualTo(expected);
+      })
+    ).toMatchInlineSnapshot(`
 "expect(received).toBe(expected) // Object.is equality
 
 - Expected  - 3
@@ -235,7 +257,11 @@ describe("toBeBindingsEqualTo", () => {
       [`"6"`, `"4"`, `"5"`],
     ];
 
-    expect(run(actual, expected)).toMatchInlineSnapshot(`
+    expect(
+      matcherResult(() => {
+        expect(actual).toBeBindingsEqualTo(expected);
+      })
+    ).toMatchInlineSnapshot(`
 "expect(received).toBe(expected) // Object.is equality
 
 - Expected  - 1
@@ -311,9 +337,17 @@ describe("toBeBindingsEqualTo", () => {
       ["_:y", `"John"`, `"Holmes"`],
     ];
 
-    expect(run(actual, correct)).toMatchInlineSnapshot(`"<Pass>"`);
+    expect(
+      matcherResult(() => {
+        expect(actual).toBeBindingsEqualTo(correct);
+      })
+    ).toMatchInlineSnapshot(`"<Pass>"`);
 
-    expect(run(actual, sameBlankNode)).toMatchInlineSnapshot(`
+    expect(
+      matcherResult(() => {
+        expect(actual).toBeBindingsEqualTo(sameBlankNode);
+      })
+    ).toMatchInlineSnapshot(`
 "expect(received).toBe(expected) // Object.is equality
 
 - Expected  - 2
@@ -332,7 +366,11 @@ describe("toBeBindingsEqualTo", () => {
   ↵"
 `);
 
-    expect(run(actual, badValues)).toMatchInlineSnapshot(`
+    expect(
+      matcherResult(() => {
+        expect(actual).toBeBindingsEqualTo(badValues);
+      })
+    ).toMatchInlineSnapshot(`
 "expect(received).toBe(expected) // Object.is equality
 
 - Expected  - 2

@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 
-import { observeMeldQuery } from "../observable/observeMeldQuery";
+import { observeMeldQuery } from "@quild/observable";
 
-import type { ReadQueryResult } from "..";
+import type { ReadQueryResult } from "@quild/core";
 import type { MeldClone } from "@m-ld/m-ld";
 import type { JsonValue } from "type-fest";
 

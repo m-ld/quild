@@ -1,7 +1,6 @@
 import { describe, it, expect } from "@jest/globals";
 
 import { parseQuery } from ".";
-import "../../test-util/toBeSparqlEqualTo";
 import * as IR from "../IntermediateResult";
 import { df } from "../common";
 

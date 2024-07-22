@@ -1,7 +1,6 @@
 import { describe, it, expect } from "@jest/globals";
 
 import { parser as meldParser } from ".";
-import "../../../test-util/toBeSparqlEqualTo";
 import * as IR from "../../IntermediateResult";
 import { IndexedList } from "../../IntermediateResult/IndexedList";
 import { df } from "../../common";

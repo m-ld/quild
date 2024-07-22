@@ -1,0 +1,12 @@
+// For config and other node files
+{
+  "extends": "../../tsconfig.options.json",
+  "include": ["./*.ts", "./*.js", "./*.mjs", "../../base.jest.config.ts"],
+  "compilerOptions": {
+    "noEmit": true,
+    "module": "nodenext",
+    "target": "esnext",
+    "lib": ["esnext"],
+    "moduleResolution": "nodenext"
+  }
+}

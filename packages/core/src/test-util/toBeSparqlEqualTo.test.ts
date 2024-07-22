@@ -2,9 +2,7 @@ import { describe, expect, it } from "@jest/globals";
 import { DataFactory } from "rdf-data-factory";
 import { Factory as AlgebraFactory } from "sparqlalgebrajs";
 
-import { runMatcher } from "./runMatcher";
-
-const run = runMatcher(expect, "toBeSparqlEqualTo");
+import { matcherResult } from "./matcherResult";
 
 const df = new DataFactory();
 const af = new AlgebraFactory(df);
@@ -18,7 +16,11 @@ describe("toBeSparqlEqualTo", () => {
       }
     `;
 
-    expect(run(query, query)).toMatchInlineSnapshot(`"<Pass>"`);
+    expect(
+      matcherResult(() => {
+        expect(query).toBeSparqlEqualTo(query);
+      })
+    ).toMatchInlineSnapshot(`"<Pass>"`);
   });
 
   it("matches an equivalent SPARQL string", () => {
@@ -37,7 +39,11 @@ describe("toBeSparqlEqualTo", () => {
       WHERE { <http://example.com/alice> foaf:name ?name . }
     `;
 
-    expect(run(query1, query2)).toMatchInlineSnapshot(`"<Pass>"`);
+    expect(
+      matcherResult(() => {
+        expect(query1).toBeSparqlEqualTo(query2);
+      })
+    ).toMatchInlineSnapshot(`"<Pass>"`);
   });
 
   it("uses the expected value's prefixes and base in the output", () => {
@@ -56,7 +62,11 @@ describe("toBeSparqlEqualTo", () => {
       WHERE { <http://example.com/alice> foaf:name ?name . }
     `;
 
-    expect(run(query1, query2)).toMatchInlineSnapshot(`
+    expect(
+      matcherResult(() => {
+        expect(query1).toBeSparqlEqualTo(query2);
+      })
+    ).toMatchInlineSnapshot(`
 "expect(received).toBe(expected) // Object.is equality
 
 - Expected  - 1
@@ -82,7 +92,11 @@ describe("toBeSparqlEqualTo", () => {
       WHERE { ?o ?p ?s . }
     `;
 
-    expect(run(query1, query2)).toMatchInlineSnapshot(`
+    expect(
+      matcherResult(() => {
+        expect(query1).toBeSparqlEqualTo(query2);
+      })
+    ).toMatchInlineSnapshot(`
 "expect(received).toBe(expected) // Object.is equality
 
 Expected: "SELECT ?s ?p ?o WHERE { ?o ?p ?s. }"
@@ -105,7 +119,11 @@ Received: "SELECT ?s ?p ?o WHERE { ?s ?p ?o. }""
       [df.variable("s"), df.variable("p"), df.variable("o")]
     );
 
-    expect(run(query1, query2)).toMatchInlineSnapshot(`"<Pass>"`);
+    expect(
+      matcherResult(() => {
+        expect(query1).toBeSparqlEqualTo(query2);
+      })
+    ).toMatchInlineSnapshot(`"<Pass>"`);
   });
 
   it("fails on non-equivalent strings and algebra", () => {
@@ -123,7 +141,11 @@ Received: "SELECT ?s ?p ?o WHERE { ?s ?p ?o. }""
       [df.variable("s"), df.variable("p"), df.variable("o")]
     );
 
-    expect(run(query1, query2)).toMatchInlineSnapshot(`
+    expect(
+      matcherResult(() => {
+        expect(query1).toBeSparqlEqualTo(query2);
+      })
+    ).toMatchInlineSnapshot(`
 "expect(received).toBe(expected) // Object.is equality
 
 Expected: "SELECT ?s ?p ?o WHERE { ?s ?p ?o. }"
@@ -158,7 +180,11 @@ Received: "SELECT ?s ?p ?o WHERE { ?something ?pretty ?off. }""
       ],
     } as const;
 
-    expect(run(query1, query2)).toMatchInlineSnapshot(`"<Pass>"`);
+    expect(
+      matcherResult(() => {
+        expect(query1).toBeSparqlEqualTo(query2);
+      })
+    ).toMatchInlineSnapshot(`"<Pass>"`);
   });
 
   it("fails on non-equivalent strings and sparqljs", () => {
@@ -188,7 +214,11 @@ Received: "SELECT ?s ?p ?o WHERE { ?something ?pretty ?off. }""
       variables: [df.variable("s"), df.variable("p"), df.variable("o")],
     } as const;
 
-    expect(run(query1, query2)).toMatchInlineSnapshot(`
+    expect(
+      matcherResult(() => {
+        expect(query1).toBeSparqlEqualTo(query2);
+      })
+    ).toMatchInlineSnapshot(`
 "expect(received).toBe(expected) // Object.is equality
 
 Expected: "SELECT ?s ?p ?o WHERE { ?s ?p ?o. }"
@@ -223,7 +253,11 @@ Received: "SELECT ?s ?p ?o WHERE { ?something ?pretty ?off. }""
       ],
     } as const;
 
-    expect(run(query1, query2)).toMatchInlineSnapshot(`"<Pass>"`);
+    expect(
+      matcherResult(() => {
+        expect(query1).toBeSparqlEqualTo(query2);
+      })
+    ).toMatchInlineSnapshot(`"<Pass>"`);
   });
 
   it("fails on non-equivalent algebra and sparqljs", () => {
@@ -253,7 +287,11 @@ Received: "SELECT ?s ?p ?o WHERE { ?something ?pretty ?off. }""
       variables: [df.variable("s")],
     } as const;
 
-    expect(run(query1, query2)).toMatchInlineSnapshot(`
+    expect(
+      matcherResult(() => {
+        expect(query1).toBeSparqlEqualTo(query2);
+      })
+    ).toMatchInlineSnapshot(`
 "expect(received).toBe(expected) // Object.is equality
 
 Expected: "SELECT ?s WHERE { ?s ?p ?o. }"
@@ -280,7 +318,11 @@ Received: "SELECT ?s ?p ?o WHERE { ?s ?p ?o. }""
       }
     `;
 
-    expect(run(query1, query2)).toMatchInlineSnapshot(`"<Pass>"`);
+    expect(
+      matcherResult(() => {
+        expect(query1).toBeSparqlEqualTo(query2);
+      })
+    ).toMatchInlineSnapshot(`"<Pass>"`);
   });
 
   it("matches projections in any order", () => {
@@ -302,6 +344,10 @@ Received: "SELECT ?s ?p ?o WHERE { ?s ?p ?o. }""
       }
     `;
 
-    expect(run(query1, query2)).toMatchInlineSnapshot(`"<Pass>"`);
+    expect(
+      matcherResult(() => {
+        expect(query1).toBeSparqlEqualTo(query2);
+      })
+    ).toMatchInlineSnapshot(`"<Pass>"`);
   });
 });
