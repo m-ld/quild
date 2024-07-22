@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -7,7 +5,6 @@ import { fixupConfigRules } from "@eslint/compat";
 import { FlatCompat } from "@eslint/eslintrc";
 import js from "@eslint/js";
 import tsParser from "@typescript-eslint/parser";
-import unusedImports from "eslint-plugin-unused-imports";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -19,7 +16,7 @@ const compat = new FlatCompat({
 
 export default [
   {
-    ignores: ["dist", "eslint.config.mjs"],
+    ignores: ["packages/*/dist"],
   },
 
   // Common rules
@@ -33,10 +30,6 @@ export default [
     )
   ),
   {
-    plugins: {
-      "unused-imports": unusedImports,
-    },
-
     rules: {
       "arrow-body-style": "warn",
       "default-param-last": "warn",
@@ -56,16 +49,6 @@ export default [
       "no-unreachable-loop": "warn",
       "require-atomic-updates": "error",
       eqeqeq: "warn",
-      "no-unused-vars": "off",
-      "unused-imports/no-unused-imports": "error",
-
-      "unused-imports/no-unused-vars": [
-        "warn",
-        {
-          varsIgnorePattern: "^_",
-          argsIgnorePattern: "^_",
-        },
-      ],
 
       "no-return-await": "warn",
       "no-useless-rename": "warn",
@@ -75,10 +58,10 @@ export default [
         "error",
         {
           devDependencies: [
-            "**/*.test.[jt]s?(x)",
-            "src/test-util/**/*.[jt]s?(x)",
-            "jest.setup.ts",
-            "eslint.config.mjs",
+            "packages/*/src/**/*.test.[jt]s?(x)",
+            "packages/*/src/test-util/**/*.[jt]s?(x)",
+            "packages/*/*",
+            "*",
           ],
         },
       ],
@@ -125,27 +108,28 @@ export default [
     },
   },
 
-  // TypeScript files
+  // TypeScript rules
   ...fixupConfigRules(
     compat.extends(
       "plugin:@typescript-eslint/strict-type-checked",
       "plugin:@typescript-eslint/stylistic-type-checked",
       "plugin:import-x/typescript"
     )
-  ).map((config) => ({
-    ...config,
-    files: ["**/*.ts?(x)"],
-  })),
+  ),
   {
-    files: ["**/*.ts?(x)"],
-
     languageOptions: {
       parser: tsParser,
       ecmaVersion: 5,
       sourceType: "script",
 
       parserOptions: {
-        project: ["tsconfig.dev.json", "tsconfig.node.json"],
+        // Use all dev-time tsconfigs
+        project: [
+          "./tsconfig.(dev|node).json",
+          "packages/*/tsconfig.(dev|node).json",
+        ],
+        // For TypeScript project references (TK: keep?)
+        EXPERIMENTAL_useProjectService: true,
         warnOnUnsupportedTypeScriptVersion: false,
       },
     },
@@ -157,10 +141,7 @@ export default [
     },
 
     rules: {
-      "@typescript-eslint/no-unused-vars": "off",
-      "unused-imports/no-unused-imports": "error",
-
-      "unused-imports/no-unused-vars": [
+      "@typescript-eslint/no-unused-vars": [
         "warn",
         {
           varsIgnorePattern: "^_",

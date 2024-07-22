@@ -1,6 +1,5 @@
-import { type OperatorFunction, concatMap } from "rxjs";
-
 import { type ReadQueryResult, readQuery } from "@quild/core";
+import { type OperatorFunction, concatMap } from "rxjs";
 
 import type * as RDF from "@rdfjs/types";
 import type { JsonValue } from "type-fest";
