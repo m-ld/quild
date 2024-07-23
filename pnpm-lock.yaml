@@ -161,7 +161,7 @@ importers:
         version: 9.7.0
       eslint-import-resolver-typescript:
         specifier: ^3.6.1
-        version: 3.6.1(@typescript-eslint/parser@8.0.0-alpha.51(eslint@9.7.0)(typescript@5.5.3))(eslint-plugin-import@2.29.1)(eslint@9.7.0)
+        version: 3.6.1(@typescript-eslint/parser@8.0.0-alpha.45(eslint@9.7.0)(typescript@5.5.3))(eslint-plugin-import@2.29.1)(eslint@9.7.0)
       eslint-plugin-import-x:
         specifier: ^3.0.1
         version: 3.0.1(eslint@9.7.0)(typescript@5.5.3)
@@ -223,8 +223,8 @@ importers:
         specifier: ^3.2.0
         version: 3.2.0
       '@m-ld/m-ld':
-        specifier: 0.10.1-edge.3
-        version: 0.10.1-edge.3
+        specifier: file:../../../m-ld-js
+        version: file:../m-ld-js
       '@quild/core':
         specifier: workspace:0.0.0-alpha.1
         version: link:../core
@@ -277,6 +277,9 @@ importers:
       '@jest/types':
         specifier: ^29.6.3
         version: 29.6.3
+      '@quild/config-base':
+        specifier: workspace:0.0.0-alpha.1
+        version: link:../config-base
       '@rdfjs/types':
         specifier: 1.1.0
         version: 1.1.0
@@ -306,7 +309,7 @@ importers:
         version: 9.7.0
       eslint-import-resolver-typescript:
         specifier: ^3.6.1
-        version: 3.6.1(@typescript-eslint/parser@8.0.0-alpha.45(eslint@9.7.0)(typescript@5.5.3))(eslint-plugin-import@2.29.1)(eslint@9.7.0)
+        version: 3.6.1(@typescript-eslint/parser@8.0.0-alpha.51(eslint@9.7.0)(typescript@5.5.3))(eslint-plugin-import@2.29.1)(eslint@9.7.0)
       eslint-plugin-import-x:
         specifier: ^3.0.1
         version: 3.0.1(eslint@9.7.0)(typescript@5.5.3)
@@ -1863,29 +1866,6 @@ packages:
 
   '@m-ld/m-ld-spec@0.7.1-edge.0':
     resolution: {integrity: sha512-UDI7H4XqmMW27g0xkVy582vTiDINZqn5Ss5qwobLhHcrTbScv58o3sj44d+AzeOdJ4qcB6m3GJtKKJwsgKSQZA==}
-
-  '@m-ld/m-ld@0.10.1-edge.3':
-    resolution: {integrity: sha512-KQH5Rd4qylKtafCiHhu3p+Lq50j1tynXBJO99kvEdOPqpuOy/TCaRrXsaENm7rw1Ton71r68y1ujE4Oh9PT9lw==}
-    peerDependencies:
-      '@peculiar/webcrypto': '1'
-      ably: '1'
-      async-mqtt: '2'
-      simple-peer: '9'
-      socket.io: '4'
-      socket.io-client: '4'
-    peerDependenciesMeta:
-      '@peculiar/webcrypto':
-        optional: true
-      ably:
-        optional: true
-      async-mqtt:
-        optional: true
-      simple-peer:
-        optional: true
-      socket.io:
-        optional: true
-      socket.io-client:
-        optional: true
 
   '@m-ld/m-ld@file:../m-ld-js':
     resolution: {directory: ../m-ld-js, type: directory}
@@ -8392,39 +8372,6 @@ snapshots:
     dependencies:
       json-rql: 0.6.3
       rxjs: 7.8.1
-
-  '@m-ld/m-ld@0.10.1-edge.3':
-    dependencies:
-      '@ably/msgpack-js': 0.4.0
-      '@m-ld/jsonld': 6.0.1-m-ld.0
-      '@m-ld/m-ld-spec': 0.7.1-edge.0
-      '@types/detect-node': 2.0.2
-      '@types/lru-cache': 5.1.1
-      '@types/requestidlecallback': 0.3.7
-      '@types/sha.js': 2.4.4
-      '@types/simple-peer': 9.11.8
-      '@types/valid-data-url': 2.0.2
-      abstract-level: 1.0.3
-      asynciterator: 3.9.0
-      cuid: 2.1.8
-      fast-array-diff: 1.1.0
-      fflate: 0.8.2
-      immer: 10.1.1
-      json-rql: 0.6.3
-      loglevel: 1.9.1
-      lru-cache: 6.0.0
-      marky: 1.2.5
-      mqtt-pattern: 1.2.0
-      quadstore: 12.4.1
-      quadstore-comunica: 3.5.0(asynciterator@3.9.0)(quadstore@12.4.1)
-      queue-microtask: 1.2.3
-      rdf-data-factory: 1.1.1
-      reflect-metadata: 0.1.14
-      rx-flowable: 0.1.2
-      rxjs: 7.8.1
-      sha.js: 2.4.11
-      sparqlalgebrajs: 4.2.0
-      valid-data-url: 4.0.1
 
   '@m-ld/m-ld@file:../m-ld-js':
     dependencies:

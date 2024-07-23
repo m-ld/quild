@@ -1,7 +1,5 @@
-import { map } from "rxjs";
-
-import { observeMeld } from "./observeMeld";
-import { queryMap } from "./queryMap";
+import { watchQuery } from "@m-ld/m-ld/ext/rx";
+import { readQuery } from "@quild/core";
 
 import type { MeldClone } from "@m-ld/m-ld";
 import type { JsonValue } from "type-fest";
@@ -23,7 +21,8 @@ export const observeMeldQuery = <Data extends JsonValue>(
   meld: MeldClone,
   query: JsonValue
 ) =>
-  observeMeld(meld).pipe(
-    map(([_update, state]) => state),
-    queryMap<Data>(query)
+  watchQuery(
+    meld,
+    (state) => readQuery<Data>(state, query),
+    (_update, state) => readQuery<Data>(state, query)
   );

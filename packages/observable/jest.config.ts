@@ -1,7 +1,9 @@
+import baseConfig from "@quild/config-base/jest.config.base";
+
 import type { Config } from "@jest/types";
 
 const config: Config.InitialOptions = {
-  projects: ["<rootDir>/packages/core", "<rootDir>/packages/observable"],
+  ...baseConfig,
 };
 
 export default config;

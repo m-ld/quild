@@ -199,6 +199,11 @@ export default [
           allowNumber: true,
         },
       ],
+
+      "@typescript-eslint/no-unnecessary-condition": [
+        "warn",
+        { allowConstantLoopConditions: true },
+      ],
     },
   },
 
