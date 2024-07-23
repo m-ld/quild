@@ -1,7 +1,7 @@
 // For config and other node files
 {
   "extends": "../../tsconfig.options.json",
-  "include": ["./*.ts", "./*.js", "./*.mjs", "../../base.jest.config.ts"],
+  "include": ["./*.ts", "./*.js", "./*.mjs"],
   "compilerOptions": {
     "noEmit": true,
     "module": "nodenext",

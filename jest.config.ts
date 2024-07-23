@@ -1,7 +1,7 @@
 import type { Config } from "@jest/types";
 
 const config: Config.InitialOptions = {
-  projects: ["<rootDir>/packages/*"],
+  projects: ["<rootDir>/packages/core"],
 };
 
 export default config;

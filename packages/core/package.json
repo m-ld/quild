@@ -16,7 +16,7 @@
     "dist"
   ],
   "scripts": {
-    "test": "NODE_OPTIONS=--experimental-vm-modules jest",
+    "test": "NODE_OPTIONS='--experimental-vm-modules --disable-warning=ExperimentalWarning' jest",
     "build": "tsc --build",
     "clean": "rm -rf dist *.tsbuildinfo",
     "lint": "eslint .",
@@ -24,7 +24,7 @@
     "fetch-fixtures": "fixtures/fetchSwapiData.sh"
   },
   "devDependencies": {
-    "@comunica/bindings-factory": "3.2.0",
+    "@comunica/bindings-factory": "2.7.0",
     "@eslint-community/eslint-plugin-eslint-comments": "4.3.0",
     "@eslint/compat": "^1.1.1",
     "@eslint/eslintrc": "^3.1.0",
@@ -32,6 +32,7 @@
     "@jest/expect": "^29.7.0",
     "@jest/globals": "^29.5.0",
     "@jest/types": "^29.6.3",
+    "@quild/config-base": "workspace:0.0.0-alpha.1",
     "@rdfjs/types": "1.1.0",
     "@testing-library/react": "^16.0.0",
     "@types/eslint__eslintrc": "^2.1.1",
@@ -40,6 +41,7 @@
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "@types/sparqljs": "^3.1.4",
+    "asynciterator": "^3.9.0",
     "eslint": "^9.7.0",
     "eslint-import-resolver-typescript": "^3.6.1",
     "eslint-plugin-import-x": "^3.0.1",
@@ -62,8 +64,7 @@
     "typescript-eslint": "^8.0.0-alpha.45"
   },
   "dependencies": {
-    "@comunica/query-sparql-rdfjs": "^3.2.0",
-    "@graphy/memory.dataset.fast": "4.3.6",
+    "@comunica/query-sparql-rdfjs": "^2.10.0",
     "@m-ld/m-ld": "file:../../../m-ld-js",
     "@types/lodash-es": "^4.17.8",
     "jsonld": "8.1.1",

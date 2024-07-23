@@ -19,7 +19,6 @@ export const linearizeList = function* <Value>(
   head: string,
   links: LinkedListObject<Value>
 ) {
-  console.log("linearizeList");
   let current: string | null = head;
   while (current !== null) {
     const result: (typeof links)[string] | undefined = links[current];

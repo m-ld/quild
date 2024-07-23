@@ -62,7 +62,6 @@
   },
   "dependencies": {
     "@comunica/query-sparql-rdfjs": "^3.2.0",
-    "@graphy/memory.dataset.fast": "4.3.6",
     "@m-ld/m-ld": "0.10.1-edge.3",
     "@quild/core": "workspace:0.0.0-alpha.1",
     "@types/lodash-es": "^4.17.8",

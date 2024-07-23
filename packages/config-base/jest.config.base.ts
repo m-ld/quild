@@ -1,4 +1,5 @@
 import type { Config } from "@jest/types";
+import type { TsJestTransformerOptions } from "ts-jest";
 
 const baseConfig: Config.InitialOptions = {
   preset: "ts-jest/presets/default-esm",
@@ -9,7 +10,8 @@ const baseConfig: Config.InitialOptions = {
       "ts-jest",
       {
         useESM: true,
-      },
+        tsconfig: "<rootDir>/tsconfig.dev.json",
+      } satisfies TsJestTransformerOptions,
     ],
   },
 };

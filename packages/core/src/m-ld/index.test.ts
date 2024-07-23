@@ -17,6 +17,7 @@ describe(readQuery, () => {
       "@id": uuid(),
       "@domain": "data.swapi.dev",
       genesis: true,
+      logLevel: "warn",
     });
 
     /* eslint-disable-next-line @typescript-eslint/consistent-type-assertions

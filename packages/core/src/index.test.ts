@@ -3,7 +3,7 @@ import jsonld from "jsonld";
 
 import { df } from "./common";
 import { readQuery } from "./index";
-import { dataset } from "./test-util/fixedDataset";
+import { quadSource } from "./test-util/quadSource";
 import data from "../fixtures/data.json";
 
 import type { Quad, Term } from "@rdfjs/types";
@@ -15,11 +15,13 @@ import type * as JsonLD from "jsonld";
 
 // This madness is just to cope with the fact that jsonld.toRDF doesn't return
 // real Quads. Namely, the "Quad" itself is missing its `termType`, and it and
-// its terms are all missing the `.equals()` method.
+// its terms are all missing the `.equals()` method. Also, BlankNodes are
+// incorrectly named: they include the `_:`, which is not part of the name, but
+// only part of the Turtle representation.
 const fixQuad = (q: JsonLD.Quad): Quad => {
   const fixTerm = ((term: Term) =>
     term.termType === "Literal"
-      ? df.literal(term.value, term.datatype)
+      ? df.literal(term.value, fixTerm(term.datatype))
       : term.termType === "BlankNode"
       ? df.blankNode(term.value.replace(/^_:/, ""))
       : df.fromTerm(term)) as typeof df.fromTerm;
@@ -35,7 +37,7 @@ const fixQuad = (q: JsonLD.Quad): Quad => {
 };
 
 const quads = (await jsonld.toRDF(data as jsonld.JsonLdDocument)).map(fixQuad);
-const source = dataset().addAll(quads);
+const source = quadSource(quads);
 
 /* eslint-enable @typescript-eslint/consistent-type-assertions -- ^^^ */
 
