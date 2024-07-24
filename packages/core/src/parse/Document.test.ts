@@ -1,7 +1,7 @@
 import { describe, expect, it } from "@jest/globals";
 
 import { Document } from "./Document";
-import { nullContext } from "./common";
+import { contextParser } from "./common";
 import { makeParser } from "./parser";
 import { df } from "../common";
 import { foo } from "../test-util/toTurtle";
@@ -21,7 +21,7 @@ describe(Document, () => {
         height: "172",
       },
       variable: df.variable("luke"),
-      ctx: nullContext,
+      ctx: await contextParser.parse({}),
     };
 
     expect(await parser.Document(toParse)).toStrictEqual(
@@ -41,7 +41,7 @@ describe(Document, () => {
         },
       ],
       variable: df.variable("luke"),
-      ctx: nullContext,
+      ctx: await contextParser.parse({}),
     };
 
     expect(await parser.Document(toParse)).toStrictEqual(
@@ -63,7 +63,7 @@ describe(Document, () => {
         ],
       },
       variable: df.variable("luke"),
-      ctx: nullContext,
+      ctx: await contextParser.parse({}),
     };
 
     expect(await parser.Document(toParse)).toStrictEqual(

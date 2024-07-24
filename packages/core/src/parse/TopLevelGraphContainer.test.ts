@@ -1,7 +1,7 @@
 import { describe, expect, it } from "@jest/globals";
 
 import { TopLevelGraphContainer } from "./TopLevelGraphContainer";
-import { type Parsed, contextParser, nullContext } from "./common";
+import { type Parsed, contextParser } from "./common";
 import { makeParser } from "./parser";
 import * as IR from "../IntermediateResult";
 import { df } from "../common";
@@ -22,7 +22,7 @@ describe(TopLevelGraphContainer, () => {
         ],
       },
       variable: df.variable("root"),
-      ctx: nullContext,
+      ctx: await contextParser.parse({}),
     };
 
     const parsedNodeObjectArray = await parser.NodeObjectArray({
@@ -35,7 +35,7 @@ describe(TopLevelGraphContainer, () => {
         },
       ],
       variable: df.variable("root"),
-      ctx: nullContext,
+      ctx: await contextParser.parse({}),
     });
 
     expect<Parsed<IR.Object>>(
@@ -61,7 +61,7 @@ describe(TopLevelGraphContainer, () => {
         ],
       },
       variable: df.variable("root"),
-      ctx: nullContext,
+      ctx: await contextParser.parse({}),
     };
 
     const parsedNodeObjectArray = await parser.NodeObjectArray({

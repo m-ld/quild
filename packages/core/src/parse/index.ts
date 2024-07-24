@@ -1,4 +1,4 @@
-import { type Parser, nullContext } from "./common";
+import { type Parser, contextParser } from "./common";
 import { defaultParser } from "./parser";
 import { af, df } from "../common";
 
@@ -12,7 +12,7 @@ export const parseQuery = async (
     await parser.Document({
       element: query,
       variable: df.variable("root"),
-      ctx: nullContext,
+      ctx: await contextParser.parse({}),
     });
 
   return {
