@@ -9,9 +9,9 @@ import type * as RDF from "@rdfjs/types";
  * @param options.prefixes The prefixes to use.
  * @returns A promise that resolves with the Turtle string.
  */
-export const toTurtle = (
+const toTurtle = (
   stream: RDF.Stream,
-  { prefixes }: Pick<N3.WriterOptions, "prefixes"> = {}
+  { prefixes }: Pick<N3.WriterOptions, "prefixes"> = {},
 ) =>
   new Promise((resolve) => {
     let turtleCode = "";
@@ -27,3 +27,5 @@ export const toTurtle = (
 
     streamWriter.import(stream);
   });
+
+export const foo = 1;

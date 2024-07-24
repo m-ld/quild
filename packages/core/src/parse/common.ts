@@ -59,7 +59,7 @@ export const isPlainObject = isPlainObject_ as (
   value: unknown
 ) => value is Record<string, unknown>;
 
-export interface TopLevelGraphContainer extends JsonObject {
+interface TopLevelGraphContainer extends JsonObject {
   "@context"?: JsonObject;
   "@graph": JsonValue[];
 }
@@ -75,14 +75,14 @@ export const isTopLevelGraphContainer = (
     element["@context"] === undefined ||
     element["@context"] === null);
 
-export type SetObject = JsonObject & {
+type SetObject = JsonObject & {
   "@set": JsonValue[];
 };
 
 export const isSetObject = (element: JsonObject): element is SetObject =>
   isPlainObject(element) && isArray(element["@set"]);
 
-export type ListObject = JsonObject & {
+type ListObject = JsonObject & {
   "@list": JsonValue[];
 };
 
@@ -128,7 +128,7 @@ export interface ToParse<Element extends JsonValue = JsonValue> {
   ctx: JsonLdContextNormalized;
 }
 
-export const elementMatches = <T, U extends JsonValue>(
+const elementMatches = <T, U extends JsonValue>(
   predicate: (x: unknown) => x is T,
   toParse: ToParse<U>
 ): toParse is ToParse<T & U> => predicate(toParse.element);

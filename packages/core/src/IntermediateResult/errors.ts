@@ -3,7 +3,7 @@ import type { JsonValue } from "type-fest";
 
 const termString = (term: RDF.Term) => `<${term.termType}: ${term.value}>`;
 
-export class ResultError extends Error {}
+class ResultError extends Error {}
 
 export class IncompleteResultError extends ResultError {
   constructor(readonly variable: RDF.Variable) {

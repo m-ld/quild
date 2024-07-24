@@ -10,7 +10,6 @@ export { NativePlaceholder } from "./NativePlaceholder";
 export { Unwrapped } from "./Unwrapped";
 
 export {
-  ResultError,
   IncompleteResultError,
   BadNativeValueError,
   NotANamedNodeError,

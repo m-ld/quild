@@ -2,7 +2,7 @@
 
 import { evolve as evolve_ } from "rambdax";
 
-export type Evolver<From> = {
+type Evolver<From> = {
   [K in keyof From]?: (v: From[K]) => unknown;
 };
 

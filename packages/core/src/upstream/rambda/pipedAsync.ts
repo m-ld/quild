@@ -2,7 +2,7 @@
 
 import { reduce } from "rambdax";
 
-export function pipeAsync<TArg, R1, R2, R3, R4, R5, R6, R7, TResult>(
+function pipeAsync<TArg, R1, R2, R3, R4, R5, R6, R7, TResult>(
   ...funcs: [
     f1: (a: Awaited<TArg>) => R1,
     f2: (a: Awaited<R1>) => R2,
@@ -15,7 +15,7 @@ export function pipeAsync<TArg, R1, R2, R3, R4, R5, R6, R7, TResult>(
     fnLast: (a: unknown) => TResult
   ]
 ): (a: TArg) => TResult; // fallback overload if number of piped functions greater than 7
-export function pipeAsync<TArg, R1, R2, R3, R4, R5, R6, R7>(
+function pipeAsync<TArg, R1, R2, R3, R4, R5, R6, R7>(
   f1: (a: Awaited<TArg>) => R1,
   f2: (a: Awaited<R1>) => R2,
   f3: (a: Awaited<R2>) => R3,
@@ -24,7 +24,7 @@ export function pipeAsync<TArg, R1, R2, R3, R4, R5, R6, R7>(
   f6: (a: Awaited<R5>) => R6,
   f7: (a: Awaited<R6>) => R7
 ): (a: TArg) => R7;
-export function pipeAsync<TArg, R1, R2, R3, R4, R5, R6>(
+function pipeAsync<TArg, R1, R2, R3, R4, R5, R6>(
   f1: (a: Awaited<TArg>) => R1,
   f2: (a: Awaited<R1>) => R2,
   f3: (a: Awaited<R2>) => R3,
@@ -32,33 +32,33 @@ export function pipeAsync<TArg, R1, R2, R3, R4, R5, R6>(
   f5: (a: Awaited<R4>) => R5,
   f6: (a: Awaited<R5>) => R6
 ): (a: TArg) => R6;
-export function pipeAsync<TArg, R1, R2, R3, R4, R5>(
+function pipeAsync<TArg, R1, R2, R3, R4, R5>(
   f1: (a: Awaited<TArg>) => R1,
   f2: (a: Awaited<R1>) => R2,
   f3: (a: Awaited<R2>) => R3,
   f4: (a: Awaited<R3>) => R4,
   f5: (a: Awaited<R4>) => R5
 ): (a: TArg) => R5;
-export function pipeAsync<TArg, R1, R2, R3, R4>(
+function pipeAsync<TArg, R1, R2, R3, R4>(
   f1: (a: Awaited<TArg>) => R1,
   f2: (a: Awaited<R1>) => R2,
   f3: (a: Awaited<R2>) => R3,
   f4: (a: Awaited<R3>) => R4
 ): (a: TArg) => R4;
-export function pipeAsync<TArg, R1, R2, R3>(
+function pipeAsync<TArg, R1, R2, R3>(
   f1: (a: Awaited<TArg>) => R1,
   f2: (a: Awaited<R1>) => R2,
   f3: (a: Awaited<R2>) => R3
 ): (a: TArg) => R3;
-export function pipeAsync<TArg, R1, R2>(
+function pipeAsync<TArg, R1, R2>(
   f1: (a: Awaited<TArg>) => R1,
   f2: (a: Awaited<R1>) => R2
 ): (a: TArg) => R2;
-export function pipeAsync<TArg, R1>(
+function pipeAsync<TArg, R1>(
   f1: (a: Awaited<TArg>) => R1
 ): (a: Awaited<TArg>) => R1;
 
-export function pipeAsync(...fnList: Array<(x: unknown) => unknown>) {
+function pipeAsync(...fnList: Array<(x: unknown) => unknown>) {
   return function (startArgument: unknown) {
     return reduce(async (value, fn) => fn(await value), startArgument, fnList);
   };

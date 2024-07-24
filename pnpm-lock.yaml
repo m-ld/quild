@@ -104,9 +104,12 @@ importers:
       rdf-string:
         specifier: ^1.6.3
         version: 1.6.3
-      rxjs:
-        specifier: ^7.8.1
-        version: 7.8.1
+      react:
+        specifier: 18 || 19
+        version: 18.3.1
+      react-dom:
+        specifier: 18 || 19
+        version: 18.3.1(react@18.3.1)
       sparqlalgebrajs:
         specifier: 4.2.0
         version: 4.2.0
@@ -117,18 +120,6 @@ importers:
       '@eslint-community/eslint-plugin-eslint-comments':
         specifier: 4.3.0
         version: 4.3.0(eslint@9.7.0)
-      '@eslint/compat':
-        specifier: ^1.1.1
-        version: 1.1.1
-      '@eslint/eslintrc':
-        specifier: ^3.1.0
-        version: 3.1.0
-      '@eslint/js':
-        specifier: ^9.7.0
-        version: 9.7.0
-      '@jest/expect':
-        specifier: ^29.7.0
-        version: 29.7.0
       '@jest/globals':
         specifier: ^29.5.0
         version: 29.5.0
@@ -141,24 +132,9 @@ importers:
       '@rdfjs/types':
         specifier: 1.1.0
         version: 1.1.0
-      '@testing-library/react':
-        specifier: ^16.0.0
-        version: 16.0.0(@testing-library/dom@10.3.1)(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@types/eslint__eslintrc':
-        specifier: ^2.1.1
-        version: 2.1.1
-      '@types/eslint__js':
-        specifier: ^8.42.3
-        version: 8.42.3
       '@types/n3':
         specifier: ^1.16.0
         version: 1.16.0
-      '@types/react':
-        specifier: ^18.3.3
-        version: 18.3.3
-      '@types/react-dom':
-        specifier: ^18.3.0
-        version: 18.3.0
       '@types/sparqljs':
         specifier: ^3.1.4
         version: 3.1.4
@@ -170,10 +146,7 @@ importers:
         version: 9.7.0
       eslint-import-resolver-typescript:
         specifier: ^3.6.1
-        version: 3.6.1(@typescript-eslint/parser@8.0.0-alpha.45(eslint@9.7.0)(typescript@5.5.3))(eslint-plugin-import@2.29.1)(eslint@9.7.0)
-      eslint-plugin-import-x:
-        specifier: ^3.0.1
-        version: 3.0.1(eslint@9.7.0)(typescript@5.5.3)
+        version: 3.6.1(@typescript-eslint/parser@8.0.0-alpha.51(eslint@9.7.0)(typescript@5.5.3))(eslint-plugin-import@2.29.1)(eslint@9.7.0)
       eslint-plugin-jest-formatting:
         specifier: ^3.1.0
         version: 3.1.0(eslint@9.7.0)
@@ -189,21 +162,12 @@ importers:
       jest:
         specifier: ^29.7.0
         version: 29.7.0(@types/node@20.3.1)(ts-node@10.9.1(@types/node@20.3.1)(typescript@5.5.3))
-      jest-environment-jsdom:
-        specifier: ^29.7.0
-        version: 29.7.0
       memory-level:
         specifier: ^1.0.0
         version: 1.0.0
       n3:
         specifier: 1.16.4
         version: 1.16.4
-      react:
-        specifier: ^18.3.1
-        version: 18.3.1
-      react-dom:
-        specifier: ^18.3.1
-        version: 18.3.1(react@18.3.1)
       sparqljs:
         specifier: 3.6.2
         version: 3.6.2
@@ -212,74 +176,26 @@ importers:
         version: 6.8.1
       ts-jest:
         specifier: ^29.1.0
-        version: 29.1.0(@babel/core@7.22.5)(@jest/types@29.6.3)(babel-jest@29.7.0(@babel/core@7.22.5))(jest@29.7.0(@types/node@20.3.1)(ts-node@10.9.1(@types/node@20.3.1)(typescript@5.5.3)))(typescript@5.5.3)
-      ts-node:
-        specifier: ^10.9.1
-        version: 10.9.1(@types/node@20.3.1)(typescript@5.5.3)
+        version: 29.1.0(@babel/core@7.24.9)(@jest/types@29.6.3)(babel-jest@29.7.0(@babel/core@7.24.9))(jest@29.7.0(@types/node@20.3.1)(ts-node@10.9.1(@types/node@20.3.1)(typescript@5.5.3)))(typescript@5.5.3)
       type-fest:
         specifier: 3.7.1
         version: 3.7.1
       typescript:
         specifier: ^5.5.3
         version: 5.5.3
-      typescript-eslint:
-        specifier: ^8.0.0-alpha.45
-        version: 8.0.0-alpha.45(eslint@9.7.0)(typescript@5.5.3)
 
   packages/observable:
     dependencies:
-      '@comunica/query-sparql-rdfjs':
-        specifier: ^3.2.0
-        version: 3.2.0
       '@m-ld/m-ld':
         specifier: file:../../../m-ld-js
         version: file:../m-ld-js
       '@quild/core':
         specifier: workspace:0.0.0-alpha.1
         version: link:../core
-      '@types/lodash-es':
-        specifier: ^4.17.8
-        version: 4.17.8
-      jsonld:
-        specifier: 8.1.1
-        version: 8.1.1(web-streams-polyfill@3.2.1)
-      jsonld-context-parser:
-        specifier: ^2.3.0
-        version: 2.3.0
-      lodash-es:
-        specifier: 4.17.21
-        version: 4.17.21
-      rambdax:
-        specifier: ^10.0.0
-        version: 10.0.0
-      rdf-data-factory:
-        specifier: 1.1.1
-        version: 1.1.1
-      rdf-string:
-        specifier: ^1.6.3
-        version: 1.6.3
       rxjs:
         specifier: ^7.8.1
         version: 7.8.1
-      sparqlalgebrajs:
-        specifier: 4.2.0
-        version: 4.2.0
     devDependencies:
-      '@comunica/bindings-factory':
-        specifier: 3.2.0
-        version: 3.2.0
-      '@eslint-community/eslint-plugin-eslint-comments':
-        specifier: 4.3.0
-        version: 4.3.0(eslint@9.7.0)
-      '@eslint/compat':
-        specifier: ^1.1.1
-        version: 1.1.1
-      '@eslint/eslintrc':
-        specifier: ^3.1.0
-        version: 3.1.0
-      '@eslint/js':
-        specifier: ^9.7.0
-        version: 9.7.0
       '@jest/globals':
         specifier: ^29.5.0
         version: 29.5.0
@@ -289,96 +205,39 @@ importers:
       '@quild/config-base':
         specifier: workspace:0.0.0-alpha.1
         version: link:../config-base
-      '@rdfjs/types':
-        specifier: 1.1.0
-        version: 1.1.0
-      '@testing-library/react':
-        specifier: ^16.0.0
-        version: 16.0.0(@testing-library/dom@10.3.1)(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@types/eslint__eslintrc':
-        specifier: ^2.1.1
-        version: 2.1.1
-      '@types/eslint__js':
-        specifier: ^8.42.3
-        version: 8.42.3
-      '@types/n3':
-        specifier: ^1.16.0
-        version: 1.16.0
       '@types/react':
         specifier: ^18.3.3
         version: 18.3.3
       '@types/react-dom':
         specifier: ^18.3.0
         version: 18.3.0
-      '@types/sparqljs':
-        specifier: ^3.1.4
-        version: 3.1.4
       eslint:
         specifier: ^9.7.0
         version: 9.7.0
-      eslint-import-resolver-typescript:
-        specifier: ^3.6.1
-        version: 3.6.1(@typescript-eslint/parser@8.0.0-alpha.51(eslint@9.7.0)(typescript@5.5.3))(eslint-plugin-import@2.29.1)(eslint@9.7.0)
-      eslint-plugin-import-x:
-        specifier: ^3.0.1
-        version: 3.0.1(eslint@9.7.0)(typescript@5.5.3)
-      eslint-plugin-jest-formatting:
-        specifier: ^3.1.0
-        version: 3.1.0(eslint@9.7.0)
-      eslint-plugin-promise:
-        specifier: ^6.4.0
-        version: 6.4.0(eslint@9.7.0)
-      eslint-plugin-unused-imports:
-        specifier: ^4.0.0
-        version: 4.0.0(eslint@9.7.0)
-      expect:
-        specifier: 29.5.0
-        version: 29.5.0
       jest:
         specifier: ^29.5.0
         version: 29.5.0(@types/node@20.3.1)(ts-node@10.9.1(@types/node@20.3.1)(typescript@5.5.3))
-      jest-environment-jsdom:
-        specifier: ^29.7.0
-        version: 29.7.0
       memory-level:
         specifier: ^1.0.0
         version: 1.0.0
-      n3:
-        specifier: 1.16.4
-        version: 1.16.4
       react:
         specifier: ^18.3.1
         version: 18.3.1
       react-dom:
         specifier: ^18.3.1
         version: 18.3.1(react@18.3.1)
-      sparqljs:
-        specifier: 3.6.2
-        version: 3.6.2
-      table:
-        specifier: 6.8.1
-        version: 6.8.1
       ts-jest:
         specifier: ^29.1.0
         version: 29.1.0(@babel/core@7.22.5)(@jest/types@29.6.3)(babel-jest@29.7.0(@babel/core@7.22.5))(jest@29.5.0(@types/node@20.3.1)(ts-node@10.9.1(@types/node@20.3.1)(typescript@5.5.3)))(typescript@5.5.3)
-      ts-node:
-        specifier: ^10.9.1
-        version: 10.9.1(@types/node@20.3.1)(typescript@5.5.3)
       type-fest:
         specifier: 3.7.1
         version: 3.7.1
       typescript:
         specifier: ^5.5.3
         version: 5.5.3
-      typescript-eslint:
-        specifier: ^8.0.0-alpha.45
-        version: 8.0.0-alpha.45(eslint@9.7.0)(typescript@5.5.3)
 
   packages/react:
     dependencies:
-      '@comunica/query-sparql-rdfjs':
-        specifier: ^3.2.0
-        version: 3.2.0
       '@m-ld/m-ld':
         specifier: file:../../../m-ld-js
         version: file:../m-ld-js
@@ -388,52 +247,10 @@ importers:
       '@quild/observable':
         specifier: workspace:0.0.0-alpha.1
         version: link:../observable
-      '@types/lodash-es':
-        specifier: ^4.17.8
-        version: 4.17.8
-      jsonld:
-        specifier: 8.1.1
-        version: 8.1.1(web-streams-polyfill@3.2.1)
-      jsonld-context-parser:
-        specifier: ^2.3.0
-        version: 2.3.0
-      lodash-es:
-        specifier: 4.17.21
-        version: 4.17.21
-      rambdax:
-        specifier: ^10.0.0
-        version: 10.0.0
-      rdf-data-factory:
-        specifier: 1.1.1
-        version: 1.1.1
-      rdf-string:
-        specifier: ^1.6.3
-        version: 1.6.3
-      rxjs:
-        specifier: ^7.8.1
-        version: 7.8.1
       setimmediate:
         specifier: ^1.0.5
         version: 1.0.5
-      sparqlalgebrajs:
-        specifier: 4.2.0
-        version: 4.2.0
     devDependencies:
-      '@comunica/bindings-factory':
-        specifier: 3.2.0
-        version: 3.2.0
-      '@eslint-community/eslint-plugin-eslint-comments':
-        specifier: 4.3.0
-        version: 4.3.0(eslint@9.7.0)
-      '@eslint/compat':
-        specifier: ^1.1.1
-        version: 1.1.1
-      '@eslint/eslintrc':
-        specifier: ^3.1.0
-        version: 3.1.0
-      '@eslint/js':
-        specifier: ^9.7.0
-        version: 9.7.0
       '@jest/globals':
         specifier: ^29.5.0
         version: 29.5.0
@@ -443,90 +260,39 @@ importers:
       '@quild/config-base':
         specifier: workspace:0.0.0-alpha.1
         version: link:../config-base
-      '@rdfjs/types':
-        specifier: 1.1.0
-        version: 1.1.0
       '@testing-library/react':
         specifier: ^16.0.0
         version: 16.0.0(@testing-library/dom@10.3.1)(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@types/eslint__eslintrc':
-        specifier: ^2.1.1
-        version: 2.1.1
-      '@types/eslint__js':
-        specifier: ^8.42.3
-        version: 8.42.3
-      '@types/n3':
-        specifier: ^1.16.0
-        version: 1.16.0
       '@types/react':
         specifier: ^18.3.3
         version: 18.3.3
       '@types/react-dom':
         specifier: ^18.3.0
         version: 18.3.0
-      '@types/sparqljs':
-        specifier: ^3.1.4
-        version: 3.1.4
       eslint:
         specifier: ^9.7.0
         version: 9.7.0
-      eslint-import-resolver-typescript:
-        specifier: ^3.6.1
-        version: 3.6.1(@typescript-eslint/parser@8.0.0-alpha.51(eslint@9.7.0)(typescript@5.5.3))(eslint-plugin-import@2.29.1)(eslint@9.7.0)
-      eslint-plugin-import-x:
-        specifier: ^3.0.1
-        version: 3.0.1(eslint@9.7.0)(typescript@5.5.3)
-      eslint-plugin-jest-formatting:
-        specifier: ^3.1.0
-        version: 3.1.0(eslint@9.7.0)
-      eslint-plugin-promise:
-        specifier: ^6.4.0
-        version: 6.4.0(eslint@9.7.0)
-      eslint-plugin-unused-imports:
-        specifier: ^4.0.0
-        version: 4.0.0(eslint@9.7.0)
-      expect:
-        specifier: 29.5.0
-        version: 29.5.0
       jest:
         specifier: ^29.5.0
         version: 29.5.0(@types/node@20.3.1)(ts-node@10.9.1(@types/node@20.3.1)(typescript@5.5.3))
-      jest-environment-jsdom:
-        specifier: ^29.7.0
-        version: 29.7.0
       memory-level:
         specifier: ^1.0.0
         version: 1.0.0
-      n3:
-        specifier: 1.16.4
-        version: 1.16.4
       react:
         specifier: ^18.3.1
         version: 18.3.1
       react-dom:
         specifier: ^18.3.1
         version: 18.3.1(react@18.3.1)
-      sparqljs:
-        specifier: 3.6.2
-        version: 3.6.2
-      table:
-        specifier: 6.8.1
-        version: 6.8.1
       ts-jest:
         specifier: ^29.1.0
         version: 29.1.0(@babel/core@7.24.9)(@jest/types@29.6.3)(babel-jest@29.7.0(@babel/core@7.24.9))(jest@29.5.0(@types/node@20.3.1)(ts-node@10.9.1(@types/node@20.3.1)(typescript@5.5.3)))(typescript@5.5.3)
-      ts-node:
-        specifier: ^10.9.1
-        version: 10.9.1(@types/node@20.3.1)(typescript@5.5.3)
       type-fest:
         specifier: 3.7.1
         version: 3.7.1
       typescript:
         specifier: ^5.5.3
         version: 5.5.3
-      typescript-eslint:
-        specifier: ^8.0.0-alpha.45
-        version: 8.0.0-alpha.45(eslint@9.7.0)(typescript@5.5.3)
 
 packages:
 
@@ -806,44 +572,17 @@ packages:
   '@comunica/actor-abstract-mediatyped@2.10.0':
     resolution: {integrity: sha512-0o6WBujsMnIVcwvRJv6Nj+kKPLZzqBS3On48rm01Rh9T1/My0E/buJMXwgcARKCfMonc2mJ9zxpPCh5ilGEU2A==}
 
-  '@comunica/actor-abstract-mediatyped@3.2.0':
-    resolution: {integrity: sha512-Nv78acoUv/+FnaKo1JB11E5OWwaKIQ9QiPKn9lQL0y+Lod8kNwJ3X7/D830qnutcIe3bl+sAqxvt9CQtyPP26g==}
-
   '@comunica/actor-abstract-parse@2.7.0':
     resolution: {integrity: sha512-Zjsoq44A8TCWHrfH4EtZ648TgquxuD6W8x9osrYZL8o7f+XtZCD5cri3DBgCedUT78x79tj0wfVURp+15Ob9dQ==}
-
-  '@comunica/actor-abstract-parse@3.2.0':
-    resolution: {integrity: sha512-vDyfcIhmf2GDKbjw2Sr2H40dsMZsz18REcTS2mLp/e1UWB1DpwLCsGqbQV88Lyj5Uvc4SJa8IBdYLg4+BZFmKw==}
 
   '@comunica/actor-abstract-path@2.10.1':
     resolution: {integrity: sha512-+k1ltuUuIyn4iUm5oRMObyt2zhu68h7ymzxuKU4ezATlgwfwj6EM7/3W2n2/gxjg9tcFMr5GC6aNnFQmq3Iuig==}
 
-  '@comunica/actor-abstract-path@3.2.0':
-    resolution: {integrity: sha512-5s7UHAK14P65c68k+/5T3hViVPB9hDHXh9HsIGZnlKJtEBDCpnS0qurs4X/8ULCGRaKCeuWDNm6oy0k9Oae+vQ==}
-
-  '@comunica/actor-context-preprocess-convert-shortcuts@3.2.0':
-    resolution: {integrity: sha512-8cNZVmByELdJ4V49B7Aimo2gB18BGgQF4KTHJXV61OgP6101qy8EgoMXR8SqdA7YIilCoJUAxTdN2O6mE7k//Q==}
-
-  '@comunica/actor-context-preprocess-query-source-identify@3.2.0':
-    resolution: {integrity: sha512-RrGUYu6yQoQv9SZwLQ/IpZ5GFOopkLDPquByaX9Ov0SMOlb3MJ93HFeiRGBwvNtjxrdqtWxyqhMJzz550zsBFw==}
-
-  '@comunica/actor-context-preprocess-query-source-skolemize@3.2.0':
-    resolution: {integrity: sha512-QxW6VaKPZ2XN0PHVmfCb1H5n7NB0ZvOwYR5+YpqeqHhcrH93DUjSkzx3CDL4VDLK/C8DU46fVD4Xn+ONUyalFQ==}
-
-  '@comunica/actor-context-preprocess-set-defaults@3.2.0':
-    resolution: {integrity: sha512-mjnt2ifXQccMl6u3cvMiH/zWFcm6envHWCtJQfFayBROP4tCuvv1SEUThFiiVSVqAmmrcVxGEVQWFLu/6oY+/w==}
-
   '@comunica/actor-context-preprocess-source-to-destination@2.10.0':
     resolution: {integrity: sha512-sQc42Sd4cuVumZ9+PDnWBTBYneqCFShFliK8Et83GR3wBGzu9x0tS/M2o3e63sBbb6ZkWHyO5jl/O8AbrjhcTg==}
 
-  '@comunica/actor-context-preprocess-source-to-destination@3.2.0':
-    resolution: {integrity: sha512-ph/n7obnwQ4VWOAaBlC7eZLZyrBXrmzFD1l6EfsB3lSbxhgmA2wvnIu/QlKxOp2KCErhu/ijnVQpe5i7ZHqU+Q==}
-
   '@comunica/actor-hash-bindings-sha1@2.10.0':
     resolution: {integrity: sha512-f981PcCiDWbdZfM1ct1v1q/VII14y18lo1enEdHB25SF0hCkzIDwh9IrfDfJDju5I6luSWNE/MYMMeAAmF9e3g==}
-
-  '@comunica/actor-hash-bindings-sha1@3.2.0':
-    resolution: {integrity: sha512-sLeZXk2YFLEuZAzu8UsZwdehWwIblDiD+whiAqgTkfM9YMaD0w3YHAzyEVPgmknPSIKhrO3ZPafLTRei/DZeQg==}
 
   '@comunica/actor-http-fetch@2.7.0':
     resolution: {integrity: sha512-MU281B74Ed+gAge3aTozqdP3CQEmDvp3CcfkfZzETFGZSL5tHXLnXIezctefEfrCco2iruT+micJPL8/vmQjOQ==}
@@ -854,74 +593,26 @@ packages:
   '@comunica/actor-http-proxy@2.10.2':
     resolution: {integrity: sha512-3yUF8BCh4nwq8J6NRILEsyNrQNStkE9ggJ7hYwRfA1XcMgz1pANNaWJ2P2TEKH1jNinr23bL3JeuUZCm9Kz9dA==}
 
-  '@comunica/actor-http-proxy@3.2.0':
-    resolution: {integrity: sha512-DToKOyQ7Twx01GUaWazUpMU145yWG+vqNu9IElzLK9xgd/Suoq4SM43zi9yqkAl98q7q3z7uIfsXsMZ583uTDA==}
-
   '@comunica/actor-init-query@2.10.2':
     resolution: {integrity: sha512-7A4bXdKCjXRdUThvMOOyg+U17DPeBAsyDYz1SA8F4lPUR06NapcG5TmZF+YWUTN/2EG5fZPUnD3etKuPXreGUw==}
-
-  '@comunica/actor-init-query@3.2.0':
-    resolution: {integrity: sha512-Uvvz3yhaFHw82T/udiy54Wi7CEaizpy+L9FsOLe9E0h0pFCc5/P3ipPPd2T82lXFdEg/QwXsybTCoA5IpWj1jA==}
-
-  '@comunica/actor-optimize-query-operation-assign-sources-exhaustive@3.2.0':
-    resolution: {integrity: sha512-EwgbY4upROw4My+OngknYSnDYmR+vv9GE1qzDMPNkYMU7kvwfciruAIY1MH24be8VwVCzQOJsCyZGacVDFARQA==}
 
   '@comunica/actor-optimize-query-operation-bgp-to-join@2.10.0':
     resolution: {integrity: sha512-M9vwM4a3VQA/ir8Q7eGRNzzx52u6RJFIXBW8p+Zkn+zv+4fsket3zLYJGhJU7dcvaSXcOi68rDP/r8KfgNXr4Q==}
 
-  '@comunica/actor-optimize-query-operation-bgp-to-join@3.2.0':
-    resolution: {integrity: sha512-dD2bFU09oLVnmy87lQ6TrXBQzpfyioxWo5CUAAR7lJZg8ZK0wrS6wYzLEaEyAtrP4GgQKNb4Xh/vBAp26AyGNQ==}
-
-  '@comunica/actor-optimize-query-operation-describe-to-constructs-subject@3.2.0':
-    resolution: {integrity: sha512-5rt7aH0lC7ZcAgkyVgrSv7v/SOSial4Oqc1E/t/TXRTqBfQS15yswVKZUdPB/mMiv9CLsHN8EBNsvPiEhmUbww==}
-
-  '@comunica/actor-optimize-query-operation-filter-pushdown@3.2.0':
-    resolution: {integrity: sha512-ZW+AsMwkJairyob/sMn11jcr2xxAFu239ubF7t3Ag4es7/2F1Xm5MsWQZ2QWcmG1nJ/itFsB28Y90FwJ/bH7HA==}
-
-  '@comunica/actor-optimize-query-operation-group-sources@3.2.0':
-    resolution: {integrity: sha512-IWa5EGm8UCFw7VILuOUgFhcBGsRZiXr8FCEM5AZTOVYePODVMT9RjgSYmohbOEomThBwhOdpzdXUcYWYR7AzGg==}
-
   '@comunica/actor-optimize-query-operation-join-bgp@2.10.0':
     resolution: {integrity: sha512-tzZojWPbWn/S0DZGjGfV90ZRJVWT/yX3DKGgZ1ur33U5TW8n/fBQxHNMPCLu0GkMQ1dyx6bU+ekILTqm+21Jyw==}
-
-  '@comunica/actor-optimize-query-operation-join-bgp@3.2.0':
-    resolution: {integrity: sha512-pW6VN6Egc54TpJd6palZSb2GtxwMjDF8qn70PVXZs1slckhysKwUe2jWVe7yxsltDQdZT6QnjGbsj+dwpTPDhQ==}
 
   '@comunica/actor-optimize-query-operation-join-connected@2.10.0':
     resolution: {integrity: sha512-RsbKIAxX1HyoR/AUzqIV++dTcLiEElRIVDHYTaXVVvGgHECYdh9s+oc8cvv/lDbLVpfnc6P9C9BTAfrqOjKkhA==}
 
-  '@comunica/actor-optimize-query-operation-join-connected@3.2.0':
-    resolution: {integrity: sha512-Eri5VAfzj0607nE7e9VM1AL591iHSm3y1/pfxQZ4qKvScdE6tSvKvPVoKEcLF7pMte+NpRkKthtQoEHIpFGUWQ==}
-
-  '@comunica/actor-optimize-query-operation-prune-empty-source-operations@3.2.0':
-    resolution: {integrity: sha512-ECkM0iVzwWcku2V4lmgXv52RN6tQd52weqK3CwmB+0NV0CSZ6pobn3S2eTWjHLcR46paZw7kVf7R+yMfKCFlHw==}
-
-  '@comunica/actor-optimize-query-operation-rewrite-add@3.2.0':
-    resolution: {integrity: sha512-6x7V2/fuj2mejCn1R7WjJEdCtUDSsRzXgU3p1NlI3jfKKGUPP+a/fKBmzFXEEA9iRSf9pD2jZ99RwKiy21C1gg==}
-
-  '@comunica/actor-optimize-query-operation-rewrite-copy@3.2.0':
-    resolution: {integrity: sha512-mD+0m0ZXSdvuRLKaNbDBAS0FMARWtGg4mvTWZ5YjU/H30GTUMe6syVhyD5L+U33DXs8cxPKBH7hK1VIlbch29A==}
-
-  '@comunica/actor-optimize-query-operation-rewrite-move@3.2.0':
-    resolution: {integrity: sha512-l9bmAcIZrMKtUe7xPu/cxf+mAMV0NFcpG+zzSyXMPKUkBLbIxo/jfl7r0DsOo/R2sfgmJcXg6J3A5s378YPO7w==}
-
   '@comunica/actor-query-operation-ask@2.10.1':
     resolution: {integrity: sha512-7oktqE4fkMhi6Hs9XCcwwoZRsEismVqJZ5wp9lXXOPaxnHEiFyj5gb/B6baCstoCvCt6LcU8fVvfHSitbFCpeQ==}
-
-  '@comunica/actor-query-operation-ask@3.2.0':
-    resolution: {integrity: sha512-tDx72zMcIYltvU9L7jgyb97PECNNZZe4duYN4DA7E3zpJSmYygsElsKmSLHGU+X7msnCrdjJ8iMiZMuo5HuE+Q==}
 
   '@comunica/actor-query-operation-bgp-join@2.10.1':
     resolution: {integrity: sha512-eNpnvgFyKlZEHkMzubYL8ndADSsAQH4rwXvh22CGnf0FwyndHr6TEpmE6j77m9vXiSJ/lda0U3Zv4vIXvtREOw==}
 
-  '@comunica/actor-query-operation-bgp-join@3.2.0':
-    resolution: {integrity: sha512-mNZCIe+iD3SSxoMRA7l2AyQm8WlyEasrc4l1hNi1KGt9Jtrvna6ilkeCkKYcmVQINHwe0bPzCzUSwxQL8Fhtnw==}
-
   '@comunica/actor-query-operation-construct@2.10.1':
     resolution: {integrity: sha512-S+Nt1+1psv01QRnfytZjiog2NBNHIbjr7XIv+MO3p6aVmLCoZ6lmjxSGNdbX+EmcGr7tbbafXK5z3zRM+ke8Mw==}
-
-  '@comunica/actor-query-operation-construct@3.2.0':
-    resolution: {integrity: sha512-zdxG0wylMYGFHKP3AmCP75gCx9EFMk+ul9jQ4V5i746SnzoLY2sWbEF1exv6qT8VVuInROU0iDmdVtr+GcTuJA==}
 
   '@comunica/actor-query-operation-describe-subject@2.10.1':
     resolution: {integrity: sha512-E8i0M6haJ5iZVeHMn5PbvA4G+l87mcZKqIxVpYAnJVpD667F74Dkx3IMbk+ohRmyRmnkOEmztUrjeyixHHzUEQ==}
@@ -929,116 +620,59 @@ packages:
   '@comunica/actor-query-operation-distinct-hash@2.10.1':
     resolution: {integrity: sha512-exvJbgcJ0Pe4EGbLJD5LuGpvaGcFeckCxwB5pyd9OewNke+tLLP7nbEjB8KFEPpCO9LE7zt4faB1HvpJdEHQKQ==}
 
-  '@comunica/actor-query-operation-distinct-hash@3.2.0':
-    resolution: {integrity: sha512-dJtUrHA8CCReJzLaceNPL0+NXJcXo0ac9S35um9U06Zx2HMARtzTk7QLrQB5j+qlAhkkmFFCtRfNP45kU+74SQ==}
-
   '@comunica/actor-query-operation-extend@2.10.1':
     resolution: {integrity: sha512-wkZxUfDu8T5lXD+OFLItmjjbnEBqtv0z8pxVKgI/gX8mOeu5KcPWLH0dJODTWoIzIYrJhV25FmCgBks1rt6K8w==}
-
-  '@comunica/actor-query-operation-extend@3.2.0':
-    resolution: {integrity: sha512-EzXwpAD3tHjrfeZLOceeD7FvEphLUtnMCQjlXunEJlDQ7Kfs1IVE0UPk2qqFPURTFUTsIE4eNREHopVnG5wL1A==}
 
   '@comunica/actor-query-operation-filter-sparqlee@2.10.1':
     resolution: {integrity: sha512-w2PnDNnlf+9B947ZdeSs7NpW9qGJjRiuODZYwhh0e6cx89GPDhEDVuJwawF6VP3m/oLcgXOAdif0Wwo3d8KNAA==}
 
-  '@comunica/actor-query-operation-filter@3.2.0':
-    resolution: {integrity: sha512-9J4j0FHlYTybvppovwZgANZU+BS/3k38cgNSOB9rELuzeW/9DQCtGkZ37rqkczD0RK/PXOTAeN0lagbaskHqYA==}
-
   '@comunica/actor-query-operation-from-quad@2.10.1':
     resolution: {integrity: sha512-7D4R8ONNJJPzoRu96dwIToOEk6/3O/T26FRzCqQKrbjFHNkX2v92KA/SiDzNz59VmDNWjYF1rsV31Ade6J89MA==}
-
-  '@comunica/actor-query-operation-from-quad@3.2.0':
-    resolution: {integrity: sha512-m7pAnng2xAtARVVtDCln1vn7M6WwpZC841GMf12EfaYLdabJ7ixtFkCNToO4VoHQ915IiK1n6EkwOv5ZPu+lHg==}
 
   '@comunica/actor-query-operation-group@2.10.1':
     resolution: {integrity: sha512-Od5s9Vb6uDPzXa6OAUC1WSMF96spNPJI2Zqf0Ixejw4zCNevOK/VwHivYfF0vHIUZxjRrOl3Al1ZU9L8n5Wxlw==}
 
-  '@comunica/actor-query-operation-group@3.2.0':
-    resolution: {integrity: sha512-0w1FIC37I09+s6BfJ7miFeQhkFZ0KpptP8LefskIpaLY3KwzHVLXxHw7R6Mir2ktQJUxA0vCQWy0JF1ERQOuiQ==}
-
   '@comunica/actor-query-operation-join@2.10.1':
     resolution: {integrity: sha512-CGed1nSPvKsM8rvj/4KFME0lLnzlDMMEU+xGczu+BZW4FK+Z6RyBtHIUmy8SgFvNP1GXz83q8KnoecF5z8IpjA==}
-
-  '@comunica/actor-query-operation-join@3.2.0':
-    resolution: {integrity: sha512-F0gublbcoF0Q5JfGgY/cLm03rGxtB5Z1eAP+rwJwHKl1a50pi8NB6QdP7PHW/akzHIujS5qdeXWD0Fc+LUHqiA==}
 
   '@comunica/actor-query-operation-leftjoin@2.10.1':
     resolution: {integrity: sha512-j0RwdoiV2WsCQnxcSa//m5FZ+ZHDRBm6ObsgpqS44WxzpV8rIB6Dq/3UxGgE7D2vK400JaiiHa3dFiHTwDF18w==}
 
-  '@comunica/actor-query-operation-leftjoin@3.2.0':
-    resolution: {integrity: sha512-+9C5VAMsBYu1DyJCOPZdEJusbQIgP4KQ2fLO6Z/G8EnYUHQckZWuD3KST6iPmfq2e7IcJCjUbsmclogIMcLhFQ==}
-
   '@comunica/actor-query-operation-minus@2.10.1':
     resolution: {integrity: sha512-rUvHbc5/EUWMSJUgOEtxabCJ9IT9YThuG0FhcQk+BGRPGmsv2oz8uri5urKgCjfVXMH/09hRZksiDMqrmkQmZw==}
-
-  '@comunica/actor-query-operation-minus@3.2.0':
-    resolution: {integrity: sha512-EpTMCJanLzQ1w4Ez5TTyUrzsMcx8AtuYR4B4sxW9tDMhGIip0jvygOSobK/9ijRu6iNbqlEnx06yo2CY5/9A8w==}
 
   '@comunica/actor-query-operation-nop@2.10.1':
     resolution: {integrity: sha512-l/Z8Uuoq3AlSoxkgYjrP7O7Xc9h8Y3ZOh0f7UKCuAST3U5vPQ3k1YJckrRtdli8s0NHptN9TfZjwviEHuYbDFQ==}
 
-  '@comunica/actor-query-operation-nop@3.2.0':
-    resolution: {integrity: sha512-UaObMdxe6fBrO8fLKwT1/M58xdBj6NJ0B80cjBIixsaAj5tfLWoCo4ElRW010o82HgfqMb6OZoSacszdOneBaA==}
-
   '@comunica/actor-query-operation-orderby-sparqlee@2.10.1':
     resolution: {integrity: sha512-8D2JmCsBtqJC29zfiaAXNzZdsKybhDFo2F8iTHul3nQHxBC2CeKDrBnY70B/HpbWxkDE+pwMfSTEFc/CvNZN6A==}
-
-  '@comunica/actor-query-operation-orderby@3.2.0':
-    resolution: {integrity: sha512-HBIdQPKkw9zjF/4S8XjJf9Ml3g2Qmwu23XfbtRb81lR+w3XowwGf0mnqNvP7PJvZXa3f6VpqeD4hf9d0vbSqNA==}
 
   '@comunica/actor-query-operation-path-alt@2.10.1':
     resolution: {integrity: sha512-y1AHtkibThqHve79wAriXqrZ6hdLBhcdwyOpVqqEhY19a32P97Xv58bOwOkNeLguYdn/5CFlCTHz6dnzxUIoXg==}
 
-  '@comunica/actor-query-operation-path-alt@3.2.0':
-    resolution: {integrity: sha512-g1G0Y6Ca6f8CMQBicRU39V1X0i5MkyXo4nxUHgcgAUZlX4H/mbTFL1ub2h/RRxxUlOeSIoJh4gu1927xiT/kDA==}
-
   '@comunica/actor-query-operation-path-inv@2.10.1':
     resolution: {integrity: sha512-pd30Ug7bOAZ5amfA3I6v+cpitlDn2i5fE1BA006LYJISCAHSfKEgLmU2Q4ZPbwi4s1A8WKKLV7Q389Ru3Xtziw==}
-
-  '@comunica/actor-query-operation-path-inv@3.2.0':
-    resolution: {integrity: sha512-LWX4v7Hdxn6ECJN5ziVzPnRFHrhnE/fxrwt5Xd0eEJ//gKa+Q2EvHWMr+fZ5d2aj5Gt5VORLXyR26nudU278Iw==}
 
   '@comunica/actor-query-operation-path-link@2.10.1':
     resolution: {integrity: sha512-akujCHvCLmxaZ3gw9b1odDcqqAQnbbr9E8dTWLZyMJ4Mei8q/FmfWTF5MjGuQOas4UmQ3mm6gcqAKRZnJqlXNg==}
 
-  '@comunica/actor-query-operation-path-link@3.2.0':
-    resolution: {integrity: sha512-kFAPlIG1TXjc9pVuHGe++GtUduRdUnvED/rjCZRUyi5kQ3EAsRN/+mBnnA9K0IFvuqOXBTPyl/E6vX+jiVx41Q==}
-
   '@comunica/actor-query-operation-path-nps@2.10.1':
     resolution: {integrity: sha512-5X3EUzn6Cygz94gNn1XWQQUZVp+de59sw8/rxPQqgwzdi1Y1O9zrLv+/7GqMJoLz6MHmDSgsceTIY4eC1qmmOQ==}
-
-  '@comunica/actor-query-operation-path-nps@3.2.0':
-    resolution: {integrity: sha512-3PccEuWOkCdG3V/8h0xuxemN1X2HAvddzuCG0IVqZXVa4LcEsqGy6WzUaDQ4nnoHO3WgTVNiuxzIsVsLYuoUpQ==}
 
   '@comunica/actor-query-operation-path-one-or-more@2.10.1':
     resolution: {integrity: sha512-SkQeKESQqZOlzuMIsipcZ3ni7YfeyYMZCOtxC01HFbeyq+SDVbyfYUZ4Dd9uAi/g3InyzJRfou4csxHS8g7sHw==}
 
-  '@comunica/actor-query-operation-path-one-or-more@3.2.0':
-    resolution: {integrity: sha512-cWUsO2J+SO96zbe9OqTMwaU8zuvTP4EWmvK5oEH4Y77PooqxX0beN7Yxq+mOpeoatP9cF7GuUUE/aWLPS0ivlg==}
-
   '@comunica/actor-query-operation-path-seq@2.10.1':
     resolution: {integrity: sha512-8TYLdVYaq9oMd9cuLFay78103bOfvygQU/C8NtPdLI9kkRWFsBatvaKmykHOHQAvaLgNhniOlrIJNEpepZGnAQ==}
-
-  '@comunica/actor-query-operation-path-seq@3.2.0':
-    resolution: {integrity: sha512-O4eBLRwALAOd3Y92G6afjKRvls17T/6Q7Ed8d1LsAErGQd1UhkAkxnXRt/4y4gGSrrm9b0X2VovkZPFj6//okg==}
 
   '@comunica/actor-query-operation-path-zero-or-more@2.10.1':
     resolution: {integrity: sha512-DtqBSw4LV1KI3q1YYAwgXlWrz1PO4EUpe/bVri0UB3JSQnxjBMHuJlHn2crC9Z93tmizneXxfvtWlLSXRrehsw==}
 
-  '@comunica/actor-query-operation-path-zero-or-more@3.2.0':
-    resolution: {integrity: sha512-BVW7sbOYQgdAuOF7o7DZo9eDj88rslJH0IIVZK+wZa8qYv3N06wJTTe+hfGqAUDu/Upt5IMv7RpmcHeTgIRvIQ==}
-
   '@comunica/actor-query-operation-path-zero-or-one@2.10.1':
     resolution: {integrity: sha512-qePX+7iW5DXDwaYO210y7jhSU32Zk82S5UHuLLvd4q4HS1Z7j8e4KhukbeZKzQmOsO8S5JOHHM9vwvsOc3GPlw==}
 
-  '@comunica/actor-query-operation-path-zero-or-one@3.2.0':
-    resolution: {integrity: sha512-5gCr4SNcg8Rxrj5toGopfGQ22uEHxUcEELO7dp2myMpy+kbx5o3OfkhQLJ7b6or6wGIMpTazTpuytQi6jg5caQ==}
-
   '@comunica/actor-query-operation-project@2.10.1':
     resolution: {integrity: sha512-KAaPl4GFIQMWR8I8OoJroktGssPKGbEEJHyGzTuYXrmJrcXgknOxf5IUSVJNpaFfS6dshT6nqW+ciT+wRzz0Tg==}
-
-  '@comunica/actor-query-operation-project@3.2.0':
-    resolution: {integrity: sha512-cmPSGqnSTuAmQgNDGkMn7hxcCe2cfjM42xqav34KItjZJ74zZmsjr9NKALArDDL60K8sUQ0d1zAWkZUqCTnkfg==}
 
   '@comunica/actor-query-operation-quadpattern@2.10.1':
     resolution: {integrity: sha512-RZj1TXW+VDU4aYJVnSzgs8q0340e+YUeGLtoY9sl0Xzc8YNaIus4nXRUz/KfOXDknxm1q+a4Bof4yHNgXtb1Hw==}
@@ -1046,23 +680,11 @@ packages:
   '@comunica/actor-query-operation-reduced-hash@2.10.1':
     resolution: {integrity: sha512-9hX25ztkbNxnaUd7Gtilok+9WJkr/s3a3y4axLoYX4/nOogYN+nZRKChvNSn4qn/lWvpG5VWv4+q0en1fP+AGA==}
 
-  '@comunica/actor-query-operation-reduced-hash@3.2.0':
-    resolution: {integrity: sha512-79CcRBtjj8R9doin5LaglX86zYiuv08IrnJ1cz9jZYV84KlkL6W+IA4xbgo+8pOrd64oyuhKqrjbSPmwHR1lZQ==}
-
   '@comunica/actor-query-operation-service@2.10.1':
     resolution: {integrity: sha512-GvpvhUmhkVFOCLrmcblgIPqi91XPRog5WkC9NFMRCToaSNAMQq82DX2dvwzn3IFItcmyZrmy+GYoaQ9miK2uVQ==}
 
-  '@comunica/actor-query-operation-service@3.2.0':
-    resolution: {integrity: sha512-1ncG7gDzUqM7bkYAKw87WpV4BoWFbs+2q+CpvGVhK2mXEtyJ5BxDVvtsmYPoungiUoLi8dO2a05jwUuQDzjZYg==}
-
   '@comunica/actor-query-operation-slice@2.10.1':
     resolution: {integrity: sha512-KOBnTIUvwf28WB7oHevUC/xciEdH5gLg7MN8DvamkAkUiUjviEsRpkswUiD8lFe1dAs0ekA4pC0NoZ8BWp3uqA==}
-
-  '@comunica/actor-query-operation-slice@3.2.0':
-    resolution: {integrity: sha512-7xmTTZvwoSxqjB1Dg8HDeql1cs63IU0lajDshyQB+7QjcjKk7okiiEIp1bJQ/bEK7cnQh3ghQy7ASBkX1a8IOw==}
-
-  '@comunica/actor-query-operation-source@3.2.0':
-    resolution: {integrity: sha512-1pCTabkSrtml5mI0JohFbNwNikv0nWJJgmCoEV5eHRqDZjoeWYWY3vNQ2DTBcugp61BOIFIvWjp2azQ3TngEmQ==}
 
   '@comunica/actor-query-operation-sparql-endpoint@2.10.2':
     resolution: {integrity: sha512-nbBzVHhYHUu/9qg9ZzTw7rKvsRb3ViBvM+Fye0oMXojZUbyu2WI6eLFUc2Ze1/LYDNf/1KHNpkg6OdsiEi8HFQ==}
@@ -1070,23 +692,14 @@ packages:
   '@comunica/actor-query-operation-union@2.10.1':
     resolution: {integrity: sha512-Ezi2bAa9r6yyffXDDUPLlKoszsXnuhDUeQSQuU3c7JEAcwip3wC3zMNkavowwfRZ/1D5doitmUEdw2lAd+xloA==}
 
-  '@comunica/actor-query-operation-union@3.2.0':
-    resolution: {integrity: sha512-FXrns4QXpiXzXJA0R+zI1RH8N/urjduC6qZGST0Y7Rm20eHtMbrmzLjxoq2YXHKuyWUMUVuTKXwAaxVOdkNh/g==}
-
   '@comunica/actor-query-operation-update-add-rewrite@2.10.1':
     resolution: {integrity: sha512-is3mrCPciExrlny5JbCvB011kUNYE9/fzQc/zmA3h24S5hHZbygA9mSS+dI85IwwqdKPYlrEqfn8c0kCVWMKyw==}
 
   '@comunica/actor-query-operation-update-clear@2.10.2':
     resolution: {integrity: sha512-+sf6+LvXdKBv2pCuBH/ad5QdpheZSPEvw19UoaPQRQyQVBzIskOtfs4rwJHSn/YmoqhbstKZszakad3oxWwTTg==}
 
-  '@comunica/actor-query-operation-update-clear@3.2.0':
-    resolution: {integrity: sha512-o2iJRRFcH4iu4MfGtd3eplLP29tBiXDI3A+99g2j8MFOjx9li1K76/i3hCp/IuArwRVvKKywHCH8b9zSzSKFig==}
-
   '@comunica/actor-query-operation-update-compositeupdate@2.10.1':
     resolution: {integrity: sha512-IVNouBPFQLOczhW3qHyEoyxWrc7wnVT2vPwRHEaGlfnSiYAX42XSNLb9jR0XjB70wh3Civue4Ovs3upOXdrN3Q==}
-
-  '@comunica/actor-query-operation-update-compositeupdate@3.2.0':
-    resolution: {integrity: sha512-A5EOe8R/GhkftPa4MZwkLhZ3DInr1yGZHd3PP+OLjOid4wPE+PUHjHqs/RGSe5tsUCD+8uld6uiyMR8zGh5Cdw==}
 
   '@comunica/actor-query-operation-update-copy-rewrite@2.10.1':
     resolution: {integrity: sha512-l/3AM35hjahyHmiLoB3FPm0Jlhdmd/vqgOGj7V3Ra+TfHo5h8XOB3uzG78Q06HQNw4iyONBZc5lLlYXkzRd5lg==}
@@ -1094,26 +707,14 @@ packages:
   '@comunica/actor-query-operation-update-create@2.10.2':
     resolution: {integrity: sha512-g3DwLkYFTU8uZoIOV7oNPWStBmqvnBBPvLngG19MQQezuVoh8w88efxhbN0B/khi5/v4qcLsr7C0ffAaPF8Fbg==}
 
-  '@comunica/actor-query-operation-update-create@3.2.0':
-    resolution: {integrity: sha512-5q82/s9NSyo/PQpy9yws8Q5R3qIOIvd2HMXlkL6GrRzMOsSjCqZRFZn9Oek23YyM61O9G5DGReL9gb4s9kxcYg==}
-
   '@comunica/actor-query-operation-update-deleteinsert@2.10.2':
     resolution: {integrity: sha512-FiRCLUAxkDoFpOe9jKC5llI7njbFdb1N8McRvZjBazUS4XDutjTZEkcKLs6AcRyG3esfHt6gNm6PqCuZ+aP8TA==}
-
-  '@comunica/actor-query-operation-update-deleteinsert@3.2.0':
-    resolution: {integrity: sha512-+0hGNGWYHyplP58H0nkIg9k3xfVTqP/TDe1SCLs0YDL45MxVY259/rzwOmQU2hsNb9SY5UY0puTCuxP40+9N2A==}
 
   '@comunica/actor-query-operation-update-drop@2.10.2':
     resolution: {integrity: sha512-N/878InwoyQfysjCyo9r+H82eUlNeEGODJ95gCvzF/QGRc11N3dfcd3XijyHQ9OKAoQ9oR5gcS829LB3BDtKHg==}
 
-  '@comunica/actor-query-operation-update-drop@3.2.0':
-    resolution: {integrity: sha512-JSi4kc1rANifUSgRwwlK2k19+RweoCOK2QflBfZZM3xoRtZ/NMs/dqONM9ULbmpzEhTexqm9ISZYniqt7DfKBQ==}
-
   '@comunica/actor-query-operation-update-load@2.10.2':
     resolution: {integrity: sha512-lQb5fxb1+ZFbQkylmepze+e+LtVmVNvAvFBvjxUSfCT62uIKKHMeh1So5kTrGD0Co4ABCs1h6o9WB+8yQzFtQw==}
-
-  '@comunica/actor-query-operation-update-load@3.2.0':
-    resolution: {integrity: sha512-XXTb3HX415hI8VxRz/yZTGT3Zw7x/3pwHtrPy/py/jVb6FDLRkLDvjTC2t5Aq4faVddTOhy+RSdZjuvHMain2A==}
 
   '@comunica/actor-query-operation-update-move-rewrite@2.10.1':
     resolution: {integrity: sha512-GDLSHG2++EAAyUKhDu+mM6QfMTuzM8dS24HqeQL5Wzbkdc2KTmNKyJuhJw6SfXr6EiF/kxf1GPY6zwjcwACx/w==}
@@ -1121,218 +722,95 @@ packages:
   '@comunica/actor-query-operation-values@2.10.1':
     resolution: {integrity: sha512-++9IgCVCQPIF8fzZLmrVpxPj8eI9TvkLshHAugQQBnhSijrDMUudW9eoA+eFmCaD/Ru7YtlKe3OJzRGV8FCG+Q==}
 
-  '@comunica/actor-query-operation-values@3.2.0':
-    resolution: {integrity: sha512-gXx/E5Ny8qUjUr+LiIKgwIzDbr6lauyP6pSRsPkyWxb7/b1/V4HHoUWcXAH0r6T/v6t5Iz8vdHh0rnn/gXb//Q==}
-
   '@comunica/actor-query-parse-graphql@2.10.0':
     resolution: {integrity: sha512-l3RrkxElDYV4weXt3vpC0Q0She4AhbvPbPDronQulgN9nFAZhz4z9k8800T5uWMsL98wHNNXDFlnFk5S38lsow==}
-
-  '@comunica/actor-query-parse-graphql@3.2.0':
-    resolution: {integrity: sha512-bLID/YTpPF6rzh7pnBPuFiu1+nA4O2H9geFUP8I+EvSICdaDY6Aj1zG8qb26zE3oNvG+u/i4EWIvcUFogO4UAw==}
 
   '@comunica/actor-query-parse-sparql@2.10.0':
     resolution: {integrity: sha512-DUVAuSSNn0AyvLruOpRpLZBsr96Q4LuV1gcO+alKZALtfOZikRKY/3sXz1NUkaRQc7qDH9xFFTFrfJd0jLvlDA==}
 
-  '@comunica/actor-query-parse-sparql@3.2.0':
-    resolution: {integrity: sha512-3Q0iWc4qiQwW5FdBgaBhMnW7TGjCvF147fkQ8rKF9O5DYsv5L+7m17W+ejTcRzazfuAhFq/m8aoOzjtxvs+9kA==}
-
-  '@comunica/actor-query-process-explain-logical@3.2.0':
-    resolution: {integrity: sha512-Qarw8De5K5msyXtVXHRmh5B7nAAPF4EDQAJW81ekGiZOigT/WknIVyz7mKSGL8639wawL+n6jW9RKE5BEdGB/A==}
-
-  '@comunica/actor-query-process-explain-parsed@3.2.0':
-    resolution: {integrity: sha512-GEkMMVRdESmvmYYNoVKE4hLT9Az9K6dem9lJbM3IzaDqueShmr7pBBz1DYMdEw44EhANl+i/1JppVPkEYVMsow==}
-
-  '@comunica/actor-query-process-explain-physical@3.2.0':
-    resolution: {integrity: sha512-xDwTp5+cvviO9Mmwn7TEND93zGHgvLxZWiPIiGIc1E2c+jnrX1LkUx/yU4UDOqfeLv+kmToGh+jEZGZ2dNA9aQ==}
-
-  '@comunica/actor-query-process-sequential@3.2.0':
-    resolution: {integrity: sha512-5Tuec7sL2YJ4NECl1gD771bF01gPUel7Be02KCzDCOjfLX1WgeJBCgNN24N2A+TTlEEikDmkdOXthRs9+fiJEg==}
-
   '@comunica/actor-query-result-serialize-json@2.10.0':
     resolution: {integrity: sha512-GuVcsOEhKgnVPT0AaCn8sJl/Uj5UUjUktEJpuMx1UAYt0//jcQsezJslYWmJrfXE/WJYidynyDxm8z3+jwLF7A==}
-
-  '@comunica/actor-query-result-serialize-json@3.2.0':
-    resolution: {integrity: sha512-DISSDoEHTjmJL2d+JhP+L2ulPxWo4h/ZqbdRw7w3QPrYTzjMkERS8jR1d/HDX4wkUxa8JhCcaWM7Z1kzGhtBvg==}
 
   '@comunica/actor-query-result-serialize-rdf@2.10.0':
     resolution: {integrity: sha512-TBXJrDs5brRMFg8UisXS/F1vJw8nUtLhjugNZcd4ST8J965Ho1aNopydp4PMmwINMRxHhHtWJGwIB2Z5xD2lDw==}
 
-  '@comunica/actor-query-result-serialize-rdf@3.2.0':
-    resolution: {integrity: sha512-34nMR0IjM6CpF1Uy32JX+CDuuL2/ZfElV/NB1wAL1U96n08HoadkQH7FEY3MRhCLAXxHNqPFjjhxaW/zhSXZmg==}
-
   '@comunica/actor-query-result-serialize-simple@2.10.0':
     resolution: {integrity: sha512-pS7+aB9Rym1B5oi+O68NFjEq+EwpCRYtTIxGBp39CTQ0F7m4edt9QwqmARqveJPryK5X66ACvjxvutEaTgWI8w==}
-
-  '@comunica/actor-query-result-serialize-simple@3.2.0':
-    resolution: {integrity: sha512-LZ3+IQ7uJQOSXl412MEnXq04Sv31+6y+PS6rSLPtzYplcEeGUYDUrFz9OX+nEZhcFVWG6cnE2PXEPwd+1jkWag==}
 
   '@comunica/actor-query-result-serialize-sparql-csv@2.10.0':
     resolution: {integrity: sha512-Vk+7oTIPigDENK3CnV56vLfvMZVjHc3p2F4a49WDHfMgRrfQKJSQkx603vjW35n3tmUB8JSgRXr/+v7LK83KYQ==}
 
-  '@comunica/actor-query-result-serialize-sparql-csv@3.2.0':
-    resolution: {integrity: sha512-yLb1xU6nrU21LFzHENiWcapliYem3EqfYJ7sYGvaFVS1uo6hEaOkwcpQMd+qOZ0biq/vhWBMXl2DHFbI++R8Jw==}
-
   '@comunica/actor-query-result-serialize-sparql-json@2.10.2':
     resolution: {integrity: sha512-+J7SWXc4nXHzmQMk6q8MScrLNKdqX+/xQe6XCk0zDbDAt3/8EJh/2ROYFp4fEQyPDFWOwN4xpALgHRIh8PQRAQ==}
-
-  '@comunica/actor-query-result-serialize-sparql-json@3.2.0':
-    resolution: {integrity: sha512-4/AJA7zJwOoJCGSk9QsZ40libcIvl1H4EC4nchPmLs3sgQU/35t0sm+BLdcwW+B2YvFr/4BakUBf9lBzGQRaXw==}
 
   '@comunica/actor-query-result-serialize-sparql-tsv@2.10.0':
     resolution: {integrity: sha512-TgA2WIXKdu/SrbHEP8HvGoLjhDOZnBoHsGsLFSHpxY/Uwk21rZqJLBEkhuhkUtGYzQPJ1n6Wmpjz9lBrUHGJPw==}
 
-  '@comunica/actor-query-result-serialize-sparql-tsv@3.2.0':
-    resolution: {integrity: sha512-opUcSElGVo6cqmpe4RYvPoNt+6KpijSeystpjnr787yA6s7dQcplH86hVL3Z1sGRuB5qo96WtypTbsoT0hcEng==}
-
   '@comunica/actor-query-result-serialize-sparql-xml@2.10.0':
     resolution: {integrity: sha512-8RDj5ZN23HnIc6zI5pD5XKi2pyg2cx6DhI7VDRcboi7v0DxfROuQqSEtbQ8m/W6Pngdz01ySogRcIVJCzRzBLQ==}
-
-  '@comunica/actor-query-result-serialize-sparql-xml@3.2.0':
-    resolution: {integrity: sha512-jZ0R7X+6MaLEr5JN/vs3nWC5+A6rrn5psGLdM1ZlVtDkJaFf1lK9mm1HxGSD6GhZsYkmdNn2AWiSgbp56lEc4Q==}
 
   '@comunica/actor-query-result-serialize-stats@2.10.2':
     resolution: {integrity: sha512-jhj/vLDRxLuRMonBaqICt4saM9/UO9wJBT3Jxk7Rp73aQWLo+lILXKzcWpuxkh/EFx8raLUBmbjWCduamU1DzQ==}
 
-  '@comunica/actor-query-result-serialize-stats@3.2.0':
-    resolution: {integrity: sha512-mgHFzbpIubySm81EukbckpDoExI+1SwcZeBg7oWTmK6rU2Jj5M7Z89BL2dLewqtVfCNxQlA/PeeKb6xFC2b+SA==}
-
   '@comunica/actor-query-result-serialize-table@2.10.0':
     resolution: {integrity: sha512-AAPrgM/rbsSThRu9jkfJhBUeTUwQTLHNVbIn8El+Akvz+Fueoi6oSi3SslpPMHOvIUiOAgCZ05f2RbBLlhP03g==}
-
-  '@comunica/actor-query-result-serialize-table@3.2.0':
-    resolution: {integrity: sha512-cdgpVJnherk//i0KlklZZ8snzSDfmqf/TfcXl7X8O0+BghhXJ6OZ5eC7MxNwQTDlggBKmyU9iX5u2T8jkmm0yg==}
 
   '@comunica/actor-query-result-serialize-tree@2.10.0':
     resolution: {integrity: sha512-sEyIzoSTV11YPY6r4fn6fwrf3WjLD6GrwXMTuevsDAKDYaMYxyriH3T/LMLLBEURy8SLD1I1Fpw/qaZisRmLTg==}
 
-  '@comunica/actor-query-result-serialize-tree@3.2.0':
-    resolution: {integrity: sha512-JGdUwGJpiIxSoHsWYZSdjHZhdbLEXlE7eKfTXsLH+U8dNEZ1sKAh886C3IBAxv5BfItiA/NWI23xt+Y2SDStRA==}
-
-  '@comunica/actor-query-source-identify-hypermedia-sparql@3.2.0':
-    resolution: {integrity: sha512-5nTezAS/ljNmLsX3E0ncIJQfSPXcfY61qLTpkOjZMg8V2yB/1IJB7Af/6+RTgcu4uuLbSeezUoZO1jJipuRlaA==}
-
-  '@comunica/actor-query-source-identify-hypermedia@3.2.0':
-    resolution: {integrity: sha512-gtqdVLtXCVwks8a7hoMKrsCfadHkrOYfWwmQRlJZA2rots5WeDNys4Kn1pJu4ex2T31Xp1rftJ6o5hc8YlEitg==}
-
-  '@comunica/actor-query-source-identify-rdfjs@3.2.0':
-    resolution: {integrity: sha512-eltseOlfE3AblFK3vO8vYDmnm18JpcnOQUOjy3muJlNV1TrJb+Bol1ps7sfijm6Dwbyf860xG6LnCxcp7XOeLw==}
-
   '@comunica/actor-rdf-join-entries-sort-cardinality@2.10.0':
     resolution: {integrity: sha512-6dd/29q6QuQN2Ap090VA0KUFmmnHalPxFJb4MGh5nIbWZH0F/EvI+uK5vPx29cttr1yXL5u+MbJWaLb3IxwILg==}
-
-  '@comunica/actor-rdf-join-entries-sort-cardinality@3.2.0':
-    resolution: {integrity: sha512-FJMQS0IvddMy6Cam+CYyAU7R9oaV8KCLjcY2cRMCsRpkUDoMZx5+8VMk0uMjLnkCDiYpW3Z1DLADcKbNdfOMcA==}
 
   '@comunica/actor-rdf-join-inner-hash@2.10.1':
     resolution: {integrity: sha512-nUtdS3NJGKSJQC8KjDVz4TEDmkXHBYQi0/bwnAXCDl1phhq8lgv+YEmRDNe/kuCze7HyqEt98rlSJ+ZhvcHXVQ==}
 
-  '@comunica/actor-rdf-join-inner-hash@3.2.0':
-    resolution: {integrity: sha512-T79SzUze9TB68TjA/VL298gADPbiYY+ZQfGhHrnKed4NTgT2UJf5A/MdwKlxTuE9VA4DehdOjWsoibxu0Q4u3w==}
-
-  '@comunica/actor-rdf-join-inner-multi-bind-source@3.2.0':
-    resolution: {integrity: sha512-1ABdS4BwgcX4aS7txDW+alUi+5VBFa8Aq7zaRNf/uRWz5uhwGxUJ7bkvvt1xdLk1AnMZrGrKej5qTqfDdlSsTw==}
-
   '@comunica/actor-rdf-join-inner-multi-bind@2.10.1':
     resolution: {integrity: sha512-tNZ2Q7z44Yr0iIFkvtTVAsts4v0IoC4b0FYaIUeYav4y5JOlR74hWWijTAzVfb31dTMsAp3r+y0xGIdd75LRHQ==}
-
-  '@comunica/actor-rdf-join-inner-multi-bind@3.2.0':
-    resolution: {integrity: sha512-1ZeiB45gLGY45ySHd2xUQX3068O7r7rZqCy0yiUa+wqqXXV+qSto7njJaL+6D6LvgZ2xIM0xqSLXJE7XkqQzJg==}
 
   '@comunica/actor-rdf-join-inner-multi-empty@2.10.1':
     resolution: {integrity: sha512-z6a3qENwuvSU0PvqOySrsHsWSUvzfWd1xIYwEvKuEIJ9vYPoefIUgggx08E95ZF/k+PxZ0vKEywFpBSUKUzGYA==}
 
-  '@comunica/actor-rdf-join-inner-multi-empty@3.2.0':
-    resolution: {integrity: sha512-WEFUYKyQqQNCtZnaWVL/DDS1EKZQNdPspy62v4zIc0gVq4bOYSsbIid6uXD85tYRiBwZXBV5zyUFtDhUGcwZbQ==}
-
-  '@comunica/actor-rdf-join-inner-multi-smallest-filter-bindings@3.2.0':
-    resolution: {integrity: sha512-k7eT3oFb/ptdf7QYgSbtI9AynO/BmAhcYcrATwZVwH8oeT4wNgNYKGT2kf3ime0GIFrm96ghT+hcVlV/2Yo3JQ==}
-
   '@comunica/actor-rdf-join-inner-multi-smallest@2.10.1':
     resolution: {integrity: sha512-MXwIvq+viDCmsxJwD4+fwMhwZINWva3jtQ3j5ne6DXgZYUJUFOw3VujvCP4/cl075RuSxYlXgy6ETHLa1TNr7g==}
-
-  '@comunica/actor-rdf-join-inner-multi-smallest@3.2.0':
-    resolution: {integrity: sha512-f7cqFhj07arQvBBKCOdfvzYoC+Sf+SXGtPScmh1Q7y7V06vBEfw/8RebyNHFdMGzeJsgOikepQ8pV8VouRNKDA==}
 
   '@comunica/actor-rdf-join-inner-nestedloop@2.10.1':
     resolution: {integrity: sha512-nFjGMrAIrRjRcsaU8UQXLbsDODVdf4LDpVNVQIrjfoWzhOIy13ApDQrqtuObaGVfryiFgt34zVEOwMWezWzl0A==}
 
-  '@comunica/actor-rdf-join-inner-nestedloop@3.2.0':
-    resolution: {integrity: sha512-YCRt5gMDznmEqg/bgj5m1BhIw0Syg51oC+PUMpi8x+yLBG4TCZ/QDzIGyYmuJZP3ZTSexGDOykB9FgXFCGFE4Q==}
-
   '@comunica/actor-rdf-join-inner-none@2.10.1':
     resolution: {integrity: sha512-4mqsuqvLSuXMbgY0PghqK5hmBGH5YkRTwUOpGpBE0EVQaiAoQOME0uVslkt2TBzUx5IQJC+trr/80sbA9mAhMw==}
-
-  '@comunica/actor-rdf-join-inner-none@3.2.0':
-    resolution: {integrity: sha512-kQBIyHxj24rgvZmddgSBdig+3rjmnkZE/eD77NNAlVlj0j+LqDimw8VngTzeXzXeezIvYFS/Pry5p7Gp9Knm6w==}
 
   '@comunica/actor-rdf-join-inner-single@2.10.1':
     resolution: {integrity: sha512-RfnwTEsuXNdR0cNRWaCvNPlfD5KyuScsc/55j/9mr8yqGUTE9h9Om1Is5u7xnpRMxGOEqwVP6apK3ZxsZqlL/w==}
 
-  '@comunica/actor-rdf-join-inner-single@3.2.0':
-    resolution: {integrity: sha512-4ZpmZ70xTh5mZhZZrV382Tn4vdLXDwVtjNrSBM2IyvuEEoJXFPAp7jYspMKSsyggLYBwo9QSo8b4V8wnx7IG/g==}
-
   '@comunica/actor-rdf-join-inner-symmetrichash@2.10.1':
     resolution: {integrity: sha512-beFGkMUe3pTADtMXXPU8ab/IMULj+Hkg3Iah0zgrVZgwWH1Kgfkj/2qp32Ll5y9qcRbio4ruruKlHNXJJUU46Q==}
-
-  '@comunica/actor-rdf-join-inner-symmetrichash@3.2.0':
-    resolution: {integrity: sha512-7f92WPtAzftmbQh8l9/qUH+34k+mgci4wc650VposIClXhXhqDytX6lYUeA424jcvxwaern8TcZlxQ514T5ESw==}
 
   '@comunica/actor-rdf-join-minus-hash-undef@2.10.1':
     resolution: {integrity: sha512-tz5LdeAHnylEQIq4bRfFqaH89WZXkkdFxEshqxWijFBp5wprUYiotMDrBo9zDFaPquhs42fILtTzLY9yaalc9w==}
 
-  '@comunica/actor-rdf-join-minus-hash-undef@3.2.0':
-    resolution: {integrity: sha512-IenqlNCS4Oa8D4NQiOKKc8XMXIpMG37ewb09W1SWEpagtv5hO0Upegh9IYBWVQqBGKNS2CUyR6QpuMtrggi0QA==}
-
   '@comunica/actor-rdf-join-minus-hash@2.10.1':
     resolution: {integrity: sha512-wIaB/EpuySaARhimoLzrE0cTH0TgVkL43IAtYX7ECwH9Qcv8blO4zbL4q2KUkY7OKZRM892aqMfo3kO1vMIK7w==}
-
-  '@comunica/actor-rdf-join-minus-hash@3.2.0':
-    resolution: {integrity: sha512-BkViDtOsXgylgNTEWCrSAu3R0L1hzOpwWkBCK/meTkBFuxn+AZkq+C7A7NKU9RKvb4rflXmUBQUxFzrEMCfY6Q==}
 
   '@comunica/actor-rdf-join-optional-bind@2.10.1':
     resolution: {integrity: sha512-6dOoI/rzRZ0RUyv2WlToClE42Z2YJE5xcSrot7haT2eMdxbzr1KjyasHBcIIkSK+WViDO006lXZ1Hi4tJm9uuA==}
 
-  '@comunica/actor-rdf-join-optional-bind@3.2.0':
-    resolution: {integrity: sha512-hopy6JJBQRaPF73julTHrlbR2M4nqus1xqh7HkZlURdn0V0PoXfzW0TTL/qBQfJo+k2qgPSATj4bShEjIAX6aQ==}
-
-  '@comunica/actor-rdf-join-optional-hash@3.2.0':
-    resolution: {integrity: sha512-fE3bCnuvvwBS38iIyA3LyJrKAa7NW1YLQxul52h5syhTsLZRnoDa6L8W7JkF2+pooB3fX0vBUNBLyCST+/g+GQ==}
-
   '@comunica/actor-rdf-join-optional-nestedloop@2.10.1':
     resolution: {integrity: sha512-d7KUDjEKZszizd4SBvYkK2A6lScrq9ciEgzdrrp6IYZhIGAhJLTgPNg3Js3NEjpE7oj4KWl2WwKJe2sWcJbKJg==}
-
-  '@comunica/actor-rdf-join-optional-nestedloop@3.2.0':
-    resolution: {integrity: sha512-pVhm9NhRKQTsHOoT9O9ZDzow6gPxHlRIKaBjR2GJXhM0Gl12Kac0KpymDWvOAMh0r4FbLHVecm58WlUS9r+VZg==}
 
   '@comunica/actor-rdf-join-selectivity-variable-counting@2.10.0':
     resolution: {integrity: sha512-D7tdzxA93bpZGXI5emJyvzk6LabeAnzcQMU/V5x2QwJxyoNr+LFbesBHDDP3/u4UJwmeP0a+dU0e5mbpJujSXw==}
 
-  '@comunica/actor-rdf-join-selectivity-variable-counting@3.2.0':
-    resolution: {integrity: sha512-B4RIpi2jW109nkZ6k7YA15LA+AtoXWHqaHh2R1pRDOpNjiCY6U65WuaAEAX4OXtV02OBA9R8wcAFNNGMf5VnEw==}
-
   '@comunica/actor-rdf-metadata-accumulate-cancontainundefs@2.10.0':
     resolution: {integrity: sha512-N3rwX4kT9rkW+89q4xCjO3KKG0DbeNIyeMWDzeh2vTw8nAXYyTiPjHYvx/6VUMzhFUWF+50VtVv8ZJPO6nEapw==}
-
-  '@comunica/actor-rdf-metadata-accumulate-cancontainundefs@3.2.0':
-    resolution: {integrity: sha512-O+F+eafJU/QOVH8mdhRuhbKmupB4bcQk3kFvwkry2PjUVO/wKyKWNULaZoXSe6DEEOtodUEH23JbFYJ+afSLLw==}
 
   '@comunica/actor-rdf-metadata-accumulate-cardinality@2.10.0':
     resolution: {integrity: sha512-UpC5PbhzEDCAxTUqETH89uRaFRqmP6YuWt67OAPo5wocv2tQDs6/SdLwS695XnfeMJdfDHsXyoUzQg3r8dwydw==}
 
-  '@comunica/actor-rdf-metadata-accumulate-cardinality@3.2.0':
-    resolution: {integrity: sha512-V+4S98cbEgAbGR+ioG+EFJzyffoU7+i0iN9QJnM/w5FGjnC91em+oxLU6KjCtrPAkq8i1vyZi0tT2sY2UbXqGg==}
-
   '@comunica/actor-rdf-metadata-accumulate-pagesize@2.10.0':
     resolution: {integrity: sha512-r364CWGr5rMpV2ec3TsD+9Yhvi1JUuRXLBQqtgzjAPbpWjfDSM1Q4h0P1z9h3D+sdUMEX/0iGAY3AH2FjJAxwA==}
 
-  '@comunica/actor-rdf-metadata-accumulate-pagesize@3.2.0':
-    resolution: {integrity: sha512-32CV/hxmT5yO1b5T14gF6jVHHmfKszP/NtsK5Fm7OiHyVUdFmN+EIsKgwxyIqQ+P4J4dZfYpf6LffQPJWthUQA==}
-
   '@comunica/actor-rdf-metadata-accumulate-requesttime@2.10.0':
     resolution: {integrity: sha512-SpG7gxxAPoW2NbgyZ2UNpwluJ+IvCOYIRDTXmVTAK8bntav+/ZG30yfESFBjB3LmJEwAnktAsTgM6OhldohPKw==}
-
-  '@comunica/actor-rdf-metadata-accumulate-requesttime@3.2.0':
-    resolution: {integrity: sha512-xpSdXkW1gIxPk0XRiCHh3AgbvAT5L3MBWoTt4UtzDjQsbeAb5nu5cztSodqRieVe/B75ips9M3hWWlGZZstr4w==}
 
   '@comunica/actor-rdf-parse-html-microdata@2.7.0':
     resolution: {integrity: sha512-rjHJu5JDDmfA6Mt1eY4f7JTtez6MaKZ/LwEXmuB5R8xFV1/ikdMMuUr2B2eBuSv+aj/nNf+PlPo7R0d4IDzBGw==}
@@ -1370,26 +848,14 @@ packages:
   '@comunica/actor-rdf-serialize-jsonld@2.10.0':
     resolution: {integrity: sha512-u1M5N7BSrkhS461fV6QXKMh6TnvpoEiSHPru7wJg1kGqR9q3reuQeKLf/U23JDYb1kom8uU3R7aBpDIjgVc49Q==}
 
-  '@comunica/actor-rdf-serialize-jsonld@3.2.0':
-    resolution: {integrity: sha512-Tr65oCxOjmj/jkkk1zxDJE96Ll246kke4V21+05BsWPziQvh/4fM6BvJNuqSjDu5p0e1eWtS9/8oOKxynp2GHw==}
-
   '@comunica/actor-rdf-serialize-n3@2.10.0':
     resolution: {integrity: sha512-CoDktUI3YQuI7UBV+fQOdKl+5XjBx0XTOF9XxEDiNg5nwndEmDvq6C23fSHfkqX3/xDlnsuS/YysHAqXCrYoiA==}
-
-  '@comunica/actor-rdf-serialize-n3@3.2.0':
-    resolution: {integrity: sha512-J8bpUvgnxlmYzJ0eJY8dUZAeKqnyNIhm8K1wSaovo7lBASOPcmHEVbmxd6gGyoowlrtZLjGCwxZvm4XbfVTYbA==}
 
   '@comunica/actor-rdf-serialize-shaclc@2.10.0':
     resolution: {integrity: sha512-gp4bu4+aPtMk4bavXP27uD9X9bpa2F5u6/JtsaX2qwcqVI0x1tkVQOkm2RkUhafcHNj0Fz6lQ3aXmRIAQvaefg==}
 
-  '@comunica/actor-rdf-serialize-shaclc@3.2.0':
-    resolution: {integrity: sha512-Zupog5Rssbn2+FAgXFgcS3KK51OY4UT1+Q2nbPoyO0m3PCvZwzEuz7GNyxijN9pbXEfrUVz7PEDhXKPqh2i82Q==}
-
   '@comunica/actor-rdf-update-quads-rdfjs-store@2.10.2':
     resolution: {integrity: sha512-anX3SovvY2H8KwuWu8G9EqtITmCsz12jfqunNn5Efcch/bm4HyHTC1GThx77m6qpCdg4OMx8TLhNrH1II1UM1w==}
-
-  '@comunica/actor-rdf-update-quads-rdfjs-store@3.2.0':
-    resolution: {integrity: sha512-0cHqi9EheloYXIDK4CMBEgFfPeJac99Suq8cYAokHH+IRC2QztF/8kmL1Crmgxv3JRF4Mwe+3z8xcciaaQt9dg==}
 
   '@comunica/bindings-factory@2.10.1':
     resolution: {integrity: sha512-AUD3VWlCYljgk5jfaMejSIL9CiX3aV/cAn314e/dYP/rrnVgachcCwyaD8hKHWTBHDs5rcGxr/iwruBOfsERvQ==}
@@ -1397,32 +863,14 @@ packages:
   '@comunica/bindings-factory@2.7.0':
     resolution: {integrity: sha512-NeLbBmqiNhyUCZSfqZfwZD50dQ5+DABgPbzfuZnbHq9uSfhxAzuGCzgrK0hmuwRHWOPBtmeRnyZTJorePuxTzQ==}
 
-  '@comunica/bindings-factory@3.2.0':
-    resolution: {integrity: sha512-0/Yd7WABPpK6Ifmv2YFKHtu6vr3vIyKaE2dg4uQKJ35bJxQxXp7PyEYpmys93cKeDdokZl1ejd08gtt36jzhkA==}
-
   '@comunica/bus-context-preprocess@2.10.0':
     resolution: {integrity: sha512-eJ5CkzbnmxB9fkr2F05jnnjcaowp+yxd0+pAtvx5MLl2Kpx3nWLqHPcl4/EVVDPD+i0TEkq4AXQ1BD9BMuXK0A==}
-
-  '@comunica/bus-context-preprocess@3.2.0':
-    resolution: {integrity: sha512-lSmBfv9AZRKsVsLxAA+vc1yXBRWi/Czpps7cMUCQm4SGim4HQ2itGqfenSkqi27xg4uuTSsERqSLNEsRRSAdbw==}
-
-  '@comunica/bus-dereference-rdf@3.2.0':
-    resolution: {integrity: sha512-6rQOeR+3D2PkyWi/JtULiBz7m7hpLismophHs1EGIqPdftmSYKtqmwL1rZewnNnRxabRx24QZn2Ei9KNVEUfDg==}
-
-  '@comunica/bus-dereference@3.2.0':
-    resolution: {integrity: sha512-tPaiKK6ZUG7R6tE+eSfGoJoKK2nayTo39ztqAHZmgUqFGBlQjOIfFP5ICo34LdNz7h/cBrq8Mrg1CHgIEp6eAA==}
 
   '@comunica/bus-hash-bindings@2.10.0':
     resolution: {integrity: sha512-EdzIUgpSWMtFVxEJSesuQpMkfgznDap+U0F9epotxXc20Gg/qjTzs1gF6NkpDpaidQ7cFlV16vdbdfi8uiZ+mQ==}
 
-  '@comunica/bus-hash-bindings@3.2.0':
-    resolution: {integrity: sha512-ESfMp0JncpgIO/1g/2Y7n2pFAS0eiE0On6gXhfhHmgFLWkERcutqXbbTToNVke0M74M29D60dbZwrrqe48MDDA==}
-
   '@comunica/bus-http-invalidate@2.10.0':
     resolution: {integrity: sha512-9DevRUzuCOfHFtsryIvTU6rOz6vMbnuDzerloBoNsLFVzQCU4wPNZbxiOn0+GMDXxw7M3KgYd+KFxI2kGObVWA==}
-
-  '@comunica/bus-http-invalidate@3.2.0':
-    resolution: {integrity: sha512-SMBTK6iy0KB+YHTxW2vOnnm63EaPaCNJH58otcesZkP8PoDXxVNeMo6At8I0TKBUmiBsgBJWpyVW6pPJfElBRQ==}
 
   '@comunica/bus-http@2.10.0':
     resolution: {integrity: sha512-wITLxYFvAuFsml4txgxYfxzgroVtWCi+Ja3TTN1l+MpeN1CyDfcA3oL30W8jLMJStjxt1SUmtuOoUjM1lzsbFA==}
@@ -1430,80 +878,32 @@ packages:
   '@comunica/bus-http@2.10.2':
     resolution: {integrity: sha512-MAYRF6uEBAuJ9dCPW2Uyne7w3lNwXFXKfa14XuPG5DFTDpgo/Z2pWupPrBsA1eIWMNJ6WOG6QyEv4rllSIBqlg==}
 
-  '@comunica/bus-http@3.2.0':
-    resolution: {integrity: sha512-t8f1sOSeqfzvTzCpp8rOzi7dycg2VRKzIM0Yp8kbcGuFzokP5mojaHqYQClikWBF5vFDDFmmhVvnewgkCQrAOA==}
-
   '@comunica/bus-init@2.10.0':
     resolution: {integrity: sha512-hJejHa8sLVhQLFlduCVnhOd5aW3FCEz8wmWjyeLI3kiHFaQibnGVMhUuuNRX5f8bnnPuTdEiHc1nnYHuSi+j8A==}
-
-  '@comunica/bus-init@3.2.0':
-    resolution: {integrity: sha512-szNt83bPwLqegerQjimR5fRJ39+hlfTpgjHMkh7PFhZhulSsjQEXJw82CF+ez9Nuq45rUbud0/9OOOrSWVh7Gw==}
-
-  '@comunica/bus-merge-bindings-context@3.2.0':
-    resolution: {integrity: sha512-2C9pDE+ApECYQzjjSvFmaUCg5zTTp5gNHpjc7IHAzDBr1Q7EpjzuTY/WuRnL4YqErxa2WBhJDxbFDQtVwbFRkg==}
 
   '@comunica/bus-optimize-query-operation@2.10.0':
     resolution: {integrity: sha512-qawKJprbVc+dfjBgVzV45UEo+jZBzY3dRo0a8UkXSvgSWPcX18SGrURl2VL4sZZSAyXQBMrGUwH2eUD8l26ZJQ==}
 
-  '@comunica/bus-optimize-query-operation@3.2.0':
-    resolution: {integrity: sha512-puIO6CPRDW6DckQF6aTTTDw2pY5ZR5qxQmW8Oy4DtwduQpQM2LOAzShNEm0GoHSkw0ICmL5pRXnnxIJOPC9/8w==}
-
   '@comunica/bus-query-operation@2.10.1':
     resolution: {integrity: sha512-PoUSJeKaMZtZu+ZtB+5ABjPOiW1YjxOdLE1N5znxX2oiDKCQHmAXVaVkbVx1jPDLGYFNcOlOSzpRMqLQ/L4JIw==}
-
-  '@comunica/bus-query-operation@3.2.0':
-    resolution: {integrity: sha512-mA+htBj6j0gVOCBfpOjA5TtGZOz9MUYIRh6YfeUV+GY8dgazybZEAA3qTzj3miLgyaQTZgEppl7/GCmESH6KJw==}
 
   '@comunica/bus-query-parse@2.10.0':
     resolution: {integrity: sha512-1LynxACgCYTuBH/JMRG/IGaWtTVwr2O8wxOosCId2W3BDW9nf2DSCyOdnxnCSMSKfnLFWiaVuKybn24OLXW2dQ==}
 
-  '@comunica/bus-query-parse@3.2.0':
-    resolution: {integrity: sha512-RbdglRTdTWRQY3d4+cUsmyZghoME5rldUguX6f8mvtN8ElON6hZpcsS47XGLyp2y045rhqqm+GTjKGDamCTFNg==}
-
-  '@comunica/bus-query-process@3.2.0':
-    resolution: {integrity: sha512-B2GGpo8nglz2o6WvGg45KglL7z3q5ddtdpxvSMLnwfahU+heNeUDnXdXyFUBfGowY5JoxU/eYfurlIFY422tag==}
-
   '@comunica/bus-query-result-serialize@2.10.0':
     resolution: {integrity: sha512-9P5KUzmXvjtLbd44UVxYNB0yqAHx7molBUc7aysUQ3pbIcP/A57GXzAfiKueeiZ9cVRRG/BGsVoDGVj59tGWNg==}
-
-  '@comunica/bus-query-result-serialize@3.2.0':
-    resolution: {integrity: sha512-qecRGEWzCLoghcWKLeF0ZVEp+Fm+4FxY2hge0oyIjO/Kby9fbaSi+rIcbHFT7/nVyFYnxCDTuleTypqT9baPgw==}
-
-  '@comunica/bus-query-source-identify-hypermedia@3.2.0':
-    resolution: {integrity: sha512-3Jfe6VnUtBmcbZ1c7k9kKCPrFnZVrdnIc9fdkL1+a1uWxGFVCnZKgr38oV9q1V5jktL0QZC1TV/B5a/YC8f5pQ==}
-
-  '@comunica/bus-query-source-identify@3.2.0':
-    resolution: {integrity: sha512-jnzc8Eu9cP581+anrUt6aB0jHWj4LOecQGLZ/BKTOsuE365HMWTL697in+x30FUkoyTIsZMLLgs1L0krISs6mA==}
 
   '@comunica/bus-rdf-join-entries-sort@2.10.0':
     resolution: {integrity: sha512-17FQrdYtzjY84OI/ZvipJKD0ei3IySmsWwaGC9sIJn+1W4LBVKudTu5S0tzGTKTb0URhS4mrCliUBzyINtIZMQ==}
 
-  '@comunica/bus-rdf-join-entries-sort@3.2.0':
-    resolution: {integrity: sha512-Lj25C1JE86x/+2bqMLO/qF+QIiiXAWUQOAM/bHdhExcYVbn8cYEzFOvewYlML8ujRoMpDXAwoQytJPm4a8CyEQ==}
-
   '@comunica/bus-rdf-join-selectivity@2.10.0':
     resolution: {integrity: sha512-YjoygSiH6r4SAYqz6gpvUql2vnznPVE62IsWqYnjFWeH1kBsxO5yEOO01s2FfN3jLcfsytTyG7VNTCN788YbaA==}
-
-  '@comunica/bus-rdf-join-selectivity@3.2.0':
-    resolution: {integrity: sha512-cE/Jbx+VbyNXNhudOjArKWYBNFStWVPuCqJDbE4iqcy/1ODSPrVesnkakVLJzGMnZYvH7OHIcwtf2Vmf5PGK2Q==}
 
   '@comunica/bus-rdf-join@2.10.1':
     resolution: {integrity: sha512-pPFoJVHY5p931jIKt+9sqRCGiuuf8yFqrlOOAd3un72cwuyhwNHvn52xwvcPlNUAySz/kDmW+U0syflqI6VdAw==}
 
-  '@comunica/bus-rdf-join@3.2.0':
-    resolution: {integrity: sha512-Iq7xn4sSCNqTB2tBCGl90VzBghUDmhYfCOWgoiwBN0qb6SY/MtXanpg+cJEA/t3kSUJ+Lxp9oDcMatvBxnSZTQ==}
-
   '@comunica/bus-rdf-metadata-accumulate@2.10.0':
     resolution: {integrity: sha512-XG/3s4a3yGpYt4H+sn9T2zTaUxLG+37dmhRhXv2cBmR4gaCXkglERPaOrQygHldEF+4ITF3RmXHCgANsQ1AwQg==}
-
-  '@comunica/bus-rdf-metadata-accumulate@3.2.0':
-    resolution: {integrity: sha512-/o+G8To7jv9q/xv0LahiGTyAXITqFw9Ccu9Lq2940ryzxfz8z1ZeKw32k5MLS9092ufIPMW+JGO+Ge6Yd6ImqA==}
-
-  '@comunica/bus-rdf-metadata-extract@3.2.0':
-    resolution: {integrity: sha512-v46Zpj884SVTyQ5UUUJAN3+LQ0rDAeuxSGj9gkw5JMUi5CdmOuIa3ZavL9aA5DACzYKcih5lOXso9OBp7Ktv6w==}
-
-  '@comunica/bus-rdf-metadata@3.2.0':
-    resolution: {integrity: sha512-6KHEy+60yY0r8kMeAUGpRWaNmWbfj95VuszoahVsv18ALKjifufW5FNMRyRbmkkqTvAcWa4O1eYYu+LMo/G+Sg==}
 
   '@comunica/bus-rdf-parse-html@2.7.0':
     resolution: {integrity: sha512-1oRe+ghYPQmj97wiqN3KfxLOGPfSFZsH3+5AHjk2bQ41bzPUj/gHkGWEmnFHu68uf15ezyfLghKR7itimKSC2w==}
@@ -1511,115 +911,57 @@ packages:
   '@comunica/bus-rdf-parse@2.7.0':
     resolution: {integrity: sha512-j3T4R68xbAyisEh5G22ZNPRS45MK2epVtDEEyPdOZa681PtI8PElPCR8gPZeUlWOPxf/v3xKMbvWn/fHBaFjQA==}
 
-  '@comunica/bus-rdf-parse@3.2.0':
-    resolution: {integrity: sha512-pD1jtuwS5MvOCeWFuw79qztwdqfmti4XC535dHCdTtpYO/ajVKdoYAIDOKCvk+LmJL5+lDnlH1EXETW4Ex4fcQ==}
-
-  '@comunica/bus-rdf-resolve-hypermedia-links-queue@3.2.0':
-    resolution: {integrity: sha512-CHLKbh6gt0LZBC8AZexQdXT+6oA6qbPJ1OnsgBgFfvmCGmmcdBe4mFZWuxdwFQlxqkGYNuvZ8bs+MkqQu4TPtg==}
-
-  '@comunica/bus-rdf-resolve-hypermedia-links@3.2.0':
-    resolution: {integrity: sha512-+P3TNFEvKp/QjmFZqH4KzQuNLPir1WIlQd21AD1VpuFt7hJZP+Ii7SrDJefrgGvy1dw3Yxj1VbNKKA/Uwi5JeQ==}
-
   '@comunica/bus-rdf-resolve-quad-pattern@2.10.0':
     resolution: {integrity: sha512-JEI4DqSprGmrbfmiIwc8PbS+HCoxXwmMtp7gDpoB1HyYKIHzzu9DOIiwmYEDRO5dwV+uTwaYKZz/mUPm2U6EEg==}
 
   '@comunica/bus-rdf-serialize@2.10.0':
     resolution: {integrity: sha512-AmbN9MUgw6B6AfrIqR1u7PWHZFgbJz+j1SFJVtnHQ51hEpG+Ig9nNG2IWjHOsFK0xBBQ/wXgNmt/cufEMRM1SQ==}
 
-  '@comunica/bus-rdf-serialize@3.2.0':
-    resolution: {integrity: sha512-mLNu1OOHgVMh/vEgWbEm51ZerGXKUveurbBJURYQN7wirRb3LF1cxPLs84OBhTHIckEimjQNYchZWKVBxI3yEQ==}
-
   '@comunica/bus-rdf-update-quads@2.10.2':
     resolution: {integrity: sha512-+iVpAHps8ytGq8AZF4xTZbLyskS40JPn64MO+OAuYovqXLlezp6vh9eJ5qETuP9NP+BpZDk3nOU3Ky3fb0QCUw==}
-
-  '@comunica/bus-rdf-update-quads@3.2.0':
-    resolution: {integrity: sha512-u5hwSxw/oxaOEosF3oBq+bBqrU5FU/4UhNHWT9TZzpdy4Zi72u/KV8czuY6RC1YH5C2fp6CSS0NTIn34WNVcqQ==}
 
   '@comunica/config-query-sparql@2.7.0':
     resolution: {integrity: sha512-rMnFgT7cz9+0z7wV4OzIMY5qM9/Z0mTGrR8y2JokoHyyTcBGOSajFmy61XCSLMCsLLG8qDXsJ4ClCCky3TGfqA==}
 
-  '@comunica/config-query-sparql@3.2.0':
-    resolution: {integrity: sha512-WZzfi9uI7IBOxXpbcEGzdbVjhaxGuM5/j9sUOrE+XuoF4UnFV4QYB7X7uhHKoWHa/Cw4GvGZmvvjnHYlqaM/pA==}
-
   '@comunica/context-entries@2.10.0':
     resolution: {integrity: sha512-lmCYCcXxW8C6ecFH2whZCt31NT1ejb0P/sbytK7f4ctyA06Q8iYFEcYE4eWOXMdpfkwkcnz31x9XL77OGeSC2Q==}
-
-  '@comunica/context-entries@3.2.0':
-    resolution: {integrity: sha512-c97CoVmptgvkFZyIX6d7zU1lTtc2jl+zwm49HGQEK2fbiimR8jK7cMimWu5AFDICAR1VYh1lTIBIoI+72QZZ+w==}
 
   '@comunica/core@2.10.0':
     resolution: {integrity: sha512-onsGs2iKHUPRxxMOdx42vdxslk8q9FQZdRjQtHJ6SGiCpJwIL9ciBgPIOl2RL2YfzXHemr/0umeNOppRDcWhJA==}
     engines: {node: '>=14.0'}
 
-  '@comunica/core@3.2.0':
-    resolution: {integrity: sha512-rfLWrbVISt2TXWu++dJa3F/mK+B2vCPL+KfIlzGTOyFPuYzDO303rh9FVs8XnViY7cTw6ph+PcZjWiO7qDDz6A==}
-    engines: {node: '>=14.0'}
-
   '@comunica/data-factory@2.7.0':
     resolution: {integrity: sha512-dSTzrR1w9SzAWx70ZXKXHUC8f0leUolLZ9TOhGjFhhsBMJ9Pbo0g6vHV8txX5FViShngrg9QNKhsHeQnMk5z6Q==}
-
-  '@comunica/data-factory@3.1.0':
-    resolution: {integrity: sha512-kNEgK+3HPzej8m53//RkZTq9WPYrja9CjrkJqvdgawpMTbg+zEeCoQZ3BGD0LiWiphADpyvYfRFCVpgcHjKvLQ==}
 
   '@comunica/expression-evaluator@2.10.0':
     resolution: {integrity: sha512-gSfiVSAE+SaxpXq3jT5OnyZd+sD9KFaWtTiKT1tDDs8lD7Jj68aRP7VoEhvKwPwRlUx0aoaXUL2MYtV6JsXRbg==}
 
-  '@comunica/expression-evaluator@3.1.0':
-    resolution: {integrity: sha512-zALZpPGYwSmP04Kxc2RkhYU0Ro6FUjChxlu028f9wcwJCVOLFPTtjt9WV6Qi6qa7E+DvGi7xLtOUvfbmxN7tMw==}
-
   '@comunica/logger-pretty@2.10.0':
     resolution: {integrity: sha512-JXkeM5HnbyTPnQTf5/ugRPL9R+vXT7b/hRVYzYmhAGCjkCNL7NJPTBbIgxmZHqZ+UGxprotrvmDQtwHmVA+Ddw==}
-
-  '@comunica/logger-pretty@3.2.0':
-    resolution: {integrity: sha512-bEroWCKxg8abvCB52EKdK59e7OPLkJBZsb3+y4oY6vXXvVqJCHBpL6btldIJcMaqVd6kDnQExcclEhtF5OWWRg==}
 
   '@comunica/logger-void@2.10.0':
     resolution: {integrity: sha512-GFJh9hV8rIC9yXAuLGGKjQRVs8IOQOINBbaTNO+FJUWWWHlo5pDEKAoGYuysz5TBGoT3Lexz8bMfdkuHMa3uIQ==}
 
-  '@comunica/logger-void@3.2.0':
-    resolution: {integrity: sha512-PynYqPQfYy2jPig8RKNjVhsIhkSeWsntPfqRB1li5/mS44LSFnAFk2jAuqIjhQsCuWK7pOAxV6jLgHEfx8jR1g==}
-
   '@comunica/mediator-all@2.10.0':
     resolution: {integrity: sha512-y1+A+sIW462G8iPzi6BSPIb4I9iy08ZruM2Thf1or6sytwLKro7E2RYjS6IdupwfFYafXXCeT85+lrJgTKERhQ==}
-
-  '@comunica/mediator-all@3.2.0':
-    resolution: {integrity: sha512-9s2X9LAR+YbdXsPG20tpLuYHpV2PH26pfpF/aqBWHct4TqkN8Ysglc+sv34KogMbteqKTTcoElA7yFdqh2IUtA==}
 
   '@comunica/mediator-combine-pipeline@2.10.0':
     resolution: {integrity: sha512-j7+/oUlbhKB4Rq6g9oNKU+e9cQL8U9z8tAUNhoXUSHajcr4huj0t1+riaOD109/DRWhV793ILhBDzgiZbHd7DA==}
 
-  '@comunica/mediator-combine-pipeline@3.2.0':
-    resolution: {integrity: sha512-1uyYbltcVsa79T9ocW2jELArNMrAlbtEdo88nnmW5pS9MzCyphYiuZx0vwTNZlRaK5Wu8ktWFfg0iSS19WtH4A==}
-
   '@comunica/mediator-combine-union@2.10.0':
     resolution: {integrity: sha512-QbP4zP1i6nMDZ8teC0RoTz5E8pOpxDhWPBr1ylb2jzPUjPpMgrnbHYTondlN0Oau3SMEehItojg/LYDtPOP/GQ==}
-
-  '@comunica/mediator-combine-union@3.2.0':
-    resolution: {integrity: sha512-/PVHOgOoSx7AgYbou+PfL3nkDWZuJw0moy/dORhG4x75bDDiRbf7dtFC5fQxpu4mgvVeN7N1vyUprIKp+0OTBQ==}
 
   '@comunica/mediator-join-coefficients-fixed@2.10.1':
     resolution: {integrity: sha512-HRvc0e8QDnR3sbRMMCyx9ILFA6KiUxHEqDOpt7BV3kFMWWIpBavFDwPUjLBG6sRA8o0CFu1+oVVh5fAFYZIxzQ==}
 
-  '@comunica/mediator-join-coefficients-fixed@3.2.0':
-    resolution: {integrity: sha512-LrouXAPjuOOmR38PuIkvCK6AHOviNDHlG6cMUMy/u/qTUk7FxSgkaFY3VZib1cy2GIDdzqFN4zoB1ndkzq4mpg==}
-
   '@comunica/mediator-number@2.10.0':
     resolution: {integrity: sha512-0T8D1HGTu5Sd8iKb2dBjc6VRc/U4A15TAN6m561ra9pFlP+w31kby0ZYP6WWBHBobbUsX1LCvnbRQaAC4uWwVw==}
-
-  '@comunica/mediator-number@3.2.0':
-    resolution: {integrity: sha512-jegC/uKp7G1FjQuqo5iWl61c0FSn+MJDeZrKYcQ/VJWbtgwdmfsfQ+/EbpR4OltCgtIIjd91bhT+fKMwn4jvmw==}
 
   '@comunica/mediator-race@2.10.0':
     resolution: {integrity: sha512-JiEtOLMkPnbjSLabVpE4VqDbu2ZKKnkUdATGBeWX+o+MjPw6c0hhw01RG4WY2rQhDyNl++nLQe3EowQh8xW9TA==}
 
-  '@comunica/mediator-race@3.2.0':
-    resolution: {integrity: sha512-vy7mMpZBrwUgb6SxP9lZNDC1C/ssV05wZyqDSUWsBvuDZgCglBMGx4HCXL+zXz8JGpXXPWPaFDdUM7qJHxgu9w==}
-
   '@comunica/mediatortype-accuracy@2.10.0':
     resolution: {integrity: sha512-u9Noai4yGACaBRGOoRZ65XoQhazKNx5QaFOX5nJ/p84Qq4g50woC2rpsncuyrXhW1j/rIc2WvIUGUfy/g6CDiw==}
-
-  '@comunica/mediatortype-accuracy@3.2.0':
-    resolution: {integrity: sha512-SEWFWgw68h4EvtrnPEK35iTMD7L1eOHnagMjJhqbDU960g7fSlMLjzdPu0PrxWSYBHdJknobrfwJH9t6vYriUw==}
 
   '@comunica/mediatortype-httprequests@2.10.0':
     resolution: {integrity: sha512-uPjs/NdngHZZWomjZor6W29UeOlxganupIOa3Z6H3qdUnsSpxeoS9URXy7BICAX+4PmgebperSn18BRA+PWiSw==}
@@ -1627,40 +969,21 @@ packages:
   '@comunica/mediatortype-join-coefficients@2.10.0':
     resolution: {integrity: sha512-EPipAV5PDNeEVXbsd+8NsqNKu5ztCAoEJ3azcFAmD9di9ppArNJWU/mxy5yUzcBgMUX4wRp6jCa5rIF5sRHG7g==}
 
-  '@comunica/mediatortype-join-coefficients@3.2.0':
-    resolution: {integrity: sha512-vsgQfD2vz70hDx8DZJH6AHdSmL/NcftVS2+oyCXfb6k0XQ42yXCv4QWI60LCzqu0iu7TRSmxOGXGMknhMcI36w==}
-
   '@comunica/mediatortype-time@2.10.0':
     resolution: {integrity: sha512-nBz1exxrja1Tj8KSlSevG4Hw2u09tTh6gtNfVjI76i/e7muu4RUWVhi9b8PcwBNAfuUqRl+5OgOSa2X4W+6QlA==}
-
-  '@comunica/mediatortype-time@3.2.0':
-    resolution: {integrity: sha512-RBs3bfx80Glmk8NynkQU7mfT5BKqax6sYUZ7vVXYdyMMRPrZYEFIYyfIH6fPJZ4xblEah4BNRGueJoloj+MMpw==}
 
   '@comunica/metadata@2.10.0':
     resolution: {integrity: sha512-PF7TKhuDIO4GE9tzuAkTxarQV5cmwXZ64hp0qm8Ql/V+dVHu/3xLL9v/Q67ZX26GF9hOyr7cdpNI08M7DHc86g==}
 
-  '@comunica/metadata@3.2.0':
-    resolution: {integrity: sha512-PXqVCL92IQBmEeAlcVlN431QNIBPL1f5AMJ2l2rM2y37AaTT6iWC8p7q5FD7icv6tpWSfz0yT+8RdRzNEoylsw==}
-
   '@comunica/query-sparql-rdfjs@2.10.2':
     resolution: {integrity: sha512-qgInGuVBGSO14PNZma/dIMQIC3CGS+64LOJY274ixRfJ4QKwmV7oG6kQyHDsHxFYkhyeMWKc0R5X5ugu1cmSAw==}
-
-  '@comunica/query-sparql-rdfjs@3.2.0':
-    resolution: {integrity: sha512-TiuLuKADfgOO9SpZKvExGGupJWlWQzNWmlOF65p+331cWfMaxT16bdo73ZYcj3BzM1/E2qW2RJYILDk1qEuGfA==}
 
   '@comunica/runner@2.10.0':
     resolution: {integrity: sha512-v/oEKT+IwjO6Y74bCCzlR+ZMI6oykpfz7GQrQbl1oTWQsvBbTdf0omPkoYnk1esEAsFnsJD+NGwAiRiFKeBo0A==}
     hasBin: true
 
-  '@comunica/runner@3.2.0':
-    resolution: {integrity: sha512-HZC+cxQ1Ns647uDd/AofR9G3UIjOvW/83r5dJAu9GoUoRW+WSbh9XLAdF7/DHkBeTmZ56SiBuwe+zW63erUl9Q==}
-    hasBin: true
-
   '@comunica/types@2.10.0':
     resolution: {integrity: sha512-1UjPGbZcYrapBjMGUZedrIGcn9rOLpEOlJo1ZkWddFUGTwndVg9d4BZnQw+UnQzXMcLJcdKt94Zns8iEmBqARw==}
-
-  '@comunica/types@3.2.0':
-    resolution: {integrity: sha512-UHKvAqu8giOjgon978P+mlg8RkzUBLJY2c9d9Kcyzjln6uBI5Cjp+ek8f79tR+ZADPCQpV6hkjJK3v3myanq2g==}
 
   '@cspotcode/source-map-support@0.8.1':
     resolution: {integrity: sha512-IchNf6dN4tHoMFIn/7OE8LWZ19Y6q/67Bmf6vnGREv8RSbBVb9LPJxEcnwrcwX6ixSvaiGoomAUvu4YSxXrVgw==}
@@ -1964,10 +1287,6 @@ packages:
       '@types/react-dom':
         optional: true
 
-  '@tootallnate/once@2.0.0':
-    resolution: {integrity: sha512-XCuKFP5PS55gnMVu3dty8KPatLqUoy/ZYzDzAGCQ8JNFCkLXzmI7vNHCR+XpbZaMWQK/vQubr7PkYq8g470J/A==}
-    engines: {node: '>= 10'}
-
   '@tsconfig/node10@1.0.9':
     resolution: {integrity: sha512-jNsYVVxU8v5g43Erja32laIDHXeoNvFEpX33OK4d6hljo3jDhCBDhx5dhCCTMWUojscpAagGiRkBKxpdl9fxqA==}
 
@@ -2025,9 +1344,6 @@ packages:
   '@types/istanbul-reports@3.0.1':
     resolution: {integrity: sha512-c3mAZEuK0lvBp8tmuL74XRKn1+y2dcwOUpH7x4WrF6gk1GIgiluDRgMYQtw2OFcBvAJWlt6ASU3tSqxp0Uu0Aw==}
 
-  '@types/jsdom@20.0.1':
-    resolution: {integrity: sha512-d0r18sZPmMQr1eG35u12FZfhIXNrnsPU/g5wvRKCUf/tOGilKKwYMYGqh33BNR6ba+2gkHw1EUiHoN3mn7E5IQ==}
-
   '@types/json-schema@7.0.15':
     resolution: {integrity: sha512-5+fP8P8MFNC+AyZCDxrB2pkZFPGzqQWUzpSeuuVLvm8VMcorNYavBqoFcxK8bQz4Qsbn4oUEEem4wDLfcysGHA==}
 
@@ -2074,9 +1390,6 @@ packages:
   '@types/readable-stream@2.3.15':
     resolution: {integrity: sha512-oM5JSKQCcICF1wvGgmecmHldZ48OZamtMxcGGVICOJA8o8cahXC1zEVAif8iwoc5j8etxFaRFnf095+CDsuoFQ==}
 
-  '@types/readable-stream@4.0.15':
-    resolution: {integrity: sha512-oAZ3kw+kJFkEqyh7xORZOku1YAKvsFTogRY8kVl4vHpEKiDkfnSA/My8haRE7fvmix5Zyy+1pwzOi7yycGLBJw==}
-
   '@types/requestidlecallback@0.3.7':
     resolution: {integrity: sha512-5/EwNH3H/+M2zxATq9UidyD7rCq3WhK5Te/XhdhqP270QoGInVkoNBj6kK2Ah5slkZewkX8XJb7WDaYhmJu+eg==}
 
@@ -2098,9 +1411,6 @@ packages:
   '@types/stack-utils@2.0.1':
     resolution: {integrity: sha512-Hl219/BT5fLAaz6NDkSuhzasy49dwQS/DSdu4MdggFB8zcXv7vflBI3xp7FEmkmdDkBUI2bPUNeMttp2knYdxw==}
 
-  '@types/tough-cookie@4.0.5':
-    resolution: {integrity: sha512-/Ad8+nIOV7Rl++6f1BdKxFSMgmoqEoYbHRpPcx3JEfv8VRsQe9Z4mCXeJBzxs7mbHY/XOZZuXlRNfhpVPbs6ZA==}
-
   '@types/triple-beam@1.3.2':
     resolution: {integrity: sha512-txGIh+0eDFzKGC25zORnswy+br1Ha7hj5cMVwKIU7+s0U2AxxJru/jZSMU6OC9MJWP6+pc/hc6ZjyZShpsyY2g==}
 
@@ -2116,32 +1426,11 @@ packages:
   '@types/yargs@17.0.24':
     resolution: {integrity: sha512-6i0aC7jV6QzQB8ne1joVZ0eSFIstHsCrobmOtghM11yGlH0j43FKL2UhWdELkyps0zuf7qVTUVCCR+tgSlyLLw==}
 
-  '@typescript-eslint/eslint-plugin@8.0.0-alpha.45':
-    resolution: {integrity: sha512-h+pGHKWu+i5D6BmzpggG8bDj/fVVhxzQLE2CPsKtH1ab0QvUz+eyT/lIfz0xs8NF/lQS7tmlU5AYnQdKe1yAQw==}
-    engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
-    peerDependencies:
-      '@typescript-eslint/parser': ^8.0.0 || ^8.0.0-alpha.0
-      eslint: ^8.57.0 || ^9.0.0
-      typescript: '*'
-    peerDependenciesMeta:
-      typescript:
-        optional: true
-
   '@typescript-eslint/eslint-plugin@8.0.0-alpha.51':
     resolution: {integrity: sha512-989dk3/IA2HNdfl8T1Tj0+AEAtqHN5Cdac7Ff1N367Lh5e5xKi3nXWMkptbZaAEo/wi5+CZD8jngQ70wnCRweA==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
     peerDependencies:
       '@typescript-eslint/parser': ^8.0.0 || ^8.0.0-alpha.0
-      eslint: ^8.57.0 || ^9.0.0
-      typescript: '*'
-    peerDependenciesMeta:
-      typescript:
-        optional: true
-
-  '@typescript-eslint/parser@8.0.0-alpha.45':
-    resolution: {integrity: sha512-iFm6dmGX2rBiqHLfu7PShqhhHuuaDPzej05KbTIGJVGgdj2Xit4GYP35uDpe/YPcMTO8DZ9dOmUYfMGLBKS9Og==}
-    engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
-    peerDependencies:
       eslint: ^8.57.0 || ^9.0.0
       typescript: '*'
     peerDependenciesMeta:
@@ -2158,10 +1447,6 @@ packages:
       typescript:
         optional: true
 
-  '@typescript-eslint/scope-manager@8.0.0-alpha.45':
-    resolution: {integrity: sha512-zmfZYLH6Oaq1drf99idktn1/m4SZvBXFUKdl8B2A1SrBc6E57wtRW9OwFBnROgM4gHeG1wb89DLhQ/UeqcUmMQ==}
-    engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
-
   '@typescript-eslint/scope-manager@8.0.0-alpha.50':
     resolution: {integrity: sha512-LBfEMDeBy894cX6lFjLad/722+BHXxQ2UXkqs1MtRFhGI71mStZStZD0hpoeXF2RyvLq+Z8FJ2ur4tRGEsWGiw==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
@@ -2169,15 +1454,6 @@ packages:
   '@typescript-eslint/scope-manager@8.0.0-alpha.51':
     resolution: {integrity: sha512-zT8Ib31deJCqRVJepZOMFoHiFAsSHOh5TmedcFeqyiMuzrqBMtF95iv6mPJqFDIXNgxmTkahpRan1z043ckBnA==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
-
-  '@typescript-eslint/type-utils@8.0.0-alpha.45':
-    resolution: {integrity: sha512-JsX5S7Pda8XTJ/y49ksnN3ScptnEnrEJpecc97l6JiVDMHENWeNVHsbfLmYhjGb0jWKI2IdEOmsVvpOIpj1jUg==}
-    engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
-    peerDependencies:
-      typescript: '*'
-    peerDependenciesMeta:
-      typescript:
-        optional: true
 
   '@typescript-eslint/type-utils@8.0.0-alpha.51':
     resolution: {integrity: sha512-KqU2e3KITMGlRfG4ehfO2zS0GutDWc+zV2nwbRDQdUfh1izgFDAh5UqiJ8YafXVzY1v0dnRggnmvjOMotjQa1w==}
@@ -2188,10 +1464,6 @@ packages:
       typescript:
         optional: true
 
-  '@typescript-eslint/types@8.0.0-alpha.45':
-    resolution: {integrity: sha512-yjTlmcSnkFV8IoqE0vinmWo+fl7TjkaGyGX/g9gKN/b2IO8g+AimB7BhilmlBqvZupvo2AfiHqcnZEVhQAXI8w==}
-    engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
-
   '@typescript-eslint/types@8.0.0-alpha.50':
     resolution: {integrity: sha512-ePz2nxMmLaJUrSveN/MpuI4JI6sBfQqP9ILJw8TgdY9BEI9Zkbkv5RO6UEYP3R8GdKuIDJE4N8++um7C0vt74Q==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
@@ -2199,15 +1471,6 @@ packages:
   '@typescript-eslint/types@8.0.0-alpha.51':
     resolution: {integrity: sha512-joqeu3jITe9BbgXAggKKg9mBIGDL6mAf2JVlo00zWP50u4qnsa3NWKMwWp77pjtI9E2DPU0vlTEdL+v/3aTPJA==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
-
-  '@typescript-eslint/typescript-estree@8.0.0-alpha.45':
-    resolution: {integrity: sha512-FcvtdTxahvP+qlZ1XXF+m0GVqomklKtkG6cIHLdBvTOHgIBILtahU7yyRE5rOHDdGoAFu8AzItJI12rtf9TRyA==}
-    engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
-    peerDependencies:
-      typescript: '*'
-    peerDependenciesMeta:
-      typescript:
-        optional: true
 
   '@typescript-eslint/typescript-estree@8.0.0-alpha.50':
     resolution: {integrity: sha512-LHzOKpOFOPnRRlhS/nJz6j0G9tGANddC2swf+wemAQXUrStToJuh7CdWiLd03OzrWYwFss/2BrBoxismWNi4Cg==}
@@ -2233,10 +1496,6 @@ packages:
     peerDependencies:
       eslint: ^8.57.0 || ^9.0.0
 
-  '@typescript-eslint/visitor-keys@8.0.0-alpha.45':
-    resolution: {integrity: sha512-SZmtknee9MzeT41tCpvh5vUyji0Zr4OyfERJqDmfg5YZwkm3BRdTeexrBKK9C8da97ULR1SUSeLUTqttC77vJw==}
-    engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
-
   '@typescript-eslint/visitor-keys@8.0.0-alpha.50':
     resolution: {integrity: sha512-g71Q3uf56GTseXQk+tzMt9SwQAdX0u0mV/ECWsclLG5IUVREnhHG+GmjpFi5gxur/12hPj7I1qzQX3jCM5H51A==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
@@ -2245,10 +1504,6 @@ packages:
     resolution: {integrity: sha512-bOLfR14nLfhO9BBD1YpmnQSTNTapAIegKsb4Ms1RAQXkJRKIeuLS42AEYRM8uvLiNLk0hDIBjCnMPTAyDAWLbw==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
-  abab@2.0.6:
-    resolution: {integrity: sha512-j2afSsaIENvHZN2B8GOpF566vZ5WVk5opAiMTvWgaQT8DkbOqsTfvNAvHoRGU2zzP8cPoqys+xHTRDWW8L+/BA==}
-    deprecated: Use your platform's native atob() and btoa() methods instead
-
   abort-controller@3.0.0:
     resolution: {integrity: sha512-h8lQ8tacZYnR3vNQTgibj+tODHI5/+l06Au2Pcriv/Gmet0eaj4TwWH41sO9wnHDiQsEj19q0drzdWdeAHtweg==}
     engines: {node: '>=6.5'}
@@ -2256,9 +1511,6 @@ packages:
   abstract-level@1.0.3:
     resolution: {integrity: sha512-t6jv+xHy+VYwc4xqZMn2Pa9DjcdzvzZmQGRjTFc8spIbRGHgBrEKbPq+rYXc7CCo0lxgYvSgKVg9qZAhpVQSjA==}
     engines: {node: '>=12'}
-
-  acorn-globals@7.0.1:
-    resolution: {integrity: sha512-umOSDSDrfHbTNPuNpC2NSnnA3LUrqpevPb4T9jRx4MagXNS0rs+gwiTcAvqCRmsD6utzsrzNt+ebm00SNWiC3Q==}
 
   acorn-jsx@5.3.2:
     resolution: {integrity: sha512-rq9s+JNhf0IChjtDXxllJ7g41oZk5SlXtp0LHwyA5cejwn7vKmKp4pPri6YEePv2PU65sAsegbXtIinmDFDXgQ==}
@@ -2278,10 +1530,6 @@ packages:
     resolution: {integrity: sha512-jaVNAFBHNLXspO543WnNNPZFRtavh3skAkITqD0/2aeMkKZTN+254PyhwxFYrk3vQ1xfY+2wbesJMs/JC8/PwQ==}
     engines: {node: '>=0.4.0'}
     hasBin: true
-
-  agent-base@6.0.2:
-    resolution: {integrity: sha512-RZNwNclF7+MS/8bDg70amg32dyeZGZxiDuQmZxKLAlQjr3jGyLx+4Kkk58UO7D2QdgFIQCovuSuZESne6RG6XQ==}
-    engines: {node: '>= 6.0.0'}
 
   aggregate-error@3.1.0:
     resolution: {integrity: sha512-4I7Td01quW/RpocfNayFdFVk1qSuoh0E7JrbRJ16nH01HhKFQ88INq9Sd+nd72zqRySlr9BmDA8xlEJ6vJMrYA==}
@@ -2372,9 +1620,6 @@ packages:
 
   asyncjoin@1.2.3:
     resolution: {integrity: sha512-4OJH73zYDfIfbgr7wKfAKTgu/P2e/9r0o0NZ4KZu2tFtSf5uUVs/DjzpfY5BueOkkZcBhnq788MbZ57tjwyPIQ==}
-
-  asynckit@0.4.0:
-    resolution: {integrity: sha512-Oei9OH4tRh0YqU3GxhX79dM/mwVgvbZJaSNaRk+bshkj0S5cfHcgYakreBjrHwatXKbz+IoIdYLxrKim2MjW0Q==}
 
   available-typed-arrays@1.0.7:
     resolution: {integrity: sha512-wvUjBtSGN7+7SjNpq/9M2Tg350UZD3q62IFZLbRAR1bSMlCo1ZaeW+BJ+D090e4hIIZLBcTDWe4Mh4jvUDajzQ==}
@@ -2566,20 +1811,12 @@ packages:
   colorspace@1.1.4:
     resolution: {integrity: sha512-BgvKJiuVu1igBUF2kEjRCZXol6wiiGbY5ipL/oVPwm0BL9sIpMIzM8IK7vwuxIIzOXMV3Ey5w+vxhm0rR/TN8w==}
 
-  combined-stream@1.0.8:
-    resolution: {integrity: sha512-FQN4MRfuJeHf7cBbBMJFXhKSDq+2kAArBlmRBvcvFE5BB1HZKXtSFASDhdlz9zOYwxh8lDdnvmMOe/+5cdoEdg==}
-    engines: {node: '>= 0.8'}
-
   commander@4.1.1:
     resolution: {integrity: sha512-NOKm8xhkzAjzFx8B2v5OAHT+u5pRQc2UCa2Vq9jYL/31o2wi9mxBA7LIFs3sV5VSC49z6pEhfbMULvShKj26WA==}
     engines: {node: '>= 6'}
 
   componentsjs@5.5.1:
     resolution: {integrity: sha512-hmqq+ZUa98t9CoeWPGwE14I18aXQFAt66HRd8DaZCNggcSr82vhlyrjeXX0JAUMgr2MyQzwKstkv4INRAREguA==}
-    hasBin: true
-
-  componentsjs@6.0.1:
-    resolution: {integrity: sha512-8ylkwrS0WJCTkkp2dOamE4yLkkdFd9xZQQ8dGzaY22TdntLR9V/SH+dZ+GQ+im9/2KgrKtcEu0UHMY+cpE0LYw==}
     hasBin: true
 
   concat-map@0.0.1:
@@ -2606,16 +1843,6 @@ packages:
     resolution: {integrity: sha512-iRDPJKUPVEND7dHPO8rkbOnPpyDygcDFtWjpeWNCgy8WP2rXcxXL8TskReQl6OrB2G7+UJrags1q15Fudc7G6w==}
     engines: {node: '>= 8'}
 
-  cssom@0.3.8:
-    resolution: {integrity: sha512-b0tGHbfegbhPJpxpiBPU2sCkigAqtM9O121le6bbOlgyV+NyGyCmVfJ6QW9eRjz8CpNfWEOYBIMIGRYkLwsIYg==}
-
-  cssom@0.5.0:
-    resolution: {integrity: sha512-iKuQcq+NdHqlAcwUY0o/HL69XQrUaQdMjmStJ8JFmUaiiQErlhrmuigkg/CU4E2J0IyUKUrMAgl36TvN67MqTw==}
-
-  cssstyle@2.3.0:
-    resolution: {integrity: sha512-AZL67abkUzIuvcHqk7c09cezpGNcxUxU4Ioi/05xHk4DQeTkWmGYftIE6ctU6AEt+Gn4n1lDStOtj7FKycP71A==}
-    engines: {node: '>=8'}
-
   csstype@3.1.3:
     resolution: {integrity: sha512-M1uQkMl8rQK/szD0LNhtqxIPLpimGm8sOBwU7lLnCpSbTyY3yeU1Vc7l4KT5zT4s/yOxHH5O7tIuuLOCnLADRw==}
 
@@ -2626,10 +1853,6 @@ packages:
   data-uri-to-buffer@4.0.1:
     resolution: {integrity: sha512-0R9ikRb668HB7QDxT1vkpuUBtqc53YyAwMwGeUFKRojY/NWKvdZ+9UYtRfGmhqNbRkTSVpMbmyhXipFFv2cb/A==}
     engines: {node: '>= 12'}
-
-  data-urls@3.0.2:
-    resolution: {integrity: sha512-Jy/tj3ldjZJo63sVAvg6LHt2mHvl4V6AgRAmNDtLdm7faqtsx+aJG42rsyCo9JCoRVKwPFzKlIPx3DIibwSIaQ==}
-    engines: {node: '>=12'}
 
   data-view-buffer@1.0.1:
     resolution: {integrity: sha512-0lht7OugA5x3iJLOWFhWK/5ehONdprk0ISXqVFn/NFrDu+cuc8iADFrGQz5BnRK7LLU3JmkbXSxaqX+/mXYtUA==}
@@ -2660,9 +1883,6 @@ packages:
       supports-color:
         optional: true
 
-  decimal.js@10.4.3:
-    resolution: {integrity: sha512-VBBaLc1MgL5XpzgIP7ny5Z6Nx3UrRkIViUkPUdtl9aya5amy3De1gsUUSB1g3+3sExYNjCAsAznmukyxCb1GRA==}
-
   dedent@0.7.0:
     resolution: {integrity: sha512-Q6fKUPqnAHAyhiUgFU7BUzLiv0kd8saH9al7tnu5Q/okj6dnupxyTgFIBjVzJATdfIAm9NAsvXNzjaKa+bxVyA==}
 
@@ -2691,10 +1911,6 @@ packages:
   define-properties@1.2.1:
     resolution: {integrity: sha512-8QmQKqEASLd5nx0U1B1okLElbUuuttJ/AnYmRXbbbGDWh6uS208EjD4Xqq/I9wK7u0v6O08XhTWnt5XtEbR6Dg==}
     engines: {node: '>= 0.4'}
-
-  delayed-stream@1.0.0:
-    resolution: {integrity: sha512-ZySD7Nf91aLB0RxL4KGrKHBXl7Eds1DAmEdcoVawXnLD7SDhpNgtuII2aAkg7a7QS41jxPSZ17p4VdGnMHk3MQ==}
-    engines: {node: '>=0.4.0'}
 
   dequal@2.0.3:
     resolution: {integrity: sha512-0je+qPKHEMohvfRTCEo3CrPG6cAzAYgmzKyxRiYSSDkS6eGJdyVJm7WaYA5ECaAD9wLB2T4EEeymA5aFVcYXCA==}
@@ -2736,11 +1952,6 @@ packages:
 
   domelementtype@2.3.0:
     resolution: {integrity: sha512-OLETBj6w0OsagBwdXnPdN0cnMfF9opN69co+7ZrbfPGrdpPVNBUj02spi6B1N7wChLQiPn4CSH/zJvXw56gmHw==}
-
-  domexception@4.0.0:
-    resolution: {integrity: sha512-A2is4PLG+eeSfoTMA95/s4pvAoSo2mKtiM5jlHkAVewmiO8ISFTFKZjH7UAM1Atli/OT/7JHOrJRJiMKUZKYBw==}
-    engines: {node: '>=12'}
-    deprecated: Use your platform's native DOMException instead
 
   domhandler@5.0.3:
     resolution: {integrity: sha512-cgwlv/1iFQiFnU96XXgROh8xTeetsnJiDsTc7TYCLFd9+/WNkIqPTxiM/8pSd8VIrhXGTf1Ny1q1hquVqDJB5w==}
@@ -2825,11 +2036,6 @@ packages:
   escape-string-regexp@4.0.0:
     resolution: {integrity: sha512-TtpcNJ3XAzx3Gq8sWRzJaVajRs0uVxA2YAkdb1jm2YkPz4G6egUFAyA3n5vtEIZefPk5Wa4UXbKuS5fKkJWdgA==}
     engines: {node: '>=10'}
-
-  escodegen@2.1.0:
-    resolution: {integrity: sha512-2NlIDTwUWJN0mRPQOdtQBzbUHvdGY2P1VXSyU83Q3xKxM7WHX2Ql8dKq782Q9TgQUNOLEzEYu9bzLNj1q88I5w==}
-    engines: {node: '>=6.0'}
-    hasBin: true
 
   eslint-import-resolver-node@0.3.9:
     resolution: {integrity: sha512-WFj2isz22JahUv+B788TlO3N6zL3nNJGU8CcZbPZvVEkBPaJdCV4vy5wyghty5ROFbCRnm132v8BScu5/1BQ8g==}
@@ -2950,9 +2156,6 @@ packages:
     resolution: {integrity: sha512-kVscqXk4OCp68SZ0dkgEKVi6/8ij300KBWTJq32P/dYeWTSwK41WyTxalN1eRmA5Z9UU/LX9D7FWSmV9SAYx6g==}
     engines: {node: '>=0.10.0'}
 
-  event-emitter-promisify@1.1.0:
-    resolution: {integrity: sha512-uyHG8gjwYGDlKoo0Txtx/u1HI1ubj0FK0rVqI4O0s1EymQm4iAEMbrS5B+XFlSaS8SZ3xzoKX+YHRZk8Nk/bXg==}
-
   event-target-shim@5.0.1:
     resolution: {integrity: sha512-i/2XbnSz/uxRCU6+NdVJgKWDTM427+MqYbkQzD321DuCQJUqOuJKIA0IM2+W2xtYHdKOmZ4dR6fExsd4SXL+WQ==}
     engines: {node: '>=6'}
@@ -3041,10 +2244,6 @@ packages:
 
   for-each@0.3.3:
     resolution: {integrity: sha512-jqYfLp7mo9vIyQf8ykW2v7A+2N4QjeCeI5+Dz9XraiO1ign81wjiH7Fb9vSOWvQfNtmSa4H2RoQTrrXivdUZmw==}
-
-  form-data@4.0.0:
-    resolution: {integrity: sha512-ETEklSGi5t0QMZuiXoA/Q6vcnxcLQP5vdugSpuAyi6SVGi2clPPp+xgEhuMaHC+zGgn31Kd235W35f7Hykkaww==}
-    engines: {node: '>= 6'}
 
   formdata-polyfill@4.0.10:
     resolution: {integrity: sha512-buewHzMvYL29jdeQTVILecSaZKnt/RJWjoZCF5OW60Z67/GmSLBkOFM7qh1PI3zFNtJbaZL5eQu1vLfazOwj4g==}
@@ -3176,10 +2375,6 @@ packages:
     resolution: {integrity: sha512-0hJU9SCPvmMzIBdZFqNPXWa6dqh7WdH0cII9y+CyS8rG3nL48Bclra9HmKhVVUHyPWNH5Y7xDwAB7bfgSjkUMQ==}
     engines: {node: '>= 0.4'}
 
-  html-encoding-sniffer@3.0.0:
-    resolution: {integrity: sha512-oWv4T4yJ52iKrufjnyZPkrN0CH3QnrUqdB6In1g5Fe1mia8GmF36gnfNySxoZtxD5+NmYw1EElVXiBk93UeskA==}
-    engines: {node: '>=12'}
-
   html-escaper@2.0.2:
     resolution: {integrity: sha512-H2iMtd0I4Mt5eYiapRdIDjp+XzelXQ0tFE4JS7YFwFevXXMmOp9myNrUvCg0D6ws8iqkRPBfKHgbwig1SmlLfg==}
 
@@ -3193,21 +2388,9 @@ packages:
     resolution: {integrity: sha512-mW3N/rTYpCn99s1do0zx6nzFZSwLH9HGfUM4ZqLWJ16ylmYaC2v5eYGqrNTQlByx8AzUgGI+V/32gXPugs1+Sw==}
     engines: {node: '>=6.0.0'}
 
-  http-proxy-agent@5.0.0:
-    resolution: {integrity: sha512-n2hY8YdoRE1i7r6M0w9DIw5GgZN0G25P8zLCRQ8rjXtTU3vsNFBI/vWK/UIeE6g5MUUz6avwAPXmL6Fy9D/90w==}
-    engines: {node: '>= 6'}
-
-  https-proxy-agent@5.0.1:
-    resolution: {integrity: sha512-dFcAjpTQFgoLMzC2VwU+C/CbS7uRL0lWmxDITmqm7C+7F0Odmj6s9l6alZc6AELXhrnggM2CeWSXHGOdX2YtwA==}
-    engines: {node: '>= 6'}
-
   human-signals@2.1.0:
     resolution: {integrity: sha512-B4FFZ6q/T2jhhksgkbEW3HBvWIfDW85snkQgawt07S7J5QXTk6BkNV+0yAeZrM5QpMAdYlocGoljn0sJ/WQkFw==}
     engines: {node: '>=10.17.0'}
-
-  iconv-lite@0.6.3:
-    resolution: {integrity: sha512-4fCk79wshMdzMp2rH06qWrJE4iolqLhCUH+OiuIgU++RB0+94NlDL81atO7GX55uUKueo0txHNtvEyI6D7WdMw==}
-    engines: {node: '>=0.10.0'}
 
   ieee754@1.2.1:
     resolution: {integrity: sha512-dcyqhDvX1C46lXZcVqCpK+FtMRQVdIMN6/Df5js2zouUsqG7I6sFxitIC+7KYK29KdXOLHdu9zL4sFnoVQnqaA==}
@@ -3322,9 +2505,6 @@ packages:
   is-path-inside@3.0.3:
     resolution: {integrity: sha512-Fd4gABb+ycGAmKou8eMftCupSir5lRxqf4aD/vd0cD2qc4HL07OjCeuHMr8Ro4CoMaeCKDB0/ECBOVWjTwUvPQ==}
     engines: {node: '>=8'}
-
-  is-potential-custom-element-name@1.0.1:
-    resolution: {integrity: sha512-bCYeRA2rVibKZd+s2625gGnGF/t7DSqDs4dP7CrLA1m7jKWz6pps0LpYLJN8Q64HtmPKJ1hrN3nzPNKFEKOUiQ==}
 
   is-regex@1.1.4:
     resolution: {integrity: sha512-kvRdxDsxZjhzUX07ZnLydzS1TU/TJlTUHHY4YLL87e37oUA49DfkLqgy+VjFocowy29cKvcSiu+kIv728jTTVg==}
@@ -3466,15 +2646,6 @@ packages:
   jest-each@29.7.0:
     resolution: {integrity: sha512-gns+Er14+ZrEoC5fhOfYCY1LOHHr0TI+rQUHZS8Ttw2l7gl+80eHc/gFf2Ktkw0+SIACDTeWvpFcv3B04VembQ==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
-
-  jest-environment-jsdom@29.7.0:
-    resolution: {integrity: sha512-k9iQbsf9OyOfdzWH8HDmrRT0gSIcX+FLNW7IQq94tFX0gynPwqDTW0Ho6iMVNjGz/nb+l/vW3dWM2bbLLpkbXA==}
-    engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
-    peerDependencies:
-      canvas: ^2.5.0
-    peerDependenciesMeta:
-      canvas:
-        optional: true
 
   jest-environment-node@29.5.0:
     resolution: {integrity: sha512-ExxuIK/+yQ+6PRGaHkKewYtg6hto2uGCgvKdb2nfJfKXgZ17DfXjvbZ+jA1Qt9A8EQSfPnt5FKIfnOO3u1h9qw==}
@@ -3646,15 +2817,6 @@ packages:
   js-yaml@4.1.0:
     resolution: {integrity: sha512-wpxZs9NoxZaJESJGIZTyDEaYpl0FKSA+FB9aJiyemKhMwkxQg63h4T1KJgUGHpTqPDNRcmmYLugrRjJlBtWvRA==}
     hasBin: true
-
-  jsdom@20.0.3:
-    resolution: {integrity: sha512-SYhBvTh89tTfCD/CRdSOm13mOBa42iTaTyfyEWBdKcGdPxPtLFBXuHR8XHb33YNYaP+lLbmSvBTsnoesCNJEsQ==}
-    engines: {node: '>=14'}
-    peerDependencies:
-      canvas: ^2.5.0
-    peerDependenciesMeta:
-      canvas:
-        optional: true
 
   jsesc@2.5.2:
     resolution: {integrity: sha512-OYu7XEzjkCQ3C5Ps3QIZsQfNpqoJyZZA99wd9aWd05NCtC5pWOkShK2mkL6HXQR6/Cy2lbNdPlZBpuQHXE63gA==}
@@ -3830,14 +2992,6 @@ packages:
     resolution: {integrity: sha512-DMy+ERcEW2q8Z2Po+WNXuw3c5YaUSFjAO5GsJqfEl7UjvtIuFKO6ZrKvcItdy98dwFI2N1tg3zNIdKaQT+aNdA==}
     engines: {node: '>=8.6'}
 
-  mime-db@1.52.0:
-    resolution: {integrity: sha512-sPU4uV7dYlvtWJxwwxHD0PuihVNiE7TyAbQ5SWxDCB9mUYvOgroQOwYQQOKPJ8CIbE+1ETVlOoK1UC2nU3gYvg==}
-    engines: {node: '>= 0.6'}
-
-  mime-types@2.1.35:
-    resolution: {integrity: sha512-ZDY+bPm5zTTF+YpCrAU9nK0UgICYPT0QtT1NZWFv4s++TNkcgVaT0g6+4R2uI4MjQjzysHB1zxuWL50hzaeXiw==}
-    engines: {node: '>= 0.6'}
-
   mimic-fn@2.1.0:
     resolution: {integrity: sha512-OqbOk5oEQeAZ8WXWydlu9HJjz9WVdEIvamMCcXmuqUYjTknH/sqsWvhQ3vgwKFRR1HpjvNBKQ37nbJgYzGqGcg==}
     engines: {node: '>=6'}
@@ -3916,9 +3070,6 @@ packages:
     resolution: {integrity: sha512-S48WzZW777zhNIrn7gxOlISNAqi9ZC/uQFnRdbeIHhZhCA6UqpkOT8T1G7BvfdgP4Er8gF4sUbaS0i7QvIfCWw==}
     engines: {node: '>=8'}
 
-  nwsapi@2.2.10:
-    resolution: {integrity: sha512-QK0sRs7MKv0tKe1+5uZIQk/C8XGza4DAnztJG8iD+TpJIORARrCxczA738awHrZoHeTjSSoHqao2teO0dC/gFQ==}
-
   object-inspect@1.13.2:
     resolution: {integrity: sha512-IRZSRuzJiynemAXPYtPe5BoI/RESNYR7TYm50MC5Mqbd3Jmw5y790sErYw3V6SryFJD64b74qQQs9wn5Bg/k3g==}
     engines: {node: '>= 0.4'}
@@ -3992,9 +3143,6 @@ packages:
   parse-ms@4.0.0:
     resolution: {integrity: sha512-TXfryirbmq34y8QBwgqCVLi+8oA3oWx2eAnSn62ITyEhEYaWRlVZ2DvMM9eZbMs/RfxPu/PK/aBLyGj4IrqMHw==}
     engines: {node: '>=18'}
-
-  parse5@7.1.2:
-    resolution: {integrity: sha512-Czj1WaSVpaoj0wbhMzLmWD69anp2WH7FXMB9n1Sy8/ZFF9jolSQVMu1Ij5WIyGmcBmhk7EOndpO4mIpihVqAXw==}
 
   path-exists@4.0.0:
     resolution: {integrity: sha512-ak9Qy5Q7jYb2Wwcey5Fpvg2KoAc/ZIhLSLOSBmRmygPsGwkVVt0fZa0qrtMz+m6tJTAHfZQ8FnmB4MG4LWy7/w==}
@@ -4070,9 +3218,6 @@ packages:
     resolution: {integrity: sha512-NxNv/kLguCA7p3jE8oL2aEBsrJWgAakBpgmgK6lpPWV+WuOmY6r2/zbAVnP+T8bQlA0nzHXSJSJW0Hq7ylaD2Q==}
     engines: {node: '>= 6'}
 
-  psl@1.9.0:
-    resolution: {integrity: sha512-E/ZsdU4HLs/68gYzgGTkMicWTLPdAftJLfJFlLUAAKZGkStNU72sZjT66SnMDVOfOWY/YAoiD7Jxa9iHvngcag==}
-
   punycode@2.3.0:
     resolution: {integrity: sha512-rRV+zQD8tVFys26lAGR9WUuS4iUAngJScM+ZRSKtvl5tKeZ2t5bvdNFdNHBW9FWR4guGHlgmsZ1G7BSm2wTbuA==}
     engines: {node: '>=6'}
@@ -4090,9 +3235,6 @@ packages:
   quadstore@12.4.1:
     resolution: {integrity: sha512-cuEDO/uWL2e17bb0zLefhcAh7tBiNptZkGwIBP1Kt/23kcx6LNHi6rQGf/XBOLViLMwg1oAx0Xvc/hBBMj3Hxw==}
     engines: {node: '>=16.0.0'}
-
-  querystringify@2.2.0:
-    resolution: {integrity: sha512-FIqgj2EUvTa7R50u0rGsyTftzjYmv/a3hO345bZNrqabNqjtgiDMgmo4mkUjd+nzU5oF3dClKqFIPUKybUyqoQ==}
 
   queue-microtask@1.2.3:
     resolution: {integrity: sha512-NuaNSa6flKT5JaSYQzJok04JzTL1CA6aGhv5rfLW3PgqA+M2ChpZQnAC8h8i4ZFkBS8X5RqkDBHA7r4hej3K9A==}
@@ -4129,9 +3271,6 @@ packages:
   rdf-quad@1.5.0:
     resolution: {integrity: sha512-LnCYx8XbRVW1wr6UiZPSy2Tv7bXAtEwuyck/68dANhFu8VMnGS+QfUNP3b9YI6p4Bfd/fyDx5E3x81IxGV6BzA==}
 
-  rdf-streaming-store@1.1.4:
-    resolution: {integrity: sha512-Bq98GHHvmdJRTxZBH5TKYuWLAHEXiLTd/F6OeuLtWC6tQydxp7smMnYyoRtztc9p+jBsA9z9HmzQsGfEE2mj4w==}
-
   rdf-string-ttl@1.3.2:
     resolution: {integrity: sha512-yqolaVoUvTaSC5aaQuMcB4BL54G/pCGsV4jQH87f0TvAx8zHZG0koh7XWrjva/IPGcVb1QTtaeEdfda5mcddJg==}
 
@@ -4161,9 +3300,6 @@ packages:
   react@18.3.1:
     resolution: {integrity: sha512-wS+hAgJShR0KhEvPJArfuPVN1+Hz1t0Y6n5jLrGQbkb4urgPE/0Rve+1kMB1v/oWgHgm4WIcV+i7F2pTVj+2iQ==}
     engines: {node: '>=0.10.0'}
-
-  readable-from-web@1.0.0:
-    resolution: {integrity: sha512-tei03fQhxqLEklpIvocFUR9hO42hiyYvdhwoNHAjJztPAQ8QS1NqF2AhLwzGxIGidPBJ4MCqB48wn7OAFCfhsQ==}
 
   readable-stream-node-to-web@1.0.1:
     resolution: {integrity: sha512-OGzi2VKLa8H259kAx7BIwuRrXHGcxeHj4RdASSgEGBP9Q2wowdPvBc65upF4Q9O05qWgKqBw1+9PiLTtObl7uQ==}
@@ -4204,9 +3340,6 @@ packages:
   require-from-string@2.0.2:
     resolution: {integrity: sha512-Xf0nWe6RseziFMu+Ap9biiUbmplq6S9/p+7w7YXP/JBHhrUDDUhwa+vANyubuqfZWTveU//DYVGsDG7RKL/vEw==}
     engines: {node: '>=0.10.0'}
-
-  requires-port@1.0.0:
-    resolution: {integrity: sha512-KigOCHcocU3XODJxsu8i/j8T9tzT4adHiecwORRQ0ZZFcp7ahwXuRU1m+yuO90C5ZUyGeGfocHDI14M3L3yDAQ==}
 
   resolve-cwd@3.0.0:
     resolution: {integrity: sha512-OrZaX2Mb+rJCpH/6CpSqt9xFVpN++x01XnN2ie9g6P5/3xelLAkXWVADpdz1IHD/KFfEXyE6V0U01OQ3UO2rEg==}
@@ -4261,13 +3394,6 @@ packages:
   safe-stable-stringify@2.4.3:
     resolution: {integrity: sha512-e2bDA2WJT0wxseVd4lsDP4+3ONX6HpMXQa1ZhFQ7SU+GjvORCmShbCMltrtIDfkYhVHrOcPtj+KhmDBdPdZD1g==}
     engines: {node: '>=10'}
-
-  safer-buffer@2.1.2:
-    resolution: {integrity: sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg==}
-
-  saxes@6.0.0:
-    resolution: {integrity: sha512-xAg7SOnEhrm5zI3puOOKyy1OMcMlIJZYNJY7xLBwSze0UjhPLnWfj2GF2EpT0jmzaJKIWKHLsaSSajf35bcYnA==}
-    engines: {node: '>=v12.22.7'}
 
   scheduler@0.23.2:
     resolution: {integrity: sha512-UOShsPwz7NrMUqhR6t0hWjFduvOzbtv7toDH1/hIrfRNIDBnnBWd0CwJTGvTpngVlmwGCdP9/Zl/tVrDqcuYzQ==}
@@ -4472,9 +3598,6 @@ packages:
     resolution: {integrity: sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==}
     engines: {node: '>= 0.4'}
 
-  symbol-tree@3.2.4:
-    resolution: {integrity: sha512-9QNk5KwDF+Bvz+PyObkmSYjI5ksVUYtjW7AU22r2NKcfLJcXp96hkDWU3+XndOsUb+AQ9QhfzfCT2O+CNWT5Tw==}
-
   table@6.8.1:
     resolution: {integrity: sha512-Y4X9zqrCftUhMeH2EptSSERdVKt/nEdijTOacGD/97EKjhQ/Qs8RTlEGABSJNNN8lac9kheH+af7yAkEWlgneA==}
     engines: {node: '>=10.0.0'}
@@ -4507,16 +3630,8 @@ packages:
   to-utf8@0.0.1:
     resolution: {integrity: sha512-zks18/TWT1iHO3v0vFp5qLKOG27m67ycq/Y7a7cTiRuUNlc4gf3HGnkRgMv0NyhnfTamtkYBJl+YeD1/j07gBQ==}
 
-  tough-cookie@4.1.4:
-    resolution: {integrity: sha512-Loo5UUvLD9ScZ6jh8beX1T6sO1w2/MpCRpEP7V280GKMVUQ0Jzar2U3UJPsrdbziLEMMhu3Ujnq//rhiFuIeag==}
-    engines: {node: '>=6'}
-
   tr46@0.0.3:
     resolution: {integrity: sha512-N3WMsuqV66lT30CrXNbEjx4GEwlow3v6rr4mCcv6prnfwhS01rkgyFdjPNBYd9br7LpXV1+Emh01fHnq2Gdgrw==}
-
-  tr46@3.0.0:
-    resolution: {integrity: sha512-l7FvfAHlcmulp8kr+flpQZmVwtu7nfRV7NZujtN0OqES8EL4O4e0qqzL0DC5gAvx/ZC/9lk6rhcUwYvkBnBnYA==}
-    engines: {node: '>=12'}
 
   triple-beam@1.3.0:
     resolution: {integrity: sha512-XrHUvV5HpdLmIj4uVMxHggLbFSZYIn7HEWsqePZcI50pco+MPqJ50wMGY794X7AOOhxOBAjbkqfAbEe/QMp2Lw==}
@@ -4603,15 +3718,6 @@ packages:
     resolution: {integrity: sha512-/OxDN6OtAk5KBpGb28T+HZc2M+ADtvRxXrKKbUwtsLgdoxgX13hyy7ek6bFRl5+aBs2yZzB0c4CnQfAtVypW/g==}
     engines: {node: '>= 0.4'}
 
-  typescript-eslint@8.0.0-alpha.45:
-    resolution: {integrity: sha512-Iw8MpAxWE0UBrtJjHsGxEiY2tHT1hkfrt6tWcnHotVyDAhsNVMYXcucxtWMYdnNf5fKQCRHM51RA84nuQgB1Bw==}
-    engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
-    peerDependencies:
-      typescript: '*'
-    peerDependenciesMeta:
-      typescript:
-        optional: true
-
   typescript-eslint@8.0.0-alpha.51:
     resolution: {integrity: sha512-Hs60EyclUz1wBZMkmJ/xiiWGW91UZWcumWqOCQeWBp+xlPJJAufr5/OTrWhW+58yPv/72moEVhrA0VeUAlNoDQ==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
@@ -4633,10 +3739,6 @@ packages:
     resolution: {integrity: sha512-Ji2IJhFXZY0x/0tVBXeQwgPlLWw13GVzpsWPQ3rV50IFMMof2I55PZZxtm4P6iNq+L5znYN9nSTAq0ZyE6lSJw==}
     engines: {node: '>=14.0'}
 
-  universalify@0.2.0:
-    resolution: {integrity: sha512-CJ1QgKmNg3CwvAv/kOFmtnEN05f0D/cn9QntgNOQlQF9dgvVTHj3t+8JPdjqawCHk7V/KA+fbUqzZ9XWhcqPUg==}
-    engines: {node: '>= 4.0.0'}
-
   update-browserslist-db@1.0.11:
     resolution: {integrity: sha512-dCwEFf0/oT85M1fHBg4F0jtLwJrutGoHSQXCh7u4o2t1drG+c0a9Flnqww6XUKSfQMPpJBRjU8d4RXB09qtvaA==}
     hasBin: true
@@ -4651,9 +3753,6 @@ packages:
 
   uri-js@4.4.1:
     resolution: {integrity: sha512-7rKUyy33Q1yc98pQ1DAmLtwX109F7TIfWlW1Ydo8Wl1ii1SeHieeh0HHfPeL2fMXK6z0s8ecKs9frCuLJvndBg==}
-
-  url-parse@1.5.10:
-    resolution: {integrity: sha512-WypcfiRhfeUP9vvF0j6rw0J3hrWrw6iZv3+22h6iRMJ/8z1Tj6XfLP4DsUix5MhMPnXpiHDoKyoZ/bdCkwBCiQ==}
 
   util-deprecate@1.0.2:
     resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==}
@@ -4676,10 +3775,6 @@ packages:
   validate-iri@1.0.1:
     resolution: {integrity: sha512-gLXi7351CoyVVQw8XE5sgpYawRKatxE7kj/xmCxXOZS1kMdtcqC0ILIqLuVEVnAUQSL/evOGG3eQ+8VgbdnstA==}
 
-  w3c-xmlserializer@4.0.0:
-    resolution: {integrity: sha512-d+BFHzbiCx6zGfz0HyQ6Rg69w9k19nviJspaj4yNscGjrHu94sVP+aRm75yEbCh+r2/yR+7q6hux9LVtbuTGBw==}
-    engines: {node: '>=14'}
-
   walker@1.0.8:
     resolution: {integrity: sha512-ts/8E8l5b7kY0vlWLewOkDXMmPdLcVV4GmOQLyxuSswIJsweeFZtAsMF7k1Nszz+TYBQrlYRmzOnr398y1JemQ==}
 
@@ -4695,22 +3790,6 @@ packages:
 
   webidl-conversions@3.0.1:
     resolution: {integrity: sha512-2JAn3z8AR6rjK8Sm8orRC0h/bcl/DqL7tRPdGZ4I1CjdF+EaMLmYxBHyXuKL849eucPFhvBoxMsflfOb8kxaeQ==}
-
-  webidl-conversions@7.0.0:
-    resolution: {integrity: sha512-VwddBukDzu71offAQR975unBIGqfKZpM+8ZX6ySk8nYhVoo5CYaZyzt3YBvYtRtO+aoGlqxPg/B87NGVZ/fu6g==}
-    engines: {node: '>=12'}
-
-  whatwg-encoding@2.0.0:
-    resolution: {integrity: sha512-p41ogyeMUrw3jWclHWTQg1k05DSVXPLcVxRTYsXUk+ZooOCZLcoYgPZ/HL/D/N+uQPOtcp1me1WhBEaX02mhWg==}
-    engines: {node: '>=12'}
-
-  whatwg-mimetype@3.0.0:
-    resolution: {integrity: sha512-nt+N2dzIutVRxARx1nghPKGv1xHikU7HKdfafKkLNLindmPU/ch3U31NOCGGA/dmPcmb1VlofO0vnKAcsm0o/Q==}
-    engines: {node: '>=12'}
-
-  whatwg-url@11.0.0:
-    resolution: {integrity: sha512-RKT8HExMpoYx4igMiVMY83lN6UeITKJlBQ+vR/8ZJ8OCdSiN3RwCq+9gH0+Xzj0+5IrM6i4j/6LuvzbZIQgEcQ==}
-    engines: {node: '>=12'}
 
   whatwg-url@5.0.0:
     resolution: {integrity: sha512-saE57nupxk6v3HY35+jzBwYa0rKSy0XR8JSxZPwgLr7ys0IBzhGviA1/TUGJLmSVqs8pb9AnvICXEuOHLprYTw==}
@@ -4749,22 +3828,6 @@ packages:
   write-file-atomic@4.0.2:
     resolution: {integrity: sha512-7KxauUdBmSdWnmpaGFg+ppNjKF8uNLry8LyzjauQDOVONfFLNKrKvQOxZ/VuTIcS/gge/YNahf5RIIQWTSarlg==}
     engines: {node: ^12.13.0 || ^14.15.0 || >=16.0.0}
-
-  ws@8.18.0:
-    resolution: {integrity: sha512-8VbfWfHLbbwu3+N6OKsOMpBdT4kXPDDB9cJk2bJ6mh9ucxdlnNvH1e+roYkKmN9Nxw2yjz7VzeO9oOz2zJ04Pw==}
-    engines: {node: '>=10.0.0'}
-    peerDependencies:
-      bufferutil: ^4.0.1
-      utf-8-validate: '>=5.0.2'
-    peerDependenciesMeta:
-      bufferutil:
-        optional: true
-      utf-8-validate:
-        optional: true
-
-  xml-name-validator@4.0.0:
-    resolution: {integrity: sha512-ICP2e+jsHvAj2E2lIHxa5tjXRlKDJo4IdvPvCXbXQGdzSfmSpNVyIKMvoZHjDY9DP0zV17iI85o90vRFXNccRw==}
-    engines: {node: '>=12'}
 
   xmlchars@2.2.0:
     resolution: {integrity: sha512-JZnDKK8B0RCDw84FNdDAIpZK+JuJw+s7Lz8nksI7SIuU3UXJJslUthsi+uWBUYOwPFwW7W7PRLRfUKpxjtjFCw==}
@@ -5238,19 +4301,9 @@ snapshots:
       '@comunica/core': 2.10.0
       '@comunica/types': 2.10.0
 
-  '@comunica/actor-abstract-mediatyped@3.2.0':
-    dependencies:
-      '@comunica/core': 3.2.0
-      '@comunica/types': 3.2.0
-
   '@comunica/actor-abstract-parse@2.7.0':
     dependencies:
       '@comunica/core': 2.10.0
-      readable-stream: 4.4.2
-
-  '@comunica/actor-abstract-parse@3.2.0':
-    dependencies:
-      '@comunica/core': 3.2.0
       readable-stream: 4.4.2
 
   '@comunica/actor-abstract-path@2.10.1':
@@ -5268,65 +4321,6 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
-  '@comunica/actor-abstract-path@3.2.0':
-    dependencies:
-      '@comunica/bindings-factory': 3.2.0
-      '@comunica/bus-query-operation': 3.2.0
-      '@comunica/context-entries': 3.2.0
-      '@comunica/core': 3.2.0
-      '@comunica/types': 3.2.0
-      '@rdfjs/types': 1.1.0
-      asynciterator: 3.9.0
-      rdf-data-factory: 1.1.1
-      rdf-string: 1.6.3
-      sparqlalgebrajs: 4.3.8
-    transitivePeerDependencies:
-      - encoding
-
-  '@comunica/actor-context-preprocess-convert-shortcuts@3.2.0':
-    dependencies:
-      '@comunica/bus-context-preprocess': 3.2.0
-      '@comunica/core': 3.2.0
-      '@comunica/types': 3.2.0
-
-  '@comunica/actor-context-preprocess-query-source-identify@3.2.0':
-    dependencies:
-      '@comunica/bus-context-preprocess': 3.2.0
-      '@comunica/bus-http-invalidate': 3.2.0
-      '@comunica/bus-query-source-identify': 3.2.0
-      '@comunica/context-entries': 3.2.0
-      '@comunica/core': 3.2.0
-      '@comunica/types': 3.2.0
-      lru-cache: 10.0.0
-    transitivePeerDependencies:
-      - encoding
-
-  '@comunica/actor-context-preprocess-query-source-skolemize@3.2.0':
-    dependencies:
-      '@comunica/bus-context-preprocess': 3.2.0
-      '@comunica/context-entries': 3.2.0
-      '@comunica/core': 3.2.0
-      '@comunica/data-factory': 3.1.0
-      '@comunica/metadata': 3.2.0
-      '@comunica/types': 3.2.0
-      '@rdfjs/types': 1.1.0
-      asynciterator: 3.9.0
-      rdf-data-factory: 1.1.2
-      rdf-terms: 1.11.0
-      sparqlalgebrajs: 4.3.8
-    transitivePeerDependencies:
-      - encoding
-
-  '@comunica/actor-context-preprocess-set-defaults@3.2.0':
-    dependencies:
-      '@comunica/bus-context-preprocess': 3.2.0
-      '@comunica/context-entries': 3.2.0
-      '@comunica/core': 3.2.0
-      '@comunica/types': 3.2.0
-      '@rdfjs/types': 1.1.0
-    transitivePeerDependencies:
-      - encoding
-
   '@comunica/actor-context-preprocess-source-to-destination@2.10.0':
     dependencies:
       '@comunica/bus-context-preprocess': 2.10.0
@@ -5336,27 +4330,10 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
-  '@comunica/actor-context-preprocess-source-to-destination@3.2.0':
-    dependencies:
-      '@comunica/bus-context-preprocess': 3.2.0
-      '@comunica/context-entries': 3.2.0
-      '@comunica/core': 3.2.0
-      '@comunica/types': 3.2.0
-    transitivePeerDependencies:
-      - encoding
-
   '@comunica/actor-hash-bindings-sha1@2.10.0':
     dependencies:
       '@comunica/bus-hash-bindings': 2.10.0
       '@comunica/core': 2.10.0
-      canonicalize: 2.0.0
-      hash.js: 1.1.7
-      rdf-string: 1.6.3
-
-  '@comunica/actor-hash-bindings-sha1@3.2.0':
-    dependencies:
-      '@comunica/bus-hash-bindings': 3.2.0
-      '@comunica/core': 3.2.0
       canonicalize: 2.0.0
       hash.js: 1.1.7
       rdf-string: 1.6.3
@@ -5389,15 +4366,6 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
-  '@comunica/actor-http-proxy@3.2.0':
-    dependencies:
-      '@comunica/bus-http': 3.2.0
-      '@comunica/context-entries': 3.2.0
-      '@comunica/mediatortype-time': 3.2.0
-      '@comunica/types': 3.2.0
-    transitivePeerDependencies:
-      - encoding
-
   '@comunica/actor-init-query@2.10.2':
     dependencies:
       '@comunica/actor-http-proxy': 2.10.2
@@ -5427,79 +4395,11 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
-  '@comunica/actor-init-query@3.2.0':
-    dependencies:
-      '@comunica/actor-http-proxy': 3.2.0
-      '@comunica/bus-http-invalidate': 3.2.0
-      '@comunica/bus-init': 3.2.0
-      '@comunica/bus-query-process': 3.2.0
-      '@comunica/bus-query-result-serialize': 3.2.0
-      '@comunica/context-entries': 3.2.0
-      '@comunica/core': 3.2.0
-      '@comunica/logger-pretty': 3.2.0
-      '@comunica/runner': 3.2.0
-      '@comunica/types': 3.2.0
-      '@rdfjs/types': 1.1.0
-      '@types/yargs': 17.0.24
-      asynciterator: 3.9.0
-      negotiate: 1.0.1
-      rdf-quad: 1.5.0
-      streamify-string: 1.0.1
-      yargs: 17.7.2
-    optionalDependencies:
-      process: 0.11.10
-    transitivePeerDependencies:
-      - encoding
-
-  '@comunica/actor-optimize-query-operation-assign-sources-exhaustive@3.2.0':
-    dependencies:
-      '@comunica/bus-optimize-query-operation': 3.2.0
-      '@comunica/bus-query-operation': 3.2.0
-      '@comunica/bus-rdf-update-quads': 3.2.0
-      '@comunica/context-entries': 3.2.0
-      '@comunica/core': 3.2.0
-      '@comunica/types': 3.2.0
-      sparqlalgebrajs: 4.3.8
-    transitivePeerDependencies:
-      - encoding
-
   '@comunica/actor-optimize-query-operation-bgp-to-join@2.10.0':
     dependencies:
       '@comunica/bus-optimize-query-operation': 2.10.0
       '@comunica/core': 2.10.0
       sparqlalgebrajs: 4.2.0
-
-  '@comunica/actor-optimize-query-operation-bgp-to-join@3.2.0':
-    dependencies:
-      '@comunica/bus-optimize-query-operation': 3.2.0
-      '@comunica/core': 3.2.0
-      sparqlalgebrajs: 4.3.8
-
-  '@comunica/actor-optimize-query-operation-describe-to-constructs-subject@3.2.0':
-    dependencies:
-      '@comunica/bus-optimize-query-operation': 3.2.0
-      '@comunica/core': 3.2.0
-      rdf-data-factory: 1.1.2
-      sparqlalgebrajs: 4.3.8
-
-  '@comunica/actor-optimize-query-operation-filter-pushdown@3.2.0':
-    dependencies:
-      '@comunica/bus-optimize-query-operation': 3.2.0
-      '@comunica/core': 3.2.0
-      '@comunica/types': 3.2.0
-      '@rdfjs/types': 1.1.0
-      rdf-terms: 1.11.0
-      sparqlalgebrajs: 4.3.8
-
-  '@comunica/actor-optimize-query-operation-group-sources@3.2.0':
-    dependencies:
-      '@comunica/bus-optimize-query-operation': 3.2.0
-      '@comunica/bus-query-operation': 3.2.0
-      '@comunica/core': 3.2.0
-      '@comunica/types': 3.2.0
-      sparqlalgebrajs: 4.3.8
-    transitivePeerDependencies:
-      - encoding
 
   '@comunica/actor-optimize-query-operation-join-bgp@2.10.0':
     dependencies:
@@ -5507,55 +4407,11 @@ snapshots:
       '@comunica/core': 2.10.0
       sparqlalgebrajs: 4.2.0
 
-  '@comunica/actor-optimize-query-operation-join-bgp@3.2.0':
-    dependencies:
-      '@comunica/bus-optimize-query-operation': 3.2.0
-      '@comunica/core': 3.2.0
-      sparqlalgebrajs: 4.3.8
-
   '@comunica/actor-optimize-query-operation-join-connected@2.10.0':
     dependencies:
       '@comunica/bus-optimize-query-operation': 2.10.0
       '@comunica/core': 2.10.0
       sparqlalgebrajs: 4.2.0
-
-  '@comunica/actor-optimize-query-operation-join-connected@3.2.0':
-    dependencies:
-      '@comunica/bus-optimize-query-operation': 3.2.0
-      '@comunica/core': 3.2.0
-      sparqlalgebrajs: 4.3.8
-
-  '@comunica/actor-optimize-query-operation-prune-empty-source-operations@3.2.0':
-    dependencies:
-      '@comunica/bus-optimize-query-operation': 3.2.0
-      '@comunica/bus-query-operation': 3.2.0
-      '@comunica/context-entries': 3.2.0
-      '@comunica/core': 3.2.0
-      '@comunica/types': 3.2.0
-      rdf-data-factory: 1.1.2
-      sparqlalgebrajs: 4.3.8
-    transitivePeerDependencies:
-      - encoding
-
-  '@comunica/actor-optimize-query-operation-rewrite-add@3.2.0':
-    dependencies:
-      '@comunica/bus-optimize-query-operation': 3.2.0
-      '@comunica/core': 3.2.0
-      '@rdfjs/types': 1.1.0
-      rdf-data-factory: 1.1.2
-      sparqlalgebrajs: 4.3.8
-
-  '@comunica/actor-optimize-query-operation-rewrite-copy@3.2.0':
-    dependencies:
-      '@comunica/bus-optimize-query-operation': 3.2.0
-      '@comunica/core': 3.2.0
-      sparqlalgebrajs: 4.3.8
-
-  '@comunica/actor-optimize-query-operation-rewrite-move@3.2.0':
-    dependencies:
-      '@comunica/bus-optimize-query-operation': 3.2.0
-      '@comunica/core': 3.2.0
-      sparqlalgebrajs: 4.3.8
 
   '@comunica/actor-query-operation-ask@2.10.1':
     dependencies:
@@ -5566,30 +4422,12 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
-  '@comunica/actor-query-operation-ask@3.2.0':
-    dependencies:
-      '@comunica/bus-query-operation': 3.2.0
-      '@comunica/core': 3.2.0
-      '@comunica/types': 3.2.0
-      sparqlalgebrajs: 4.3.8
-    transitivePeerDependencies:
-      - encoding
-
   '@comunica/actor-query-operation-bgp-join@2.10.1':
     dependencies:
       '@comunica/bus-query-operation': 2.10.1
       '@comunica/core': 2.10.0
       '@comunica/types': 2.10.0
       sparqlalgebrajs: 4.2.0
-    transitivePeerDependencies:
-      - encoding
-
-  '@comunica/actor-query-operation-bgp-join@3.2.0':
-    dependencies:
-      '@comunica/bus-query-operation': 3.2.0
-      '@comunica/core': 3.2.0
-      '@comunica/types': 3.2.0
-      sparqlalgebrajs: 4.3.8
     transitivePeerDependencies:
       - encoding
 
@@ -5603,19 +4441,6 @@ snapshots:
       rdf-data-factory: 1.1.1
       rdf-terms: 1.11.0
       sparqlalgebrajs: 4.2.0
-    transitivePeerDependencies:
-      - encoding
-
-  '@comunica/actor-query-operation-construct@3.2.0':
-    dependencies:
-      '@comunica/bus-query-operation': 3.2.0
-      '@comunica/core': 3.2.0
-      '@comunica/types': 3.2.0
-      '@rdfjs/types': 1.1.0
-      asynciterator: 3.9.0
-      rdf-data-factory: 1.1.1
-      rdf-terms: 1.11.0
-      sparqlalgebrajs: 4.3.8
     transitivePeerDependencies:
       - encoding
 
@@ -5641,16 +4466,6 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
-  '@comunica/actor-query-operation-distinct-hash@3.2.0':
-    dependencies:
-      '@comunica/bus-hash-bindings': 3.2.0
-      '@comunica/bus-query-operation': 3.2.0
-      '@comunica/core': 3.2.0
-      '@comunica/types': 3.2.0
-      sparqlalgebrajs: 4.3.8
-    transitivePeerDependencies:
-      - encoding
-
   '@comunica/actor-query-operation-extend@2.10.1':
     dependencies:
       '@comunica/bindings-factory': 2.10.1
@@ -5659,18 +4474,6 @@ snapshots:
       '@comunica/expression-evaluator': 2.10.0
       '@comunica/types': 2.10.0
       sparqlalgebrajs: 4.2.0
-    transitivePeerDependencies:
-      - encoding
-
-  '@comunica/actor-query-operation-extend@3.2.0':
-    dependencies:
-      '@comunica/bindings-factory': 3.2.0
-      '@comunica/bus-merge-bindings-context': 3.2.0
-      '@comunica/bus-query-operation': 3.2.0
-      '@comunica/core': 3.2.0
-      '@comunica/expression-evaluator': 3.1.0
-      '@comunica/types': 3.2.0
-      sparqlalgebrajs: 4.3.8
     transitivePeerDependencies:
       - encoding
 
@@ -5685,18 +4488,6 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
-  '@comunica/actor-query-operation-filter@3.2.0':
-    dependencies:
-      '@comunica/bindings-factory': 3.2.0
-      '@comunica/bus-merge-bindings-context': 3.2.0
-      '@comunica/bus-query-operation': 3.2.0
-      '@comunica/core': 3.2.0
-      '@comunica/expression-evaluator': 3.1.0
-      '@comunica/types': 3.2.0
-      sparqlalgebrajs: 4.3.8
-    transitivePeerDependencies:
-      - encoding
-
   '@comunica/actor-query-operation-from-quad@2.10.1':
     dependencies:
       '@comunica/bus-query-operation': 2.10.1
@@ -5704,16 +4495,6 @@ snapshots:
       '@comunica/types': 2.10.0
       '@rdfjs/types': 1.1.0
       sparqlalgebrajs: 4.2.0
-    transitivePeerDependencies:
-      - encoding
-
-  '@comunica/actor-query-operation-from-quad@3.2.0':
-    dependencies:
-      '@comunica/bus-query-operation': 3.2.0
-      '@comunica/core': 3.2.0
-      '@comunica/types': 3.2.0
-      '@rdfjs/types': 1.1.0
-      sparqlalgebrajs: 4.3.8
     transitivePeerDependencies:
       - encoding
 
@@ -5732,22 +4513,6 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
-  '@comunica/actor-query-operation-group@3.2.0':
-    dependencies:
-      '@comunica/bindings-factory': 3.2.0
-      '@comunica/bus-hash-bindings': 3.2.0
-      '@comunica/bus-merge-bindings-context': 3.2.0
-      '@comunica/bus-query-operation': 3.2.0
-      '@comunica/core': 3.2.0
-      '@comunica/expression-evaluator': 3.1.0
-      '@comunica/types': 3.2.0
-      '@rdfjs/types': 1.1.0
-      asynciterator: 3.9.0
-      rdf-data-factory: 1.1.1
-      sparqlalgebrajs: 4.3.8
-    transitivePeerDependencies:
-      - encoding
-
   '@comunica/actor-query-operation-join@2.10.1':
     dependencies:
       '@comunica/bus-query-operation': 2.10.1
@@ -5755,16 +4520,6 @@ snapshots:
       '@comunica/core': 2.10.0
       '@comunica/types': 2.10.0
       sparqlalgebrajs: 4.2.0
-    transitivePeerDependencies:
-      - encoding
-
-  '@comunica/actor-query-operation-join@3.2.0':
-    dependencies:
-      '@comunica/bus-query-operation': 3.2.0
-      '@comunica/bus-rdf-join': 3.2.0
-      '@comunica/core': 3.2.0
-      '@comunica/types': 3.2.0
-      sparqlalgebrajs: 4.3.8
     transitivePeerDependencies:
       - encoding
 
@@ -5779,19 +4534,6 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
-  '@comunica/actor-query-operation-leftjoin@3.2.0':
-    dependencies:
-      '@comunica/bindings-factory': 3.2.0
-      '@comunica/bus-merge-bindings-context': 3.2.0
-      '@comunica/bus-query-operation': 3.2.0
-      '@comunica/bus-rdf-join': 3.2.0
-      '@comunica/core': 3.2.0
-      '@comunica/expression-evaluator': 3.1.0
-      '@comunica/types': 3.2.0
-      sparqlalgebrajs: 4.3.8
-    transitivePeerDependencies:
-      - encoding
-
   '@comunica/actor-query-operation-minus@2.10.1':
     dependencies:
       '@comunica/bus-query-operation': 2.10.1
@@ -5799,16 +4541,6 @@ snapshots:
       '@comunica/core': 2.10.0
       '@comunica/types': 2.10.0
       sparqlalgebrajs: 4.2.0
-    transitivePeerDependencies:
-      - encoding
-
-  '@comunica/actor-query-operation-minus@3.2.0':
-    dependencies:
-      '@comunica/bus-query-operation': 3.2.0
-      '@comunica/bus-rdf-join': 3.2.0
-      '@comunica/core': 3.2.0
-      '@comunica/types': 3.2.0
-      sparqlalgebrajs: 4.3.8
     transitivePeerDependencies:
       - encoding
 
@@ -5824,20 +4556,6 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
-  '@comunica/actor-query-operation-nop@3.2.0':
-    dependencies:
-      '@comunica/bindings-factory': 3.2.0
-      '@comunica/bus-merge-bindings-context': 3.2.0
-      '@comunica/bus-query-operation': 3.2.0
-      '@comunica/core': 3.2.0
-      '@comunica/metadata': 3.2.0
-      '@comunica/types': 3.2.0
-      '@rdfjs/types': 1.1.0
-      asynciterator: 3.9.0
-      sparqlalgebrajs: 4.3.8
-    transitivePeerDependencies:
-      - encoding
-
   '@comunica/actor-query-operation-orderby-sparqlee@2.10.1':
     dependencies:
       '@comunica/bus-query-operation': 2.10.1
@@ -5846,19 +4564,6 @@ snapshots:
       '@comunica/types': 2.10.0
       asynciterator: 3.9.0
       sparqlalgebrajs: 4.2.0
-    transitivePeerDependencies:
-      - encoding
-
-  '@comunica/actor-query-operation-orderby@3.2.0':
-    dependencies:
-      '@comunica/bindings-factory': 3.2.0
-      '@comunica/bus-merge-bindings-context': 3.2.0
-      '@comunica/bus-query-operation': 3.2.0
-      '@comunica/core': 3.2.0
-      '@comunica/expression-evaluator': 3.1.0
-      '@comunica/types': 3.2.0
-      asynciterator: 3.9.0
-      sparqlalgebrajs: 4.3.8
     transitivePeerDependencies:
       - encoding
 
@@ -5873,33 +4578,12 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
-  '@comunica/actor-query-operation-path-alt@3.2.0':
-    dependencies:
-      '@comunica/actor-abstract-path': 3.2.0
-      '@comunica/actor-query-operation-union': 3.2.0
-      '@comunica/bus-query-operation': 3.2.0
-      '@comunica/bus-rdf-metadata-accumulate': 3.2.0
-      '@comunica/types': 3.2.0
-      asynciterator: 3.9.0
-      sparqlalgebrajs: 4.3.8
-    transitivePeerDependencies:
-      - encoding
-
   '@comunica/actor-query-operation-path-inv@2.10.1':
     dependencies:
       '@comunica/actor-abstract-path': 2.10.1
       '@comunica/bus-query-operation': 2.10.1
       '@comunica/types': 2.10.0
       sparqlalgebrajs: 4.2.0
-    transitivePeerDependencies:
-      - encoding
-
-  '@comunica/actor-query-operation-path-inv@3.2.0':
-    dependencies:
-      '@comunica/actor-abstract-path': 3.2.0
-      '@comunica/bus-query-operation': 3.2.0
-      '@comunica/types': 3.2.0
-      sparqlalgebrajs: 4.3.8
     transitivePeerDependencies:
       - encoding
 
@@ -5912,30 +4596,12 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
-  '@comunica/actor-query-operation-path-link@3.2.0':
-    dependencies:
-      '@comunica/actor-abstract-path': 3.2.0
-      '@comunica/bus-query-operation': 3.2.0
-      '@comunica/types': 3.2.0
-      sparqlalgebrajs: 4.3.8
-    transitivePeerDependencies:
-      - encoding
-
   '@comunica/actor-query-operation-path-nps@2.10.1':
     dependencies:
       '@comunica/actor-abstract-path': 2.10.1
       '@comunica/bus-query-operation': 2.10.1
       '@comunica/types': 2.10.0
       sparqlalgebrajs: 4.2.0
-    transitivePeerDependencies:
-      - encoding
-
-  '@comunica/actor-query-operation-path-nps@3.2.0':
-    dependencies:
-      '@comunica/actor-abstract-path': 3.2.0
-      '@comunica/bus-query-operation': 3.2.0
-      '@comunica/types': 3.2.0
-      sparqlalgebrajs: 4.3.8
     transitivePeerDependencies:
       - encoding
 
@@ -5950,18 +4616,6 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
-  '@comunica/actor-query-operation-path-one-or-more@3.2.0':
-    dependencies:
-      '@comunica/actor-abstract-path': 3.2.0
-      '@comunica/bindings-factory': 3.2.0
-      '@comunica/bus-merge-bindings-context': 3.2.0
-      '@comunica/bus-query-operation': 3.2.0
-      '@comunica/types': 3.2.0
-      asynciterator: 3.9.0
-      sparqlalgebrajs: 4.3.8
-    transitivePeerDependencies:
-      - encoding
-
   '@comunica/actor-query-operation-path-seq@2.10.1':
     dependencies:
       '@comunica/actor-abstract-path': 2.10.1
@@ -5969,16 +4623,6 @@ snapshots:
       '@comunica/bus-rdf-join': 2.10.1
       '@comunica/types': 2.10.0
       sparqlalgebrajs: 4.2.0
-    transitivePeerDependencies:
-      - encoding
-
-  '@comunica/actor-query-operation-path-seq@3.2.0':
-    dependencies:
-      '@comunica/actor-abstract-path': 3.2.0
-      '@comunica/bus-query-operation': 3.2.0
-      '@comunica/bus-rdf-join': 3.2.0
-      '@comunica/types': 3.2.0
-      sparqlalgebrajs: 4.3.8
     transitivePeerDependencies:
       - encoding
 
@@ -5994,19 +4638,6 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
-  '@comunica/actor-query-operation-path-zero-or-more@3.2.0':
-    dependencies:
-      '@comunica/actor-abstract-path': 3.2.0
-      '@comunica/bindings-factory': 3.2.0
-      '@comunica/bus-merge-bindings-context': 3.2.0
-      '@comunica/bus-query-operation': 3.2.0
-      '@comunica/types': 3.2.0
-      asynciterator: 3.9.0
-      rdf-string: 1.6.3
-      sparqlalgebrajs: 4.3.8
-    transitivePeerDependencies:
-      - encoding
-
   '@comunica/actor-query-operation-path-zero-or-one@2.10.1':
     dependencies:
       '@comunica/actor-abstract-path': 2.10.1
@@ -6019,19 +4650,6 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
-  '@comunica/actor-query-operation-path-zero-or-one@3.2.0':
-    dependencies:
-      '@comunica/actor-abstract-path': 3.2.0
-      '@comunica/bindings-factory': 3.2.0
-      '@comunica/bus-merge-bindings-context': 3.2.0
-      '@comunica/bus-query-operation': 3.2.0
-      '@comunica/metadata': 3.2.0
-      '@comunica/types': 3.2.0
-      asynciterator: 3.9.0
-      sparqlalgebrajs: 4.3.8
-    transitivePeerDependencies:
-      - encoding
-
   '@comunica/actor-query-operation-project@2.10.1':
     dependencies:
       '@comunica/bus-query-operation': 2.10.1
@@ -6041,18 +4659,6 @@ snapshots:
       '@rdfjs/types': 1.1.0
       rdf-data-factory: 1.1.1
       sparqlalgebrajs: 4.2.0
-    transitivePeerDependencies:
-      - encoding
-
-  '@comunica/actor-query-operation-project@3.2.0':
-    dependencies:
-      '@comunica/bus-query-operation': 3.2.0
-      '@comunica/core': 3.2.0
-      '@comunica/data-factory': 3.1.0
-      '@comunica/types': 3.2.0
-      '@rdfjs/types': 1.1.0
-      rdf-data-factory: 1.1.1
-      sparqlalgebrajs: 4.3.8
     transitivePeerDependencies:
       - encoding
 
@@ -6084,17 +4690,6 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
-  '@comunica/actor-query-operation-reduced-hash@3.2.0':
-    dependencies:
-      '@comunica/bus-hash-bindings': 3.2.0
-      '@comunica/bus-query-operation': 3.2.0
-      '@comunica/core': 3.2.0
-      '@comunica/types': 3.2.0
-      lru-cache: 10.0.0
-      sparqlalgebrajs: 4.3.8
-    transitivePeerDependencies:
-      - encoding
-
   '@comunica/actor-query-operation-service@2.10.1':
     dependencies:
       '@comunica/bindings-factory': 2.10.1
@@ -6108,20 +4703,6 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
-  '@comunica/actor-query-operation-service@3.2.0':
-    dependencies:
-      '@comunica/bindings-factory': 3.2.0
-      '@comunica/bus-merge-bindings-context': 3.2.0
-      '@comunica/bus-query-operation': 3.2.0
-      '@comunica/bus-query-source-identify': 3.2.0
-      '@comunica/core': 3.2.0
-      '@comunica/metadata': 3.2.0
-      '@comunica/types': 3.2.0
-      asynciterator: 3.9.0
-      sparqlalgebrajs: 4.3.8
-    transitivePeerDependencies:
-      - encoding
-
   '@comunica/actor-query-operation-slice@2.10.1':
     dependencies:
       '@comunica/bus-query-operation': 2.10.1
@@ -6129,27 +4710,6 @@ snapshots:
       '@comunica/core': 2.10.0
       '@comunica/types': 2.10.0
       sparqlalgebrajs: 4.2.0
-    transitivePeerDependencies:
-      - encoding
-
-  '@comunica/actor-query-operation-slice@3.2.0':
-    dependencies:
-      '@comunica/bus-query-operation': 3.2.0
-      '@comunica/context-entries': 3.2.0
-      '@comunica/core': 3.2.0
-      '@comunica/types': 3.2.0
-      sparqlalgebrajs: 4.3.8
-    transitivePeerDependencies:
-      - encoding
-
-  '@comunica/actor-query-operation-source@3.2.0':
-    dependencies:
-      '@comunica/bus-query-operation': 3.2.0
-      '@comunica/context-entries': 3.2.0
-      '@comunica/core': 3.2.0
-      '@comunica/metadata': 3.2.0
-      '@comunica/types': 3.2.0
-      sparqlalgebrajs: 4.3.8
     transitivePeerDependencies:
       - encoding
 
@@ -6186,20 +4746,6 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
-  '@comunica/actor-query-operation-union@3.2.0':
-    dependencies:
-      '@comunica/bus-query-operation': 3.2.0
-      '@comunica/bus-rdf-metadata-accumulate': 3.2.0
-      '@comunica/core': 3.2.0
-      '@comunica/metadata': 3.2.0
-      '@comunica/types': 3.2.0
-      '@rdfjs/types': 1.1.0
-      asynciterator: 3.9.0
-      rdf-terms: 1.11.0
-      sparqlalgebrajs: 4.3.8
-    transitivePeerDependencies:
-      - encoding
-
   '@comunica/actor-query-operation-update-add-rewrite@2.10.1':
     dependencies:
       '@comunica/bus-query-operation': 2.10.1
@@ -6222,33 +4768,12 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
-  '@comunica/actor-query-operation-update-clear@3.2.0':
-    dependencies:
-      '@comunica/bus-query-operation': 3.2.0
-      '@comunica/bus-rdf-update-quads': 3.2.0
-      '@comunica/core': 3.2.0
-      '@comunica/types': 3.2.0
-      '@rdfjs/types': 1.1.0
-      rdf-data-factory: 1.1.1
-      sparqlalgebrajs: 4.3.8
-    transitivePeerDependencies:
-      - encoding
-
   '@comunica/actor-query-operation-update-compositeupdate@2.10.1':
     dependencies:
       '@comunica/bus-query-operation': 2.10.1
       '@comunica/core': 2.10.0
       '@comunica/types': 2.10.0
       sparqlalgebrajs: 4.2.0
-    transitivePeerDependencies:
-      - encoding
-
-  '@comunica/actor-query-operation-update-compositeupdate@3.2.0':
-    dependencies:
-      '@comunica/bus-query-operation': 3.2.0
-      '@comunica/core': 3.2.0
-      '@comunica/types': 3.2.0
-      sparqlalgebrajs: 4.3.8
     transitivePeerDependencies:
       - encoding
 
@@ -6271,16 +4796,6 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
-  '@comunica/actor-query-operation-update-create@3.2.0':
-    dependencies:
-      '@comunica/bus-query-operation': 3.2.0
-      '@comunica/bus-rdf-update-quads': 3.2.0
-      '@comunica/core': 3.2.0
-      '@comunica/types': 3.2.0
-      sparqlalgebrajs: 4.3.8
-    transitivePeerDependencies:
-      - encoding
-
   '@comunica/actor-query-operation-update-deleteinsert@2.10.2':
     dependencies:
       '@comunica/actor-query-operation-construct': 2.10.1
@@ -6292,21 +4807,6 @@ snapshots:
       '@rdfjs/types': 1.1.0
       asynciterator: 3.9.0
       sparqlalgebrajs: 4.2.0
-    transitivePeerDependencies:
-      - encoding
-
-  '@comunica/actor-query-operation-update-deleteinsert@3.2.0':
-    dependencies:
-      '@comunica/actor-query-operation-construct': 3.2.0
-      '@comunica/bindings-factory': 3.2.0
-      '@comunica/bus-merge-bindings-context': 3.2.0
-      '@comunica/bus-query-operation': 3.2.0
-      '@comunica/bus-rdf-update-quads': 3.2.0
-      '@comunica/core': 3.2.0
-      '@comunica/types': 3.2.0
-      '@rdfjs/types': 1.1.0
-      asynciterator: 3.9.0
-      sparqlalgebrajs: 4.3.8
     transitivePeerDependencies:
       - encoding
 
@@ -6322,18 +4822,6 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
-  '@comunica/actor-query-operation-update-drop@3.2.0':
-    dependencies:
-      '@comunica/bus-query-operation': 3.2.0
-      '@comunica/bus-rdf-update-quads': 3.2.0
-      '@comunica/core': 3.2.0
-      '@comunica/types': 3.2.0
-      '@rdfjs/types': 1.1.0
-      rdf-data-factory: 1.1.1
-      sparqlalgebrajs: 4.3.8
-    transitivePeerDependencies:
-      - encoding
-
   '@comunica/actor-query-operation-update-load@2.10.2':
     dependencies:
       '@comunica/bus-query-operation': 2.10.1
@@ -6343,19 +4831,6 @@ snapshots:
       '@comunica/types': 2.10.0
       rdf-data-factory: 1.1.1
       sparqlalgebrajs: 4.2.0
-    transitivePeerDependencies:
-      - encoding
-
-  '@comunica/actor-query-operation-update-load@3.2.0':
-    dependencies:
-      '@comunica/bus-query-operation': 3.2.0
-      '@comunica/bus-query-source-identify': 3.2.0
-      '@comunica/bus-rdf-update-quads': 3.2.0
-      '@comunica/context-entries': 3.2.0
-      '@comunica/core': 3.2.0
-      '@comunica/types': 3.2.0
-      rdf-data-factory: 1.1.1
-      sparqlalgebrajs: 4.3.8
     transitivePeerDependencies:
       - encoding
 
@@ -6381,34 +4856,11 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
-  '@comunica/actor-query-operation-values@3.2.0':
-    dependencies:
-      '@comunica/bindings-factory': 3.2.0
-      '@comunica/bus-merge-bindings-context': 3.2.0
-      '@comunica/bus-query-operation': 3.2.0
-      '@comunica/core': 3.2.0
-      '@comunica/metadata': 3.2.0
-      '@comunica/types': 3.2.0
-      asynciterator: 3.9.0
-      rdf-data-factory: 1.1.1
-      sparqlalgebrajs: 4.3.8
-    transitivePeerDependencies:
-      - encoding
-
   '@comunica/actor-query-parse-graphql@2.10.0':
     dependencies:
       '@comunica/bus-query-parse': 2.10.0
       '@comunica/context-entries': 2.10.0
       '@comunica/core': 2.10.0
-      graphql-to-sparql: 3.0.1
-    transitivePeerDependencies:
-      - encoding
-
-  '@comunica/actor-query-parse-graphql@3.2.0':
-    dependencies:
-      '@comunica/bus-query-parse': 3.2.0
-      '@comunica/context-entries': 3.2.0
-      '@comunica/core': 3.2.0
       graphql-to-sparql: 3.0.1
     transitivePeerDependencies:
       - encoding
@@ -6421,70 +4873,10 @@ snapshots:
       sparqlalgebrajs: 4.2.0
       sparqljs: 3.7.1
 
-  '@comunica/actor-query-parse-sparql@3.2.0':
-    dependencies:
-      '@comunica/bus-query-parse': 3.2.0
-      '@comunica/core': 3.2.0
-      '@types/sparqljs': 3.1.4
-      sparqlalgebrajs: 4.3.8
-      sparqljs: 3.7.1
-
-  '@comunica/actor-query-process-explain-logical@3.2.0':
-    dependencies:
-      '@comunica/bus-query-process': 3.2.0
-      '@comunica/context-entries': 3.2.0
-      '@comunica/core': 3.2.0
-    transitivePeerDependencies:
-      - encoding
-
-  '@comunica/actor-query-process-explain-parsed@3.2.0':
-    dependencies:
-      '@comunica/bus-query-process': 3.2.0
-      '@comunica/context-entries': 3.2.0
-      '@comunica/core': 3.2.0
-    transitivePeerDependencies:
-      - encoding
-
-  '@comunica/actor-query-process-explain-physical@3.2.0':
-    dependencies:
-      '@comunica/bus-query-process': 3.2.0
-      '@comunica/context-entries': 3.2.0
-      '@comunica/core': 3.2.0
-      '@comunica/types': 3.2.0
-      '@rdfjs/types': 1.1.0
-      rdf-string: 1.6.3
-    transitivePeerDependencies:
-      - encoding
-
-  '@comunica/actor-query-process-sequential@3.2.0':
-    dependencies:
-      '@comunica/bindings-factory': 3.2.0
-      '@comunica/bus-context-preprocess': 3.2.0
-      '@comunica/bus-merge-bindings-context': 3.2.0
-      '@comunica/bus-optimize-query-operation': 3.2.0
-      '@comunica/bus-query-operation': 3.2.0
-      '@comunica/bus-query-parse': 3.2.0
-      '@comunica/bus-query-process': 3.2.0
-      '@comunica/context-entries': 3.2.0
-      '@comunica/core': 3.2.0
-      '@comunica/types': 3.2.0
-      '@rdfjs/types': 1.1.0
-      sparqlalgebrajs: 4.3.8
-    transitivePeerDependencies:
-      - encoding
-
   '@comunica/actor-query-result-serialize-json@2.10.0':
     dependencies:
       '@comunica/bus-query-result-serialize': 2.10.0
       '@comunica/types': 2.10.0
-      rdf-string: 1.6.3
-      readable-stream: 4.4.2
-
-  '@comunica/actor-query-result-serialize-json@3.2.0':
-    dependencies:
-      '@comunica/bus-query-result-serialize': 3.2.0
-      '@comunica/types': 3.2.0
-      asynciterator: 3.9.0
       rdf-string: 1.6.3
       readable-stream: 4.4.2
 
@@ -6495,13 +4887,6 @@ snapshots:
       '@comunica/core': 2.10.0
       '@comunica/types': 2.10.0
 
-  '@comunica/actor-query-result-serialize-rdf@3.2.0':
-    dependencies:
-      '@comunica/bus-query-result-serialize': 3.2.0
-      '@comunica/bus-rdf-serialize': 3.2.0
-      '@comunica/core': 3.2.0
-      '@comunica/types': 3.2.0
-
   '@comunica/actor-query-result-serialize-simple@2.10.0':
     dependencies:
       '@comunica/bus-query-result-serialize': 2.10.0
@@ -6510,26 +4895,10 @@ snapshots:
       rdf-string: 1.6.3
       readable-stream: 4.4.2
 
-  '@comunica/actor-query-result-serialize-simple@3.2.0':
-    dependencies:
-      '@comunica/bus-query-result-serialize': 3.2.0
-      '@comunica/types': 3.2.0
-      '@rdfjs/types': 1.1.0
-      asynciterator: 3.9.0
-      rdf-string: 1.6.3
-      readable-stream: 4.4.2
-
   '@comunica/actor-query-result-serialize-sparql-csv@2.10.0':
     dependencies:
       '@comunica/bus-query-result-serialize': 2.10.0
       '@comunica/types': 2.10.0
-      '@rdfjs/types': 1.1.0
-      readable-stream: 4.4.2
-
-  '@comunica/actor-query-result-serialize-sparql-csv@3.2.0':
-    dependencies:
-      '@comunica/bus-query-result-serialize': 3.2.0
-      '@comunica/types': 3.2.0
       '@rdfjs/types': 1.1.0
       readable-stream: 4.4.2
 
@@ -6543,29 +4912,10 @@ snapshots:
       '@rdfjs/types': 1.1.0
       readable-stream: 4.4.2
 
-  '@comunica/actor-query-result-serialize-sparql-json@3.2.0':
-    dependencies:
-      '@comunica/bus-http': 3.2.0
-      '@comunica/bus-http-invalidate': 3.2.0
-      '@comunica/bus-query-result-serialize': 3.2.0
-      '@comunica/core': 3.2.0
-      '@comunica/types': 3.2.0
-      '@rdfjs/types': 1.1.0
-      asynciterator: 3.9.0
-      readable-stream: 4.4.2
-
   '@comunica/actor-query-result-serialize-sparql-tsv@2.10.0':
     dependencies:
       '@comunica/bus-query-result-serialize': 2.10.0
       '@comunica/types': 2.10.0
-      '@rdfjs/types': 1.1.0
-      rdf-string-ttl: 1.3.2
-      readable-stream: 4.4.2
-
-  '@comunica/actor-query-result-serialize-sparql-tsv@3.2.0':
-    dependencies:
-      '@comunica/bus-query-result-serialize': 3.2.0
-      '@comunica/types': 3.2.0
       '@rdfjs/types': 1.1.0
       rdf-string-ttl: 1.3.2
       readable-stream: 4.4.2
@@ -6575,14 +4925,6 @@ snapshots:
       '@comunica/bus-query-result-serialize': 2.10.0
       '@comunica/types': 2.10.0
       '@rdfjs/types': 1.1.0
-      readable-stream: 4.4.2
-
-  '@comunica/actor-query-result-serialize-sparql-xml@3.2.0':
-    dependencies:
-      '@comunica/bus-query-result-serialize': 3.2.0
-      '@comunica/types': 3.2.0
-      '@rdfjs/types': 1.1.0
-      asynciterator: 3.9.0
       readable-stream: 4.4.2
 
   '@comunica/actor-query-result-serialize-stats@2.10.2':
@@ -6595,31 +4937,10 @@ snapshots:
       process: 0.11.10
       readable-stream: 4.4.2
 
-  '@comunica/actor-query-result-serialize-stats@3.2.0':
-    dependencies:
-      '@comunica/bus-http': 3.2.0
-      '@comunica/bus-http-invalidate': 3.2.0
-      '@comunica/bus-query-result-serialize': 3.2.0
-      '@comunica/core': 3.2.0
-      '@comunica/types': 3.2.0
-      asynciterator: 3.9.0
-      process: 0.11.10
-      readable-stream: 4.4.2
-
   '@comunica/actor-query-result-serialize-table@2.10.0':
     dependencies:
       '@comunica/bus-query-result-serialize': 2.10.0
       '@comunica/types': 2.10.0
-      '@rdfjs/types': 1.1.0
-      rdf-data-factory: 1.1.1
-      rdf-string: 1.6.3
-      rdf-terms: 1.11.0
-      readable-stream: 4.4.2
-
-  '@comunica/actor-query-result-serialize-table@3.2.0':
-    dependencies:
-      '@comunica/bus-query-result-serialize': 3.2.0
-      '@comunica/types': 3.2.0
       '@rdfjs/types': 1.1.0
       rdf-data-factory: 1.1.1
       rdf-string: 1.6.3
@@ -6637,88 +4958,10 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
-  '@comunica/actor-query-result-serialize-tree@3.2.0':
-    dependencies:
-      '@comunica/bus-query-result-serialize': 3.2.0
-      '@comunica/context-entries': 3.2.0
-      '@comunica/core': 3.2.0
-      '@comunica/types': 3.2.0
-      readable-stream: 4.4.2
-      sparqljson-to-tree: 3.0.1
-    transitivePeerDependencies:
-      - encoding
-
-  '@comunica/actor-query-source-identify-hypermedia-sparql@3.2.0':
-    dependencies:
-      '@comunica/bindings-factory': 3.2.0
-      '@comunica/bus-http': 3.2.0
-      '@comunica/bus-merge-bindings-context': 3.2.0
-      '@comunica/bus-query-source-identify-hypermedia': 3.2.0
-      '@comunica/context-entries': 3.2.0
-      '@comunica/types': 3.2.0
-      '@rdfjs/types': 1.1.0
-      asynciterator: 3.9.0
-      fetch-sparql-endpoint: 4.1.0
-      lru-cache: 10.0.0
-      rdf-data-factory: 1.1.1
-      sparqlalgebrajs: 4.3.8
-    transitivePeerDependencies:
-      - encoding
-
-  '@comunica/actor-query-source-identify-hypermedia@3.2.0':
-    dependencies:
-      '@comunica/actor-query-source-identify-rdfjs': 3.2.0
-      '@comunica/bindings-factory': 3.2.0
-      '@comunica/bus-dereference-rdf': 3.2.0
-      '@comunica/bus-merge-bindings-context': 3.2.0
-      '@comunica/bus-query-operation': 3.2.0
-      '@comunica/bus-query-source-identify': 3.2.0
-      '@comunica/bus-query-source-identify-hypermedia': 3.2.0
-      '@comunica/bus-rdf-metadata': 3.2.0
-      '@comunica/bus-rdf-metadata-accumulate': 3.2.0
-      '@comunica/bus-rdf-metadata-extract': 3.2.0
-      '@comunica/bus-rdf-resolve-hypermedia-links': 3.2.0
-      '@comunica/bus-rdf-resolve-hypermedia-links-queue': 3.2.0
-      '@comunica/context-entries': 3.2.0
-      '@comunica/core': 3.2.0
-      '@comunica/metadata': 3.2.0
-      '@comunica/types': 3.2.0
-      '@rdfjs/types': 1.1.0
-      asynciterator: 3.9.0
-      lru-cache: 10.0.0
-      rdf-data-factory: 1.1.2
-      rdf-streaming-store: 1.1.4
-      readable-stream: 4.4.2
-      sparqlalgebrajs: 4.3.8
-    transitivePeerDependencies:
-      - encoding
-
-  '@comunica/actor-query-source-identify-rdfjs@3.2.0':
-    dependencies:
-      '@comunica/bindings-factory': 3.2.0
-      '@comunica/bus-merge-bindings-context': 3.2.0
-      '@comunica/bus-query-source-identify': 3.2.0
-      '@comunica/context-entries': 3.2.0
-      '@comunica/core': 3.2.0
-      '@comunica/metadata': 3.2.0
-      '@comunica/types': 3.2.0
-      '@rdfjs/types': 1.1.0
-      asynciterator: 3.9.0
-      rdf-data-factory: 1.1.1
-      rdf-terms: 1.11.0
-      sparqlalgebrajs: 4.3.8
-    transitivePeerDependencies:
-      - encoding
-
   '@comunica/actor-rdf-join-entries-sort-cardinality@2.10.0':
     dependencies:
       '@comunica/bus-rdf-join-entries-sort': 2.10.0
       '@comunica/core': 2.10.0
-
-  '@comunica/actor-rdf-join-entries-sort-cardinality@3.2.0':
-    dependencies:
-      '@comunica/bus-rdf-join-entries-sort': 3.2.0
-      '@comunica/core': 3.2.0
 
   '@comunica/actor-rdf-join-inner-hash@2.10.1':
     dependencies:
@@ -6726,28 +4969,6 @@ snapshots:
       '@comunica/mediatortype-join-coefficients': 2.10.0
       '@comunica/types': 2.10.0
       asyncjoin: 1.2.3
-    transitivePeerDependencies:
-      - encoding
-
-  '@comunica/actor-rdf-join-inner-hash@3.2.0':
-    dependencies:
-      '@comunica/bus-rdf-join': 3.2.0
-      '@comunica/mediatortype-join-coefficients': 3.2.0
-      '@comunica/types': 3.2.0
-      asyncjoin: 1.2.3
-    transitivePeerDependencies:
-      - encoding
-
-  '@comunica/actor-rdf-join-inner-multi-bind-source@3.2.0':
-    dependencies:
-      '@comunica/bus-query-operation': 3.2.0
-      '@comunica/bus-rdf-join': 3.2.0
-      '@comunica/bus-rdf-join-entries-sort': 3.2.0
-      '@comunica/mediatortype-join-coefficients': 3.2.0
-      '@comunica/types': 3.2.0
-      '@rdfjs/types': 1.1.0
-      asynciterator: 3.9.0
-      sparqlalgebrajs: 4.3.8
     transitivePeerDependencies:
       - encoding
 
@@ -6764,21 +4985,6 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
-  '@comunica/actor-rdf-join-inner-multi-bind@3.2.0':
-    dependencies:
-      '@comunica/bindings-factory': 3.2.0
-      '@comunica/bus-merge-bindings-context': 3.2.0
-      '@comunica/bus-query-operation': 3.2.0
-      '@comunica/bus-rdf-join': 3.2.0
-      '@comunica/bus-rdf-join-entries-sort': 3.2.0
-      '@comunica/context-entries': 3.2.0
-      '@comunica/mediatortype-join-coefficients': 3.2.0
-      '@comunica/types': 3.2.0
-      asynciterator: 3.9.0
-      sparqlalgebrajs: 4.3.8
-    transitivePeerDependencies:
-      - encoding
-
   '@comunica/actor-rdf-join-inner-multi-empty@2.10.1':
     dependencies:
       '@comunica/bus-rdf-join': 2.10.1
@@ -6786,32 +4992,6 @@ snapshots:
       '@comunica/metadata': 2.10.0
       '@comunica/types': 2.10.0
       asynciterator: 3.9.0
-    transitivePeerDependencies:
-      - encoding
-
-  '@comunica/actor-rdf-join-inner-multi-empty@3.2.0':
-    dependencies:
-      '@comunica/bus-rdf-join': 3.2.0
-      '@comunica/mediatortype-join-coefficients': 3.2.0
-      '@comunica/metadata': 3.2.0
-      '@comunica/types': 3.2.0
-      '@rdfjs/types': 1.1.0
-      asynciterator: 3.9.0
-    transitivePeerDependencies:
-      - encoding
-
-  '@comunica/actor-rdf-join-inner-multi-smallest-filter-bindings@3.2.0':
-    dependencies:
-      '@comunica/bindings-factory': 3.2.0
-      '@comunica/bus-query-operation': 3.2.0
-      '@comunica/bus-rdf-join': 3.2.0
-      '@comunica/bus-rdf-join-entries-sort': 3.2.0
-      '@comunica/context-entries': 3.2.0
-      '@comunica/mediatortype-join-coefficients': 3.2.0
-      '@comunica/types': 3.2.0
-      '@rdfjs/types': 1.1.0
-      asynciterator: 3.9.0
-      sparqlalgebrajs: 4.3.8
     transitivePeerDependencies:
       - encoding
 
@@ -6826,31 +5006,11 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
-  '@comunica/actor-rdf-join-inner-multi-smallest@3.2.0':
-    dependencies:
-      '@comunica/bus-query-operation': 3.2.0
-      '@comunica/bus-rdf-join': 3.2.0
-      '@comunica/bus-rdf-join-entries-sort': 3.2.0
-      '@comunica/mediatortype-join-coefficients': 3.2.0
-      '@comunica/types': 3.2.0
-      sparqlalgebrajs: 4.3.8
-    transitivePeerDependencies:
-      - encoding
-
   '@comunica/actor-rdf-join-inner-nestedloop@2.10.1':
     dependencies:
       '@comunica/bus-rdf-join': 2.10.1
       '@comunica/mediatortype-join-coefficients': 2.10.0
       '@comunica/types': 2.10.0
-      asyncjoin: 1.2.3
-    transitivePeerDependencies:
-      - encoding
-
-  '@comunica/actor-rdf-join-inner-nestedloop@3.2.0':
-    dependencies:
-      '@comunica/bus-rdf-join': 3.2.0
-      '@comunica/mediatortype-join-coefficients': 3.2.0
-      '@comunica/types': 3.2.0
       asyncjoin: 1.2.3
     transitivePeerDependencies:
       - encoding
@@ -6865,29 +5025,10 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
-  '@comunica/actor-rdf-join-inner-none@3.2.0':
-    dependencies:
-      '@comunica/bindings-factory': 3.2.0
-      '@comunica/bus-merge-bindings-context': 3.2.0
-      '@comunica/bus-rdf-join': 3.2.0
-      '@comunica/mediatortype-join-coefficients': 3.2.0
-      '@comunica/metadata': 3.2.0
-      '@rdfjs/types': 1.1.0
-      asynciterator: 3.9.0
-    transitivePeerDependencies:
-      - encoding
-
   '@comunica/actor-rdf-join-inner-single@2.10.1':
     dependencies:
       '@comunica/bus-rdf-join': 2.10.1
       '@comunica/mediatortype-join-coefficients': 2.10.0
-    transitivePeerDependencies:
-      - encoding
-
-  '@comunica/actor-rdf-join-inner-single@3.2.0':
-    dependencies:
-      '@comunica/bus-rdf-join': 3.2.0
-      '@comunica/mediatortype-join-coefficients': 3.2.0
     transitivePeerDependencies:
       - encoding
 
@@ -6896,15 +5037,6 @@ snapshots:
       '@comunica/bus-rdf-join': 2.10.1
       '@comunica/mediatortype-join-coefficients': 2.10.0
       '@comunica/types': 2.10.0
-      asyncjoin: 1.2.3
-    transitivePeerDependencies:
-      - encoding
-
-  '@comunica/actor-rdf-join-inner-symmetrichash@3.2.0':
-    dependencies:
-      '@comunica/bus-rdf-join': 3.2.0
-      '@comunica/mediatortype-join-coefficients': 3.2.0
-      '@comunica/types': 3.2.0
       asyncjoin: 1.2.3
     transitivePeerDependencies:
       - encoding
@@ -6920,33 +5052,12 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
-  '@comunica/actor-rdf-join-minus-hash-undef@3.2.0':
-    dependencies:
-      '@comunica/bus-query-operation': 3.2.0
-      '@comunica/bus-rdf-join': 3.2.0
-      '@comunica/mediatortype-join-coefficients': 3.2.0
-      '@comunica/types': 3.2.0
-      '@rdfjs/types': 1.1.0
-      rdf-string: 1.6.3
-    transitivePeerDependencies:
-      - encoding
-
   '@comunica/actor-rdf-join-minus-hash@2.10.1':
     dependencies:
       '@comunica/bus-query-operation': 2.10.1
       '@comunica/bus-rdf-join': 2.10.1
       '@comunica/mediatortype-join-coefficients': 2.10.0
       '@comunica/types': 2.10.0
-      '@rdfjs/types': 1.1.0
-    transitivePeerDependencies:
-      - encoding
-
-  '@comunica/actor-rdf-join-minus-hash@3.2.0':
-    dependencies:
-      '@comunica/bus-query-operation': 3.2.0
-      '@comunica/bus-rdf-join': 3.2.0
-      '@comunica/mediatortype-join-coefficients': 3.2.0
-      '@comunica/types': 3.2.0
       '@rdfjs/types': 1.1.0
     transitivePeerDependencies:
       - encoding
@@ -6963,46 +5074,11 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
-  '@comunica/actor-rdf-join-optional-bind@3.2.0':
-    dependencies:
-      '@comunica/actor-rdf-join-inner-multi-bind': 3.2.0
-      '@comunica/bindings-factory': 3.2.0
-      '@comunica/bus-merge-bindings-context': 3.2.0
-      '@comunica/bus-query-operation': 3.2.0
-      '@comunica/bus-rdf-join': 3.2.0
-      '@comunica/context-entries': 3.2.0
-      '@comunica/mediatortype-join-coefficients': 3.2.0
-      '@comunica/types': 3.2.0
-      sparqlalgebrajs: 4.3.8
-    transitivePeerDependencies:
-      - encoding
-
-  '@comunica/actor-rdf-join-optional-hash@3.2.0':
-    dependencies:
-      '@comunica/bus-query-operation': 3.2.0
-      '@comunica/bus-rdf-join': 3.2.0
-      '@comunica/mediatortype-join-coefficients': 3.2.0
-      '@comunica/types': 3.2.0
-      '@rdfjs/types': 1.1.0
-      asynciterator: 3.9.0
-      rdf-string: 1.6.3
-    transitivePeerDependencies:
-      - encoding
-
   '@comunica/actor-rdf-join-optional-nestedloop@2.10.1':
     dependencies:
       '@comunica/bus-rdf-join': 2.10.1
       '@comunica/mediatortype-join-coefficients': 2.10.0
       '@comunica/types': 2.10.0
-      asyncjoin: 1.2.3
-    transitivePeerDependencies:
-      - encoding
-
-  '@comunica/actor-rdf-join-optional-nestedloop@3.2.0':
-    dependencies:
-      '@comunica/bus-rdf-join': 3.2.0
-      '@comunica/mediatortype-join-coefficients': 3.2.0
-      '@comunica/types': 3.2.0
       asyncjoin: 1.2.3
     transitivePeerDependencies:
       - encoding
@@ -7014,22 +5090,10 @@ snapshots:
       '@comunica/mediatortype-accuracy': 2.10.0
       sparqlalgebrajs: 4.2.0
 
-  '@comunica/actor-rdf-join-selectivity-variable-counting@3.2.0':
-    dependencies:
-      '@comunica/bus-rdf-join-selectivity': 3.2.0
-      '@comunica/core': 3.2.0
-      '@comunica/mediatortype-accuracy': 3.2.0
-      sparqlalgebrajs: 4.3.8
-
   '@comunica/actor-rdf-metadata-accumulate-cancontainundefs@2.10.0':
     dependencies:
       '@comunica/bus-rdf-metadata-accumulate': 2.10.0
       '@comunica/core': 2.10.0
-
-  '@comunica/actor-rdf-metadata-accumulate-cancontainundefs@3.2.0':
-    dependencies:
-      '@comunica/bus-rdf-metadata-accumulate': 3.2.0
-      '@comunica/core': 3.2.0
 
   '@comunica/actor-rdf-metadata-accumulate-cardinality@2.10.0':
     dependencies:
@@ -7037,31 +5101,15 @@ snapshots:
       '@comunica/core': 2.10.0
       '@comunica/types': 2.10.0
 
-  '@comunica/actor-rdf-metadata-accumulate-cardinality@3.2.0':
-    dependencies:
-      '@comunica/bus-rdf-metadata-accumulate': 3.2.0
-      '@comunica/core': 3.2.0
-      '@comunica/types': 3.2.0
-
   '@comunica/actor-rdf-metadata-accumulate-pagesize@2.10.0':
     dependencies:
       '@comunica/bus-rdf-metadata-accumulate': 2.10.0
       '@comunica/core': 2.10.0
 
-  '@comunica/actor-rdf-metadata-accumulate-pagesize@3.2.0':
-    dependencies:
-      '@comunica/bus-rdf-metadata-accumulate': 3.2.0
-      '@comunica/core': 3.2.0
-
   '@comunica/actor-rdf-metadata-accumulate-requesttime@2.10.0':
     dependencies:
       '@comunica/bus-rdf-metadata-accumulate': 2.10.0
       '@comunica/core': 2.10.0
-
-  '@comunica/actor-rdf-metadata-accumulate-requesttime@3.2.0':
-    dependencies:
-      '@comunica/bus-rdf-metadata-accumulate': 3.2.0
-      '@comunica/core': 3.2.0
 
   '@comunica/actor-rdf-parse-html-microdata@2.7.0':
     dependencies:
@@ -7178,38 +5226,16 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
-  '@comunica/actor-rdf-serialize-jsonld@3.2.0':
-    dependencies:
-      '@comunica/bus-rdf-serialize': 3.2.0
-      '@comunica/types': 3.2.0
-      jsonld-streaming-serializer: 2.1.0
-    transitivePeerDependencies:
-      - encoding
-
   '@comunica/actor-rdf-serialize-n3@2.10.0':
     dependencies:
       '@comunica/bus-rdf-serialize': 2.10.0
       '@comunica/types': 2.10.0
       n3: 1.17.0
 
-  '@comunica/actor-rdf-serialize-n3@3.2.0':
-    dependencies:
-      '@comunica/bus-rdf-serialize': 3.2.0
-      n3: 1.17.0
-
   '@comunica/actor-rdf-serialize-shaclc@2.10.0':
     dependencies:
       '@comunica/bus-rdf-serialize': 2.10.0
       '@comunica/types': 2.10.0
-      arrayify-stream: 2.0.1
-      readable-stream: 4.4.2
-      shaclc-write: 1.4.2
-    transitivePeerDependencies:
-      - encoding
-
-  '@comunica/actor-rdf-serialize-shaclc@3.2.0':
-    dependencies:
-      '@comunica/bus-rdf-serialize': 3.2.0
       arrayify-stream: 2.0.1
       readable-stream: 4.4.2
       shaclc-write: 1.4.2
@@ -7223,19 +5249,6 @@ snapshots:
       '@comunica/types': 2.10.0
       '@rdfjs/types': 1.1.0
       asynciterator: 3.9.0
-      rdf-data-factory: 1.1.1
-      rdf-string: 1.6.3
-    transitivePeerDependencies:
-      - encoding
-
-  '@comunica/actor-rdf-update-quads-rdfjs-store@3.2.0':
-    dependencies:
-      '@comunica/bus-rdf-update-quads': 3.2.0
-      '@comunica/core': 3.2.0
-      '@comunica/types': 3.2.0
-      '@rdfjs/types': 1.1.0
-      asynciterator: 3.9.0
-      event-emitter-promisify: 1.1.0
       rdf-data-factory: 1.1.1
       rdf-string: 1.6.3
     transitivePeerDependencies:
@@ -7255,63 +5268,19 @@ snapshots:
       rdf-data-factory: 1.1.1
       rdf-string: 1.6.3
 
-  '@comunica/bindings-factory@3.2.0':
-    dependencies:
-      '@comunica/bus-merge-bindings-context': 3.2.0
-      '@comunica/core': 3.2.0
-      '@comunica/types': 3.2.0
-      '@rdfjs/types': 1.1.0
-      immutable: 4.3.0
-      rdf-data-factory: 1.1.1
-      rdf-string: 1.6.3
-
   '@comunica/bus-context-preprocess@2.10.0':
     dependencies:
       '@comunica/core': 2.10.0
       '@comunica/types': 2.10.0
-
-  '@comunica/bus-context-preprocess@3.2.0':
-    dependencies:
-      '@comunica/core': 3.2.0
-      '@comunica/types': 3.2.0
-
-  '@comunica/bus-dereference-rdf@3.2.0':
-    dependencies:
-      '@comunica/bus-dereference': 3.2.0
-      '@comunica/bus-rdf-parse': 3.2.0
-      '@comunica/core': 3.2.0
-      '@rdfjs/types': 1.1.0
-    transitivePeerDependencies:
-      - encoding
-
-  '@comunica/bus-dereference@3.2.0':
-    dependencies:
-      '@comunica/actor-abstract-mediatyped': 3.2.0
-      '@comunica/actor-abstract-parse': 3.2.0
-      '@comunica/context-entries': 3.2.0
-      '@comunica/core': 3.2.0
-      '@comunica/types': 3.2.0
-      readable-stream: 4.4.2
-    transitivePeerDependencies:
-      - encoding
 
   '@comunica/bus-hash-bindings@2.10.0':
     dependencies:
       '@comunica/core': 2.10.0
       '@comunica/types': 2.10.0
 
-  '@comunica/bus-hash-bindings@3.2.0':
-    dependencies:
-      '@comunica/core': 3.2.0
-      '@comunica/types': 3.2.0
-
   '@comunica/bus-http-invalidate@2.10.0':
     dependencies:
       '@comunica/core': 2.10.0
-
-  '@comunica/bus-http-invalidate@3.2.0':
-    dependencies:
-      '@comunica/core': 3.2.0
 
   '@comunica/bus-http@2.10.0':
     dependencies:
@@ -7329,41 +5298,16 @@ snapshots:
       readable-stream-node-to-web: 1.0.1
       web-streams-ponyfill: 1.4.2
 
-  '@comunica/bus-http@3.2.0':
-    dependencies:
-      '@comunica/core': 3.2.0
-      is-stream: 2.0.1
-      readable-from-web: 1.0.0
-      readable-stream-node-to-web: 1.0.1
-      stream-to-string: 1.2.1
-      web-streams-ponyfill: 1.4.2
-
   '@comunica/bus-init@2.10.0':
     dependencies:
       '@comunica/core': 2.10.0
       readable-stream: 4.4.2
-
-  '@comunica/bus-init@3.2.0':
-    dependencies:
-      '@comunica/core': 3.2.0
-      readable-stream: 4.4.2
-
-  '@comunica/bus-merge-bindings-context@3.2.0':
-    dependencies:
-      '@comunica/core': 3.2.0
-      '@comunica/types': 3.2.0
 
   '@comunica/bus-optimize-query-operation@2.10.0':
     dependencies:
       '@comunica/core': 2.10.0
       '@comunica/types': 2.10.0
       sparqlalgebrajs: 4.2.0
-
-  '@comunica/bus-optimize-query-operation@3.2.0':
-    dependencies:
-      '@comunica/core': 3.2.0
-      '@comunica/types': 3.2.0
-      sparqlalgebrajs: 4.3.8
 
   '@comunica/bus-query-operation@2.10.1':
     dependencies:
@@ -7380,40 +5324,11 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
-  '@comunica/bus-query-operation@3.2.0':
-    dependencies:
-      '@comunica/bindings-factory': 3.2.0
-      '@comunica/context-entries': 3.2.0
-      '@comunica/core': 3.2.0
-      '@comunica/data-factory': 3.1.0
-      '@comunica/metadata': 3.2.0
-      '@comunica/types': 3.2.0
-      '@rdfjs/types': 1.1.0
-      asynciterator: 3.9.0
-      rdf-data-factory: 1.1.2
-      rdf-string: 1.6.3
-      rdf-terms: 1.11.0
-      sparqlalgebrajs: 4.3.8
-    transitivePeerDependencies:
-      - encoding
-
   '@comunica/bus-query-parse@2.10.0':
     dependencies:
       '@comunica/core': 2.10.0
       '@rdfjs/types': 1.1.0
       sparqlalgebrajs: 4.2.0
-
-  '@comunica/bus-query-parse@3.2.0':
-    dependencies:
-      '@comunica/core': 3.2.0
-      '@rdfjs/types': 1.1.0
-      sparqlalgebrajs: 4.3.8
-
-  '@comunica/bus-query-process@3.2.0':
-    dependencies:
-      '@comunica/core': 3.2.0
-      '@comunica/types': 3.2.0
-      sparqlalgebrajs: 4.3.8
 
   '@comunica/bus-query-result-serialize@2.10.0':
     dependencies:
@@ -7421,55 +5336,16 @@ snapshots:
       '@comunica/core': 2.10.0
       '@comunica/types': 2.10.0
 
-  '@comunica/bus-query-result-serialize@3.2.0':
-    dependencies:
-      '@comunica/actor-abstract-mediatyped': 3.2.0
-      '@comunica/core': 3.2.0
-      '@comunica/types': 3.2.0
-
-  '@comunica/bus-query-source-identify-hypermedia@3.2.0':
-    dependencies:
-      '@comunica/core': 3.2.0
-      '@comunica/types': 3.2.0
-      '@rdfjs/types': 1.1.0
-
-  '@comunica/bus-query-source-identify@3.2.0':
-    dependencies:
-      '@comunica/bindings-factory': 3.2.0
-      '@comunica/bus-query-operation': 3.2.0
-      '@comunica/core': 3.2.0
-      '@comunica/metadata': 3.2.0
-      '@comunica/types': 3.2.0
-      '@rdfjs/types': 1.1.0
-      asynciterator: 3.9.0
-      rdf-data-factory: 1.1.2
-      rdf-string: 1.6.3
-      rdf-terms: 1.11.0
-      sparqlalgebrajs: 4.3.8
-    transitivePeerDependencies:
-      - encoding
-
   '@comunica/bus-rdf-join-entries-sort@2.10.0':
     dependencies:
       '@comunica/core': 2.10.0
       '@comunica/types': 2.10.0
-
-  '@comunica/bus-rdf-join-entries-sort@3.2.0':
-    dependencies:
-      '@comunica/core': 3.2.0
-      '@comunica/types': 3.2.0
 
   '@comunica/bus-rdf-join-selectivity@2.10.0':
     dependencies:
       '@comunica/core': 2.10.0
       '@comunica/mediatortype-accuracy': 2.10.0
       '@comunica/types': 2.10.0
-
-  '@comunica/bus-rdf-join-selectivity@3.2.0':
-    dependencies:
-      '@comunica/core': 3.2.0
-      '@comunica/mediatortype-accuracy': 3.2.0
-      '@comunica/types': 3.2.0
 
   '@comunica/bus-rdf-join@2.10.1':
     dependencies:
@@ -7486,41 +5362,10 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
-  '@comunica/bus-rdf-join@3.2.0':
-    dependencies:
-      '@comunica/bus-rdf-join-entries-sort': 3.2.0
-      '@comunica/bus-rdf-join-selectivity': 3.2.0
-      '@comunica/context-entries': 3.2.0
-      '@comunica/core': 3.2.0
-      '@comunica/mediatortype-join-coefficients': 3.2.0
-      '@comunica/metadata': 3.2.0
-      '@comunica/types': 3.2.0
-      '@rdfjs/types': 1.1.0
-      asynciterator: 3.9.0
-      rdf-data-factory: 1.1.1
-      rdf-string: 1.6.3
-    transitivePeerDependencies:
-      - encoding
-
   '@comunica/bus-rdf-metadata-accumulate@2.10.0':
     dependencies:
       '@comunica/core': 2.10.0
       '@comunica/types': 2.10.0
-
-  '@comunica/bus-rdf-metadata-accumulate@3.2.0':
-    dependencies:
-      '@comunica/core': 3.2.0
-      '@comunica/types': 3.2.0
-
-  '@comunica/bus-rdf-metadata-extract@3.2.0':
-    dependencies:
-      '@comunica/core': 3.2.0
-      '@rdfjs/types': 1.1.0
-
-  '@comunica/bus-rdf-metadata@3.2.0':
-    dependencies:
-      '@comunica/core': 3.2.0
-      '@rdfjs/types': 1.1.0
 
   '@comunica/bus-rdf-parse-html@2.7.0':
     dependencies:
@@ -7532,24 +5377,6 @@ snapshots:
       '@comunica/actor-abstract-mediatyped': 2.10.0
       '@comunica/actor-abstract-parse': 2.7.0
       '@comunica/core': 2.10.0
-      '@rdfjs/types': 1.1.0
-
-  '@comunica/bus-rdf-parse@3.2.0':
-    dependencies:
-      '@comunica/actor-abstract-mediatyped': 3.2.0
-      '@comunica/actor-abstract-parse': 3.2.0
-      '@comunica/core': 3.2.0
-      '@rdfjs/types': 1.1.0
-
-  '@comunica/bus-rdf-resolve-hypermedia-links-queue@3.2.0':
-    dependencies:
-      '@comunica/bus-rdf-resolve-hypermedia-links': 3.2.0
-      '@comunica/core': 3.2.0
-
-  '@comunica/bus-rdf-resolve-hypermedia-links@3.2.0':
-    dependencies:
-      '@comunica/core': 3.2.0
-      '@comunica/types': 3.2.0
       '@rdfjs/types': 1.1.0
 
   '@comunica/bus-rdf-resolve-quad-pattern@2.10.0':
@@ -7569,12 +5396,6 @@ snapshots:
       '@comunica/core': 2.10.0
       '@rdfjs/types': 1.1.0
 
-  '@comunica/bus-rdf-serialize@3.2.0':
-    dependencies:
-      '@comunica/actor-abstract-mediatyped': 3.2.0
-      '@comunica/core': 3.2.0
-      '@rdfjs/types': 1.1.0
-
   '@comunica/bus-rdf-update-quads@2.10.2':
     dependencies:
       '@comunica/actor-rdf-resolve-quad-pattern-federated': 2.10.1
@@ -7588,20 +5409,7 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
-  '@comunica/bus-rdf-update-quads@3.2.0':
-    dependencies:
-      '@comunica/actor-context-preprocess-query-source-skolemize': 3.2.0
-      '@comunica/context-entries': 3.2.0
-      '@comunica/core': 3.2.0
-      '@comunica/types': 3.2.0
-      '@rdfjs/types': 1.1.0
-      asynciterator: 3.9.0
-    transitivePeerDependencies:
-      - encoding
-
   '@comunica/config-query-sparql@2.7.0': {}
-
-  '@comunica/config-query-sparql@3.2.0': {}
 
   '@comunica/context-entries@2.10.0':
     dependencies:
@@ -7613,50 +5421,16 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
-  '@comunica/context-entries@3.2.0':
-    dependencies:
-      '@comunica/core': 3.2.0
-      '@comunica/types': 3.2.0
-      '@rdfjs/types': 1.1.0
-      jsonld-context-parser: 2.3.0
-      sparqlalgebrajs: 4.3.8
-    transitivePeerDependencies:
-      - encoding
-
   '@comunica/core@2.10.0':
     dependencies:
       '@comunica/types': 2.10.0
-      immutable: 4.3.0
-
-  '@comunica/core@3.2.0':
-    dependencies:
-      '@comunica/types': 3.2.0
       immutable: 4.3.0
 
   '@comunica/data-factory@2.7.0':
     dependencies:
       '@rdfjs/types': 1.1.0
 
-  '@comunica/data-factory@3.1.0':
-    dependencies:
-      '@rdfjs/types': 1.1.0
-
   '@comunica/expression-evaluator@2.10.0':
-    dependencies:
-      '@rdfjs/types': 1.1.0
-      '@types/spark-md5': 3.0.2
-      '@types/uuid': 9.0.7
-      bignumber.js: 9.1.1
-      hash.js: 1.1.7
-      lru-cache: 10.0.0
-      rdf-data-factory: 1.1.2
-      rdf-string: 1.6.3
-      relative-to-absolute-iri: 1.0.7
-      spark-md5: 3.0.2
-      sparqlalgebrajs: 4.2.0
-      uuid: 9.0.1
-
-  '@comunica/expression-evaluator@3.1.0':
     dependencies:
       '@rdfjs/types': 1.1.0
       '@types/spark-md5': 3.0.2
@@ -7677,45 +5451,22 @@ snapshots:
       object-inspect: 1.13.2
       process: 0.11.10
 
-  '@comunica/logger-pretty@3.2.0':
-    dependencies:
-      '@comunica/types': 3.2.0
-      object-inspect: 1.13.2
-      process: 0.11.10
-
   '@comunica/logger-void@2.10.0':
     dependencies:
       '@comunica/types': 2.10.0
 
-  '@comunica/logger-void@3.2.0':
-    dependencies:
-      '@comunica/types': 3.2.0
-
   '@comunica/mediator-all@2.10.0':
     dependencies:
       '@comunica/core': 2.10.0
-
-  '@comunica/mediator-all@3.2.0':
-    dependencies:
-      '@comunica/core': 3.2.0
 
   '@comunica/mediator-combine-pipeline@2.10.0':
     dependencies:
       '@comunica/core': 2.10.0
       '@comunica/types': 2.10.0
 
-  '@comunica/mediator-combine-pipeline@3.2.0':
-    dependencies:
-      '@comunica/core': 3.2.0
-      '@comunica/types': 3.2.0
-
   '@comunica/mediator-combine-union@2.10.0':
     dependencies:
       '@comunica/core': 2.10.0
-
-  '@comunica/mediator-combine-union@3.2.0':
-    dependencies:
-      '@comunica/core': 3.2.0
 
   '@comunica/mediator-join-coefficients-fixed@2.10.1':
     dependencies:
@@ -7727,39 +5478,17 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
-  '@comunica/mediator-join-coefficients-fixed@3.2.0':
-    dependencies:
-      '@comunica/bus-rdf-join': 3.2.0
-      '@comunica/context-entries': 3.2.0
-      '@comunica/core': 3.2.0
-      '@comunica/mediatortype-join-coefficients': 3.2.0
-      '@comunica/types': 3.2.0
-    transitivePeerDependencies:
-      - encoding
-
   '@comunica/mediator-number@2.10.0':
     dependencies:
       '@comunica/core': 2.10.0
-
-  '@comunica/mediator-number@3.2.0':
-    dependencies:
-      '@comunica/core': 3.2.0
 
   '@comunica/mediator-race@2.10.0':
     dependencies:
       '@comunica/core': 2.10.0
 
-  '@comunica/mediator-race@3.2.0':
-    dependencies:
-      '@comunica/core': 3.2.0
-
   '@comunica/mediatortype-accuracy@2.10.0':
     dependencies:
       '@comunica/core': 2.10.0
-
-  '@comunica/mediatortype-accuracy@3.2.0':
-    dependencies:
-      '@comunica/core': 3.2.0
 
   '@comunica/mediatortype-httprequests@2.10.0':
     dependencies:
@@ -7770,28 +5499,13 @@ snapshots:
       '@comunica/core': 2.10.0
       '@rdfjs/types': 1.1.0
 
-  '@comunica/mediatortype-join-coefficients@3.2.0':
-    dependencies:
-      '@comunica/core': 3.2.0
-      '@rdfjs/types': 1.1.0
-
   '@comunica/mediatortype-time@2.10.0':
     dependencies:
       '@comunica/core': 2.10.0
 
-  '@comunica/mediatortype-time@3.2.0':
-    dependencies:
-      '@comunica/core': 3.2.0
-
   '@comunica/metadata@2.10.0':
     dependencies:
       '@comunica/types': 2.10.0
-
-  '@comunica/metadata@3.2.0':
-    dependencies:
-      '@comunica/types': 3.2.0
-      '@rdfjs/types': 1.1.0
-      asynciterator: 3.9.0
 
   '@comunica/query-sparql-rdfjs@2.10.2':
     dependencies:
@@ -7892,134 +5606,11 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
-  '@comunica/query-sparql-rdfjs@3.2.0':
-    dependencies:
-      '@comunica/actor-context-preprocess-convert-shortcuts': 3.2.0
-      '@comunica/actor-context-preprocess-query-source-identify': 3.2.0
-      '@comunica/actor-context-preprocess-query-source-skolemize': 3.2.0
-      '@comunica/actor-context-preprocess-set-defaults': 3.2.0
-      '@comunica/actor-context-preprocess-source-to-destination': 3.2.0
-      '@comunica/actor-hash-bindings-sha1': 3.2.0
-      '@comunica/actor-init-query': 3.2.0
-      '@comunica/actor-optimize-query-operation-assign-sources-exhaustive': 3.2.0
-      '@comunica/actor-optimize-query-operation-bgp-to-join': 3.2.0
-      '@comunica/actor-optimize-query-operation-describe-to-constructs-subject': 3.2.0
-      '@comunica/actor-optimize-query-operation-filter-pushdown': 3.2.0
-      '@comunica/actor-optimize-query-operation-group-sources': 3.2.0
-      '@comunica/actor-optimize-query-operation-join-bgp': 3.2.0
-      '@comunica/actor-optimize-query-operation-join-connected': 3.2.0
-      '@comunica/actor-optimize-query-operation-prune-empty-source-operations': 3.2.0
-      '@comunica/actor-optimize-query-operation-rewrite-add': 3.2.0
-      '@comunica/actor-optimize-query-operation-rewrite-copy': 3.2.0
-      '@comunica/actor-optimize-query-operation-rewrite-move': 3.2.0
-      '@comunica/actor-query-operation-ask': 3.2.0
-      '@comunica/actor-query-operation-bgp-join': 3.2.0
-      '@comunica/actor-query-operation-construct': 3.2.0
-      '@comunica/actor-query-operation-distinct-hash': 3.2.0
-      '@comunica/actor-query-operation-extend': 3.2.0
-      '@comunica/actor-query-operation-filter': 3.2.0
-      '@comunica/actor-query-operation-from-quad': 3.2.0
-      '@comunica/actor-query-operation-group': 3.2.0
-      '@comunica/actor-query-operation-join': 3.2.0
-      '@comunica/actor-query-operation-leftjoin': 3.2.0
-      '@comunica/actor-query-operation-minus': 3.2.0
-      '@comunica/actor-query-operation-nop': 3.2.0
-      '@comunica/actor-query-operation-orderby': 3.2.0
-      '@comunica/actor-query-operation-path-alt': 3.2.0
-      '@comunica/actor-query-operation-path-inv': 3.2.0
-      '@comunica/actor-query-operation-path-link': 3.2.0
-      '@comunica/actor-query-operation-path-nps': 3.2.0
-      '@comunica/actor-query-operation-path-one-or-more': 3.2.0
-      '@comunica/actor-query-operation-path-seq': 3.2.0
-      '@comunica/actor-query-operation-path-zero-or-more': 3.2.0
-      '@comunica/actor-query-operation-path-zero-or-one': 3.2.0
-      '@comunica/actor-query-operation-project': 3.2.0
-      '@comunica/actor-query-operation-reduced-hash': 3.2.0
-      '@comunica/actor-query-operation-service': 3.2.0
-      '@comunica/actor-query-operation-slice': 3.2.0
-      '@comunica/actor-query-operation-source': 3.2.0
-      '@comunica/actor-query-operation-union': 3.2.0
-      '@comunica/actor-query-operation-update-clear': 3.2.0
-      '@comunica/actor-query-operation-update-compositeupdate': 3.2.0
-      '@comunica/actor-query-operation-update-create': 3.2.0
-      '@comunica/actor-query-operation-update-deleteinsert': 3.2.0
-      '@comunica/actor-query-operation-update-drop': 3.2.0
-      '@comunica/actor-query-operation-update-load': 3.2.0
-      '@comunica/actor-query-operation-values': 3.2.0
-      '@comunica/actor-query-parse-graphql': 3.2.0
-      '@comunica/actor-query-parse-sparql': 3.2.0
-      '@comunica/actor-query-process-explain-logical': 3.2.0
-      '@comunica/actor-query-process-explain-parsed': 3.2.0
-      '@comunica/actor-query-process-explain-physical': 3.2.0
-      '@comunica/actor-query-process-sequential': 3.2.0
-      '@comunica/actor-query-result-serialize-json': 3.2.0
-      '@comunica/actor-query-result-serialize-rdf': 3.2.0
-      '@comunica/actor-query-result-serialize-simple': 3.2.0
-      '@comunica/actor-query-result-serialize-sparql-csv': 3.2.0
-      '@comunica/actor-query-result-serialize-sparql-json': 3.2.0
-      '@comunica/actor-query-result-serialize-sparql-tsv': 3.2.0
-      '@comunica/actor-query-result-serialize-sparql-xml': 3.2.0
-      '@comunica/actor-query-result-serialize-stats': 3.2.0
-      '@comunica/actor-query-result-serialize-table': 3.2.0
-      '@comunica/actor-query-result-serialize-tree': 3.2.0
-      '@comunica/actor-query-source-identify-hypermedia': 3.2.0
-      '@comunica/actor-query-source-identify-hypermedia-sparql': 3.2.0
-      '@comunica/actor-query-source-identify-rdfjs': 3.2.0
-      '@comunica/actor-rdf-join-entries-sort-cardinality': 3.2.0
-      '@comunica/actor-rdf-join-inner-hash': 3.2.0
-      '@comunica/actor-rdf-join-inner-multi-bind': 3.2.0
-      '@comunica/actor-rdf-join-inner-multi-bind-source': 3.2.0
-      '@comunica/actor-rdf-join-inner-multi-empty': 3.2.0
-      '@comunica/actor-rdf-join-inner-multi-smallest': 3.2.0
-      '@comunica/actor-rdf-join-inner-multi-smallest-filter-bindings': 3.2.0
-      '@comunica/actor-rdf-join-inner-nestedloop': 3.2.0
-      '@comunica/actor-rdf-join-inner-none': 3.2.0
-      '@comunica/actor-rdf-join-inner-single': 3.2.0
-      '@comunica/actor-rdf-join-inner-symmetrichash': 3.2.0
-      '@comunica/actor-rdf-join-minus-hash': 3.2.0
-      '@comunica/actor-rdf-join-minus-hash-undef': 3.2.0
-      '@comunica/actor-rdf-join-optional-bind': 3.2.0
-      '@comunica/actor-rdf-join-optional-hash': 3.2.0
-      '@comunica/actor-rdf-join-optional-nestedloop': 3.2.0
-      '@comunica/actor-rdf-join-selectivity-variable-counting': 3.2.0
-      '@comunica/actor-rdf-metadata-accumulate-cancontainundefs': 3.2.0
-      '@comunica/actor-rdf-metadata-accumulate-cardinality': 3.2.0
-      '@comunica/actor-rdf-metadata-accumulate-pagesize': 3.2.0
-      '@comunica/actor-rdf-metadata-accumulate-requesttime': 3.2.0
-      '@comunica/actor-rdf-serialize-jsonld': 3.2.0
-      '@comunica/actor-rdf-serialize-n3': 3.2.0
-      '@comunica/actor-rdf-serialize-shaclc': 3.2.0
-      '@comunica/actor-rdf-update-quads-rdfjs-store': 3.2.0
-      '@comunica/bus-http-invalidate': 3.2.0
-      '@comunica/bus-query-operation': 3.2.0
-      '@comunica/config-query-sparql': 3.2.0
-      '@comunica/core': 3.2.0
-      '@comunica/logger-void': 3.2.0
-      '@comunica/mediator-all': 3.2.0
-      '@comunica/mediator-combine-pipeline': 3.2.0
-      '@comunica/mediator-combine-union': 3.2.0
-      '@comunica/mediator-join-coefficients-fixed': 3.2.0
-      '@comunica/mediator-number': 3.2.0
-      '@comunica/mediator-race': 3.2.0
-      '@comunica/runner': 3.2.0
-      '@comunica/types': 3.2.0
-    transitivePeerDependencies:
-      - encoding
-
   '@comunica/runner@2.10.0':
     dependencies:
       '@comunica/bus-init': 2.10.0
       '@comunica/core': 2.10.0
       componentsjs: 5.5.1
-      process: 0.11.10
-    transitivePeerDependencies:
-      - encoding
-
-  '@comunica/runner@3.2.0':
-    dependencies:
-      '@comunica/bus-init': 3.2.0
-      '@comunica/core': 3.2.0
-      componentsjs: 6.0.1
       process: 0.11.10
     transitivePeerDependencies:
       - encoding
@@ -8031,16 +5622,10 @@ snapshots:
       asynciterator: 3.9.0
       sparqlalgebrajs: 4.2.0
 
-  '@comunica/types@3.2.0':
-    dependencies:
-      '@rdfjs/types': 1.1.0
-      '@types/yargs': 17.0.24
-      asynciterator: 3.9.0
-      sparqlalgebrajs: 4.3.8
-
   '@cspotcode/source-map-support@0.8.1':
     dependencies:
       '@jridgewell/trace-mapping': 0.3.9
+    optional: true
 
   '@dabh/diagnostics@2.0.3':
     dependencies:
@@ -8442,6 +6027,7 @@ snapshots:
     dependencies:
       '@jridgewell/resolve-uri': 3.1.0
       '@jridgewell/sourcemap-codec': 1.4.15
+    optional: true
 
   '@m-ld/jsonld@6.0.1-m-ld.0':
     dependencies:
@@ -8551,15 +6137,17 @@ snapshots:
       '@types/react': 18.3.3
       '@types/react-dom': 18.3.0
 
-  '@tootallnate/once@2.0.0': {}
+  '@tsconfig/node10@1.0.9':
+    optional: true
 
-  '@tsconfig/node10@1.0.9': {}
+  '@tsconfig/node12@1.0.11':
+    optional: true
 
-  '@tsconfig/node12@1.0.11': {}
+  '@tsconfig/node14@1.0.3':
+    optional: true
 
-  '@tsconfig/node14@1.0.3': {}
-
-  '@tsconfig/node16@1.0.4': {}
+  '@tsconfig/node16@1.0.4':
+    optional: true
 
   '@types/aria-query@5.0.4': {}
 
@@ -8619,12 +6207,6 @@ snapshots:
     dependencies:
       '@types/istanbul-lib-report': 3.0.0
 
-  '@types/jsdom@20.0.1':
-    dependencies:
-      '@types/node': 20.3.1
-      '@types/tough-cookie': 4.0.5
-      parse5: 7.1.2
-
   '@types/json-schema@7.0.15': {}
 
   '@types/json5@0.0.29': {}
@@ -8670,11 +6252,6 @@ snapshots:
       '@types/node': 20.3.1
       safe-buffer: 5.1.2
 
-  '@types/readable-stream@4.0.15':
-    dependencies:
-      '@types/node': 20.3.1
-      safe-buffer: 5.1.2
-
   '@types/requestidlecallback@0.3.7': {}
 
   '@types/semver@7.5.0': {}
@@ -8695,8 +6272,6 @@ snapshots:
 
   '@types/stack-utils@2.0.1': {}
 
-  '@types/tough-cookie@4.0.5': {}
-
   '@types/triple-beam@1.3.2': {}
 
   '@types/uuid@9.0.7': {}
@@ -8708,24 +6283,6 @@ snapshots:
   '@types/yargs@17.0.24':
     dependencies:
       '@types/yargs-parser': 21.0.0
-
-  '@typescript-eslint/eslint-plugin@8.0.0-alpha.45(@typescript-eslint/parser@8.0.0-alpha.45(eslint@9.7.0)(typescript@5.5.3))(eslint@9.7.0)(typescript@5.5.3)':
-    dependencies:
-      '@eslint-community/regexpp': 4.11.0
-      '@typescript-eslint/parser': 8.0.0-alpha.45(eslint@9.7.0)(typescript@5.5.3)
-      '@typescript-eslint/scope-manager': 8.0.0-alpha.45
-      '@typescript-eslint/type-utils': 8.0.0-alpha.45(eslint@9.7.0)(typescript@5.5.3)
-      '@typescript-eslint/utils': 8.0.0-alpha.50(eslint@9.7.0)(typescript@5.5.3)
-      '@typescript-eslint/visitor-keys': 8.0.0-alpha.45
-      eslint: 9.7.0
-      graphemer: 1.4.0
-      ignore: 5.3.1
-      natural-compare: 1.4.0
-      ts-api-utils: 1.3.0(typescript@5.5.3)
-    optionalDependencies:
-      typescript: 5.5.3
-    transitivePeerDependencies:
-      - supports-color
 
   '@typescript-eslint/eslint-plugin@8.0.0-alpha.51(@typescript-eslint/parser@8.0.0-alpha.51(eslint@9.7.0)(typescript@5.5.3))(eslint@9.7.0)(typescript@5.5.3)':
     dependencies:
@@ -8745,19 +6302,6 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@typescript-eslint/parser@8.0.0-alpha.45(eslint@9.7.0)(typescript@5.5.3)':
-    dependencies:
-      '@typescript-eslint/scope-manager': 8.0.0-alpha.45
-      '@typescript-eslint/types': 8.0.0-alpha.45
-      '@typescript-eslint/typescript-estree': 8.0.0-alpha.45(typescript@5.5.3)
-      '@typescript-eslint/visitor-keys': 8.0.0-alpha.45
-      debug: 4.3.4
-      eslint: 9.7.0
-    optionalDependencies:
-      typescript: 5.5.3
-    transitivePeerDependencies:
-      - supports-color
-
   '@typescript-eslint/parser@8.0.0-alpha.51(eslint@9.7.0)(typescript@5.5.3)':
     dependencies:
       '@typescript-eslint/scope-manager': 8.0.0-alpha.51
@@ -8771,11 +6315,6 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@typescript-eslint/scope-manager@8.0.0-alpha.45':
-    dependencies:
-      '@typescript-eslint/types': 8.0.0-alpha.45
-      '@typescript-eslint/visitor-keys': 8.0.0-alpha.45
-
   '@typescript-eslint/scope-manager@8.0.0-alpha.50':
     dependencies:
       '@typescript-eslint/types': 8.0.0-alpha.50
@@ -8785,18 +6324,6 @@ snapshots:
     dependencies:
       '@typescript-eslint/types': 8.0.0-alpha.51
       '@typescript-eslint/visitor-keys': 8.0.0-alpha.51
-
-  '@typescript-eslint/type-utils@8.0.0-alpha.45(eslint@9.7.0)(typescript@5.5.3)':
-    dependencies:
-      '@typescript-eslint/typescript-estree': 8.0.0-alpha.45(typescript@5.5.3)
-      '@typescript-eslint/utils': 8.0.0-alpha.50(eslint@9.7.0)(typescript@5.5.3)
-      debug: 4.3.4
-      ts-api-utils: 1.3.0(typescript@5.5.3)
-    optionalDependencies:
-      typescript: 5.5.3
-    transitivePeerDependencies:
-      - eslint
-      - supports-color
 
   '@typescript-eslint/type-utils@8.0.0-alpha.51(eslint@9.7.0)(typescript@5.5.3)':
     dependencies:
@@ -8810,26 +6337,9 @@ snapshots:
       - eslint
       - supports-color
 
-  '@typescript-eslint/types@8.0.0-alpha.45': {}
-
   '@typescript-eslint/types@8.0.0-alpha.50': {}
 
   '@typescript-eslint/types@8.0.0-alpha.51': {}
-
-  '@typescript-eslint/typescript-estree@8.0.0-alpha.45(typescript@5.5.3)':
-    dependencies:
-      '@typescript-eslint/types': 8.0.0-alpha.45
-      '@typescript-eslint/visitor-keys': 8.0.0-alpha.45
-      debug: 4.3.4
-      globby: 11.1.0
-      is-glob: 4.0.3
-      minimatch: 9.0.5
-      semver: 7.6.3
-      ts-api-utils: 1.3.0(typescript@5.5.3)
-    optionalDependencies:
-      typescript: 5.5.3
-    transitivePeerDependencies:
-      - supports-color
 
   '@typescript-eslint/typescript-estree@8.0.0-alpha.50(typescript@5.5.3)':
     dependencies:
@@ -8872,11 +6382,6 @@ snapshots:
       - supports-color
       - typescript
 
-  '@typescript-eslint/visitor-keys@8.0.0-alpha.45':
-    dependencies:
-      '@typescript-eslint/types': 8.0.0-alpha.45
-      eslint-visitor-keys: 3.4.3
-
   '@typescript-eslint/visitor-keys@8.0.0-alpha.50':
     dependencies:
       '@typescript-eslint/types': 8.0.0-alpha.50
@@ -8886,8 +6391,6 @@ snapshots:
     dependencies:
       '@typescript-eslint/types': 8.0.0-alpha.51
       eslint-visitor-keys: 3.4.3
-
-  abab@2.0.6: {}
 
   abort-controller@3.0.0:
     dependencies:
@@ -8903,26 +6406,17 @@ snapshots:
       module-error: 1.0.2
       queue-microtask: 1.2.3
 
-  acorn-globals@7.0.1:
-    dependencies:
-      acorn: 8.9.0
-      acorn-walk: 8.2.0
-
   acorn-jsx@5.3.2(acorn@8.12.1):
     dependencies:
       acorn: 8.12.1
 
-  acorn-walk@8.2.0: {}
+  acorn-walk@8.2.0:
+    optional: true
 
   acorn@8.12.1: {}
 
-  acorn@8.9.0: {}
-
-  agent-base@6.0.2:
-    dependencies:
-      debug: 4.3.4
-    transitivePeerDependencies:
-      - supports-color
+  acorn@8.9.0:
+    optional: true
 
   aggregate-error@3.1.0:
     dependencies:
@@ -8964,7 +6458,8 @@ snapshots:
       normalize-path: 3.0.0
       picomatch: 2.3.1
 
-  arg@4.1.3: {}
+  arg@4.1.3:
+    optional: true
 
   argparse@1.0.10:
     dependencies:
@@ -9037,8 +6532,6 @@ snapshots:
   asyncjoin@1.2.3:
     dependencies:
       asynciterator: 3.9.0
-
-  asynckit@0.4.0: {}
 
   available-typed-arrays@1.0.7:
     dependencies:
@@ -9302,32 +6795,9 @@ snapshots:
       color: 3.2.1
       text-hex: 1.0.0
 
-  combined-stream@1.0.8:
-    dependencies:
-      delayed-stream: 1.0.0
-
   commander@4.1.1: {}
 
   componentsjs@5.5.1:
-    dependencies:
-      '@rdfjs/types': 1.1.0
-      '@types/minimist': 1.2.2
-      '@types/node': 20.3.1
-      '@types/semver': 7.5.0
-      jsonld-context-parser: 2.3.0
-      minimist: 1.2.8
-      rdf-data-factory: 1.1.1
-      rdf-object: 1.14.0
-      rdf-parse: 2.3.2
-      rdf-quad: 1.5.0
-      rdf-string: 1.6.3
-      rdf-terms: 1.11.0
-      semver: 7.6.3
-      winston: 3.9.0
-    transitivePeerDependencies:
-      - encoding
-
-  componentsjs@6.0.1:
     dependencies:
       '@rdfjs/types': 1.1.0
       '@types/minimist': 1.2.2
@@ -9367,7 +6837,8 @@ snapshots:
       - supports-color
       - ts-node
 
-  create-require@1.1.1: {}
+  create-require@1.1.1:
+    optional: true
 
   cross-fetch@3.1.6:
     dependencies:
@@ -9381,25 +6852,11 @@ snapshots:
       shebang-command: 2.0.0
       which: 2.0.2
 
-  cssom@0.3.8: {}
-
-  cssom@0.5.0: {}
-
-  cssstyle@2.3.0:
-    dependencies:
-      cssom: 0.3.8
-
   csstype@3.1.3: {}
 
   cuid@2.1.8: {}
 
   data-uri-to-buffer@4.0.1: {}
-
-  data-urls@3.0.2:
-    dependencies:
-      abab: 2.0.6
-      whatwg-mimetype: 3.0.0
-      whatwg-url: 11.0.0
 
   data-view-buffer@1.0.1:
     dependencies:
@@ -9427,8 +6884,6 @@ snapshots:
     dependencies:
       ms: 2.1.2
 
-  decimal.js@10.4.3: {}
-
   dedent@0.7.0: {}
 
   dedent@1.5.3: {}
@@ -9454,8 +6909,6 @@ snapshots:
       has-property-descriptors: 1.0.2
       object-keys: 1.1.1
 
-  delayed-stream@1.0.0: {}
-
   dequal@2.0.3: {}
 
   detect-newline@3.1.0: {}
@@ -9464,7 +6917,8 @@ snapshots:
 
   diff-sequences@29.6.3: {}
 
-  diff@4.0.2: {}
+  diff@4.0.2:
+    optional: true
 
   dir-glob@3.0.1:
     dependencies:
@@ -9487,10 +6941,6 @@ snapshots:
       entities: 4.5.0
 
   domelementtype@2.3.0: {}
-
-  domexception@4.0.0:
-    dependencies:
-      webidl-conversions: 7.0.0
 
   domhandler@5.0.3:
     dependencies:
@@ -9614,37 +7064,12 @@ snapshots:
 
   escape-string-regexp@4.0.0: {}
 
-  escodegen@2.1.0:
-    dependencies:
-      esprima: 4.0.1
-      estraverse: 5.3.0
-      esutils: 2.0.3
-    optionalDependencies:
-      source-map: 0.6.1
-
   eslint-import-resolver-node@0.3.9:
     dependencies:
       debug: 3.2.7
       is-core-module: 2.15.0
       resolve: 1.22.8
     transitivePeerDependencies:
-      - supports-color
-
-  eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@8.0.0-alpha.45(eslint@9.7.0)(typescript@5.5.3))(eslint-plugin-import@2.29.1)(eslint@9.7.0):
-    dependencies:
-      debug: 4.3.4
-      enhanced-resolve: 5.17.0
-      eslint: 9.7.0
-      eslint-module-utils: 2.8.1(@typescript-eslint/parser@8.0.0-alpha.45(eslint@9.7.0)(typescript@5.5.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@8.0.0-alpha.45(eslint@9.7.0)(typescript@5.5.3))(eslint-plugin-import@2.29.1)(eslint@9.7.0))(eslint@9.7.0)
-      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@8.0.0-alpha.45(eslint@9.7.0)(typescript@5.5.3))(eslint-import-resolver-typescript@3.6.1)(eslint@9.7.0)
-      fast-glob: 3.3.2
-      get-tsconfig: 4.7.5
-      is-core-module: 2.15.0
-      is-glob: 4.0.3
-    transitivePeerDependencies:
-      - '@typescript-eslint/parser'
-      - eslint-import-resolver-node
-      - eslint-import-resolver-webpack
       - supports-color
 
   eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@8.0.0-alpha.51(eslint@9.7.0)(typescript@5.5.3))(eslint-plugin-import@2.29.1)(eslint@9.7.0):
@@ -9662,17 +7087,6 @@ snapshots:
       - '@typescript-eslint/parser'
       - eslint-import-resolver-node
       - eslint-import-resolver-webpack
-      - supports-color
-
-  eslint-module-utils@2.8.1(@typescript-eslint/parser@8.0.0-alpha.45(eslint@9.7.0)(typescript@5.5.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@8.0.0-alpha.45(eslint@9.7.0)(typescript@5.5.3))(eslint-plugin-import@2.29.1)(eslint@9.7.0))(eslint@9.7.0):
-    dependencies:
-      debug: 3.2.7
-    optionalDependencies:
-      '@typescript-eslint/parser': 8.0.0-alpha.45(eslint@9.7.0)(typescript@5.5.3)
-      eslint: 9.7.0
-      eslint-import-resolver-node: 0.3.9
-      eslint-import-resolver-typescript: 3.6.1(@typescript-eslint/parser@8.0.0-alpha.45(eslint@9.7.0)(typescript@5.5.3))(eslint-plugin-import@2.29.1)(eslint@9.7.0)
-    transitivePeerDependencies:
       - supports-color
 
   eslint-module-utils@2.8.1(@typescript-eslint/parser@8.0.0-alpha.51(eslint@9.7.0)(typescript@5.5.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@8.0.0-alpha.51(eslint@9.7.0)(typescript@5.5.3))(eslint-plugin-import@2.29.1)(eslint@9.7.0))(eslint@9.7.0):
@@ -9703,33 +7117,6 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
       - typescript
-
-  eslint-plugin-import@2.29.1(@typescript-eslint/parser@8.0.0-alpha.45(eslint@9.7.0)(typescript@5.5.3))(eslint-import-resolver-typescript@3.6.1)(eslint@9.7.0):
-    dependencies:
-      array-includes: 3.1.8
-      array.prototype.findlastindex: 1.2.5
-      array.prototype.flat: 1.3.2
-      array.prototype.flatmap: 1.3.2
-      debug: 3.2.7
-      doctrine: 2.1.0
-      eslint: 9.7.0
-      eslint-import-resolver-node: 0.3.9
-      eslint-module-utils: 2.8.1(@typescript-eslint/parser@8.0.0-alpha.45(eslint@9.7.0)(typescript@5.5.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@8.0.0-alpha.45(eslint@9.7.0)(typescript@5.5.3))(eslint-plugin-import@2.29.1)(eslint@9.7.0))(eslint@9.7.0)
-      hasown: 2.0.2
-      is-core-module: 2.15.0
-      is-glob: 4.0.3
-      minimatch: 3.1.2
-      object.fromentries: 2.0.8
-      object.groupby: 1.0.3
-      object.values: 1.2.0
-      semver: 6.3.1
-      tsconfig-paths: 3.15.0
-    optionalDependencies:
-      '@typescript-eslint/parser': 8.0.0-alpha.45(eslint@9.7.0)(typescript@5.5.3)
-    transitivePeerDependencies:
-      - eslint-import-resolver-typescript
-      - eslint-import-resolver-webpack
-      - supports-color
 
   eslint-plugin-import@2.29.1(@typescript-eslint/parser@8.0.0-alpha.51(eslint@9.7.0)(typescript@5.5.3))(eslint-import-resolver-typescript@3.6.1)(eslint@9.7.0):
     dependencies:
@@ -9842,8 +7229,6 @@ snapshots:
   estraverse@5.3.0: {}
 
   esutils@2.0.3: {}
-
-  event-emitter-promisify@1.1.0: {}
 
   event-target-shim@5.0.1: {}
 
@@ -9961,12 +7346,6 @@ snapshots:
   for-each@0.3.3:
     dependencies:
       is-callable: 1.2.7
-
-  form-data@4.0.0:
-    dependencies:
-      asynckit: 0.4.0
-      combined-stream: 1.0.8
-      mime-types: 2.1.35
 
   formdata-polyfill@4.0.10:
     dependencies:
@@ -10099,10 +7478,6 @@ snapshots:
     dependencies:
       function-bind: 1.1.2
 
-  html-encoding-sniffer@3.0.0:
-    dependencies:
-      whatwg-encoding: 2.0.0
-
   html-escaper@2.0.2: {}
 
   htmlparser2@8.0.2:
@@ -10121,26 +7496,7 @@ snapshots:
 
   http-link-header@1.1.1: {}
 
-  http-proxy-agent@5.0.0:
-    dependencies:
-      '@tootallnate/once': 2.0.0
-      agent-base: 6.0.2
-      debug: 4.3.4
-    transitivePeerDependencies:
-      - supports-color
-
-  https-proxy-agent@5.0.1:
-    dependencies:
-      agent-base: 6.0.2
-      debug: 4.3.4
-    transitivePeerDependencies:
-      - supports-color
-
   human-signals@2.1.0: {}
-
-  iconv-lite@0.6.3:
-    dependencies:
-      safer-buffer: 2.1.2
 
   ieee754@1.2.1: {}
 
@@ -10232,8 +7588,6 @@ snapshots:
   is-number@7.0.0: {}
 
   is-path-inside@3.0.3: {}
-
-  is-potential-custom-element-name@1.0.1: {}
 
   is-regex@1.1.4:
     dependencies:
@@ -10505,21 +7859,6 @@ snapshots:
       jest-get-type: 29.6.3
       jest-util: 29.7.0
       pretty-format: 29.7.0
-
-  jest-environment-jsdom@29.7.0:
-    dependencies:
-      '@jest/environment': 29.7.0
-      '@jest/fake-timers': 29.7.0
-      '@jest/types': 29.6.3
-      '@types/jsdom': 20.0.1
-      '@types/node': 20.3.1
-      jest-mock: 29.7.0
-      jest-util: 29.7.0
-      jsdom: 20.0.3
-    transitivePeerDependencies:
-      - bufferutil
-      - supports-color
-      - utf-8-validate
 
   jest-environment-node@29.5.0:
     dependencies:
@@ -10927,39 +8266,6 @@ snapshots:
     dependencies:
       argparse: 2.0.1
 
-  jsdom@20.0.3:
-    dependencies:
-      abab: 2.0.6
-      acorn: 8.9.0
-      acorn-globals: 7.0.1
-      cssom: 0.5.0
-      cssstyle: 2.3.0
-      data-urls: 3.0.2
-      decimal.js: 10.4.3
-      domexception: 4.0.0
-      escodegen: 2.1.0
-      form-data: 4.0.0
-      html-encoding-sniffer: 3.0.0
-      http-proxy-agent: 5.0.0
-      https-proxy-agent: 5.0.1
-      is-potential-custom-element-name: 1.0.1
-      nwsapi: 2.2.10
-      parse5: 7.1.2
-      saxes: 6.0.0
-      symbol-tree: 3.2.4
-      tough-cookie: 4.1.4
-      w3c-xmlserializer: 4.0.0
-      webidl-conversions: 7.0.0
-      whatwg-encoding: 2.0.0
-      whatwg-mimetype: 3.0.0
-      whatwg-url: 11.0.0
-      ws: 8.18.0
-      xml-name-validator: 4.0.0
-    transitivePeerDependencies:
-      - bufferutil
-      - supports-color
-      - utf-8-validate
-
   jsesc@2.5.2: {}
 
   json-buffer@3.0.1: {}
@@ -11160,12 +8466,6 @@ snapshots:
       braces: 3.0.2
       picomatch: 2.3.1
 
-  mime-db@1.52.0: {}
-
-  mime-types@2.1.35:
-    dependencies:
-      mime-db: 1.52.0
-
   mimic-fn@2.1.0: {}
 
   minimalistic-assert@1.0.1: {}
@@ -11227,8 +8527,6 @@ snapshots:
   npm-run-path@4.0.1:
     dependencies:
       path-key: 3.1.1
-
-  nwsapi@2.2.10: {}
 
   object-inspect@1.13.2: {}
 
@@ -11316,10 +8614,6 @@ snapshots:
 
   parse-ms@4.0.0: {}
 
-  parse5@7.1.2:
-    dependencies:
-      entities: 4.5.0
-
   path-exists@4.0.0: {}
 
   path-is-absolute@1.0.1: {}
@@ -11373,8 +8667,6 @@ snapshots:
       kleur: 3.0.3
       sisteransi: 1.0.5
 
-  psl@1.9.0: {}
-
   punycode@2.3.0: {}
 
   pure-rand@6.0.2: {}
@@ -11393,8 +8685,6 @@ snapshots:
       abstract-level: 1.0.3
       asynciterator: 3.9.0
       js-sorted-set: 0.7.0
-
-  querystringify@2.2.0: {}
 
   queue-microtask@1.2.3: {}
 
@@ -11473,16 +8763,6 @@ snapshots:
       rdf-literal: 1.3.1
       rdf-string: 1.6.3
 
-  rdf-streaming-store@1.1.4:
-    dependencies:
-      '@rdfjs/types': 1.1.0
-      '@types/n3': 1.16.0
-      '@types/readable-stream': 2.3.15
-      n3: 1.16.4
-      rdf-string: 1.6.3
-      rdf-terms: 1.11.0
-      readable-stream: 4.4.2
-
   rdf-string-ttl@1.3.2:
     dependencies:
       '@rdfjs/types': 1.1.0
@@ -11532,11 +8812,6 @@ snapshots:
     dependencies:
       loose-envify: 1.4.0
 
-  readable-from-web@1.0.0:
-    dependencies:
-      '@types/readable-stream': 4.0.15
-      readable-stream: 4.4.2
-
   readable-stream-node-to-web@1.0.1: {}
 
   readable-stream@3.6.2:
@@ -11581,8 +8856,6 @@ snapshots:
   require-directory@2.1.1: {}
 
   require-from-string@2.0.2: {}
-
-  requires-port@1.0.0: {}
 
   resolve-cwd@3.0.0:
     dependencies:
@@ -11634,12 +8907,6 @@ snapshots:
       is-regex: 1.1.4
 
   safe-stable-stringify@2.4.3: {}
-
-  safer-buffer@2.1.2: {}
-
-  saxes@6.0.0:
-    dependencies:
-      xmlchars: 2.2.0
 
   scheduler@0.23.2:
     dependencies:
@@ -11869,8 +9136,6 @@ snapshots:
 
   supports-preserve-symlinks-flag@1.0.0: {}
 
-  symbol-tree@3.2.4: {}
-
   table@6.8.1:
     dependencies:
       ajv: 8.12.0
@@ -11901,18 +9166,7 @@ snapshots:
 
   to-utf8@0.0.1: {}
 
-  tough-cookie@4.1.4:
-    dependencies:
-      psl: 1.9.0
-      punycode: 2.3.0
-      universalify: 0.2.0
-      url-parse: 1.5.10
-
   tr46@0.0.3: {}
-
-  tr46@3.0.0:
-    dependencies:
-      punycode: 2.3.0
 
   triple-beam@1.3.0: {}
 
@@ -11971,6 +9225,23 @@ snapshots:
       '@jest/types': 29.6.3
       babel-jest: 29.7.0(@babel/core@7.24.9)
 
+  ts-jest@29.1.0(@babel/core@7.24.9)(@jest/types@29.6.3)(babel-jest@29.7.0(@babel/core@7.24.9))(jest@29.7.0(@types/node@20.3.1)(ts-node@10.9.1(@types/node@20.3.1)(typescript@5.5.3)))(typescript@5.5.3):
+    dependencies:
+      bs-logger: 0.2.6
+      fast-json-stable-stringify: 2.1.0
+      jest: 29.7.0(@types/node@20.3.1)(ts-node@10.9.1(@types/node@20.3.1)(typescript@5.5.3))
+      jest-util: 29.7.0
+      json5: 2.2.3
+      lodash.memoize: 4.1.2
+      make-error: 1.3.6
+      semver: 7.5.2
+      typescript: 5.5.3
+      yargs-parser: 21.1.1
+    optionalDependencies:
+      '@babel/core': 7.24.9
+      '@jest/types': 29.6.3
+      babel-jest: 29.7.0(@babel/core@7.24.9)
+
   ts-node@10.9.1(@types/node@20.3.1)(typescript@5.5.3):
     dependencies:
       '@cspotcode/source-map-support': 0.8.1
@@ -11988,6 +9259,7 @@ snapshots:
       typescript: 5.5.3
       v8-compile-cache-lib: 3.0.1
       yn: 3.1.1
+    optional: true
 
   tsconfig-paths@3.15.0:
     dependencies:
@@ -12042,17 +9314,6 @@ snapshots:
       is-typed-array: 1.1.13
       possible-typed-array-names: 1.0.0
 
-  typescript-eslint@8.0.0-alpha.45(eslint@9.7.0)(typescript@5.5.3):
-    dependencies:
-      '@typescript-eslint/eslint-plugin': 8.0.0-alpha.45(@typescript-eslint/parser@8.0.0-alpha.45(eslint@9.7.0)(typescript@5.5.3))(eslint@9.7.0)(typescript@5.5.3)
-      '@typescript-eslint/parser': 8.0.0-alpha.45(eslint@9.7.0)(typescript@5.5.3)
-      '@typescript-eslint/utils': 8.0.0-alpha.50(eslint@9.7.0)(typescript@5.5.3)
-    optionalDependencies:
-      typescript: 5.5.3
-    transitivePeerDependencies:
-      - eslint
-      - supports-color
-
   typescript-eslint@8.0.0-alpha.51(eslint@9.7.0)(typescript@5.5.3):
     dependencies:
       '@typescript-eslint/eslint-plugin': 8.0.0-alpha.51(@typescript-eslint/parser@8.0.0-alpha.51(eslint@9.7.0)(typescript@5.5.3))(eslint@9.7.0)(typescript@5.5.3)
@@ -12077,8 +9338,6 @@ snapshots:
     dependencies:
       busboy: 1.6.0
 
-  universalify@0.2.0: {}
-
   update-browserslist-db@1.0.11(browserslist@4.21.9):
     dependencies:
       browserslist: 4.21.9
@@ -12095,16 +9354,12 @@ snapshots:
     dependencies:
       punycode: 2.3.0
 
-  url-parse@1.5.10:
-    dependencies:
-      querystringify: 2.2.0
-      requires-port: 1.0.0
-
   util-deprecate@1.0.2: {}
 
   uuid@9.0.1: {}
 
-  v8-compile-cache-lib@3.0.1: {}
+  v8-compile-cache-lib@3.0.1:
+    optional: true
 
   v8-to-istanbul@9.1.0:
     dependencies:
@@ -12115,10 +9370,6 @@ snapshots:
   valid-data-url@4.0.1: {}
 
   validate-iri@1.0.1: {}
-
-  w3c-xmlserializer@4.0.0:
-    dependencies:
-      xml-name-validator: 4.0.0
 
   walker@1.0.8:
     dependencies:
@@ -12134,19 +9385,6 @@ snapshots:
   web-streams-ponyfill@1.4.2: {}
 
   webidl-conversions@3.0.1: {}
-
-  webidl-conversions@7.0.0: {}
-
-  whatwg-encoding@2.0.0:
-    dependencies:
-      iconv-lite: 0.6.3
-
-  whatwg-mimetype@3.0.0: {}
-
-  whatwg-url@11.0.0:
-    dependencies:
-      tr46: 3.0.0
-      webidl-conversions: 7.0.0
 
   whatwg-url@5.0.0:
     dependencies:
@@ -12208,10 +9446,6 @@ snapshots:
       imurmurhash: 0.1.4
       signal-exit: 3.0.7
 
-  ws@8.18.0: {}
-
-  xml-name-validator@4.0.0: {}
-
   xmlchars@2.2.0: {}
 
   y18n@5.0.8: {}
@@ -12232,7 +9466,8 @@ snapshots:
       y18n: 5.0.8
       yargs-parser: 21.1.1
 
-  yn@3.1.1: {}
+  yn@3.1.1:
+    optional: true
 
   yocto-queue@0.1.0: {}
 

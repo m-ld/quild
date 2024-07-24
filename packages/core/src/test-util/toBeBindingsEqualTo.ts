@@ -122,7 +122,7 @@ const NOT_FOUND = -1;
  * The column widths will match across all tables, to make it easier to compare
  * multple tables generated at once.
  */
-export const bindingsTables = <BindingsesList extends Bindings[][]>(
+const bindingsTables = <BindingsesList extends Bindings[][]>(
   bindingseses: BindingsesList,
   /**
    * The columns will be ordered by these variable names. Variables not
