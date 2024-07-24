@@ -96,7 +96,7 @@ export const propagateContext = async (
   innerCtxDef === undefined
     ? outerCtx
     : innerCtxDef === null
-    ? nullContext
+    ? contextParser.parse({})
     : /* eslint-disable-next-line @typescript-eslint/consistent-type-assertions
          ---
          Needed until we have better types flowing. */
@@ -129,7 +129,6 @@ export interface ToParse<Element extends JsonValue = JsonValue> {
 }
 
 export const contextParser = new ContextParser();
-export const nullContext = await contextParser.parse({});
 
 /**
  * Make all properties in `T` optional, *except* keys assignable to `K`.
