@@ -3,6 +3,9 @@
   "workspaces": {
     ".": {
       "entry": ["wallaby.mjs"]
+    },
+    "packages/core": {
+      "ignore": ["src/types/*"]
     }
   }
 }

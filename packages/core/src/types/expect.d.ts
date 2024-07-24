@@ -12,7 +12,7 @@ declare module "expect/build/matchers" {
    * `expect`.
    */
   type MatcherFunctionDefiningMatcher<
-    Matcher extends (...args: never[]) => unknown
+    Matcher extends (...args: never[]) => unknown,
   > = MatcherFunction<Parameters<Matcher>>;
 
   type BuiltInMatcherName =

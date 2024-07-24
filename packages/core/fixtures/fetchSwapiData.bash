@@ -1,5 +1,3 @@
-#!/bin/bash
-
 # The URL prefix for SWAPI.
 prefix="https://swapi.dev/api/"
 

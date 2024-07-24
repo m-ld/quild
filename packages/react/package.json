@@ -19,8 +19,7 @@
     "build": "tsc --project tsconfig.build.json",
     "clean": "rm -rf dist *.tsbuildinfo",
     "lint": "eslint .",
-    "typecheck": "tsc --project tsconfig.dev.json",
-    "fetch-fixtures": "fixtures/fetchSwapiData.sh"
+    "typecheck": "tsc --project tsconfig.dev.json"
   },
   "devDependencies": {
     "@jest/globals": "^29.5.0",
