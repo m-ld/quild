@@ -26,6 +26,7 @@
   },
   "devDependencies": {
     "@comunica/bindings-factory": "2.7.0",
+    "@jest/expect": "^29.7.0",
     "@jest/globals": "^29.5.0",
     "@jest/types": "^29.6.3",
     "@quild/config-base": "workspace:0.0.0-alpha.1",
