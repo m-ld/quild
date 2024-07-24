@@ -1,4 +1,4 @@
-import baseConfig from "@quild/config-base/jest.config.base";
+import baseConfig from "@quild/config-base/jest.config.base.ts";
 
 import type { Config } from "@jest/types";
 

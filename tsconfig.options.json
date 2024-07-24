@@ -16,5 +16,11 @@
     "skipLibCheck": true,
     "strict": true,
     "useUnknownInCatchVariables": true
+  },
+
+  "ts-node": {
+    "compilerOptions": {
+      "allowImportingTsExtensions": true
+    }
   }
 }

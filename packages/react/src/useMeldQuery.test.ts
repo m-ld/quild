@@ -15,6 +15,7 @@ const createMeldClone = async () =>
     "@id": uuid(),
     "@domain": "directory.example.edu",
     genesis: true,
+    logLevel: "WARN",
   });
 
 const query = {
@@ -60,7 +61,7 @@ describe(useMeldQuery, () => {
           parseWarnings: [],
         });
       },
-      { timeout: 100 }
+      { timeout: 100 },
     );
 
     await act(async () => {
@@ -84,7 +85,7 @@ describe(useMeldQuery, () => {
           parseWarnings: [],
         });
       },
-      { timeout: 100 }
+      { timeout: 100 },
     );
   });
 });
