@@ -3,8 +3,7 @@
   "files": [],
   "references": [
     { "path": "./tsconfig.build.json" },
-    { "path": "./tsconfig.dev.json" }
-    // Nothing to be in this project:
-    // { "path": "./tsconfig.node.json" }
+    { "path": "./tsconfig.dev.json" },
+    { "path": "./tsconfig.node.json" }
   ]
 }
