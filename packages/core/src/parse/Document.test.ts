@@ -4,9 +4,6 @@ import { Document } from "./Document";
 import { contextParser } from "./common";
 import { makeParser } from "./parser";
 import { df } from "../common";
-import { foo } from "../test-util/toTurtle";
-
-console.log(foo);
 
 describe(Document, () => {
   const parser = makeParser({ Document });
