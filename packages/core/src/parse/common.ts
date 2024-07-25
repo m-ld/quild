@@ -29,7 +29,8 @@ export type ProjectableOperation =
   | Algebra.LeftJoin;
 
 export interface Parsed<
-  IRType extends IR.IntermediateResult = IR.IntermediateResult
+  IRType extends IR.IntermediateResult = IR.IntermediateResult,
+  TermType extends RDF.Term = RDF.Term
 > {
   /** The IR which will accept bindings and produce a result. */
   intermediateResult: IRType;
@@ -44,7 +45,7 @@ export interface Parsed<
   /** Warnings generated during parsing. */
   warnings: ParseWarning[];
   /** A term representing the root of the parsed query. */
-  term: RDF.Term;
+  term: TermType;
 }
 
 /**
@@ -138,9 +139,15 @@ type PartialExcept<T, K extends keyof T> = Partial<Omit<T, K>> & Pick<T, K>;
 /**
  * Creates a {@link Parsed} with default values.
  */
-export const parsed = <IRType extends IR.IntermediateResult>(
-  partialParsed: PartialExcept<Parsed<IRType>, "intermediateResult" | "term">
-): Parsed<IRType> => ({
+export const parsed = <
+  IRType extends IR.IntermediateResult,
+  TermType extends RDF.Term = RDF.Term
+>(
+  partialParsed: PartialExcept<
+    Parsed<IRType, TermType>,
+    "intermediateResult" | "term"
+  >
+): Parsed<IRType, TermType> => ({
   operation: af.createJoin([]),
   projections: [],
   warnings: [],
@@ -159,8 +166,12 @@ export const parseWarning = (
 
 export type Parse<
   Element extends JsonValue = JsonValue,
-  IRType extends IR.IntermediateResult = IR.IntermediateResult
-> = (this: Parser, toParse: ToParse<Element>) => Promise<Parsed<IRType>>;
+  IRType extends IR.IntermediateResult = IR.IntermediateResult,
+  TermType extends RDF.Term = RDF.Term
+> = (
+  this: Parser,
+  toParse: ToParse<Element>
+) => Promise<Parsed<IRType, TermType>>;
 
 /**
  * A Parser contains handlers for each type of element found in a query.
@@ -170,7 +181,11 @@ export interface Parser {
   readonly NodeObjectArray: Parse<JsonArray, IR.Set>;
   readonly ListArray: Parse<JsonArray>;
   readonly TopLevelGraphContainer: Parse<TopLevelGraphContainer, IR.Object>;
-  readonly NodeObject: Parse<JsonObject, IR.Object>;
+  readonly NodeObject: Parse<
+    JsonObject,
+    IR.Object,
+    RDF.Variable | RDF.NamedNode
+  >;
   readonly GraphObject: Parse;
   readonly ListObject: Parse<ListObject, IR.Object>;
   readonly Primitive: Parse<

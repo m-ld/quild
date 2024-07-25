@@ -1,9 +1,14 @@
-import { type Parser, nestWarningsUnderKey, isPlainObject } from "./common";
+import {
+  type Parser,
+  nestWarningsUnderKey,
+  isPlainObject,
+  Parsed,
+} from "./common";
 import * as IR from "../IntermediateResult";
 import { af } from "../common";
 import { evolve, prepend } from "../upstream/rambda";
 
-import type * as RDF from "@rdfjs/types";
+import { identity } from "rambdax";
 
 export const NodeObjectArray: Parser["NodeObjectArray"] = async function ({
   element,
@@ -32,8 +37,11 @@ export const NodeObjectArray: Parser["NodeObjectArray"] = async function ({
 
   return evolve(
     {
-      intermediateResult: (ir) => new IR.Set(variable, ir),
-      projections: prepend(variable)<RDF.Variable>,
+      intermediateResult: (ir) => new IR.Set(parsedSubquery.term, ir),
+      projections:
+        parsedSubquery.term.termType === "Variable"
+          ? prepend(parsedSubquery.term)
+          : identity<Parsed["projections"]>,
       warnings: nestWarningsUnderKey(0),
       operation: (op) => af.createLeftJoin(af.createJoin([]), op),
     },

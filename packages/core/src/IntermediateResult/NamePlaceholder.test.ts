@@ -18,7 +18,7 @@ describe(NamePlaceholder, () => {
         await contextParser.parse({}),
         NamePlaceholder.Compaction.BASE
       ).result();
-    }).toThrow(new IncompleteResultError(root));
+    }).rejects.toThrow(new IncompleteResultError(root));
   });
 
   it("accepts one solution", async () => {
@@ -84,6 +84,6 @@ describe(NamePlaceholder, () => {
         await contextParser.parse({}),
         NamePlaceholder.Compaction.BASE
       ).addSolution(bf.bindings([[root, df.literal("A New Hope")]]));
-    }).toThrow(new NotANamedNodeError(df.literal("A New Hope")));
+    }).rejects.toThrow(new NotANamedNodeError(df.literal("A New Hope")));
   });
 });

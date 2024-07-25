@@ -27,5 +27,3 @@ const toTurtle = (
 
     streamWriter.import(stream);
   });
-
-export const foo = 1;

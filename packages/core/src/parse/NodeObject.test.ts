@@ -274,7 +274,7 @@ describe(NodeObject, () => {
 
     expect(await parser.NodeObject(toParse)).toStrictEqual(
       parsed({
-        term: variable,
+        term: df.namedNode("https://swapi.dev/api/people/1/"),
         intermediateResult: new IR.Object({
           "@id": new IR.LiteralValue("https://swapi.dev/api/people/1/"),
           "http://swapi.dev/documentation#name": new IR.LiteralValue(
@@ -338,7 +338,7 @@ describe(NodeObject, () => {
 
     expect(await parser.NodeObject(toParse)).toStrictEqual(
       parsed({
-        term: variable,
+        term: df.namedNode("https://swapi.dev/api/people/1/"),
         intermediateResult: new IR.Object({
           "@context": new IR.LiteralValue({
             url: "@id",

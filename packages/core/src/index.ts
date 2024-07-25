@@ -9,6 +9,7 @@ import type * as IR from "./IntermediateResult";
 import type { Parser, ParseWarning } from "./parse/common";
 import type { Source } from "@rdfjs/types";
 import type { JsonValue } from "type-fest";
+import { toSparql } from "sparqlalgebrajs";
 
 const engine = new QueryEngine();
 
@@ -35,6 +36,9 @@ export const readQuery = async <Data extends JsonValue>(
     query,
     parser
   );
+
+  // console.log(JSON.stringify(query, null, 2));
+  // console.log(toSparql(sparql));
 
   const bindingsStream = await engine.queryBindings(sparql, {
     sources: [source],

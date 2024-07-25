@@ -36,18 +36,21 @@ import type { JsonArray } from "type-fest";
 // `IR.Set` elsewhere.
 export class IRSet implements IntermediateResult {
   /**
-   * @param variable The variable that elements of this set are bound to.
+   * @param subject TK: The variable that elements of this set are bound to.
    * @param template The template to apply to each element of this set.
    * @param results The results so far, indexed by node names.
    */
   constructor(
-    private readonly variable: RDF.Variable,
+    private readonly subject: RDF.Variable | RDF.NamedNode,
     private readonly template: IntermediateResult,
     private readonly results: Record<string, IntermediateResult> = {}
   ) {}
 
   addSolution(solution: RDF.Bindings): IntermediateResult {
-    const v = solution.get(this.variable);
+    const v =
+      this.subject.termType === "Variable"
+        ? solution.get(this.subject)
+        : this.subject;
 
     // If there's no binding for us in the solution, ignore it.
     // TODO: Is this the correct thing to do?
@@ -56,7 +59,7 @@ export class IRSet implements IntermediateResult {
     }
 
     return new IRSet(
-      this.variable,
+      this.subject,
       this.template,
       update(this.results, JSON.stringify(v), (ir) =>
         (ir ?? this.template).addSolution(solution)
