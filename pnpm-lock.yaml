@@ -54,6 +54,24 @@ importers:
 
   examples/todomvc-vanilla-m-ld:
     dependencies:
+      '@m-ld/m-ld':
+        specifier: file:../../../m-ld-js
+        version: file:../m-ld-js
+      '@quild/core':
+        specifier: workspace:0.0.0-alpha.1
+        version: link:../../packages/core
+      '@quild/observable':
+        specifier: workspace:0.0.0-alpha.1
+        version: link:../../packages/observable
+      memory-level:
+        specifier: ^1.0.0
+        version: 1.0.0
+      rxjs:
+        specifier: ^7.8.1
+        version: 7.8.1
+      stream-browserify:
+        specifier: ^3.0.0
+        version: 3.0.0
       todomvc-app-css:
         specifier: ^2.4.2
         version: 2.4.3
@@ -82,6 +100,9 @@ importers:
       style-loader:
         specifier: ^3.3.1
         version: 3.3.4(webpack@5.93.0(webpack-cli@5.1.4))
+      terser-webpack-plugin:
+        specifier: ^5.3.10
+        version: 5.3.10(webpack@5.93.0(webpack-cli@5.1.4))
       webpack:
         specifier: ^5.75.0
         version: 5.93.0(webpack-cli@5.1.4)
@@ -4668,6 +4689,9 @@ packages:
     resolution: {integrity: sha512-RwNA9Z/7PrK06rYLIzFMlaF+l73iwpzsqRIFgbMLbTcLD6cOao82TaWefPXQvB2fOC4AjuYSEndS7N/mTCbkdQ==}
     engines: {node: '>= 0.8'}
 
+  stream-browserify@3.0.0:
+    resolution: {integrity: sha512-H73RAHsVBapbim0tU2JwwOiXUj+fikfiaoYAKHF3VJfA0pe2BCzkhAHBlLG6REzE+2WNZcxOXjK7lkso+9euLA==}
+
   stream-to-string@1.2.1:
     resolution: {integrity: sha512-WsvTDNF8UYs369Yko3pcdTducQtYpzEZeOV7cTuReyFvOoA9S/DLJ6sYK+xPafSPHhUMpaxiljKYnT6JSFztIA==}
 
@@ -5261,7 +5285,7 @@ snapshots:
     dependencies:
       '@babel/types': 7.22.5
       '@jridgewell/gen-mapping': 0.3.3
-      '@jridgewell/trace-mapping': 0.3.18
+      '@jridgewell/trace-mapping': 0.3.25
       jsesc: 2.5.2
 
   '@babel/generator@7.24.10':
@@ -5630,7 +5654,7 @@ snapshots:
   '@comunica/actor-abstract-parse@2.7.0':
     dependencies:
       '@comunica/core': 2.10.0
-      readable-stream: 4.4.2
+      readable-stream: 4.5.2
 
   '@comunica/actor-abstract-path@2.10.1':
     dependencies:
@@ -6457,7 +6481,7 @@ snapshots:
       '@comunica/core': 2.10.0
       '@comunica/types': 2.10.0
       '@rdfjs/types': 1.1.0
-      readable-stream: 4.4.2
+      readable-stream: 4.5.2
       relative-to-absolute-iri: 1.0.7
     transitivePeerDependencies:
       - encoding
@@ -6470,7 +6494,7 @@ snapshots:
       '@comunica/types': 2.10.0
       '@rdfjs/types': 1.1.0
       htmlparser2: 9.0.0
-      readable-stream: 4.4.2
+      readable-stream: 4.5.2
 
   '@comunica/actor-rdf-parse-jsonld@2.7.0':
     dependencies:
@@ -6503,7 +6527,7 @@ snapshots:
       '@comunica/types': 2.10.0
       '@rdfjs/types': 1.1.0
       asynciterator: 3.9.0
-      readable-stream: 4.4.2
+      readable-stream: 4.5.2
       shaclc-parse: 1.4.0
       stream-to-string: 1.2.1
 
@@ -6627,7 +6651,7 @@ snapshots:
   '@comunica/bus-init@2.10.0':
     dependencies:
       '@comunica/core': 2.10.0
-      readable-stream: 4.4.2
+      readable-stream: 4.5.2
 
   '@comunica/bus-optimize-query-operation@2.10.0':
     dependencies:
@@ -7304,7 +7328,7 @@ snapshots:
 
   '@jest/source-map@29.6.3':
     dependencies:
-      '@jridgewell/trace-mapping': 0.3.18
+      '@jridgewell/trace-mapping': 0.3.25
       callsites: 3.1.0
       graceful-fs: 4.2.11
 
@@ -10124,7 +10148,7 @@ snapshots:
       http-link-header: 1.1.1
       jsonld-context-parser: 2.3.0
       rdf-data-factory: 1.1.1
-      readable-stream: 4.4.2
+      readable-stream: 4.5.2
     transitivePeerDependencies:
       - encoding
 
@@ -10134,7 +10158,7 @@ snapshots:
       '@types/readable-stream': 2.3.15
       buffer: 6.0.3
       jsonld-context-parser: 2.3.0
-      readable-stream: 4.4.2
+      readable-stream: 4.5.2
     transitivePeerDependencies:
       - encoding
 
@@ -10311,7 +10335,7 @@ snapshots:
       '@rdfjs/types': 1.1.0
       htmlparser2: 8.0.2
       rdf-data-factory: 1.1.1
-      readable-stream: 4.4.2
+      readable-stream: 4.5.2
       relative-to-absolute-iri: 1.0.7
 
   micromatch@4.0.5:
@@ -10388,7 +10412,7 @@ snapshots:
   n3@1.17.0:
     dependencies:
       queue-microtask: 1.2.3
-      readable-stream: 4.4.2
+      readable-stream: 4.5.2
 
   nanoid@3.3.7: {}
 
@@ -10903,7 +10927,7 @@ snapshots:
       '@comunica/mediator-number': 2.10.0
       '@comunica/mediator-race': 2.10.0
       '@rdfjs/types': 1.1.0
-      readable-stream: 4.4.2
+      readable-stream: 4.5.2
       stream-to-string: 1.2.1
     transitivePeerDependencies:
       - encoding
@@ -10935,7 +10959,7 @@ snapshots:
       '@rdfjs/types': 1.1.0
       htmlparser2: 8.0.2
       rdf-data-factory: 1.1.1
-      readable-stream: 4.4.2
+      readable-stream: 4.5.2
       relative-to-absolute-iri: 1.0.7
 
   rdfxml-streaming-parser@2.2.3:
@@ -10945,7 +10969,7 @@ snapshots:
       '@types/readable-stream': 2.3.15
       buffer: 6.0.3
       rdf-data-factory: 1.1.1
-      readable-stream: 4.4.2
+      readable-stream: 4.5.2
       relative-to-absolute-iri: 1.0.7
       validate-iri: 1.0.1
 
@@ -11314,7 +11338,7 @@ snapshots:
       '@rdfjs/types': 1.1.0
       '@types/readable-stream': 2.3.15
       rdf-data-factory: 1.1.1
-      readable-stream: 4.4.2
+      readable-stream: 4.5.2
 
   sparqljson-to-tree@3.0.1:
     dependencies:
@@ -11328,7 +11352,7 @@ snapshots:
       '@types/readable-stream': 2.3.15
       buffer: 6.0.3
       rdf-data-factory: 1.1.1
-      readable-stream: 4.4.2
+      readable-stream: 4.5.2
 
   spdy-transport@3.0.0:
     dependencies:
@@ -11364,6 +11388,11 @@ snapshots:
   statuses@1.5.0: {}
 
   statuses@2.0.1: {}
+
+  stream-browserify@3.0.0:
+    dependencies:
+      inherits: 2.0.4
+      readable-stream: 3.6.2
 
   stream-to-string@1.2.1:
     dependencies:
@@ -11717,7 +11746,7 @@ snapshots:
 
   v8-to-istanbul@9.1.0:
     dependencies:
-      '@jridgewell/trace-mapping': 0.3.18
+      '@jridgewell/trace-mapping': 0.3.25
       '@types/istanbul-lib-coverage': 2.0.4
       convert-source-map: 1.9.0
 
