@@ -55,7 +55,7 @@ const _editItemDone = (id, title) => {
 
 const _itemId = (element) => {
     const li = $parent(element, "li");
-    return parseInt(li.dataset.id, 10);
+    return li.dataset.id;
 };
 
 const _removeItem = (id, list) => {
@@ -89,6 +89,12 @@ export default class View {
 
         this.render = this.render.bind(this);
         this.bindCallback = this.bindCallback.bind(this);
+
+        this.disposeCallbacks = [];
+    }
+
+    dispose() {
+        this.disposeCallbacks.forEach((dispose) => dispose());
     }
 
     _clearCompletedButton(completedCount, visible) {
@@ -138,48 +144,81 @@ export default class View {
     bindCallback(event, handler) {
         switch (event) {
             case "newTodo":
-                $on(this.$newTodo, "change", () => handler(this.$newTodo.value));
+                this.disposeCallbacks.push(
+                    $on(this.$newTodo, "change", () =>
+                        handler(this.$newTodo.value)
+                    )
+                );
                 break;
             case "removeCompleted":
-                $on(this.$clearCompleted, "click", handler);
+                this.disposeCallbacks.push(
+                    $on(this.$clearCompleted, "click", handler)
+                );
                 break;
             case "toggleAll":
-                $on(this.$toggleAll, "click", () => {
-                    this.$toggleAllInput.click();
-                    handler({ completed: this.$toggleAllInput.checked });
-                });
+                this.disposeCallbacks.push(
+                    $on(this.$toggleAll, "click", () => {
+                        this.$toggleAllInput.click();
+                        handler({ completed: this.$toggleAllInput.checked });
+                    })
+                );
                 break;
             case "itemEdit":
-                $delegate(this.$todoList, "li label", "dblclick", (e) => handler({ id: _itemId(e.target) }));
+                this.disposeCallbacks.push(
+                    $delegate(this.$todoList, "li label", "dblclick", (e) =>
+                        handler({ id: _itemId(e.target) })
+                    )
+                );
                 break;
             case "itemRemove":
-                $delegate(this.$todoList, ".destroy", "click", (e) => handler({ id: _itemId(e.target) }));
+                this.disposeCallbacks.push(
+                    $delegate(this.$todoList, ".destroy", "click", (e) =>
+                        handler({ id: _itemId(e.target) })
+                    )
+                );
                 break;
             case "itemToggle":
-                $delegate(this.$todoList, ".toggle", "click", (e) => handler({ id: _itemId(e.target), completed: e.target.checked }));
-                break;
-            case "itemEditDone":
-                $delegate(this.$todoList, "li .edit", "blur", function (e) {
-                    if (!e.target.dataset.iscanceled) {
+                this.disposeCallbacks.push(
+                    $delegate(this.$todoList, ".toggle", "click", (e) =>
                         handler({
                             id: _itemId(e.target),
-                            title: e.target.value,
-                        });
-                    }
-                });
-                $delegate(this.$todoList, "li .edit", "keypress", function (e) {
-                    if (e.keyCode === ENTER_KEY)
-                        e.target.blur();
-                });
+                            completed: e.target.checked,
+                        })
+                    )
+                );
+                break;
+            case "itemEditDone":
+                this.disposeCallbacks.push(
+                    $delegate(this.$todoList, "li .edit", "blur", function (e) {
+                        if (!e.target.dataset.iscanceled) {
+                            handler({
+                                id: _itemId(e.target),
+                                title: e.target.value,
+                            });
+                        }
+                    })
+                );
+                this.disposeCallbacks.push(
+                    $delegate(
+                        this.$todoList,
+                        "li .edit",
+                        "keypress",
+                        function (e) {
+                            if (e.keyCode === ENTER_KEY) e.target.blur();
+                        }
+                    )
+                );
                 break;
             case "itemEditCancel":
-                $delegate(this.$todoList, "li .edit", "keyup", (e) => {
-                    if (e.keyCode === ESCAPE_KEY) {
-                        e.target.dataset.iscanceled = true;
-                        e.target.blur();
-                        handler({ id: _itemId(e.target) });
-                    }
-                });
+                this.disposeCallbacks.push(
+                    $delegate(this.$todoList, "li .edit", "keyup", (e) => {
+                        if (e.keyCode === ESCAPE_KEY) {
+                            e.target.dataset.iscanceled = true;
+                            e.target.blur();
+                            handler({ id: _itemId(e.target) });
+                        }
+                    })
+                );
                 break;
         }
     }
