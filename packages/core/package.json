@@ -9,16 +9,22 @@
   "engines": {
     "node": "18||19||20"
   },
-  "type": "module",
   "main": "dist/index.js",
-  "browser": "dist/index.js",
+  "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs",
+      "types": "./dist/index.d.ts"
+    }
+  },
   "files": [
     "dist"
   ],
   "scripts": {
     "test": "NODE_OPTIONS='--experimental-vm-modules --disable-warning=ExperimentalWarning' jest",
-    "build": "tsc --build",
+    "build": "tsup",
     "clean": "rm -rf dist *.tsbuildinfo",
     "lint": "eslint .",
     "typecheck": "tsc --project tsconfig.dev.json",
@@ -42,7 +48,8 @@
     "sparqljs": "3.6.2",
     "table": "6.8.1",
     "ts-jest": "^29.1.0",
-    "type-fest": "3.7.1",
+    "ts-node": "^10.9.1",
+    "tsup": "^8.2.2",
     "typescript": "^5.5.3"
   },
   "dependencies": {
@@ -55,7 +62,8 @@
     "rambdax": "^10.0.0",
     "rdf-data-factory": "1.1.1",
     "rdf-string": "^1.6.3",
-    "sparqlalgebrajs": "4.2.0"
+    "sparqlalgebrajs": "4.2.0",
+    "type-fest": "3.7.1"
   },
   "peerDependencies": {
     "react": "18 || 19",

@@ -7,10 +7,10 @@
   "browser": "dist/src/index.js",
   "scripts": {
     "test": "NODE_OPTIONS='--experimental-vm-modules --disable-warning=ExperimentalWarning' jest",
-    "build": "tsc --build",
-    "clean": "pnpm -r run clean",
+    "build": "pnpm --filter './packages/*' run build",
+    "clean": "pnpm --filter './packages/*' run clean",
     "lint": "eslint .",
-    "typecheck": "pnpm -r run typecheck",
+    "typecheck": "pnpm --filter './packages/*' run typecheck",
     "knip": "knip"
   },
   "pnpm": {
