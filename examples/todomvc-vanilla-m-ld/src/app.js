@@ -3,12 +3,22 @@ import { clone, uuid } from "@m-ld/m-ld";
 import { IoRemotes } from "@m-ld/m-ld/ext/socket.io";
 import {
     BehaviorSubject,
+    connectable,
+    distinctUntilChanged,
+    filter,
+    from,
     fromEvent,
+    identity,
     map,
     mergeMap,
+    Observable,
     pairwise,
     pipe,
+    share,
     startWith,
+    Subscription,
+    switchAll,
+    switchMap,
     tap,
 } from "rxjs";
 
@@ -21,26 +31,52 @@ import "todomvc-app-css/index.css";
 import "todomvc-common/base.css";
 import "./app.css";
 
-let currentApp$;
+let subscription = new Subscription();
 
 const onLoad = async () => {
-    const domainField = document.getElementById("domain");
-    currentApp$ = new BehaviorSubject(null);
-    const meld$ = fromEvent(domainField, "change").pipe(
-        map((e) => e.target.value),
-        startWith(domainField.value),
-        cloneMap()
+    const statusDot = document.getElementsByClassName("m-ld-status")[0];
+    const domainField = document.getElementsByClassName("m-ld-domain")[0];
+    const currentApp$ = new BehaviorSubject(null);
+    const meld$ = connectable(
+        fromEvent(domainField, "change").pipe(
+            map((e) => e.target.value),
+            startWith(domainField.value),
+            configMap(),
+            tap((config) => {
+                domainField.value = config["@domain"];
+            }),
+            cloneMap()
+        )
     );
 
-    meld$.pipe(appMap()).subscribe(currentApp$);
+    subscription.add(() => currentApp$.value?.dispose());
+    subscription.add(
+        meld$.pipe(mergeMap(identity), appMap()).subscribe(currentApp$)
+    );
+    subscription.add(
+        meld$
+            .pipe(
+                switchMap((meldPromise) => {
+                    return from(meldPromise).pipe(
+                        switchMap((meld) => meld.status),
+                        map((status) => (status.online ? "online" : "offline")),
+                        startWith("connecting")
+                    );
+                })
+            )
+            .subscribe((status) => {
+                statusDot.dataset.status = status;
+            })
+    );
+    meld$.connect();
 };
 
 /**
  * Rxjs operator. Maps domains to m-ld instances. Given `""`, it creates a new
  * genesis domain. Otherwise, it clones the existing domain. Closes each
- * previous clone as it goes.
+ * previous clone as it goes. TK
  */
-function cloneMap() {
+function configMap() {
     return pipe(
         map((domain) =>
             domain.length === 0
@@ -56,15 +92,26 @@ function cloneMap() {
                       genesis: false,
                       io: { uri: "https://gw.m-ld.org" },
                   }
-        ),
+        )
+    );
+}
 
-        mergeMap((config) => clone(new MemoryLevel(), IoRemotes, config)),
+/**
+ * Rxjs operator. Maps domains to m-ld instances. Given `""`, it creates a new
+ * genesis domain. Otherwise, it clones the existing domain. Closes each
+ * previous clone as it goes. TK
+ */
+function cloneMap() {
+    return pipe(
+        map((config) => clone(new MemoryLevel(), IoRemotes, config)),
         startWith(null),
         pairwise(),
         map(([prev, next]) => {
-            prev?.close();
+            prev?.then((m) => m.close());
             return next;
-        })
+        }),
+        // Just to prove to TS that we never emit a `null`.
+        filter((meld) => meld !== null)
     );
 }
 
@@ -83,6 +130,10 @@ function appMap() {
     );
 }
 
+/**
+ * An instance of the application
+ * @param {import("@m-ld/m-ld").MeldClone} storage
+ */
 function Todo(storage) {
     this.storage = storage;
     this.model = new Model(this.storage);
@@ -106,8 +157,7 @@ function Todo(storage) {
 /* HOT MODULE SPECIFIC */
 if (module.hot) {
     module.hot.dispose(function () {
-        currentApp$.value?.dispose();
-        currentApp$.unsubscribe();
+        subscription.unsubscribe();
     });
     module.hot.accept(function (err) {});
     if (document.readyState === "complete") onLoad();

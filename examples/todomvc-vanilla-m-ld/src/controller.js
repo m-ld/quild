@@ -12,12 +12,24 @@ class Controller {
 
         this.view.bindCallback("newTodo", (title) => this.addItem(title));
         this.view.bindCallback("itemEdit", (item) => this.editItem(item.id));
-        this.view.bindCallback("itemEditDone", (item) => this.editItemSave(item.id, item.title));
-        this.view.bindCallback("itemEditCancel", (item) => this.editItemCancel(item.id));
-        this.view.bindCallback("itemRemove", (item) => this.removeItem(item.id));
-        this.view.bindCallback("itemToggle", (item) => this.toggleComplete(item.id, item.completed));
-        this.view.bindCallback("removeCompleted", () => this.removeCompletedItems());
-        this.view.bindCallback("toggleAll", (status) => this.toggleAll(status.completed));
+        this.view.bindCallback("itemEditDone", (item) =>
+            this.editItemSave(item.id, item.title)
+        );
+        this.view.bindCallback("itemEditCancel", (item) =>
+            this.editItemCancel(item.id)
+        );
+        this.view.bindCallback("itemRemove", (item) =>
+            this.removeItem(item.id)
+        );
+        this.view.bindCallback("itemToggle", (item) =>
+            this.toggleComplete(item.id, item.completed)
+        );
+        this.view.bindCallback("removeCompleted", () =>
+            this.removeCompletedItems()
+        );
+        this.view.bindCallback("toggleAll", (status) =>
+            this.toggleAll(status.completed)
+        );
 
         this.currentQuery$ = new Subject();
         this.currentData$ = new BehaviorSubject([]);
@@ -26,7 +38,6 @@ class Controller {
             .subscribe(this.currentData$);
 
         this.currentData$.subscribe((data) => {
-            console.log({ data });
             return this.view.render("showEntries", data);
         });
 
