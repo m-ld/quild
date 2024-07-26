@@ -48,7 +48,7 @@
     "typescript": "^5.5.3"
   },
   "dependencies": {
-    "@m-ld/m-ld": "file:../../../m-ld-js",
+    "@m-ld/m-ld": "0.10.1-edge.4",
     "@quild/core": "workspace:0.0.0-alpha.1",
     "@quild/observable": "workspace:0.0.0-alpha.1",
     "setimmediate": "^1.0.5"

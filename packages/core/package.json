@@ -35,6 +35,7 @@
     "@comunica/bindings-factory": "2.7.0",
     "@jest/globals": "^29.5.0",
     "@jest/types": "^29.6.3",
+    "@m-ld/m-ld": "0.10.1-edge.4",
     "@quild/config-base": "workspace:0.0.0-alpha.1",
     "@rdfjs/types": "1.1.0",
     "@types/n3": "^1.16.0",
@@ -53,7 +54,6 @@
   },
   "dependencies": {
     "@comunica/query-sparql-rdfjs": "^2.10.0",
-    "@m-ld/m-ld": "file:../../../m-ld-js",
     "@types/lodash-es": "^4.17.8",
     "jsonld": "8.1.1",
     "jsonld-context-parser": "^2.3.0",
