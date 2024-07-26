@@ -129,7 +129,7 @@ const bindingsTables = <BindingsesList extends Bindings[][]>(
    * mentioned will appear in alphabetical order after these.
    */
   columnOrder: string[] = []
-): { [I in keyof BindingsesList]: string } => {
+): { [_I in keyof BindingsesList]: string } => {
   const allVariableNames = new Set<string>();
 
   for (const bindingses of bindingseses) {
@@ -186,7 +186,7 @@ const bindingsTables = <BindingsesList extends Bindings[][]>(
      assert to TS that we have this right (while letting it confirm that the
      value is at least a `string[]`). */
   return tables satisfies string[] as {
-    [I in keyof BindingsesList]: string;
+    [_I in keyof BindingsesList]: string;
   };
 };
 

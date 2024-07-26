@@ -11,7 +11,7 @@ import {
 
 expect.extend({ toBeBindingsEqualTo, toBeSparqlEqualTo });
 
-declare module "expect" {
+declare module "@jest/expect" {
   interface Matchers<R>
     extends ToBeBindingsEqualToMatchers<R>,
       ToBeSparqlEqualToMatchers<R> {}

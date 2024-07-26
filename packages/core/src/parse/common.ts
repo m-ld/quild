@@ -128,11 +128,6 @@ export interface ToParse<Element extends JsonValue = JsonValue> {
   ctx: JsonLdContextNormalized;
 }
 
-const elementMatches = <T, U extends JsonValue>(
-  predicate: (x: unknown) => x is T,
-  toParse: ToParse<U>
-): toParse is ToParse<T & U> => predicate(toParse.element);
-
 export const contextParser = new ContextParser();
 export const nullContext = await contextParser.parse({});
 

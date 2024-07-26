@@ -4,9 +4,6 @@ import { Document } from "./Document";
 import { nullContext } from "./common";
 import { makeParser } from "./parser";
 import { df } from "../common";
-import { foo } from "../test-util/toTurtle";
-
-console.log(foo);
 
 describe(Document, () => {
   const parser = makeParser({ Document });
@@ -25,7 +22,7 @@ describe(Document, () => {
     };
 
     expect(await parser.Document(toParse)).toStrictEqual(
-      await parser.NodeObject(toParse),
+      await parser.NodeObject(toParse)
     );
   });
 
@@ -45,7 +42,7 @@ describe(Document, () => {
     };
 
     expect(await parser.Document(toParse)).toStrictEqual(
-      await parser.NodeObjectArray(toParse),
+      await parser.NodeObjectArray(toParse)
     );
   });
 
@@ -67,7 +64,7 @@ describe(Document, () => {
     };
 
     expect(await parser.Document(toParse)).toStrictEqual(
-      await parser.TopLevelGraphContainer(toParse),
+      await parser.TopLevelGraphContainer(toParse)
     );
   });
 });
