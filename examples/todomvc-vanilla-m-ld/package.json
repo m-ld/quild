@@ -13,11 +13,12 @@
         "serve": "http-server ./dist -p 7002 -c-1 --cors"
     },
     "dependencies": {
-        "@m-ld/m-ld": "file:../../../m-ld-js",
+        "@m-ld/m-ld": "0.10.1-edge.4",
         "@quild/core": "workspace:0.0.0-alpha.1",
         "@quild/observable": "workspace:0.0.0-alpha.1",
         "memory-level": "^1.0.0",
         "rxjs": "^7.8.1",
+        "socket.io-client": "^4.7.5",
         "stream-browserify": "^3.0.0",
         "todomvc-app-css": "^2.4.2",
         "todomvc-common": "^1.0.5"
