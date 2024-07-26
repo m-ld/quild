@@ -33,7 +33,6 @@
   },
   "devDependencies": {
     "@comunica/bindings-factory": "2.7.0",
-    "@jest/expect": "^29.7.0",
     "@jest/globals": "^29.5.0",
     "@jest/types": "^29.6.3",
     "@quild/config-base": "workspace:0.0.0-alpha.1",
@@ -49,7 +48,6 @@
     "sparqljs": "3.6.2",
     "table": "6.8.1",
     "ts-jest": "^29.1.0",
-    "ts-node": "^10.9.1",
     "tsup": "^8.2.2",
     "typescript": "^5.5.3"
   },
