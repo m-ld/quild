@@ -4,7 +4,7 @@ import { describe, it, expect } from "@jest/globals";
 import { NamePlaceholder } from "./NamePlaceholder";
 import { IncompleteResultError, NotANamedNodeError } from "./errors";
 import { df } from "../common";
-import { contextParser, nullContext } from "../parse/common";
+import { contextParser } from "../parse/common";
 
 const bf = new BindingsFactory(df);
 
@@ -12,19 +12,19 @@ const root = df.variable("root");
 
 describe(NamePlaceholder, () => {
   it("throws when it hasn't received a solution", () => {
-    expect(() => {
+    expect(async () => {
       new NamePlaceholder(
         root,
-        nullContext,
+        await contextParser.parse({}),
         NamePlaceholder.Compaction.BASE
       ).result();
-    }).toThrow(new IncompleteResultError(root));
+    }).rejects.toThrow(new IncompleteResultError(root));
   });
 
-  it("accepts one solution", () => {
+  it("accepts one solution", async () => {
     const ir = new NamePlaceholder(
       root,
-      nullContext,
+      await contextParser.parse({}),
       NamePlaceholder.Compaction.BASE
     ).addSolution(
       bf.bindings([[root, df.namedNode("https://swapi.dev/api/films/1/")]])
@@ -61,10 +61,10 @@ describe(NamePlaceholder, () => {
     expect(ir.result()).toBe("Film");
   });
 
-  it("ignores additional solutions", () => {
+  it("ignores additional solutions", async () => {
     const ir = new NamePlaceholder(
       root,
-      nullContext,
+      await contextParser.parse({}),
       NamePlaceholder.Compaction.BASE
     )
       .addSolution(
@@ -78,12 +78,12 @@ describe(NamePlaceholder, () => {
   });
 
   it("throws trying to represent a non-name value", () => {
-    expect(() => {
+    expect(async () => {
       new NamePlaceholder(
         root,
-        nullContext,
+        await contextParser.parse({}),
         NamePlaceholder.Compaction.BASE
       ).addSolution(bf.bindings([[root, df.literal("A New Hope")]]));
-    }).toThrow(new NotANamedNodeError(df.literal("A New Hope")));
+    }).rejects.toThrow(new NotANamedNodeError(df.literal("A New Hope")));
   });
 });

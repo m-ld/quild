@@ -107,7 +107,11 @@ export const NodeObject: Parser["NodeObject"] = async function ({
   const operationForEntry = async ([key, value]: [
     key: string,
     value: unknown
-  ]): Promise<(p: Parsed<IR.Object>) => Parsed<IR.Object>> => {
+  ]): Promise<
+    (
+      p: Parsed<IR.Object, RDF.Variable | RDF.NamedNode>
+    ) => Parsed<IR.Object, RDF.Variable | RDF.NamedNode>
+  > => {
     const childVariable = variableUnder(variable, key);
 
     const { intermediateResult, operation, projections, warnings } =
@@ -141,9 +145,9 @@ export const NodeObject: Parser["NodeObject"] = async function ({
     mapParallelAsync(operationForEntry),
     reduce(
       (acc, f) => f(acc),
-      parsed({
+      parsed<IR.Object, RDF.Variable | RDF.NamedNode>({
         intermediateResult: new IR.Object({}),
-        term: variable,
+        term: node,
         projections: projectNodeName ? [variable] : [],
       })
     )
