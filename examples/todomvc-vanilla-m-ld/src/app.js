@@ -3,21 +3,14 @@ import { clone, uuid } from "@m-ld/m-ld";
 import { IoRemotes } from "@m-ld/m-ld/ext/socket.io";
 import {
     BehaviorSubject,
-    connectable,
-    distinctUntilChanged,
     filter,
     from,
     fromEvent,
-    identity,
     map,
-    mergeMap,
     Observable,
     pairwise,
     pipe,
-    share,
     startWith,
-    Subscription,
-    switchAll,
     switchMap,
     tap,
 } from "rxjs";
@@ -31,50 +24,74 @@ import "todomvc-app-css/index.css";
 import "todomvc-common/base.css";
 import "./app.css";
 
-let subscription = new Subscription();
+/**
+ * @import { OperatorFunction } from 'rxjs'
+ * @import { MeldConfig, MeldClone } from '@m-ld/m-ld'
+ */
 
-const onLoad = async () => {
+let subscription;
+
+/** @returns {Observable<MeldClone>} */
+function createDomainSelectorClones() {
     const statusDot = document.getElementsByClassName("m-ld-status")[0];
     const domainField = document.getElementsByClassName("m-ld-domain")[0];
-    const currentApp$ = new BehaviorSubject(null);
-    const meld$ = connectable(
-        fromEvent(domainField, "change").pipe(
-            map((e) => e.target.value),
-            startWith(domainField.value),
-            configMap(),
-            tap((config) => {
-                domainField.value = config["@domain"];
-            }),
-            cloneMap()
-        )
-    );
 
+    return fromEvent(domainField, "change").pipe(
+        // Take every value of the domain field...
+        map((e) => e.target.value),
+        // ...starting with the current value...
+        startWith(domainField.value),
+        // ...build a config for it...
+        configMap(),
+        // ...write the decided @domain back to the field...
+        tap((config) => {
+            domainField.value = config["@domain"];
+        }),
+        // ...and clone each domain.
+        cloneMap(),
+
+        // For each clone promise,
+        switchMap((/** @type {Promise<MeldClone>} */ meldPromise) => {
+            // ...once it resolves...
+            return from(meldPromise).pipe(
+                // ...listen to the status...
+                switchMap((meld) =>
+                    meld.status.pipe(map((status) => ({ meld, status })))
+                ),
+                // ...and map the MeldStatus to a string.
+                map(({ meld, status }) => ({
+                    meld,
+                    status: status.online ? "online" : "offline",
+                })),
+                // When the promise has arrived but not yet resolved, the status
+                // is "connecting".
+                startWith({ meld: null, status: "connecting" })
+            );
+        }),
+        // Update the status dot.
+        tap(({ status }) => {
+            statusDot.dataset.status = status;
+        }),
+        // Unwrap and return only the clone.
+        map(({ meld }) => meld),
+        // Skip the nulls.
+        filter(Boolean)
+    );
+}
+
+const onLoad = async () => {
+    const currentApp$ = new BehaviorSubject(null);
+
+    subscription = createDomainSelectorClones()
+        .pipe(appMap())
+        .subscribe(currentApp$);
     subscription.add(() => currentApp$.value?.dispose());
-    subscription.add(
-        meld$.pipe(mergeMap(identity), appMap()).subscribe(currentApp$)
-    );
-    subscription.add(
-        meld$
-            .pipe(
-                switchMap((meldPromise) => {
-                    return from(meldPromise).pipe(
-                        switchMap((meld) => meld.status),
-                        map((status) => (status.online ? "online" : "offline")),
-                        startWith("connecting")
-                    );
-                })
-            )
-            .subscribe((status) => {
-                statusDot.dataset.status = status;
-            })
-    );
-    meld$.connect();
 };
 
 /**
- * Rxjs operator. Maps domains to m-ld instances. Given `""`, it creates a new
- * genesis domain. Otherwise, it clones the existing domain. Closes each
- * previous clone as it goes. TK
+ * Rxjs operator. Maps domains to m-ld configs. Given `""`, it configures a new
+ * genesis domain. Otherwise, it configures a connection to the existing domain.
+ * @type {OperatorFunction<string, MeldConfig>}
  */
 function configMap() {
     return pipe(
@@ -97,9 +114,11 @@ function configMap() {
 }
 
 /**
- * Rxjs operator. Maps domains to m-ld instances. Given `""`, it creates a new
- * genesis domain. Otherwise, it clones the existing domain. Closes each
- * previous clone as it goes. TK
+ * Rxjs operator. Maps configs to promises of m-ld instances. The promise will
+ * be emitted immediately, meaning the time between receiving the promise and
+ * the promise resolving will be the time when the clone is connecting. Closes
+ * each previous clone as it goes.
+ * @type {OperatorFunction<MeldConfig, Promise<MeldClone>>}
  */
 function cloneMap() {
     return pipe(
@@ -118,6 +137,7 @@ function cloneMap() {
 /**
  * Rxjs operator. Maps m-ld instances to Todo instances. Disposes of each
  * previous Todo instance as it goes.
+ * @type {OperatorFunction<MeldClone, Todo>}
  */
 function appMap() {
     return pipe(
@@ -132,7 +152,7 @@ function appMap() {
 
 /**
  * An instance of the application
- * @param {import("@m-ld/m-ld").MeldClone} storage
+ * @param {MeldClone} storage
  */
 function Todo(storage) {
     this.storage = storage;
