@@ -12,12 +12,13 @@ import type { JsonValue } from "type-fest";
  * @template Data The expected shape of the data returned by the query.
  *                Eventually, this will be derived from the query itself. For
  *                now, it must be given explicitly.
- * @param meld The m-ld clone to query.
+ * @param meld The m-ld clone to query, or `null` to skip the hook (as when the
+ *             clone is not yet available).
  * @param query The Quild query to run.
  * @returns The latest result of the query.
  */
 export const useMeldQuery = <Data extends JsonValue>(
-  meld: MeldClone | undefined,
+  meld: MeldClone | null,
   query: JsonValue
 ) => {
   const [result, setResult] = useState<ReadQueryResult<Data>>();
