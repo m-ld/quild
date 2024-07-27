@@ -17,10 +17,13 @@ const compat = new FlatCompat({
 export default [
   {
     ignores: [
+      // Ignore built files
       "packages/*/dist",
-      // This is minimal changes on top of the todomvc repo's version, so we don't
-      // want to beholden to our lint config.
+
+      // These are minimal changes on top of the todomvc repo's version, so we
+      // don't want to be beholden to our lint config.
       "examples/todomvc-vanilla-m-ld",
+      "examples/todomvc-react-m-ld",
     ],
   },
 
