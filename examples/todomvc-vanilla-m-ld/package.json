@@ -14,7 +14,6 @@
     },
     "dependencies": {
         "@m-ld/m-ld": "catalog:",
-        "@quild/core": "workspace:",
         "@quild/observable": "workspace:",
         "memory-level": "^1.0.0",
         "rxjs": "catalog:",

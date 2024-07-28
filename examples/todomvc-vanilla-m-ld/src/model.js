@@ -1,4 +1,3 @@
-import { readQuery } from "@quild/core";
 import { observeMeldQuery } from "@quild/observable";
 import { map, Observable } from "rxjs";
 
@@ -53,20 +52,6 @@ const toRdfTodo = ({ completed, ...data }) => ({
         ? {}
         : { status: completed ? "COMPLETED" : "IN-PROCESS" }),
 });
-
-/**
- * @param {import("@m-ld/m-ld").MeldClone} meld The m-ld clone
- * @param {object[]} quildQuery The quild query
- * @param {function} callback The callback to fire after the query is executed
- */
-const executeQuery = (meld, quildQuery, callback) => {
-    readQuery(meld, quildQuery).then(
-        (
-            /** @type {import("@quild/core").ReadQueryResult<{status: string}[]>} */
-            { data }
-        ) => callback(data.map(fromRdfTodo))
-    );
-};
 
 /**
  * @param {Todo[]} data The todos
