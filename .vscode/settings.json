@@ -4,5 +4,6 @@
   "editor.wordSeparators": "`~!@#$%^&*()-=+[{]}\\|;:'\",.<>/?·",
   "search.exclude": {
     "**/dist": true
-  }
+  },
+  "github-actions.workflows.pinned.workflows": [".github/workflows/build.yml"]
 }

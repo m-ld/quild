@@ -21,7 +21,7 @@ export default [
       "packages/*/dist",
 
       // These are minimal changes on top of the todomvc repo's version, so we
-      // don't want to beholden to our lint config.
+      // don't want to be beholden to our lint config.
       "examples/todomvc-vanilla-m-ld",
       "examples/todomvc-react-m-ld",
     ],
