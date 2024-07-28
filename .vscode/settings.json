@@ -2,5 +2,8 @@
   // Add interpunct (·) to word separators to make working with variable names
   // easier.
   "editor.wordSeparators": "`~!@#$%^&*()-=+[{]}\\|;:'\",.<>/?·",
+  "search.exclude": {
+    "**/dist": true
+  },
   "github-actions.workflows.pinned.workflows": [".github/workflows/build.yml"]
 }

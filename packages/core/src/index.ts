@@ -36,6 +36,9 @@ export const readQuery = async <Data extends JsonValue>(
     parser
   );
 
+  // console.log(JSON.stringify(query, null, 2));
+  // console.log(toSparql(sparql));
+
   const bindingsStream = await engine.queryBindings(sparql, {
     sources: [source],
   });

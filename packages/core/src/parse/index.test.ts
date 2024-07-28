@@ -363,5 +363,38 @@ describe(parseQuery, () => {
     ]);
   });
 
-  // TODO: Deal with duplicate variable names
+  it("can handle a set with a specified @id", async () => {
+    const query = [
+      {
+        "@context": { "@vocab": "http://swapi.dev/documentation#" },
+        "@id": "https://swapi.dev/api/people/1/",
+        name: "?",
+      },
+    ] as const;
+
+    const { intermediateResult, sparql, warnings } = await parseQuery(query);
+
+    expect(intermediateResult).toStrictEqual(
+      new IR.Set(
+        df.namedNode("https://swapi.dev/api/people/1/"),
+        new IR.Object({
+          "@context": new IR.LiteralValue({
+            "@vocab": "http://swapi.dev/documentation#",
+          }),
+          "@id": new IR.LiteralValue("https://swapi.dev/api/people/1/"),
+          name: new IR.NativePlaceholder(df.variable("root·name")),
+        })
+      )
+    );
+
+    expect(sparql).toBeSparqlEqualTo(/* sparql */ `
+      SELECT ?root·name WHERE {
+        OPTIONAL {
+          <https://swapi.dev/api/people/1/> <http://swapi.dev/documentation#name> ?root·name.
+        }
+      }
+    `);
+
+    expect(warnings).toStrictEqual([]);
+  });
 });
