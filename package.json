@@ -31,7 +31,7 @@
     "@typescript-eslint/eslint-plugin": "^7.17.0",
     "@typescript-eslint/parser": "^8.0.0-alpha.50",
     "eslint": "^9.7.0",
-    "eslint-import-resolver-typescript": "^3.6.1",
+    "eslint-import-resolver-typescript": "github:import-js/eslint-import-resolver-typescript#c9b5626ee69bd529c7e391e40928a4fb28dce179",
     "eslint-plugin-import-x": "^3.1.0",
     "eslint-plugin-jest-formatting": "^3.1.0",
     "eslint-plugin-promise": "^7.0.0",
