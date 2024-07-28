@@ -46,8 +46,8 @@ importers:
         specifier: ^9.7.0
         version: 9.7.0
       eslint-import-resolver-typescript:
-        specifier: github:import-js/eslint-import-resolver-typescript#c9b5626ee69bd529c7e391e40928a4fb28dce179
-        version: https://codeload.github.com/import-js/eslint-import-resolver-typescript/tar.gz/c9b5626ee69bd529c7e391e40928a4fb28dce179(@typescript-eslint/parser@8.0.0-alpha.54(eslint@9.7.0)(typescript@5.5.3))(eslint-plugin-import-x@3.1.0(eslint@9.7.0)(typescript@5.5.3))(eslint@9.7.0)
+        specifier: npm:@peeja/eslint-import-resolver-typescript@3.6.3
+        version: '@peeja/eslint-import-resolver-typescript@3.6.3(@peeja/eslint-import-resolver-typescript@3.6.3)(@typescript-eslint/parser@8.0.0-alpha.54(eslint@9.7.0)(typescript@5.5.3))(eslint-plugin-import-x@3.1.0(eslint@9.7.0)(typescript@5.5.3))(eslint@9.7.0)'
       eslint-plugin-import-x:
         specifier: ^3.1.0
         version: 3.1.0(eslint@9.7.0)(typescript@5.5.3)
@@ -1213,6 +1213,19 @@ packages:
     resolution: {integrity: sha512-nn5ozdjYQpUCZlWGuxcJY/KpxkWQs4DcbMCmKojjyrYDEAGy4Ce19NN4v5MduafTwJlbKc99UA8YhSVqq9yPZA==}
     engines: {node: '>=12.4.0'}
 
+  '@peeja/eslint-import-resolver-typescript@3.6.3':
+    resolution: {integrity: sha512-Qny5dCAm8AiaXK+6QjbUWPBcn2tea03UQ19SGGmlssEpra6InKK1HtfbCkDv1daL/S4LTwttMlTRHtBX6bOjxg==}
+    engines: {node: ^14.18.0 || >=16.0.0}
+    peerDependencies:
+      eslint: '*'
+      eslint-plugin-import: '*'
+      eslint-plugin-import-x: '*'
+    peerDependenciesMeta:
+      eslint-plugin-import:
+        optional: true
+      eslint-plugin-import-x:
+        optional: true
+
   '@rdfjs/types@1.1.0':
     resolution: {integrity: sha512-5zm8bN2/CC634dTcn/0AhTRLaQRjXDZs3QfcAsQKNturHT7XVWcKy/8p3P5gXl+YkZTAmy7T5M/LyiT/jbkENw==}
 
@@ -1881,23 +1894,8 @@ packages:
   eslint-import-resolver-node@0.3.9:
     resolution: {integrity: sha512-WFj2isz22JahUv+B788TlO3N6zL3nNJGU8CcZbPZvVEkBPaJdCV4vy5wyghty5ROFbCRnm132v8BScu5/1BQ8g==}
 
-  eslint-import-resolver-typescript@https://codeload.github.com/import-js/eslint-import-resolver-typescript/tar.gz/c9b5626ee69bd529c7e391e40928a4fb28dce179:
-    resolution: {tarball: https://codeload.github.com/import-js/eslint-import-resolver-typescript/tar.gz/c9b5626ee69bd529c7e391e40928a4fb28dce179}
-    version: 3.6.3
-    engines: {node: ^14.18.0 || >=16.0.0}
-    peerDependencies:
-      eslint: '*'
-      eslint-plugin-import: '*'
-      eslint-plugin-import-x: '*'
-    peerDependenciesMeta:
-      eslint-plugin-import:
-        optional: true
-      eslint-plugin-import-x:
-        optional: true
-
   eslint-module-utils@2.8.1:
     resolution: {integrity: sha512-rXDXR3h7cs7dy9RNpUlQf80nX31XWJEyGq1tRMo+6GsO5VmTe4UTwtmonAD4ZkAsrfMVDA2wlGJ3790Ys+D49Q==}
-    version: 2.8.1
     engines: {node: '>=4'}
     peerDependencies:
       '@typescript-eslint/parser': '*'
@@ -5665,6 +5663,26 @@ snapshots:
 
   '@nolyfill/is-core-module@1.0.39': {}
 
+  '@peeja/eslint-import-resolver-typescript@3.6.3(@peeja/eslint-import-resolver-typescript@3.6.3)(@typescript-eslint/parser@8.0.0-alpha.54(eslint@9.7.0)(typescript@5.5.3))(eslint-plugin-import-x@3.1.0(eslint@9.7.0)(typescript@5.5.3))(eslint@9.7.0)':
+    dependencies:
+      '@nolyfill/is-core-module': 1.0.39
+      debug: 4.3.6
+      enhanced-resolve: 5.17.1
+      eslint: 9.7.0
+      eslint-module-utils: 2.8.1(@peeja/eslint-import-resolver-typescript@3.6.3(@peeja/eslint-import-resolver-typescript@3.6.3)(@typescript-eslint/parser@8.0.0-alpha.54(eslint@9.7.0)(typescript@5.5.3))(eslint-plugin-import-x@3.1.0(eslint@9.7.0)(typescript@5.5.3))(eslint@9.7.0))(@typescript-eslint/parser@8.0.0-alpha.54(eslint@9.7.0)(typescript@5.5.3))(eslint@9.7.0)
+      fast-glob: 3.3.2
+      get-tsconfig: 4.7.6
+      is-bun-module: 1.0.2
+      is-glob: 4.0.3
+    optionalDependencies:
+      eslint-plugin-import-x: 3.1.0(eslint@9.7.0)(typescript@5.5.3)
+    transitivePeerDependencies:
+      - '@typescript-eslint/parser'
+      - eslint-import-resolver-node
+      - eslint-import-resolver-typescript
+      - eslint-import-resolver-webpack
+      - supports-color
+
   '@rdfjs/types@1.1.0':
     dependencies:
       '@types/node': 20.3.1
@@ -6429,39 +6447,20 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-import-resolver-typescript@https://codeload.github.com/import-js/eslint-import-resolver-typescript/tar.gz/c9b5626ee69bd529c7e391e40928a4fb28dce179(@typescript-eslint/parser@8.0.0-alpha.54(eslint@9.7.0)(typescript@5.5.3))(eslint-plugin-import-x@3.1.0(eslint@9.7.0)(typescript@5.5.3))(eslint@9.7.0):
-    dependencies:
-      '@nolyfill/is-core-module': 1.0.39
-      debug: 4.3.6
-      enhanced-resolve: 5.17.1
-      eslint: 9.7.0
-      eslint-module-utils: 2.8.1(@typescript-eslint/parser@8.0.0-alpha.54(eslint@9.7.0)(typescript@5.5.3))(eslint-import-resolver-typescript@https://codeload.github.com/import-js/eslint-import-resolver-typescript/tar.gz/c9b5626ee69bd529c7e391e40928a4fb28dce179(@typescript-eslint/parser@8.0.0-alpha.54(eslint@9.7.0)(typescript@5.5.3))(eslint-plugin-import-x@3.1.0(eslint@9.7.0)(typescript@5.5.3))(eslint@9.7.0))(eslint@9.7.0)
-      fast-glob: 3.3.2
-      get-tsconfig: 4.7.6
-      is-bun-module: 1.0.2
-      is-glob: 4.0.3
-    optionalDependencies:
-      eslint-plugin-import-x: 3.1.0(eslint@9.7.0)(typescript@5.5.3)
-    transitivePeerDependencies:
-      - '@typescript-eslint/parser'
-      - eslint-import-resolver-node
-      - eslint-import-resolver-webpack
-      - supports-color
-
-  eslint-module-utils@2.8.1(@typescript-eslint/parser@8.0.0-alpha.54(eslint@9.7.0)(typescript@5.5.3))(eslint-import-resolver-typescript@https://codeload.github.com/import-js/eslint-import-resolver-typescript/tar.gz/c9b5626ee69bd529c7e391e40928a4fb28dce179(@typescript-eslint/parser@8.0.0-alpha.54(eslint@9.7.0)(typescript@5.5.3))(eslint-plugin-import-x@3.1.0(eslint@9.7.0)(typescript@5.5.3))(eslint@9.7.0))(eslint@9.7.0):
+  eslint-module-utils@2.8.1(@peeja/eslint-import-resolver-typescript@3.6.3(@peeja/eslint-import-resolver-typescript@3.6.3)(@typescript-eslint/parser@8.0.0-alpha.54(eslint@9.7.0)(typescript@5.5.3))(eslint-plugin-import-x@3.1.0(eslint@9.7.0)(typescript@5.5.3))(eslint@9.7.0))(@typescript-eslint/parser@8.0.0-alpha.54(eslint@9.7.0)(typescript@5.5.3))(eslint@9.7.0):
     dependencies:
       debug: 3.2.7
     optionalDependencies:
       '@typescript-eslint/parser': 8.0.0-alpha.54(eslint@9.7.0)(typescript@5.5.3)
       eslint: 9.7.0
-      eslint-import-resolver-typescript: https://codeload.github.com/import-js/eslint-import-resolver-typescript/tar.gz/c9b5626ee69bd529c7e391e40928a4fb28dce179(@typescript-eslint/parser@8.0.0-alpha.54(eslint@9.7.0)(typescript@5.5.3))(eslint-plugin-import-x@3.1.0(eslint@9.7.0)(typescript@5.5.3))(eslint@9.7.0)
+      eslint-import-resolver-typescript: '@peeja/eslint-import-resolver-typescript@3.6.3(@peeja/eslint-import-resolver-typescript@3.6.3)(@typescript-eslint/parser@8.0.0-alpha.54(eslint@9.7.0)(typescript@5.5.3))(eslint-plugin-import-x@3.1.0(eslint@9.7.0)(typescript@5.5.3))(eslint@9.7.0)'
     transitivePeerDependencies:
       - supports-color
 
   eslint-plugin-import-x@3.1.0(eslint@9.7.0)(typescript@5.5.3):
     dependencies:
       '@typescript-eslint/utils': 8.0.0-alpha.54(eslint@9.7.0)(typescript@5.5.3)
-      debug: 4.3.4
+      debug: 4.3.6
       doctrine: 3.0.0
       eslint: 9.7.0
       eslint-import-resolver-node: 0.3.9
@@ -7633,7 +7632,7 @@ snapshots:
 
   make-dir@3.1.0:
     dependencies:
-      semver: 6.3.0
+      semver: 6.3.1
 
   make-error@1.3.6: {}
 
