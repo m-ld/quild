@@ -1,5 +1,5 @@
 {
-  "packageManager": "pnpm@9.4.0+sha256.b6fd0bfda555e7e584ad7e56b30c68b01d5a04f9ee93989f4b93ca8473c49c74",
+  "packageManager": "pnpm@9.5.0",
   "engines": {
     "node": "20||22"
   },
@@ -21,26 +21,26 @@
     }
   },
   "devDependencies": {
-    "@eslint-community/eslint-plugin-eslint-comments": "^4.3.0",
-    "@eslint/compat": "^1.1.1",
-    "@eslint/eslintrc": "^3.1.0",
-    "@eslint/js": "^9.7.0",
-    "@jest/types": "^29.6.3",
-    "@types/eslint__eslintrc": "^2.1.1",
-    "@types/eslint__js": "^8.42.3",
-    "@types/node": "20.3.1",
-    "@typescript-eslint/eslint-plugin": "^8.0.0-alpha.54",
-    "@typescript-eslint/parser": "^8.0.0-alpha.54",
-    "eslint": "^9.7.0",
-    "eslint-import-resolver-typescript": "npm:@peeja/eslint-import-resolver-typescript@3.6.3",
-    "eslint-plugin-import-x": "^3.1.0",
-    "eslint-plugin-jest-formatting": "^3.1.0",
-    "eslint-plugin-promise": "^7.0.0",
-    "jest": "^29.7.0",
-    "jest-environment-jsdom": "^29.7.0",
-    "knip": "^5.27.0",
-    "ts-jest": "^29.1.0",
-    "ts-node": "^10.9.2",
-    "typescript": "^5.5.3"
+    "@eslint-community/eslint-plugin-eslint-comments": "catalog:",
+    "@eslint/compat": "catalog:",
+    "@eslint/eslintrc": "catalog:",
+    "@eslint/js": "catalog:",
+    "@jest/types": "catalog:",
+    "@types/eslint__eslintrc": "catalog:",
+    "@types/eslint__js": "catalog:",
+    "@types/node": "catalog:",
+    "@typescript-eslint/eslint-plugin": "catalog:",
+    "@typescript-eslint/parser": "catalog:",
+    "eslint": "catalog:",
+    "eslint-import-resolver-typescript": "catalog:",
+    "eslint-plugin-import-x": "catalog:",
+    "eslint-plugin-jest-formatting": "catalog:",
+    "eslint-plugin-promise": "catalog:",
+    "jest": "catalog:",
+    "jest-environment-jsdom": "catalog:",
+    "knip": "catalog:",
+    "ts-jest": "catalog:",
+    "ts-node": "catalog:",
+    "typescript": "catalog:"
   }
 }
