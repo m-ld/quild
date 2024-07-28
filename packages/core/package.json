@@ -1,0 +1,62 @@
+{
+  "name": "@quild/core",
+  "version": "0.0.0-alpha.1",
+  "description": "",
+  "author": "Petra Jaros <peeja@peeja.com>",
+  "license": "MIT",
+  "keywords": [],
+  "packageManager": "pnpm@9.4.0+sha256.b6fd0bfda555e7e584ad7e56b30c68b01d5a04f9ee93989f4b93ca8473c49c74",
+  "engines": {
+    "node": "18||19||20"
+  },
+  "type": "module",
+  "main": "dist/index.js",
+  "browser": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "test": "NODE_OPTIONS='--experimental-vm-modules --disable-warning=ExperimentalWarning' jest",
+    "build": "tsc --build",
+    "clean": "rm -rf dist *.tsbuildinfo",
+    "typecheck": "tsc --project tsconfig.dev.json",
+    "fetch-fixtures": "sh fixtures/fetchSwapiData.bash"
+  },
+  "devDependencies": {
+    "@comunica/bindings-factory": "2.7.0",
+    "@jest/expect": "^29.7.0",
+    "@jest/globals": "^29.5.0",
+    "@jest/types": "^29.6.3",
+    "@m-ld/m-ld": "0.10.1-edge.4",
+    "@quild/config-base": "workspace:0.0.0-alpha.1",
+    "@rdfjs/types": "1.1.0",
+    "@types/n3": "^1.16.0",
+    "@types/sparqljs": "^3.1.4",
+    "asynciterator": "^3.9.0",
+    "expect": "^29.7.0",
+    "jest": "^29.7.0",
+    "memory-level": "^1.0.0",
+    "n3": "1.16.4",
+    "sparqljs": "3.6.2",
+    "table": "6.8.1",
+    "ts-jest": "^29.1.0",
+    "type-fest": "3.7.1",
+    "typescript": "^5.5.3"
+  },
+  "dependencies": {
+    "@comunica/query-sparql-rdfjs": "^2.10.0",
+    "@types/lodash-es": "^4.17.8",
+    "jsonld": "8.1.1",
+    "jsonld-context-parser": "^2.3.0",
+    "lodash-es": "4.17.21",
+    "rambdax": "^10.0.0",
+    "rdf-data-factory": "1.1.1",
+    "rdf-string": "^1.6.3",
+    "sparqlalgebrajs": "4.2.0"
+  },
+  "peerDependencies": {
+    "react": "18 || 19",
+    "react-dom": "18 || 19"
+  }
+}

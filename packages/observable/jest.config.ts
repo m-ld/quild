@@ -1,7 +1,9 @@
+import baseConfig from "@quild/config-base/jest.config.base.ts";
+
 import type { Config } from "@jest/types";
 
 const config: Config.InitialOptions = {
-  projects: ["<rootDir>/packages/*/jest.config.ts"],
+  ...baseConfig,
 };
 
 export default config;

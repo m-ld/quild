@@ -1,0 +1,11 @@
+{
+  "$schema": "https://unpkg.com/knip@5/schema.json",
+  "workspaces": {
+    ".": {
+      "entry": ["wallaby.mjs"]
+    },
+    "packages/core": {
+      "ignore": ["src/types/*"]
+    }
+  }
+}

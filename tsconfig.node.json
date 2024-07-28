@@ -1,0 +1,13 @@
+// For config and other node files
+{
+  "extends": "./tsconfig.options.json",
+  "include": ["./*.ts", "./*.js", "./*.mjs"],
+  "compilerOptions": {
+    "noEmit": true,
+    "module": "nodenext",
+    "target": "esnext",
+    "lib": ["esnext"],
+    "moduleResolution": "nodenext",
+    "allowImportingTsExtensions": true
+  }
+}

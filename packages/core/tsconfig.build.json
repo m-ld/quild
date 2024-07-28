@@ -1,0 +1,8 @@
+{
+  "extends": "./tsconfig.dev.json",
+  "include": ["src/**/*"],
+  "exclude": ["src/**/*.test.*", "src/test-util/**/*"],
+  "compilerOptions": {
+    "emitDeclarationOnly": false
+  }
+}

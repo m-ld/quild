@@ -1,22 +1,9 @@
 {
-  "exclude": ["dist"],
-  "compilerOptions": {
-    "target": "esnext",
-    "module": "esnext",
-    "esModuleInterop": true,
-    "lib": ["dom", "dom.iterable", "esnext"],
-    "strict": true,
-    "allowJs": true,
-    "checkJs": true,
-    "forceConsistentCasingInFileNames": true,
-    "noEmit": true,
-    "declaration": true,
-    "moduleResolution": "node",
-    "incremental": true,
-    "noErrorTruncation": true,
-    "exactOptionalPropertyTypes": true,
-    "useUnknownInCatchVariables": true,
-    "resolveJsonModule": true,
-    "noUncheckedIndexedAccess": true
-  }
+  "extends": "./tsconfig.options.json",
+  "files": [],
+  "references": [
+    { "path": "./packages/core" },
+    { "path": "./packages/observable" },
+    { "path": "./packages/react" }
+  ]
 }

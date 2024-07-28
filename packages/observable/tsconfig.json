@@ -1,0 +1,10 @@
+{
+  "extends": "../../tsconfig.options.json",
+  "files": [],
+  "references": [
+    { "path": "./tsconfig.build.json" },
+    { "path": "./tsconfig.dev.json" }
+    // Nothing to be in this project:
+    // { "path": "./tsconfig.node.json" }
+  ]
+}
