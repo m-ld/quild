@@ -9,7 +9,6 @@ import type * as IR from "./IntermediateResult";
 import type { Parser, ParseWarning } from "./parse/common";
 import type { Source } from "@rdfjs/types";
 import type { JsonValue } from "type-fest";
-import { toSparql } from "sparqlalgebrajs";
 
 const engine = new QueryEngine();
 
