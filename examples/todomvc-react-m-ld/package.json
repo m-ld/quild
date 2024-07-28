@@ -32,14 +32,14 @@
     "webpack-merge": "^5.8.0"
   },
   "dependencies": {
-    "@m-ld/m-ld": "0.10.1-edge.4",
-    "@quild/react": "workspace:0.0.0-alpha.1",
+    "@m-ld/m-ld": "catalog:",
+    "@quild/react": "workspace:",
     "classnames": "^2.2.5",
-    "memory-level": "^1.0.0",
+    "memory-level": "catalog:",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.8.2",
-    "rxjs": "^7.8.1",
+    "rxjs": "catalog:",
     "todomvc-app-css": "^2.4.2",
     "todomvc-common": "^1.0.5"
   }

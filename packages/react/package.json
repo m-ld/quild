@@ -30,26 +30,26 @@
     "typecheck": "tsc --project tsconfig.dev.json"
   },
   "devDependencies": {
-    "@jest/globals": "^29.5.0",
-    "@jest/types": "^29.6.3",
-    "@quild/config-base": "workspace:0.0.0-alpha.1",
-    "@testing-library/react": "^16.0.0",
-    "@types/react": "^18.3.3",
-    "@types/react-dom": "^18.3.0",
-    "jest": "^29.5.0",
-    "memory-level": "^1.0.0",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "ts-jest": "^29.1.0",
-    "tsup": "^8.2.3",
-    "type-fest": "3.7.1",
-    "typescript": "^5.5.3"
+    "@jest/globals": "catalog:",
+    "@jest/types": "catalog:",
+    "@quild/config-base": "workspace:",
+    "@testing-library/react": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "jest": "catalog:",
+    "memory-level": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "ts-jest": "catalog:",
+    "tsup": "catalog:",
+    "type-fest": "catalog:",
+    "typescript": "catalog:"
   },
   "dependencies": {
-    "@m-ld/m-ld": "0.10.1-edge.4",
-    "@quild/core": "workspace:0.0.0-alpha.1",
-    "@quild/observable": "workspace:0.0.0-alpha.1",
-    "setimmediate": "^1.0.5"
+    "@m-ld/m-ld": "catalog:",
+    "@quild/core": "workspace:",
+    "@quild/observable": "workspace:",
+    "setimmediate": "catalog:"
   },
   "peerDependencies": {
     "react": "18 || 19",
