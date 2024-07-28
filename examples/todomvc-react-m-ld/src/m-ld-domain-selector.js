@@ -11,6 +11,8 @@ import {
   filter,
   pipe,
   pairwise,
+  share,
+  shareReplay,
 } from "rxjs";
 
 /**
@@ -76,7 +78,7 @@ customElements.define(
       this.clone$ = createDomainSelectorObservable(
         this.#domainField,
         this.#statusDot
-      );
+      ).pipe(shareReplay(1));
     }
   }
 );

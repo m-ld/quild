@@ -1,57 +1,43 @@
-import { useReducer, useState, useRef, useCallback } from "react";
+import { useReducer, useState, useRef, useCallback, useEffect } from "react";
 import { useMeldQuery } from "@quild/react";
 
 import { Header } from "./components/header";
 import { Main } from "./components/main";
 import { Footer } from "./components/footer";
 
+import { DispatchProvider } from "./hooks/useDispatch";
 import { MeldProvider } from "./hooks/useMeld";
 
-import { todoReducer } from "./reducer";
-
-import "./m-ld-domain-selector";
+// import "../m-ld-domain-selector";
 import "./app.css";
-
-const query = [
-  {
-    "@context": {
-      icaltzd: "http://www.w3.org/2002/12/cal/icaltzd#",
-      id: "@id",
-      title: "icaltzd:summary",
-    },
-    id: "?",
-    title: "?",
-    "icaltzd:status": "?",
-  },
-];
+import { dispatcher } from "./dispatcher";
 
 export function App() {
-  const [todos, dispatch] = useReducer(todoReducer, []);
-  const subscriptionRef = useRef(null);
+  return (
+    <WithDispatch>
+      <Header />
+      <Main />
+      <Footer />
+    </WithDispatch>
+  );
+  // }
+}
+
+function WithDispatch({ children }) {
   const [meld, setMeld] = useState(null);
 
-  const subscribeToClones = useCallback(
-    (domainSelector) => {
-      if (domainSelector) {
-        subscriptionRef.current = domainSelector.clone$.subscribe(setMeld);
-      } else {
-        subscriptionRef.current?.unsubscribe();
-        subscriptionRef.current = null;
-      }
-    },
-    [setMeld]
-  );
-
-  const { data: queryResults } = useMeldQuery(meld, query);
-
-  console.log({ queryResults });
+  useEffect(() => {
+    const subscription = document
+      .getElementById("domain-selector")
+      .clone$.subscribe(setMeld);
+    return () => subscription.unsubscribe();
+  });
 
   return (
-    <MeldProvider value={meld}>
-      <Header dispatch={dispatch} />
-      <Main todos={todos} dispatch={dispatch} />
-      <Footer todos={todos} dispatch={dispatch} />
-      <m-ld-domain-selector ref={subscribeToClones} />
-    </MeldProvider>
+    meld && (
+      <MeldProvider value={meld}>
+        <DispatchProvider value={dispatcher(meld)}>{children}</DispatchProvider>
+      </MeldProvider>
+    )
   );
 }
