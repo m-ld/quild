@@ -11,8 +11,8 @@ const bf = new BindingsFactory(df);
 const root = df.variable("root");
 
 describe(NamePlaceholder, () => {
-  it("throws when it hasn't received a solution", () => {
-    expect(async () => {
+  it("throws when it hasn't received a solution", async () => {
+    await expect(async () => {
       new NamePlaceholder(
         root,
         await contextParser.parse({}),
@@ -77,8 +77,8 @@ describe(NamePlaceholder, () => {
     expect(ir.result()).toBe("https://swapi.dev/api/films/1/");
   });
 
-  it("throws trying to represent a non-name value", () => {
-    expect(async () => {
+  it("throws trying to represent a non-name value", async () => {
+    await expect(async () => {
       new NamePlaceholder(
         root,
         await contextParser.parse({}),

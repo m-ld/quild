@@ -1,14 +1,14 @@
+import { identity } from "rambdax";
+
 import {
   type Parser,
   nestWarningsUnderKey,
   isPlainObject,
-  Parsed,
+  type Parsed,
 } from "./common";
 import * as IR from "../IntermediateResult";
 import { af } from "../common";
 import { evolve, prepend } from "../upstream/rambda";
-
-import { identity } from "rambdax";
 
 export const NodeObjectArray: Parser["NodeObjectArray"] = async function ({
   element,
