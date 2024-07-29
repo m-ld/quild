@@ -2,6 +2,8 @@
 
 **Quild** is a query language for building JSON-LD documents from RDF-style data sources, such as [JSON-LD](https://json-ld.org/), [RDF stores](https://rdf.js.org/), or [m-ld](https://m-ld.org/). It's a little like if [JSON-LD Framing](https://www.w3.org/TR/json-ld11-framing/) and [GraphQL](https://graphql.org/) had a happy little baby together.
 
+Just ask this…
+
 ```json
 {
   "@context": {
@@ -19,6 +21,8 @@
   ]
 }
 ```
+
+…to get this:
 
 ```json
 {
@@ -56,11 +60,11 @@
 
 _The examples in this document, as well as most of the tests in this repo, use data from the ever-fantastic [SWAPI](https://swapi.dev/), the Star Wars API. SWAPI is a non-linked-data JSON REST API; we interpret it here using a custom [context](packages/core/fixtures/context.json)._
 
-## Queries
+## 🔍 Queries
 
 Queries in Quild follow a few simple rules that make them intuitive to work with:
 
-### Shape
+### 📐 Shape
 
 The result of a Quild query always has the same shape as the query that generated it.
 
@@ -71,7 +75,7 @@ The result of a Quild query always has the same shape as the query that generate
 
 This means that, unlike GraphQL, the shape of the result is extremely easy to predict given the query.
 
-### Semantics
+### 💡 Semantics
 
 - The result of a Quild query is a valid JSON-LD document.
 - The query itself is also a valid JSON-LD document, because it has the same shape.
@@ -79,7 +83,7 @@ This means that, unlike GraphQL, the shape of the result is extremely easy to pr
 - When interpreted as JSON-LD, the result contains some subset of the facts in the original data. That is, in RDF terms, every triple contained in the result is a triple found in the original data.
 - Queries and results may have additional `@`-prefixed keyword keys which are not defined in JSON-LD, for additional features. JSON-LD ignores these keys, so they can represent computed values not present as explicit statements in the original data. (No such keywords have been implemented so far, but they're reserved for now as a possibility.)
 
-## API
+## 🔌 API
 
 The Quild libraries offer a few ways to work with queries over datasets:
 
