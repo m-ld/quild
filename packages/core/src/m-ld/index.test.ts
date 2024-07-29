@@ -4,7 +4,7 @@ import { NullRemotes } from "@m-ld/m-ld/ext/null";
 import jsonld, { type JsonLdDocument } from "jsonld";
 import { MemoryLevel } from "memory-level";
 
-import { parser as meldParser } from "./parse";
+import { parser as meldParser } from "./";
 import data from "../../fixtures/data.json";
 import { readQuery } from "../index";
 

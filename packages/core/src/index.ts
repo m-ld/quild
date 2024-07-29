@@ -7,7 +7,7 @@ import { readAll } from "./readAll";
 
 import type * as IR from "./IntermediateResult";
 import type { Parser, ParseWarning } from "./parse/common";
-import type { Source } from "@rdfjs/types";
+import type * as RDF from "@rdfjs/types";
 import type { JsonValue } from "type-fest";
 
 const engine = new QueryEngine();
@@ -27,7 +27,7 @@ export interface ReadQueryResult<Data> {
  * @param query The Quild query to read.
  */
 export const readQuery = async <Data extends JsonValue>(
-  source: Source,
+  source: RDF.Source,
   query: JsonValue,
   { parser = defaultParser }: { parser?: Parser } = {}
 ): Promise<ReadQueryResult<Data>> => {

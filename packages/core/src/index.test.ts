@@ -6,7 +6,7 @@ import { readQuery } from "./index";
 import { quadSource } from "./test-util/quadSource";
 import data from "../fixtures/data.json";
 
-import type { Quad, Term } from "@rdfjs/types";
+import type * as RDF from "@rdfjs/types";
 import type * as JsonLD from "jsonld";
 
 /* eslint-disable @typescript-eslint/consistent-type-assertions
@@ -18,8 +18,8 @@ import type * as JsonLD from "jsonld";
 // its terms are all missing the `.equals()` method. Also, BlankNodes are
 // incorrectly named: they include the `_:`, which is not part of the name, but
 // only part of the Turtle representation.
-const fixQuad = (q: JsonLD.Quad): Quad => {
-  const fixTerm = ((term: Term) =>
+const fixQuad = (q: JsonLD.Quad): RDF.Quad => {
+  const fixTerm = ((term: RDF.Term) =>
     term.termType === "Literal"
       ? df.literal(term.value, fixTerm(term.datatype))
       : term.termType === "BlankNode"
@@ -27,7 +27,7 @@ const fixQuad = (q: JsonLD.Quad): Quad => {
       : df.fromTerm(term)) as typeof df.fromTerm;
 
   // Pretend q is a real quad for a moment.
-  const quad = q as Quad;
+  const quad = q as RDF.Quad;
   return df.quad(
     fixTerm(quad.subject),
     fixTerm(quad.predicate),
