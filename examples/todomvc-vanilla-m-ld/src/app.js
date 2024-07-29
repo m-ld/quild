@@ -1,26 +1,4 @@
-import { MemoryLevel } from "memory-level";
-import { clone, uuid } from "@m-ld/m-ld";
-import { IoRemotes } from "@m-ld/m-ld/ext/socket.io";
-import {
-    BehaviorSubject,
-    connectable,
-    distinctUntilChanged,
-    filter,
-    from,
-    fromEvent,
-    identity,
-    map,
-    mergeMap,
-    Observable,
-    pairwise,
-    pipe,
-    share,
-    startWith,
-    Subscription,
-    switchAll,
-    switchMap,
-    tap,
-} from "rxjs";
+import { BehaviorSubject, map, pairwise, pipe } from "rxjs";
 
 import View from "./view";
 import Controller from "./controller";
@@ -30,94 +8,19 @@ import Template from "./template";
 import "todomvc-app-css/index.css";
 import "todomvc-common/base.css";
 import "./app.css";
-
-let subscription = new Subscription();
-
-const onLoad = async () => {
-    const statusDot = document.getElementsByClassName("m-ld-status")[0];
-    const domainField = document.getElementsByClassName("m-ld-domain")[0];
-    const currentApp$ = new BehaviorSubject(null);
-    const meld$ = connectable(
-        fromEvent(domainField, "change").pipe(
-            map((e) => e.target.value),
-            startWith(domainField.value),
-            configMap(),
-            tap((config) => {
-                domainField.value = config["@domain"];
-            }),
-            cloneMap()
-        )
-    );
-
-    subscription.add(() => currentApp$.value?.dispose());
-    subscription.add(
-        meld$.pipe(mergeMap(identity), appMap()).subscribe(currentApp$)
-    );
-    subscription.add(
-        meld$
-            .pipe(
-                switchMap((meldPromise) => {
-                    return from(meldPromise).pipe(
-                        switchMap((meld) => meld.status),
-                        map((status) => (status.online ? "online" : "offline")),
-                        startWith("connecting")
-                    );
-                })
-            )
-            .subscribe((status) => {
-                statusDot.dataset.status = status;
-            })
-    );
-    meld$.connect();
-};
+import "./m-ld-domain-selector";
 
 /**
- * Rxjs operator. Maps domains to m-ld instances. Given `""`, it creates a new
- * genesis domain. Otherwise, it clones the existing domain. Closes each
- * previous clone as it goes. TK
+ * @import { OperatorFunction } from 'rxjs'
+ * @import { MeldClone } from '@m-ld/m-ld'
  */
-function configMap() {
-    return pipe(
-        map((domain) =>
-            domain.length === 0
-                ? {
-                      "@id": uuid(),
-                      "@domain": `${uuid()}.public.gw.m-ld.org`,
-                      genesis: true,
-                      io: { uri: "https://gw.m-ld.org" },
-                  }
-                : {
-                      "@id": uuid(),
-                      "@domain": domain,
-                      genesis: false,
-                      io: { uri: "https://gw.m-ld.org" },
-                  }
-        )
-    );
-}
 
-/**
- * Rxjs operator. Maps domains to m-ld instances. Given `""`, it creates a new
- * genesis domain. Otherwise, it clones the existing domain. Closes each
- * previous clone as it goes. TK
- */
-function cloneMap() {
-    return pipe(
-        map((config) => clone(new MemoryLevel(), IoRemotes, config)),
-        startWith(null),
-        pairwise(),
-        map(([prev, next]) => {
-            prev?.then((m) => m.close());
-            return next;
-        }),
-        // Just to prove to TS that we never emit a `null`.
-        filter((meld) => meld !== null)
-    );
-}
+let subscription;
 
 /**
  * Rxjs operator. Maps m-ld instances to Todo instances. Disposes of each
  * previous Todo instance as it goes.
+ * @type {OperatorFunction<MeldClone, Todo>}
  */
 function appMap() {
     return pipe(
@@ -130,9 +33,19 @@ function appMap() {
     );
 }
 
+const onLoad = async () => {
+    const currentApp$ = new BehaviorSubject(null);
+
+    subscription = document
+        .getElementById("domain-selector")
+        .clone$.pipe(appMap())
+        .subscribe(currentApp$);
+    subscription.add(() => currentApp$.value?.dispose());
+};
+
 /**
  * An instance of the application
- * @param {import("@m-ld/m-ld").MeldClone} storage
+ * @param {MeldClone} storage
  */
 function Todo(storage) {
     this.storage = storage;
