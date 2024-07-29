@@ -251,3 +251,16 @@ Then…
 >
 > - [Return of the Jedi](https://swapi.dev/api/films/3/)
 > - [The Phantom Menace](https://swapi.dev/api/films/4/)
+
+## ▶️ Examples
+
+To run the examples, check out the repo and run:
+
+```sh
+$ pnpm install
+$ pnpm examples
+```
+
+The apps should both build and open in your browser. You'll see two different copies of the [TodoMVC](https://todomvc.com/) app: one using vanilla JavaScript (ES6), and one using React, both modified to use m-ld and Quild. You'll also see a text box at the bottom of the page. Each copy of the app will connect to the [m-ld Gateway](https://gw.m-ld.org/) and start using a new domain. You can connect the two apps by copying the domain name from one app and pasting it in the other app's box.
+
+Try running several copies, and watch them stay in sync! Have a friend run it on their machine and give them the domain name! Try going offline and making changes in multiple windows: you'll see your changes locally in each window, and when you go back online, you'll see them merge automatically!
