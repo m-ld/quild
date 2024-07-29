@@ -1,11 +1,22 @@
 {
   "name": "@quild/react",
   "version": "0.0.0-alpha.1",
-  "description": "",
+  "description": "Quild queries as a React hook.",
   "author": "Petra Jaros <peeja@peeja.com>",
   "license": "MIT",
-  "keywords": [],
-  "packageManager": "pnpm@9.4.0+sha256.b6fd0bfda555e7e584ad7e56b30c68b01d5a04f9ee93989f4b93ca8473c49c74",
+  "keywords": [
+    "quild",
+    "json-ld",
+    "rdf",
+    "query",
+    "m-ld",
+    "react",
+    "hooks",
+    "react-hooks"
+  ],
+  "homepage": "https://github.com/m-ld/quild",
+  "repository": "github:m-ld/quild",
+  "bugs": "https://github.com/m-ld/quild/issues",
   "engines": {
     "node": "20||22"
   },
