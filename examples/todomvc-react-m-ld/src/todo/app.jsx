@@ -1,5 +1,4 @@
-import { useReducer, useState, useRef, useCallback, useEffect } from "react";
-import { useMeldQuery } from "@quild/react";
+import { useState, useEffect } from "react";
 
 import { Header } from "./components/header";
 import { Main } from "./components/main";
@@ -8,7 +7,6 @@ import { Footer } from "./components/footer";
 import { DispatchProvider } from "./hooks/useDispatch";
 import { MeldProvider } from "./hooks/useMeld";
 
-// import "../m-ld-domain-selector";
 import "./app.css";
 import { dispatcher } from "./dispatcher";
 
