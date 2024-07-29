@@ -1,0 +1,29 @@
+{
+  "name": "@quild/m-ld-domain-selector",
+  "version": "0.0.0-alpha.1",
+  "packageManager": "pnpm@9.4.0+sha256.b6fd0bfda555e7e584ad7e56b30c68b01d5a04f9ee93989f4b93ca8473c49c74",
+  "engines": {
+    "node": "20||22"
+  },
+  "files": [
+    "dist"
+  ],
+  "main": "dist/index.js",
+  "browser": "dist/index.js",
+  "scripts": {
+    "build": "tsc --project tsconfig.build.json",
+    "dev": "tsc --project tsconfig.build.json --watch",
+    "clean": "rm -rf dist *.tsbuildinfo",
+    "lint": "eslint .",
+    "typecheck": "tsc --project tsconfig.dev.json",
+    "examples": "pnpm build && pnpm --filter './examples/*' run dev"
+  },
+  "devDependencies": {
+    "typescript": "catalog:"
+  },
+  "dependencies": {
+    "@m-ld/m-ld": "catalog:",
+    "memory-level": "catalog:",
+    "rxjs": "catalog:"
+  }
+}

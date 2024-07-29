@@ -3,8 +3,6 @@
   "engines": {
     "node": "20||22"
   },
-  "main": "dist/src/index.js",
-  "browser": "dist/src/index.js",
   "scripts": {
     "test": "NODE_OPTIONS='--experimental-vm-modules --disable-warning=ExperimentalWarning' jest",
     "build": "pnpm --filter './packages/*' run build",
@@ -12,7 +10,8 @@
     "clean": "pnpm --filter './packages/*' run clean",
     "lint": "eslint .",
     "typecheck": "pnpm --filter './packages/*' run typecheck",
-    "knip": "knip"
+    "knip": "knip",
+    "examples": "pnpm build && pnpm --filter './examples/*' run dev"
   },
   "pnpm": {
     "overrides": {

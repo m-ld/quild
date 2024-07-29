@@ -5,7 +5,7 @@ const path = require("path");
 module.exports = {
   entry: {
     app: path.resolve(__dirname, "src", "index.js"),
-    domainSelector: path.resolve(__dirname, "src", "m-ld-domain-selector.js"),
+    domainSelector: require.resolve("@quild/m-ld-domain-selector"),
   },
   plugins: [
     new HtmlWebpackPlugin({
