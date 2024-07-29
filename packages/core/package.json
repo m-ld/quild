@@ -32,6 +32,7 @@
   },
   "devDependencies": {
     "@comunica/bindings-factory": "2.7.0",
+    "@jest/expect": "^29.7.0",
     "@jest/globals": "^29.5.0",
     "@jest/types": "^29.6.3",
     "@m-ld/m-ld": "0.10.1-edge.4",
