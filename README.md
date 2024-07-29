@@ -264,3 +264,11 @@ $ pnpm examples
 The apps should both build and open in your browser. You'll see two different copies of the [TodoMVC](https://todomvc.com/) app: one using vanilla JavaScript (ES6), and one using React, both modified to use m-ld and Quild. You'll also see a text box at the bottom of the page. Each copy of the app will connect to the [m-ld Gateway](https://gw.m-ld.org/) and start using a new domain. You can connect the two apps by copying the domain name from one app and pasting it in the other app's box.
 
 Try running several copies, and watch them stay in sync! Have a friend run it on their machine and give them the domain name! Try going offline and making changes in multiple windows: you'll see your changes locally in each window, and when you go back online, you'll see them merge automatically!
+
+## 🙏 Acknowledgements
+
+Many thanks to [TodoMVC](https://todomvc.com/) and its contributors for providing an excellent basis for the examples.
+
+This project was funded through the [NGI Assure Fund](https://nlnet.nl/assure), a fund established by [NLnet](https://nlnet.nl/) with financial support from the European Commission's [Next Generation Internet](https://ngi.eu/) programme, under the aegis of DG Communications Networks, Content and Technology under grant agreement No 957073.
+
+<a target="_blank" href="https://nlnet.nl"><img src="https://m-ld.org/media/logo_nlnet.svg" alt="NLnet"></a>
