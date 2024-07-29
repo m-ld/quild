@@ -7,9 +7,9 @@ import { matcherResult } from "./matcherResult";
 import { readAll } from "../readAll";
 
 import type { ExpectedBindings } from "./toBeBindingsEqualTo";
-import type { Quad } from "@rdfjs/types";
+import type * as RDF from "@rdfjs/types";
 
-async function query(query: string, quads?: Quad[]) {
+async function query(query: string, quads?: RDF.Quad[]) {
   const engine = new QueryEngine();
 
   const bindingsStream = await engine.queryBindings(query, {

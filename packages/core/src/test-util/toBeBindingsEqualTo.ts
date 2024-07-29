@@ -5,7 +5,7 @@ import { DataFactory } from "rdf-data-factory";
 import { stringToTerm, termToString } from "rdf-string";
 import { type ColumnUserConfig, table } from "table";
 
-import type { Term } from "@rdfjs/types";
+import type * as RDF from "@rdfjs/types";
 import type { MatcherFunction } from "expect";
 import type { Variable } from "rdf-data-factory";
 
@@ -94,7 +94,7 @@ const bindingsesMatch = (
 
   // Maps blank node names from the expected bindings to the blank nodes in the
   // actual bindings.
-  const actualBlankNodes = new Map<string, Term>();
+  const actualBlankNodes = new Map<string, RDF.Term>();
 
   return !zip(sortedActual, sortedExpected).find(([a, e]) => {
     if (a === undefined || e === undefined)
@@ -209,7 +209,7 @@ export const toBeBindingsEqualTo: MatcherFunction<
   const expectedBindingses = expectedBindingRows.map((row) =>
     bf.bindings(
       expectedVariableNames
-        .map<[Variable, Term] | undefined>((name, i) => {
+        .map<[Variable, RDF.Term] | undefined>((name, i) => {
           // We use stringToTerm() to parse the given value, *except*:
           // - `stringToTerm("")` returns a `DefaultGraph`; we want a literal.
           // - `stringToTerm(undefined)` also returns a `DefaultGraph`; we want
