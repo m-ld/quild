@@ -1,0 +1,13 @@
+// For development-time checking
+{
+  "extends": "../../tsconfig.options.json",
+  "include": ["src/**/*"],
+  "compilerOptions": {
+    "emitDeclarationOnly": true,
+    "outDir": "dist",
+    "rootDir": "src",
+    "module": "nodenext",
+    "target": "esnext",
+    "moduleResolution": "nodenext"
+  }
+}

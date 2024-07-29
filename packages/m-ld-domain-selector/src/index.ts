@@ -1,5 +1,5 @@
 import { uuid, clone } from "@m-ld/m-ld";
-import { IoRemotes } from "@m-ld/m-ld/ext/socket.io";
+import { IoRemotes, type MeldIoConfig } from "@m-ld/m-ld/ext/socket.io";
 import { MemoryLevel } from "memory-level";
 import {
   fromEvent,
@@ -11,20 +11,15 @@ import {
   filter,
   pipe,
   pairwise,
-  share,
   shareReplay,
 } from "rxjs";
-
-/**
- * @import { OperatorFunction } from 'rxjs'
- * @import { MeldConfig, MeldClone } from '@m-ld/m-ld'
- */
 
 customElements.define(
   "m-ld-domain-selector",
   class MeldDomainSelector extends HTMLElement {
     #statusDot;
     #domainField;
+    clone$;
 
     constructor() {
       super();
@@ -83,18 +78,13 @@ customElements.define(
   }
 );
 
-/**
- * Creates a domain selector inside the
- * @param {HTMLElement} el
- * @returns {Observable<MeldClone>}
- * */
-function createDomainSelectorObservable(domainField, statusDot) {
+function createDomainSelectorObservable(
+  domainField: HTMLInputElement,
+  statusDot: HTMLElement
+) {
   return fromEvent(domainField, "change").pipe(
-    tap((e) => {
-      console.log(e);
-    }),
     // Take every value of the domain field...
-    map((e) => e.target.value),
+    map(() => domainField.value),
     // ...starting with the current value...
     startWith(domainField.value),
     // ...build a config for it...
@@ -107,9 +97,9 @@ function createDomainSelectorObservable(domainField, statusDot) {
     cloneMap(),
 
     // For each clone promise,
-    switchMap((/** @type {Promise<MeldClone>} */ meldPromise) => {
+    switchMap((meldPromise) =>
       // ...once it resolves...
-      return from(meldPromise).pipe(
+      from(meldPromise).pipe(
         // ...listen to the status...
         switchMap((meld) =>
           meld.status.pipe(map((status) => ({ meld, status })))
@@ -122,8 +112,8 @@ function createDomainSelectorObservable(domainField, statusDot) {
         // When the promise has arrived but not yet resolved, the status
         // is "connecting".
         startWith({ meld: null, status: "connecting" })
-      );
-    }),
+      )
+    ),
     // Update the status dot.
     tap(({ status }) => {
       statusDot.dataset.status = status;
@@ -134,6 +124,7 @@ function createDomainSelectorObservable(domainField, statusDot) {
     filter(Boolean)
   );
 }
+
 /**
  * Rxjs operator. Maps domains to m-ld configs. Given `""`, it configures a new
  * genesis domain. Otherwise, it configures a connection to the existing domain.
@@ -141,7 +132,7 @@ function createDomainSelectorObservable(domainField, statusDot) {
  */
 function configMap() {
   return pipe(
-    map((domain) =>
+    map((domain: string) =>
       domain.length === 0
         ? {
             "@id": uuid(),
@@ -158,6 +149,7 @@ function configMap() {
     )
   );
 }
+
 /**
  * Rxjs operator. Maps configs to promises of m-ld instances. The promise will
  * be emitted immediately, meaning the time between receiving the promise and
@@ -167,11 +159,11 @@ function configMap() {
  */
 function cloneMap() {
   return pipe(
-    map((config) => clone(new MemoryLevel(), IoRemotes, config)),
+    map((config: MeldIoConfig) => clone(new MemoryLevel(), IoRemotes, config)),
     startWith(null),
     pairwise(),
     map(([prev, next]) => {
-      prev?.then((m) => m.close());
+      void prev?.then((m) => m.close());
       return next;
     }),
     // Just to prove to TS that we never emit a `null`.
