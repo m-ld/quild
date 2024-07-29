@@ -6,6 +6,11 @@
     },
     "packages/core": {
       "ignore": ["src/types/*"]
+    },
+    "examples/todomvc-vanilla-m-ld": {
+      "webpack": {
+        "config": ["webpack.*.{js,ts,mjs,cjs,mts,cts}"]
+      }
     }
   }
 }

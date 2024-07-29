@@ -3,10 +3,10 @@ import { describe, expect, it } from "@jest/globals";
 import { Resource } from "./Resource";
 import {
   type ToParse,
-  nullContext,
   parsed,
   parseWarning,
   type Parse,
+  contextParser,
 } from "./common";
 import { makeParser } from "./parser";
 import * as IR from "../IntermediateResult";
@@ -15,19 +15,19 @@ import { df } from "../common";
 import type { JsonValue, ValueOf } from "type-fest";
 
 const variable = df.variable("thing");
-const makeToParse = <Element extends JsonValue>(
+const makeToParse = async <Element extends JsonValue>(
   element: Element
-): ToParse<Element> => ({
+): Promise<ToParse<Element>> => ({
   element,
   variable,
-  ctx: nullContext,
+  ctx: await contextParser.parse({}),
 });
 
 describe(Resource, () => {
   const parser = makeParser({ Resource });
 
   it("parses a null", async () => {
-    const toParse = makeToParse(null);
+    const toParse = await makeToParse(null);
 
     expect(await parser.Resource(toParse)).toStrictEqual(
       parsed({
@@ -82,7 +82,7 @@ describe(Resource, () => {
     },
     { name: "Set Object", parse: parser.SetObject, element: { "@set": [{}] } },
   ] satisfies TestCase[])("parses a $name", async ({ element, parse }) => {
-    const toParse = makeToParse(element);
+    const toParse = await makeToParse(element);
 
     expect(await parser.Resource(toParse)).toStrictEqual(
       // @ts-expect-error - It seems to be impossible to convince TS that

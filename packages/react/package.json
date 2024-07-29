@@ -7,16 +7,25 @@
   "keywords": [],
   "packageManager": "pnpm@9.4.0+sha256.b6fd0bfda555e7e584ad7e56b30c68b01d5a04f9ee93989f4b93ca8473c49c74",
   "engines": {
-    "node": "18||19||20"
+    "node": "20||22"
   },
-  "main": "dist/src/index.js",
-  "browser": "dist/src/index.js",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs",
+      "types": "./dist/index.d.ts"
+    }
+  },
   "files": [
     "dist"
   ],
   "scripts": {
     "test": "NODE_OPTIONS='--experimental-vm-modules --disable-warning=ExperimentalWarning' jest",
-    "build": "tsc --project tsconfig.build.json",
+    "build": "tsup",
+    "dev": "tsup --watch",
     "clean": "rm -rf dist *.tsbuildinfo",
     "typecheck": "tsc --project tsconfig.dev.json"
   },
@@ -32,6 +41,7 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "ts-jest": "^29.1.0",
+    "tsup": "^8.2.3",
     "type-fest": "3.7.1",
     "typescript": "^5.5.3"
   },
