@@ -50,7 +50,7 @@
     "@jest/globals": "catalog:",
     "@jest/types": "catalog:",
     "@m-ld/m-ld": "catalog:",
-    "@quild/config-base": "workspace:",
+    "@quild/config-base": "workspace:0.0.0-alpha.1",
     "@rdfjs/types": "catalog:",
     "@types/n3": "catalog:",
     "@types/sparqljs": "catalog:",

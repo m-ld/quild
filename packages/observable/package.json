@@ -44,7 +44,7 @@
   "devDependencies": {
     "@jest/globals": "catalog:",
     "@jest/types": "catalog:",
-    "@quild/config-base": "workspace:",
+    "@quild/config-base": "workspace:0.0.0-alpha.1",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "jest": "catalog:",
@@ -58,7 +58,7 @@
   },
   "dependencies": {
     "@m-ld/m-ld": "catalog:",
-    "@quild/core": "workspace:",
+    "@quild/core": "workspace:0.0.0-alpha.1",
     "rxjs": "catalog:"
   },
   "peerDependencies": {

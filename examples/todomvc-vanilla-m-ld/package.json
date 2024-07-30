@@ -14,7 +14,7 @@
     },
     "dependencies": {
         "@m-ld/m-ld": "catalog:",
-        "@quild/observable": "workspace:",
+        "@quild/observable": "workspace:0.0.0-alpha.1",
         "memory-level": "^1.0.0",
         "rxjs": "catalog:",
         "socket.io-client": "^4.7.5",
