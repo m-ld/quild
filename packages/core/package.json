@@ -1,6 +1,6 @@
 {
   "name": "@quild/core",
-  "version": "0.0.0-alpha.1",
+  "version": "0.0.0",
   "description": "Quild is a query language for building JSON-LD documents from RDF-style data sources, such as JSON-LD, RDF stores, or m-ld.",
   "author": "Petra Jaros <peeja@peeja.com>",
   "license": "MIT",
