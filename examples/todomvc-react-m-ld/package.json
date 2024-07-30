@@ -32,8 +32,8 @@
   },
   "dependencies": {
     "@m-ld/m-ld": "catalog:",
-    "@quild/m-ld-domain-selector": "workspace:0.0.0",
-    "@quild/react": "workspace:0.0.0",
+    "@quild/m-ld-domain-selector": "workspace:0.0.1",
+    "@quild/react": "workspace:0.0.1",
     "classnames": "^2.2.5",
     "memory-level": "catalog:",
     "react": "^18.3.1",
