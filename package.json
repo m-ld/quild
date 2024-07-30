@@ -1,4 +1,5 @@
 {
+  "private": true,
   "packageManager": "pnpm@9.5.0",
   "engines": {
     "node": "20||22"
@@ -6,12 +7,14 @@
   "scripts": {
     "test": "NODE_OPTIONS='--experimental-vm-modules --disable-warning=ExperimentalWarning' jest",
     "build": "pnpm --filter './packages/*' run build",
+    "build:dev": "pnpm --filter './packages/*' run build:dev",
     "dev": "pnpm --filter './packages/*' --parallel run dev",
     "clean": "pnpm --filter './packages/*' run clean",
     "lint": "eslint .",
     "typecheck": "pnpm --filter './packages/*' run typecheck",
     "knip": "knip",
-    "examples": "pnpm build && pnpm --filter './examples/*' run dev"
+    "examples": "pnpm build && pnpm --filter './examples/*' run dev",
+    "changeset": "changeset"
   },
   "pnpm": {
     "overrides": {
@@ -41,5 +44,8 @@
     "ts-jest": "catalog:",
     "ts-node": "catalog:",
     "typescript": "catalog:"
+  },
+  "dependencies": {
+    "@changesets/cli": "^2.27.7"
   }
 }

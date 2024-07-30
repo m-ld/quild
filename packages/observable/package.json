@@ -1,11 +1,22 @@
 {
   "name": "@quild/observable",
   "version": "0.0.0-alpha.1",
-  "description": "",
+  "description": "Quild queries as RxJS observables.",
   "author": "Petra Jaros <peeja@peeja.com>",
   "license": "MIT",
-  "keywords": [],
-  "packageManager": "pnpm@9.4.0+sha256.b6fd0bfda555e7e584ad7e56b30c68b01d5a04f9ee93989f4b93ca8473c49c74",
+  "keywords": [
+    "quild",
+    "json-ld",
+    "rdf",
+    "query",
+    "m-ld",
+    "observable",
+    "observables",
+    "rxjs"
+  ],
+  "homepage": "https://github.com/m-ld/quild",
+  "repository": "github:m-ld/quild",
+  "bugs": "https://github.com/m-ld/quild/issues",
   "engines": {
     "node": "20||22"
   },
@@ -23,16 +34,17 @@
     "dist"
   ],
   "scripts": {
-    "test": "NODE_OPTIONS='--experimental-vm-modules --disable-warning=ExperimentalWarning' jest",
-    "build": "tsup",
-    "dev": "tsup --watch",
+    "test": "jest",
+    "build": "tsup --tsconfig tsconfig.build.json",
+    "build:dev": "tsup --tsconfig tsconfig.dev.json",
+    "dev": "pnpm build:dev --watch",
     "clean": "rm -rf dist *.tsbuildinfo",
     "typecheck": "tsc --project tsconfig.dev.json"
   },
   "devDependencies": {
     "@jest/globals": "catalog:",
     "@jest/types": "catalog:",
-    "@quild/config-base": "workspace:",
+    "@quild/config-base": "workspace:0.0.0-alpha.1",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "jest": "catalog:",
@@ -46,7 +58,7 @@
   },
   "dependencies": {
     "@m-ld/m-ld": "catalog:",
-    "@quild/core": "workspace:",
+    "@quild/core": "workspace:0.0.0-alpha.1",
     "rxjs": "catalog:"
   },
   "peerDependencies": {
