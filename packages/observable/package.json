@@ -1,6 +1,6 @@
 {
   "name": "@quild/observable",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Quild queries as RxJS observables.",
   "author": "Petra Jaros <peeja@peeja.com>",
   "license": "MIT",
@@ -59,7 +59,7 @@
   },
   "dependencies": {
     "@m-ld/m-ld": "catalog:",
-    "@quild/core": "workspace:0.0.0",
+    "@quild/core": "workspace:0.0.1",
     "rxjs": "catalog:"
   },
   "peerDependencies": {
