@@ -1,6 +1,5 @@
 {
   "name": "todomvc-react",
-  "version": "1.0.0",
   "description": "A TodoMVC written in React.",
   "private": true,
   "engines": {
