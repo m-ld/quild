@@ -1,6 +1,6 @@
 {
   "name": "@quild/m-ld-domain-selector",
-  "version": "0.0.0-alpha.1",
+  "version": "0.0.0",
   "description": "A Web Component which connects to m-ld domains with a UI widget.",
   "author": "Petra Jaros <peeja@peeja.com>",
   "license": "MIT",
