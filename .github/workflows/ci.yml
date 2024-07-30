@@ -1,0 +1,92 @@
+name: 🌀 CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+env:
+  GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+  NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [20.x, 22.x]
+
+    steps:
+      - name: 📦 Enable Corepack
+        run: corepack enable
+
+      - name: ⬇️ Checkout
+        uses: actions/checkout@v4
+
+      - name: 🥡 Set up pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: 🟢 Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "pnpm"
+
+      - name: 🧩 Install dependencies
+        run: pnpm install
+
+      - name: 🏗️ Build packages
+        run: pnpm build
+
+      - name: 🕵️ Lint
+        run: pnpm lint
+
+      - name: 🧪 Test
+        run: pnpm test
+
+      # Disabled until we can get Knip running cleanly.
+      # - name: Knip
+      #   run: pnpm knip
+
+  release:
+    needs: check
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+    strategy:
+      matrix:
+        node-version: [22.x]
+
+    steps:
+      - name: 📦 Enable Corepack
+        run: corepack enable
+
+      - name: ⬇️ Checkout
+        uses: actions/checkout@v4
+
+      - name: 🥡 Set up pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: 🟢 Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "pnpm"
+
+      - name: 🧩 Install dependencies
+        run: pnpm install
+
+      - name: 🏗️ Build packages
+        run: pnpm build
+
+      - name: 📣 Create Release Pull Request or Publish to npm
+        uses: changesets/action@v1
+        with:
+          commit: "Version packages 🦋 [skip ci]"
+          title: "Version packages 🦋"
+        env:
+          GITHUB_TOKEN: ${{ env.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ env.NPM_TOKEN }}

@@ -20,7 +20,8 @@
   "browser": "dist/index.js",
   "scripts": {
     "build": "tsc --project tsconfig.build.json",
-    "dev": "tsc --project tsconfig.build.json --watch",
+    "build:dev": "tsc --project tsconfig.dev.json",
+    "dev": "pnpm build:dev --watch",
     "clean": "rm -rf dist *.tsbuildinfo",
     "lint": "eslint .",
     "typecheck": "tsc --project tsconfig.dev.json",

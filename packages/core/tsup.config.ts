@@ -1,8 +1,8 @@
 import { defineConfig } from "tsup";
 
-export default defineConfig({
+export default defineConfig(({ tsconfig }) => ({
   entry: ["src/index.ts", "src/m-ld/index.ts"],
   sourcemap: true,
   format: ["cjs", "esm"],
-  onSuccess: "tsc --project tsconfig.build.json",
-});
+  onSuccess: `tsc ${tsconfig ? `--project ${tsconfig}` : ""}`,
+}));

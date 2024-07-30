@@ -37,8 +37,9 @@
   ],
   "scripts": {
     "test": "jest",
-    "build": "tsup",
-    "dev": "tsup --watch",
+    "build": "tsup --tsconfig tsconfig.build.json",
+    "build:dev": "tsup --tsconfig tsconfig.dev.json",
+    "dev": "pnpm build:dev --watch",
     "clean": "rm -rf dist *.tsbuildinfo",
     "typecheck": "tsc --project tsconfig.dev.json",
     "fetch-fixtures": "sh fixtures/fetchSwapiData.bash"
