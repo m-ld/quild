@@ -3,5 +3,8 @@
 
 // These functions allow a *.type-test.ts file to take the form of a test file.
 
-export declare function describe(name: unknown, fn: () => void): void;
-export declare function it(name: unknown, fn: () => void): void;
+export declare function describe(
+  name: unknown,
+  fn: () => void | Promise<void>
+): void;
+export declare function it(name: unknown, fn: () => void | Promise<void>): void;

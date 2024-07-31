@@ -56,4 +56,28 @@ describe("QueryResult", () => {
       }>
     >();
   });
+
+  it("expands Node Object Keys which are Terms", async () => {
+    const result = await withPropertyTypes<{
+      "http://swapi.dev/documentation#name": string;
+      "http://swapi.dev/documentation#height": number;
+    }>().queryResult({
+      "@context": {
+        name: "http://swapi.dev/documentation#name",
+      },
+      name: "?",
+      height: "?",
+    } as const);
+
+    expectTypeOf<keyof typeof result>().toEqualTypeOf<
+      "@context" | "name" | "height"
+    >();
+    expectTypeOf(result["@context"]).toEqualTypeOf<
+      ReadonlyDeep<{
+        name: "http://swapi.dev/documentation#name";
+      }>
+    >();
+    expectTypeOf(result.name).toEqualTypeOf<string>();
+    expectTypeOf(result.height).toEqualTypeOf<unknown>();
+  });
 });
