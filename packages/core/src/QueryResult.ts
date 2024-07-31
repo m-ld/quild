@@ -25,11 +25,12 @@
 //
 // - A "Key" is any key of some concrete, actual object. In a Node Object, a Key
 //   is either an Absolute IRI, a Compact IRI, a Term valid in the active
-//   Context a Keyword (like "@context"), or ignored by the algorithm. If it
-//   contains a colon, if its prefix is a Term in the active Context, it is
-//   expanded as a Compact IRI; otherwise, it is an Absolute IRI. If it does not
-//   contain a colon, if it is a Term in the active Context, it is expanded as a
-//   Term; otherwise, it is ignored.
+//   Context a Keyword (like "@context"), a Relative IRI, or ignored by the
+//   algorithm. If it contains a colon, if its prefix is a Term in the active
+//   Context, it is expanded as a Compact IRI; otherwise, it is an Absolute IRI.
+//   If it does not contain a colon, if it is a Term in the active Context, it
+//   is expanded as a Term; otherwise, if there is a vocabulary mapping, it is
+//   resolved relative to that; or, failing all of that, it is ignored.
 
 type Placeholder = "?";
 
@@ -49,14 +50,7 @@ type ContextOf<Query> = "@context" extends keyof Query
     : EmptyContext
   : EmptyContext;
 
-/**
- * Expand {@link Term} to an Absolute IRI under the given {@link Context}.
- */
-type ExpandedTerm<Term, Context> = Term extends keyof Context
-  ? Context[Term]
-  : Term;
-
-type ExpandedKey<Key, Context extends ContextConstraint> =
+type ExpandedKey<Key extends string, Context extends ContextConstraint> =
   // If the Key is a Prefixed IRI...
   Key extends Iri<infer Prefix, infer Rest>
     ? // If the Key is a Compact IRI...
@@ -67,7 +61,12 @@ type ExpandedKey<Key, Context extends ContextConstraint> =
         Key
     : // Else (the Key is un-prefixed), if it is a Term in the Context...
     Key extends keyof Context
-    ? Context[Key]
+    ? // Expand it as that Term.
+      Context[Key]
+    : // Else, if there is a vocabulary mapping...
+    Context["@vocab"] extends string
+    ? // Expand it as a Relative IRI.
+      `${Context["@vocab"]}${Key}`
     : // Else, it is an unknown key. Leave it alone.
       Key;
 
@@ -76,7 +75,7 @@ type ExpandedKey<Key, Context extends ContextConstraint> =
  * {@link Context}, get the type of the value of the property it represents.
  */
 type TypeOfPropertyAtKey<
-  Key,
+  Key extends string,
   Context extends ContextConstraint,
   PropertyTypes
 > = ExpandedKey<Key, Context> extends infer Property
@@ -91,7 +90,7 @@ export type QueryResult<Query, PropertyTypes> =
       // that here.
       Context extends ContextConstraint
       ? {
-          [Key in keyof Query]: Query[Key] extends Placeholder
+          [Key in keyof Query & string]: Query[Key] extends Placeholder
             ? TypeOfPropertyAtKey<Key, Context, PropertyTypes>
             : Query[Key];
         }
