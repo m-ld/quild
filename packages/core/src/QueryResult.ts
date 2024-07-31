@@ -33,18 +33,53 @@
 
 type Placeholder = "?";
 
-type ContextOf<Query> = "@context" extends keyof Query
-  ? Query["@context"]
-  : object;
+type Iri<Prefix extends string, Rest extends string> = `${Prefix}:${Rest}`;
 
+/**
+ * A constraint type for Contexts.
+ */
+// TODO: So far, we only handle string values for Term definitions in @context.
+type ContextConstraint = Record<string, string>;
+
+type EmptyContext = Record<never, never>;
+
+type ContextOf<Query> = "@context" extends keyof Query
+  ? Query["@context"] extends ContextConstraint
+    ? Query["@context"]
+    : EmptyContext
+  : EmptyContext;
+
+/**
+ * Expand {@link Term} to an Absolute IRI under the given {@link Context}.
+ */
 type ExpandedTerm<Term, Context> = Term extends keyof Context
   ? Context[Term]
   : Term;
 
-type TypeOfProperty<Key, Context, PropertyTypes> = ExpandedTerm<
+type ExpandedKey<Key, Context extends ContextConstraint> =
+  // If the Key is a Prefixed IRI...
+  Key extends Iri<infer Prefix, infer Rest>
+    ? // If the Key is a Compact IRI...
+      Prefix extends keyof Context
+      ? // Expand it to an Absolute IRI.
+        `${Context[Prefix]}${Rest}`
+      : // Else, it is an Absolute IRI already.
+        Key
+    : // Else (the Key is un-prefixed), if it is a Term in the Context...
+    Key extends keyof Context
+    ? Context[Key]
+    : // Else, it is an unknown key. Leave it alone.
+      Key;
+
+/**
+ * For the given {@link Key} from a Node Object with the Active Context
+ * {@link Context}, get the type of the value of the property it represents.
+ */
+type TypeOfPropertyAtKey<
   Key,
-  Context
-> extends infer Property
+  Context extends ContextConstraint,
+  PropertyTypes
+> = ExpandedKey<Key, Context> extends infer Property
   ? Property extends keyof PropertyTypes
     ? PropertyTypes[Property]
     : unknown
@@ -52,9 +87,13 @@ type TypeOfProperty<Key, Context, PropertyTypes> = ExpandedTerm<
 
 export type QueryResult<Query, PropertyTypes> =
   ContextOf<Query> extends infer Context
-    ? {
-        [Key in keyof Query]: Query[Key] extends Placeholder
-          ? TypeOfProperty<Key, Context, PropertyTypes>
-          : Query[Key];
-      }
+    ? // Context is always a ContextDefinition already, but TypeScript doesn't know
+      // that here.
+      Context extends ContextConstraint
+      ? {
+          [Key in keyof Query]: Query[Key] extends Placeholder
+            ? TypeOfPropertyAtKey<Key, Context, PropertyTypes>
+            : Query[Key];
+        }
+      : never
     : never;

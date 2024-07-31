@@ -7,4 +7,8 @@ export declare function describe(
   name: unknown,
   fn: () => void | Promise<void>
 ): void;
-export declare function it(name: unknown, fn: () => void | Promise<void>): void;
+
+export declare const it: {
+  (name: unknown, fn: () => void | Promise<void>): void;
+  todo: (name: unknown) => void;
+};

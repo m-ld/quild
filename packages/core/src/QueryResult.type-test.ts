@@ -80,4 +80,48 @@ describe("QueryResult", () => {
     expectTypeOf(result.name).toEqualTypeOf<string>();
     expectTypeOf(result.height).toEqualTypeOf<unknown>();
   });
+
+  it("expands Node Object Keys which are Terms", async () => {
+    const result = await withPropertyTypes<{
+      "http://swapi.dev/documentation#name": string;
+      "http://swapi.dev/documentation#height": number;
+    }>().queryResult({
+      "@context": {
+        name: "http://swapi.dev/documentation#name",
+      },
+      name: "?",
+      height: "?",
+    } as const);
+
+    expectTypeOf<keyof typeof result>().toEqualTypeOf<
+      "@context" | "name" | "height"
+    >();
+    expectTypeOf(result["@context"]).toEqualTypeOf<
+      (typeof result)["@context"]
+    >();
+    expectTypeOf(result.name).toEqualTypeOf<string>();
+    expectTypeOf(result.height).toEqualTypeOf<unknown>();
+  });
+
+  it("expands Node Object Keys which are Compact IRIs", async () => {
+    const result = await withPropertyTypes<{
+      "http://swapi.dev/documentation#name": string;
+      "http://swapi.dev/documentation#height": number;
+    }>().queryResult({
+      "@context": {
+        swapi: "http://swapi.dev/documentation#",
+      },
+      "swapi:name": "?",
+    } as const);
+
+    expectTypeOf<keyof typeof result>().toEqualTypeOf<
+      "@context" | "swapi:name"
+    >();
+    expectTypeOf(result["@context"]).toEqualTypeOf<
+      (typeof result)["@context"]
+    >();
+    expectTypeOf(result["swapi:name"]).toEqualTypeOf<string>();
+  });
+
+  it.todo("handle term definitions in @context that aren't strings");
 });
