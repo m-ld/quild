@@ -67,6 +67,7 @@ export default [
         {
           devDependencies: [
             "packages/*/src/**/*.test.[jt]s?(x)",
+            "packages/*/src/**/*.type-test.[jt]s?(x)",
             "packages/*/src/test-util/**/*.[jt]s?(x)",
             "packages/*/*",
             "*",
@@ -211,6 +212,11 @@ export default [
       "@typescript-eslint/no-unnecessary-condition": [
         "warn",
         { allowConstantLoopConditions: true },
+      ],
+
+      "@typescript-eslint/no-invalid-void-type": [
+        "error",
+        { allowAsThisParameter: true },
       ],
     },
   },
