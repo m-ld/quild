@@ -37,7 +37,6 @@
     "README.md"
   ],
   "scripts": {
-    "test": "jest",
     "build": "tsup --tsconfig tsconfig.build.json",
     "build:dev": "tsup --tsconfig tsconfig.dev.json",
     "dev": "pnpm build:dev --watch",

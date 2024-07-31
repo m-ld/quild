@@ -35,7 +35,6 @@
     "README.md"
   ],
   "scripts": {
-    "test": "NODE_OPTIONS='--experimental-vm-modules --disable-warning=ExperimentalWarning' jest",
     "build": "tsup --tsconfig tsconfig.build.json",
     "build:dev": "tsup --tsconfig tsconfig.dev.json",
     "dev": "pnpm build:dev --watch",

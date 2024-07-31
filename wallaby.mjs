@@ -3,8 +3,7 @@ export default function () {
   return {
     env: {
       params: {
-        runner:
-          "--experimental-vm-modules --disable-warning=ExperimentalWarning",
+        runner: "pnpm exec node",
       },
     },
   };
