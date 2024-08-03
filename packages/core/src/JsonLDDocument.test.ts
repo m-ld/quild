@@ -352,6 +352,60 @@ describe("JsonLDDocument", () => {
         ],
       ]);
     });
+
+    it("accepts top-level graph objects", () => {
+      const code = /* ts */ `
+        ${setup}
+
+        withPropertyTypes<PT>().document({
+          "@context": {
+            "@vocab": "http://swapi.dev/documentation#",
+            schema: "http://schema.org/",
+          } as const,
+          "@graph": [
+            {
+              title: "A New Hope",
+              "schema:description": "The one that started it all.",
+              "schema:nonsense": "lorem ipsum dolor sit amet",
+            },
+            {
+              title: 234,
+              "schema:description": 345,
+              "schema:nonsense": 456,
+            },
+          ],
+        });
+      `;
+
+      const service = languageService(code);
+
+      expect(
+        service
+          .getSemanticDiagnostics(FILE_NAME)
+          .map((d) => [d.start, d.messageText])
+      ).toEqual([
+        [
+          code.indexOf(`"schema:nonsense": "lorem`),
+          expect.stringMatching(
+            /^Type 'string' has no properties in common with type/
+          ),
+        ],
+        [
+          code.indexOf("title: 234"),
+          "Type 'number' is not assignable to type 'string'.",
+        ],
+        [
+          code.indexOf(`"schema:description": 345`),
+          "Type 'number' is not assignable to type 'string'.",
+        ],
+        [
+          code.indexOf(`"schema:nonsense": 456`),
+          expect.stringMatching(
+            /^Type 'number' has no properties in common with type/
+          ),
+        ],
+      ]);
+    });
   });
 
   describe("completions", () => {
@@ -523,6 +577,43 @@ describe("JsonLDDocument", () => {
       expect(
         (completions?.entries ?? []).map((c) => c.name).toSorted()
       ).toEqual([
+        '"@id"',
+        '"@type"',
+        '"schema:alternateName"',
+        '"schema:description"',
+        "films",
+        "height",
+        "homeworld",
+        "mass",
+        "name",
+        "schema",
+        "title",
+      ]);
+    });
+
+    it("completes top-level graph objects", () => {
+      const code = /* ts */ `
+        ${setup}
+
+        withPropertyTypes<PT>().document({
+          "@context": {
+            "@vocab": "http://swapi.dev/documentation#",
+            schema: "http://schema.org/",
+          } as const,
+          "@graph": [
+            {
+              /*|*/
+            }
+          ],
+        });
+      `;
+
+      const completions = getCompletions(code);
+
+      expect(
+        (completions?.entries ?? []).map((c) => c.name).toSorted()
+      ).toEqual([
+        '"@context"',
         '"@id"',
         '"@type"',
         '"schema:alternateName"',

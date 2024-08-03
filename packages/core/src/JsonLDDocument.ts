@@ -38,11 +38,14 @@ type Const<T> = IsLiteralDeep<T> extends true
 
 type Keyword = `@${string}`;
 
-interface NodeObjectKeywords<Self> {
+interface Contexted<Self> {
   "@context"?: "@context" extends keyof Self ? Const<Self["@context"]> : never;
+}
+
+type NodeObjectKeywords<Self> = Contexted<Self> & {
   "@id"?: string;
   "@type"?: string;
-}
+};
 
 /**
  * The Compact IRIs which can expand under the given {@link Context} to a known
@@ -131,12 +134,32 @@ type NodeObject<PropertyTypes, OuterContext extends ContextConstraint, Self> =
     : // /infer ActiveContext
       never;
 
+type TopLevelGraphObject<
+  PropertyTypes,
+  OuterContext extends ContextConstraint,
+  Self extends { "@graph": unknown[] }
+> = PropagatedContext<OuterContext, ContextOf<Self>> extends ValidContext<
+  infer ActiveContext
+>
+  ? Contexted<Self> & {
+      "@graph": {
+        [I in keyof Self["@graph"] & number]: NodeObject<
+          PropertyTypes,
+          ActiveContext,
+          Self["@graph"][I]
+        >;
+      };
+    }
+  : never;
+
 type JsonLDDocumentInternal<
   PropertyTypes,
   OuterContext extends ContextConstraint,
   Self
 > = Self extends unknown[]
   ? { [I in keyof Self]: NodeObject<PropertyTypes, OuterContext, Self[I]> }
+  : Self extends { "@graph": unknown[] }
+  ? TopLevelGraphObject<PropertyTypes, OuterContext, Self>
   : NodeObject<PropertyTypes, OuterContext, Self>;
 
 export type JsonLDDocument<
