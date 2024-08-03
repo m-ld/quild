@@ -71,8 +71,76 @@ const getCompletions = (code: string) => {
 };
 
 describe("JsonLDDocument", () => {
-  it("completes `@context`", () => {
-    const code = /* ts */ `
+  describe("acceptance", () => {
+    it("accepts known IRI properties", () => {
+      const code = /* ts */ `
+      ${setup}
+
+      withPropertyTypes<PT>().document({
+        "http://swapi.dev/documentation#height": 123,
+      });
+    `;
+
+      const service = languageService(code);
+
+      expect(service.getSemanticDiagnostics(FILE_NAME)).toEqual([]);
+    });
+
+    it("accepts unknown IRI properties", () => {
+      const code = /* ts */ `
+      ${setup}
+
+      withPropertyTypes<PT>().document({
+        "http://www.example.com/unknown": 1,
+      });
+    `;
+
+      const service = languageService(code);
+
+      expect(service.getSemanticDiagnostics(FILE_NAME)).toEqual([]);
+    });
+
+    it("rejects known IRI properties with wrong type", () => {
+      const code = /* ts */ `
+      ${setup}
+
+      withPropertyTypes<PT>().document({
+        "http://swapi.dev/documentation#height": "a",
+      });
+    `;
+
+      const service = languageService(code);
+
+      expect(
+        service.getSemanticDiagnostics(FILE_NAME).map((d) => d.messageText)
+      ).toEqual(["Type 'string' is not assignable to type 'number'."]);
+    });
+
+    it("expands Node Object Keys which are Terms", () => {
+      const code = /* ts */ `
+      ${setup}
+
+      withPropertyTypes<PT>().document({
+        "@context": {
+          name: "http://swapi.dev/documentation#name",
+          name2: "http://swapi.dev/documentation#name",
+        } as const,
+        name: "Luke Skywalker",
+        name2: 123,
+      });
+    `;
+
+      const service = languageService(code);
+
+      expect(
+        service.getSemanticDiagnostics(FILE_NAME).map((d) => d.messageText)
+      ).toEqual(["Type 'number' is not assignable to type 'string'."]);
+    });
+  });
+
+  describe("completions", () => {
+    it("completes `@context`", () => {
+      const code = /* ts */ `
       ${setup}
 
       withPropertyTypes<PT>().document({
@@ -80,21 +148,21 @@ describe("JsonLDDocument", () => {
       });
     `;
 
-    const completions = getCompletions(code);
+      const completions = getCompletions(code);
 
-    expect(completions).toMatchObject({
-      entries: [
-        expect.objectContaining({
-          name: `"@context"`,
-          kind: "property",
-          kindModifiers: "optional",
-        }),
-      ],
+      expect(completions).toMatchObject({
+        entries: [
+          expect.objectContaining({
+            name: `"@context"`,
+            kind: "property",
+            kindModifiers: "optional",
+          }),
+        ],
+      });
     });
-  });
 
-  it("completes terms from the @context", () => {
-    const code = /* ts */ `
+    it("completes terms from the @context", () => {
+      const code = /* ts */ `
       ${setup}
 
       withPropertyTypes<PT>().document({
@@ -105,60 +173,17 @@ describe("JsonLDDocument", () => {
       });
     `;
 
-    const completions = getCompletions(code);
+      const completions = getCompletions(code);
 
-    expect(completions).toMatchObject({
-      entries: [
-        expect.objectContaining({
-          name: "height",
-          kind: "property",
-          kindModifiers: "optional",
-        }),
-      ],
+      expect(completions).toMatchObject({
+        entries: [
+          expect.objectContaining({
+            name: "height",
+            kind: "property",
+            kindModifiers: "optional",
+          }),
+        ],
+      });
     });
-  });
-
-  it("accepts known IRI properties", () => {
-    const code = /* ts */ `
-      ${setup}
-
-      withPropertyTypes<PT>().document({
-        "http://swapi.dev/documentation#height": 123,
-      });
-    `;
-
-    const service = languageService(code);
-
-    expect(service.getSemanticDiagnostics(FILE_NAME)).toEqual([]);
-  });
-
-  it("accepts unknown IRI properties", () => {
-    const code = /* ts */ `
-      ${setup}
-
-      withPropertyTypes<PT>().document({
-        "http://www.example.com/unknown": 1,
-      });
-    `;
-
-    const service = languageService(code);
-
-    expect(service.getSemanticDiagnostics(FILE_NAME)).toEqual([]);
-  });
-
-  it("rejects known IRI properties with wrong type", () => {
-    const code = /* ts */ `
-      ${setup}
-
-      withPropertyTypes<PT>().document({
-        "http://swapi.dev/documentation#height": "a",
-      });
-    `;
-
-    const service = languageService(code);
-
-    expect(
-      service.getSemanticDiagnostics(FILE_NAME).map((d) => d.messageText)
-    ).toEqual(["Type 'string' is not assignable to type 'number'."]);
   });
 });
