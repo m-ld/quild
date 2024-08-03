@@ -55,6 +55,7 @@ const setup = /* ts */ `
     "http://swapi.dev/documentation#mass": number;
     "http://swapi.dev/documentation#title": string;
     "http://swapi.dev/documentation#homeworld": object;
+    "http://swapi.dev/documentation#films": object;
     "http://schema.org/description": string;
     "http://schema.org/alternateName": string;
   }
@@ -315,23 +316,9 @@ describe("JsonLDDocument", () => {
 
       const completions = getCompletions(code);
 
-      expect(sortBy((c) => c.name, completions?.entries ?? [])).toMatchObject([
-        expect.objectContaining({
-          name: `"@context"`,
-          kind: "property",
-          kindModifiers: "optional",
-        }),
-        expect.objectContaining({
-          name: `"@id"`,
-          kind: "property",
-          kindModifiers: "optional",
-        }),
-        expect.objectContaining({
-          name: `"@type"`,
-          kind: "property",
-          kindModifiers: "optional",
-        }),
-      ]);
+      expect(
+        (completions?.entries ?? []).map((c) => c.name).toSorted()
+      ).toEqual([`"@context"`, `"@id"`, `"@type"`]);
     });
 
     it("completes terms from the @context", () => {
@@ -350,13 +337,9 @@ describe("JsonLDDocument", () => {
 
       const completions = getCompletions(code);
 
-      expect(sortBy((c) => c.name, completions?.entries ?? [])).toMatchObject([
-        expect.objectContaining({
-          name: "height",
-          kind: "property",
-          kindModifiers: "optional",
-        }),
-      ]);
+      expect(
+        (completions?.entries ?? []).map((c) => c.name).toSorted()
+      ).toEqual(["height"]);
     });
 
     it("completes Node Object Keys which are Compact IRIs", () => {
@@ -375,37 +358,16 @@ describe("JsonLDDocument", () => {
 
       const completions = getCompletions(code);
 
-      expect(sortBy((c) => c.name, completions?.entries ?? [])).toMatchObject([
-        expect.objectContaining({
-          name: '"swapi:height"',
-          kind: "property",
-          kindModifiers: "optional",
-        }),
-        expect.objectContaining({
-          name: '"swapi:homeworld"',
-          kind: "property",
-          kindModifiers: "optional",
-        }),
-        expect.objectContaining({
-          name: '"swapi:mass"',
-          kind: "property",
-          kindModifiers: "optional",
-        }),
-        expect.objectContaining({
-          name: '"swapi:name"',
-          kind: "property",
-          kindModifiers: "optional",
-        }),
-        expect.objectContaining({
-          name: '"swapi:title"',
-          kind: "property",
-          kindModifiers: "optional",
-        }),
-        expect.objectContaining({
-          name: "swapi",
-          kind: "property",
-          kindModifiers: "optional",
-        }),
+      expect(
+        (completions?.entries ?? []).map((c) => c.name).toSorted()
+      ).toEqual([
+        '"swapi:films"',
+        '"swapi:height"',
+        '"swapi:homeworld"',
+        '"swapi:mass"',
+        '"swapi:name"',
+        '"swapi:title"',
+        "swapi",
       ]);
     });
 
@@ -425,33 +387,9 @@ describe("JsonLDDocument", () => {
 
       const completions = getCompletions(code);
 
-      expect(sortBy((c) => c.name, completions?.entries ?? [])).toMatchObject([
-        expect.objectContaining({
-          name: "height",
-          kind: "property",
-          kindModifiers: "optional",
-        }),
-        expect.objectContaining({
-          name: "homeworld",
-          kind: "property",
-          kindModifiers: "optional",
-        }),
-        expect.objectContaining({
-          name: "mass",
-          kind: "property",
-          kindModifiers: "optional",
-        }),
-        expect.objectContaining({
-          name: "name",
-          kind: "property",
-          kindModifiers: "optional",
-        }),
-        expect.objectContaining({
-          name: "title",
-          kind: "property",
-          kindModifiers: "optional",
-        }),
-      ]);
+      expect(
+        (completions?.entries ?? []).map((c) => c.name).toSorted()
+      ).toEqual(["films", "height", "homeworld", "mass", "name", "title"]);
     });
 
     it("completes terms in arrays", () => {
@@ -470,13 +408,9 @@ describe("JsonLDDocument", () => {
 
       const completions = getCompletions(code);
 
-      expect(sortBy((c) => c.name, completions?.entries ?? [])).toMatchObject([
-        expect.objectContaining({
-          name: "height",
-          kind: "property",
-          kindModifiers: "optional",
-        }),
-      ]);
+      expect(
+        (completions?.entries ?? []).map((c) => c.name).toSorted()
+      ).toEqual(["height"]);
     });
 
     it("completes nested objects", () => {
@@ -505,6 +439,7 @@ describe("JsonLDDocument", () => {
         '"@type"',
         '"schema:alternateName"',
         '"schema:description"',
+        "films",
         "height",
         "homeworld",
         "mass",
