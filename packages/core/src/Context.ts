@@ -1,7 +1,7 @@
 export type Iri<
-  Prefix extends string,
-  Rest extends string
-> = `${Prefix}:${Rest}`;
+  Prefix extends string = string,
+  Suffix extends string = string
+> = `${Prefix}:${Suffix}`;
 
 /**
  * A constraint type for Contexts.
