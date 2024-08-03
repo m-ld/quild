@@ -12,6 +12,9 @@ import type {
   ValueOf,
 } from "type-fest";
 
+/* eslint-disable-next-line @typescript-eslint/no-explicit-any
+   --
+   Necessary for fun TypeScript tricks. */
 type NoInfer<T> = [T][T extends any ? 0 : never];
 
 type IsLiteralDeep<T> = T extends Primitive
