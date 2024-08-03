@@ -4,6 +4,7 @@ import path from "node:path";
 import * as url from "node:url";
 
 import { describe, it, expect } from "@jest/globals";
+import { sortBy } from "rambdax";
 import * as ts from "typescript";
 
 const require = nodeModule.createRequire(import.meta.url);
@@ -221,15 +222,13 @@ describe("JsonLDDocument", () => {
 
       const completions = getCompletions(code);
 
-      expect(completions).toMatchObject({
-        entries: [
-          expect.objectContaining({
-            name: `"@context"`,
-            kind: "property",
-            kindModifiers: "optional",
-          }),
-        ],
-      });
+      expect(sortBy((c) => c.name, completions?.entries ?? [])).toMatchObject([
+        expect.objectContaining({
+          name: `"@context"`,
+          kind: "property",
+          kindModifiers: "optional",
+        }),
+      ]);
     });
 
     it("completes terms from the @context", () => {
@@ -246,15 +245,13 @@ describe("JsonLDDocument", () => {
 
       const completions = getCompletions(code);
 
-      expect(completions).toMatchObject({
-        entries: [
-          expect.objectContaining({
-            name: "height",
-            kind: "property",
-            kindModifiers: "optional",
-          }),
-        ],
-      });
+      expect(sortBy((c) => c.name, completions?.entries ?? [])).toMatchObject([
+        expect.objectContaining({
+          name: "height",
+          kind: "property",
+          kindModifiers: "optional",
+        }),
+      ]);
     });
 
     it("completes Node Object Keys which are Compact IRIs", () => {
@@ -271,35 +268,33 @@ describe("JsonLDDocument", () => {
 
       const completions = getCompletions(code);
 
-      expect(completions).toMatchObject({
-        entries: [
-          expect.objectContaining({
-            name: '"swapi:height"',
-            kind: "property",
-            kindModifiers: "optional",
-          }),
-          expect.objectContaining({
-            name: '"swapi:mass"',
-            kind: "property",
-            kindModifiers: "optional",
-          }),
-          expect.objectContaining({
-            name: '"swapi:name"',
-            kind: "property",
-            kindModifiers: "optional",
-          }),
-          expect.objectContaining({
-            name: '"swapi:title"',
-            kind: "property",
-            kindModifiers: "optional",
-          }),
-          expect.objectContaining({
-            name: "swapi",
-            kind: "property",
-            kindModifiers: "optional",
-          }),
-        ],
-      });
+      expect(sortBy((c) => c.name, completions?.entries ?? [])).toMatchObject([
+        expect.objectContaining({
+          name: '"swapi:height"',
+          kind: "property",
+          kindModifiers: "optional",
+        }),
+        expect.objectContaining({
+          name: '"swapi:mass"',
+          kind: "property",
+          kindModifiers: "optional",
+        }),
+        expect.objectContaining({
+          name: '"swapi:name"',
+          kind: "property",
+          kindModifiers: "optional",
+        }),
+        expect.objectContaining({
+          name: '"swapi:title"',
+          kind: "property",
+          kindModifiers: "optional",
+        }),
+        expect.objectContaining({
+          name: "swapi",
+          kind: "property",
+          kindModifiers: "optional",
+        }),
+      ]);
     });
   });
 });
