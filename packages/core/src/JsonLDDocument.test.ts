@@ -186,6 +186,27 @@ describe("JsonLDDocument", () => {
         service.getSemanticDiagnostics(FILE_NAME).map((d) => d.messageText)
       ).toEqual(["Type 'number' is not assignable to type 'string'."]);
     });
+
+    it("expands Node Object Keys which are Compact IRIs", () => {
+      const code = /* ts */ `
+      ${setup}
+
+      withPropertyTypes<PT>().document({
+        "@context": {
+          swapi: "http://swapi.dev/documentation#",
+          swapi2: "http://swapi.dev/documentation#",
+        } as const,
+        "swapi:name": "Luke Skywalker",
+        "swapi2:name": 123,
+      });
+    `;
+
+      const service = languageService(code);
+
+      expect(
+        service.getSemanticDiagnostics(FILE_NAME).map((d) => d.messageText)
+      ).toEqual(["Type 'number' is not assignable to type 'string'."]);
+    });
   });
 
   describe("completions", () => {

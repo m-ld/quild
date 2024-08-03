@@ -32,74 +32,15 @@
 //   is expanded as a Term; otherwise, if there is a vocabulary mapping, it is
 //   resolved relative to that; or, failing all of that, it is ignored.
 
+import type {
+  ContextConstraint,
+  ContextOf,
+  EmptyContext,
+  PropagatedContext,
+  TypeOfPropertyAtKey,
+} from "./Context";
+
 type Placeholder = "?";
-
-type Iri<Prefix extends string, Rest extends string> = `${Prefix}:${Rest}`;
-
-/**
- * A constraint type for Contexts.
- */
-// TODO: So far, we only handle string values for Term definitions in @context.
-type ContextConstraint = Record<string, string>;
-
-type EmptyContext = Record<never, never>;
-
-type ContextOf<Query> = "@context" extends keyof Query
-  ? Query["@context"] extends ContextConstraint
-    ? Query["@context"]
-    : EmptyContext
-  : EmptyContext;
-
-type ExpandedKey<Key extends string, Context extends ContextConstraint> =
-  // If the Key is a Prefixed IRI...
-  Key extends Iri<infer Prefix, infer Rest>
-    ? // If the Key is a Compact IRI...
-      Prefix extends keyof Context
-      ? // Expand it to an Absolute IRI.
-        `${Context[Prefix]}${Rest}`
-      : // Else, it is an Absolute IRI already.
-        Key
-    : // Else (the Key is un-prefixed), if it is a Term in the Context...
-    Key extends keyof Context
-    ? // Expand it as that Term.
-      Context[Key]
-    : // Else, if there is a vocabulary mapping...
-    Context["@vocab"] extends string
-    ? // Expand it as a Relative IRI.
-      `${Context["@vocab"]}${Key}`
-    : // Else, it is an unknown key. Leave it alone.
-      Key;
-
-/**
- * For the given {@link Key} from a Node Object with the Active Context
- * {@link Context}, get the type of the value of the property it represents.
- */
-type TypeOfPropertyAtKey<
-  Key extends string,
-  Context extends ContextConstraint,
-  PropertyTypes
-> = ExpandedKey<Key, Context> extends infer Property
-  ? Property extends keyof PropertyTypes
-    ? PropertyTypes[Property]
-    : unknown
-  : never;
-
-/**
- * Given a {@link ParentContext} and a {@link ChildContext} definition, a
- * Context which should be used as the active context for child.
- */
-type PropagatedContext<
-  ParentContext extends ContextConstraint,
-  ChildContext extends ContextConstraint
-> = {
-  [Key in
-    | keyof ParentContext
-    | keyof ChildContext]: Key extends keyof ChildContext
-    ? ChildContext[Key]
-    : Key extends keyof ParentContext
-    ? ParentContext[Key]
-    : never;
-};
 
 type NodeObjectResult<
   Query,
