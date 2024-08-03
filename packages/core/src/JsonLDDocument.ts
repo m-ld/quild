@@ -27,8 +27,13 @@ type IsLiteralDeep<T> = T extends Primitive
   : never;
 
 /** T, or an array of T, corresponding to whether Test is an array. */
-type MaybeArray<Test, T> = Test extends readonly unknown[] ? T[] : T;
-// type MaybeArray<T> = T | T[];
+type MaybeArray<Test, T> = Test extends readonly unknown[]
+  ? T[]
+  : Test extends { "@set": readonly unknown[] }
+  ? { "@set": T[] }
+  : Test extends { "@list": readonly unknown[] }
+  ? { "@list": T[] }
+  : T;
 
 type Const<T> = IsLiteralDeep<T> extends true
   ? T

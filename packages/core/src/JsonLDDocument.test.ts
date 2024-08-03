@@ -56,6 +56,7 @@ const setup = /* ts */ `
     "http://swapi.dev/documentation#title": string;
     "http://swapi.dev/documentation#homeworld": object;
     "http://swapi.dev/documentation#films": object;
+    "http://swapi.dev/documentation#vehicles": object;
     "http://schema.org/description": string;
     "http://schema.org/alternateName": string;
   }
@@ -67,14 +68,14 @@ const setup = /* ts */ `
   }
 `;
 
-const getCompletions = (code: string) => {
+const getCompletions = (code: string, marker = "/*|*/") => {
   const service = languageService(code);
 
   expect(
     service.getSemanticDiagnostics(FILE_NAME).map((d) => d.messageText)
   ).toEqual([]);
 
-  return service.getCompletionsAtPosition(FILE_NAME, code.indexOf("/*|*/"), {});
+  return service.getCompletionsAtPosition(FILE_NAME, code.indexOf(marker), {});
 };
 
 describe("JsonLDDocument", () => {
@@ -406,6 +407,49 @@ describe("JsonLDDocument", () => {
         ],
       ]);
     });
+
+    it("accepts `@set`s and `@list`s`", () => {
+      const code = /* ts */ `
+        ${setup}
+
+        withPropertyTypes<PT>().document({
+          "@context": {
+            "@vocab": "http://swapi.dev/documentation#",
+          } as const,
+          films: {
+            "@set": [
+              {
+                name: 123,
+              },
+            ],
+          },
+          vehicles: {
+            "@list": [
+              {
+                name: 234,
+              },
+            ],
+          },
+        });        
+      `;
+
+      const service = languageService(code);
+
+      expect(
+        service
+          .getSemanticDiagnostics(FILE_NAME)
+          .map((d) => [d.start, d.messageText])
+      ).toEqual([
+        [
+          code.indexOf("name: 123"),
+          "Type 'number' is not assignable to type 'string'.",
+        ],
+        [
+          code.indexOf("name: 234"),
+          "Type 'number' is not assignable to type 'string'.",
+        ],
+      ]);
+    });
   });
 
   describe("completions", () => {
@@ -471,6 +515,7 @@ describe("JsonLDDocument", () => {
         '"swapi:mass"',
         '"swapi:name"',
         '"swapi:title"',
+        '"swapi:vehicles"',
         "swapi",
       ]);
     });
@@ -493,7 +538,15 @@ describe("JsonLDDocument", () => {
 
       expect(
         (completions?.entries ?? []).map((c) => c.name).toSorted()
-      ).toEqual(["films", "height", "homeworld", "mass", "name", "title"]);
+      ).toEqual([
+        "films",
+        "height",
+        "homeworld",
+        "mass",
+        "name",
+        "title",
+        "vehicles",
+      ]);
     });
 
     it("completes terms in arrays", () => {
@@ -550,6 +603,7 @@ describe("JsonLDDocument", () => {
         "name",
         "schema",
         "title",
+        "vehicles",
       ]);
     });
 
@@ -588,6 +642,7 @@ describe("JsonLDDocument", () => {
         "name",
         "schema",
         "title",
+        "vehicles",
       ]);
     });
 
@@ -625,7 +680,57 @@ describe("JsonLDDocument", () => {
         "name",
         "schema",
         "title",
+        "vehicles",
       ]);
+    });
+
+    it("completes `@set`s and `@list`s`", () => {
+      const code = /* ts */ `
+        ${setup}
+
+        withPropertyTypes<PT>().document({
+          "@context": {
+            "@vocab": "http://swapi.dev/documentation#",
+          } as const,
+          films: {
+            "@set": [
+              {
+                /*1*/
+              },
+            ],
+          },
+          vehicles: {
+            "@list": [
+              {
+                /*2*/
+              },
+            ],
+          },
+        });        
+      `;
+
+      const completions1 = getCompletions(code, "/*1*/");
+      const completions2 = getCompletions(code, "/*2*/");
+
+      const expected = [
+        '"@context"',
+        '"@id"',
+        '"@type"',
+        "films",
+        "height",
+        "homeworld",
+        "mass",
+        "name",
+        "title",
+        "vehicles",
+      ];
+
+      expect(
+        (completions1?.entries ?? []).map((c) => c.name).toSorted()
+      ).toEqual(expected);
+      expect(
+        (completions2?.entries ?? []).map((c) => c.name).toSorted()
+      ).toEqual(expected);
     });
   });
 });
