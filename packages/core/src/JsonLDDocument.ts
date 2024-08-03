@@ -87,9 +87,7 @@ type NodeObject<PropertyTypes, OuterContext extends ContextConstraint, Self> =
   PropagatedContext<OuterContext, ContextOf<Self>> extends ValidContext<
     infer ActiveContext
   >
-    ? // NodeObjects may have...
-      // The built-in keywords:
-      NodeObjectKeywords<Self> & {
+    ? {
         // Any terms defined in the active context:
         // For each key K in the active context...
         [K in Exclude<
@@ -97,12 +95,7 @@ type NodeObject<PropertyTypes, OuterContext extends ContextConstraint, Self> =
           Keyword
         >]?: ActiveContext[K] extends keyof PropertyTypes // If K is an alias for a property with a known type, use that type.
           ? PropertyTypes[ActiveContext[K]]
-          : // Else, if K is in the object, it's a NodeObject
-          // (TODO: That's woefully incomplete)
-          K extends keyof Self
-          ? NodeObject<PropertyTypes, ActiveContext, Self[K]>
-          : // Lastly, if it's not in the object, it's not in the object.
-            never;
+          : never;
       } & CompactIriKeys<ActiveContext, PropertyTypes> &
         VocabMappedKeys<ActiveContext, PropertyTypes> & {
           // Any IRI keys already in the object, with a type if known:
@@ -111,7 +104,18 @@ type NodeObject<PropertyTypes, OuterContext extends ContextConstraint, Self> =
             ActiveContext,
             PropertyTypes
           >;
+        } extends infer Properties
+      ? NodeObjectKeywords<Self> & {
+          [K in keyof Properties]: object extends Properties[K]
+            ? NodeObject<
+                PropertyTypes,
+                ActiveContext,
+                K extends keyof Self ? Self[K] : object
+              >
+            : Properties[K];
         }
+      : // /infer Properties
+        never
     : // /infer ActiveContext
       never;
 

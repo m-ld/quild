@@ -54,7 +54,9 @@ const setup = /* ts */ `
     "http://swapi.dev/documentation#height": number;
     "http://swapi.dev/documentation#mass": number;
     "http://swapi.dev/documentation#title": string;
+    "http://swapi.dev/documentation#homeworld": object;
     "http://schema.org/description": string;
+    "http://schema.org/alternateName": string;
   }
 
   declare function withPropertyTypes<PropertyTypes>(): {
@@ -251,6 +253,54 @@ describe("JsonLDDocument", () => {
         service.getSemanticDiagnostics(FILE_NAME).map((d) => d.messageText)
       ).toEqual(["Type 'number' is not assignable to type 'string'."]);
     });
+
+    it("accepts nested objects", () => {
+      const code = /* ts */ `
+        ${setup}
+
+        withPropertyTypes<PT>().document({
+          "@context": {
+            "@vocab": "http://swapi.dev/documentation#",
+          } as const,
+          name: 123,
+          homeworld: {
+            "@context": {
+              schema: "http://schema.org/",
+            } as const,
+            name: 234,
+            "schema:description": 345,
+            "schema:nonsense": 456,
+          },
+        });
+      `;
+
+      const service = languageService(code);
+
+      expect(
+        service
+          .getSemanticDiagnostics(FILE_NAME)
+          .map((d) => [d.start, d.messageText])
+      ).toEqual([
+        [
+          code.indexOf("name: 123"),
+          "Type 'number' is not assignable to type 'string'.",
+        ],
+        [
+          code.indexOf("name: 234"),
+          "Type 'number' is not assignable to type 'string'.",
+        ],
+        [
+          code.indexOf(`"schema:description": 345`),
+          "Type 'number' is not assignable to type 'string'.",
+        ],
+        [
+          code.indexOf(`"schema:nonsense": 456`),
+          expect.stringMatching(
+            /^Type 'number' has no properties in common with type/
+          ),
+        ],
+      ]);
+    });
   });
 
   describe("completions", () => {
@@ -332,6 +382,11 @@ describe("JsonLDDocument", () => {
           kindModifiers: "optional",
         }),
         expect.objectContaining({
+          name: '"swapi:homeworld"',
+          kind: "property",
+          kindModifiers: "optional",
+        }),
+        expect.objectContaining({
           name: '"swapi:mass"',
           kind: "property",
           kindModifiers: "optional",
@@ -377,6 +432,11 @@ describe("JsonLDDocument", () => {
           kindModifiers: "optional",
         }),
         expect.objectContaining({
+          name: "homeworld",
+          kind: "property",
+          kindModifiers: "optional",
+        }),
+        expect.objectContaining({
           name: "mass",
           kind: "property",
           kindModifiers: "optional",
@@ -416,6 +476,41 @@ describe("JsonLDDocument", () => {
           kind: "property",
           kindModifiers: "optional",
         }),
+      ]);
+    });
+
+    it("completes nested objects", () => {
+      const code = /* ts */ `
+        ${setup}
+
+        withPropertyTypes<PT>().document({
+          "@context": {
+            "@vocab": "http://swapi.dev/documentation#",
+          } as const,
+          homeworld: {
+            "@context": {
+              schema: "http://schema.org/",
+            } as const,
+            /*|*/
+          },
+        });
+      `;
+
+      const completions = getCompletions(code);
+
+      expect(
+        (completions?.entries ?? []).map((c) => c.name).toSorted()
+      ).toEqual([
+        '"@id"',
+        '"@type"',
+        '"schema:alternateName"',
+        '"schema:description"',
+        "height",
+        "homeworld",
+        "mass",
+        "name",
+        "schema",
+        "title",
       ]);
     });
   });
