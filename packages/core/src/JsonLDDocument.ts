@@ -1,11 +1,18 @@
-import type { IsLiteral, Primitive } from "type-fest";
+import type {
+  ContextConstraint,
+  ContextOf,
+  Iri,
+  PropagatedContext,
+  TypeOfPropertyAtKey,
+} from "./Context";
+import type {
+  IsLiteral,
+  Primitive,
+  UnionToIntersection,
+  ValueOf,
+} from "type-fest";
 
 type NoInfer<T> = [T][T extends any ? 0 : never];
-
-type Iri<
-  Prefix extends string = string,
-  Suffix extends string = string
-> = `${Prefix}:${Suffix}`;
 
 type IsLiteralDeep<T> = T extends Primitive
   ? IsLiteral<T>
@@ -21,52 +28,77 @@ type Const<T> = IsLiteralDeep<T> extends true
       error: "Must be composed of only literal types. Try adding `as const`.";
     } & "";
 
-// TODO: Incomplete
-export type NextContext<OuterContext, InnerContext> = OuterContext &
-  InnerContext;
+/**
+ * The Compact IRIs which can expand under the given {@link Context} to a known
+ * property from the given {@link PropertyTypes}.
+ */
+type CompactIriKeys<
+  Context extends ContextConstraint,
+  PropertyTypes
+> = UnionToIntersection<
+  ValueOf<{
+    [T in keyof Context & string]: {
+      [P in keyof PropertyTypes as P extends `${Context[T]}${infer Suffix}`
+        ? // A "suffix" that's an empty string doesn't count.
+          Suffix extends ""
+          ? never
+          : Iri<T, Suffix>
+        : never]?: PropertyTypes[P];
+    };
+  }>
+>;
 
-// prettier-ignore
-export type NodeObject<PropertyTypes, OuterContext, Self> =
+// Just to prove to TypeScript that this extends ContextConstraint.
+type ValidContext<C extends ContextConstraint> = C;
+
+export type NodeObject<
+  PropertyTypes,
+  OuterContext extends ContextConstraint,
+  Self
+> =
   // Calculate the active context
-  NextContext<
-    OuterContext,
-    "@context" extends keyof Self ? Self["@context"] : {}
-  > extends infer ActiveContext ?
-    // NodeObjects may have...
-    // The built-in keywords:
-    { "@context"?: "@context" extends keyof Self ? Const<Self["@context"]> : never } &
-    // Any terms defined in the active context:
-    {
-      // For each key K in the active context...
-      [K in keyof ActiveContext]?:
-        // If K is an alias for a property with a known type, use that type.
-        ActiveContext[K] extends keyof PropertyTypes
+  PropagatedContext<OuterContext, ContextOf<Self>> extends ValidContext<
+    infer ActiveContext
+  >
+    ? // NodeObjects may have...
+      // The built-in keywords:
+      {
+        "@context"?: "@context" extends keyof Self
+          ? Const<Self["@context"]>
+          : never;
+      } & {
+        // Any terms defined in the active context:
+        // For each key K in the active context...
+        [K in keyof ActiveContext]?: ActiveContext[K] extends keyof PropertyTypes // If K is an alias for a property with a known type, use that type.
           ? PropertyTypes[ActiveContext[K]]
-
-        // Else, if K is in the object, it's a NodeObject
-        // (TODO: That's woefully incomplete)
-        : K extends keyof Self
+          : // Else, if K is in the object, it's a NodeObject
+          // (TODO: That's woefully incomplete)
+          K extends keyof Self
           ? NodeObject<PropertyTypes, ActiveContext, Self[K]>
+          : // Lastly, if it's not in the object, it's not in the object.
+            never;
+      } & CompactIriKeys<ActiveContext, PropertyTypes> & {
+          // Any IRI keys already in the object, with a type if known:
+          [K in keyof Self & Iri]?: TypeOfPropertyAtKey<
+            K,
+            ActiveContext,
+            PropertyTypes
+          >;
+        } & {
+          // And nothing else:
+          [K in Exclude<
+            keyof Self,
+            keyof ActiveContext | keyof PropertyTypes | Iri | "@context"
+          >]?: never;
+        }
+    : // /infer ActiveContext
+      never;
 
-        // Lastly, if it's not in the object, it's not in the object.
-        : never;
-    } &
-    // Any IRI keys already in the object, with a type if known:
-    {
-      [K in (keyof Self) & Iri]?:
-        K extends keyof PropertyTypes ? PropertyTypes[K] : unknown
-    } &
-    // And nothing else:
-    {
-      [K in Exclude<
-        keyof Self,
-        keyof ActiveContext | keyof PropertyTypes | Iri | "@context"
-      >]?: never;
-    }
-    // /infer ActiveContext
-    : never;
-
-export type JsonLDDocument<PropertyTypes, OuterContext, Self> = {
+export type JsonLDDocument<
+  PropertyTypes,
+  OuterContext extends ContextConstraint,
+  Self
+> = {
   // This trick ensures Self is inferred to be the entire object this type is
   // applied to, while the resulting type leaves the *values* of those keys as
   // `unknown`.

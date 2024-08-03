@@ -256,5 +256,50 @@ describe("JsonLDDocument", () => {
         ],
       });
     });
+
+    it("completes Node Object Keys which are Compact IRIs", () => {
+      const code = /* ts */ `
+      ${setup}
+
+      withPropertyTypes<PT>().document({
+        "@context": {
+          swapi: "http://swapi.dev/documentation#",
+        } as const,
+        /*|*/
+      });
+    `;
+
+      const completions = getCompletions(code);
+
+      expect(completions).toMatchObject({
+        entries: [
+          expect.objectContaining({
+            name: '"swapi:height"',
+            kind: "property",
+            kindModifiers: "optional",
+          }),
+          expect.objectContaining({
+            name: '"swapi:mass"',
+            kind: "property",
+            kindModifiers: "optional",
+          }),
+          expect.objectContaining({
+            name: '"swapi:name"',
+            kind: "property",
+            kindModifiers: "optional",
+          }),
+          expect.objectContaining({
+            name: '"swapi:title"',
+            kind: "property",
+            kindModifiers: "optional",
+          }),
+          expect.objectContaining({
+            name: "swapi",
+            kind: "property",
+            kindModifiers: "optional",
+          }),
+        ],
+      });
+    });
   });
 });
