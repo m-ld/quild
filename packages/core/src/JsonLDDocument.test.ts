@@ -48,13 +48,11 @@ const setup = /* ts */ `
   import type { JsonLDDocument } from "./JsonLDDocument";
 
   interface PT {
-    "http://www.example.com/aNumber": number;
-    "http://www.example.com/multipleNumbers": number;
-    "http://www.example.com/aString": string;
-    "http://www.example.com/multipleStrings": string;
-    "http://www.example.com/aNumberVariable": number;
-    "http://www.example.com/aStringVariable": string;
-    "http://www.example.com/anArrayOfString": string;
+    "http://swapi.dev/documentation#name": string;
+    "http://swapi.dev/documentation#height": number;
+    "http://swapi.dev/documentation#mass": number;
+    "http://swapi.dev/documentation#title": string;
+    "http://schema.org/description": string;
   }
 
   declare function withPropertyTypes<PropertyTypes>(): {
@@ -101,7 +99,7 @@ describe("JsonLDDocument", () => {
 
       withPropertyTypes<PT>().document({
         "@context": {
-          aNumber: "http://www.example.com/aNumber",
+          height: "http://swapi.dev/documentation#height",
         } as const,
         /*|*/
       });
@@ -112,7 +110,7 @@ describe("JsonLDDocument", () => {
     expect(completions).toMatchObject({
       entries: [
         expect.objectContaining({
-          name: "aNumber",
+          name: "height",
           kind: "property",
           kindModifiers: "optional",
         }),
@@ -125,7 +123,7 @@ describe("JsonLDDocument", () => {
       ${setup}
 
       withPropertyTypes<PT>().document({
-        "http://www.example.com/aNumber": 1,
+        "http://swapi.dev/documentation#height": 123,
       });
     `;
 
@@ -153,7 +151,7 @@ describe("JsonLDDocument", () => {
       ${setup}
 
       withPropertyTypes<PT>().document({
-        "http://www.example.com/aNumber": "a",
+        "http://swapi.dev/documentation#height": "a",
       });
     `;
 
