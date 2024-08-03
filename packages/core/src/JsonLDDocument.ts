@@ -7,6 +7,7 @@ import type {
 } from "./Context";
 import type {
   IsLiteral,
+  IterableElement,
   Primitive,
   UnionToIntersection,
   ValueOf,
@@ -24,6 +25,10 @@ type IsLiteralDeep<T> = T extends Primitive
     ? true
     : false
   : never;
+
+/** T, or an array of T, corresponding to whether Test is an array. */
+type MaybeArray<Test, T> = Test extends readonly unknown[] ? T[] : T;
+// type MaybeArray<T> = T | T[];
 
 type Const<T> = IsLiteralDeep<T> extends true
   ? T
@@ -106,13 +111,20 @@ type NodeObject<PropertyTypes, OuterContext extends ContextConstraint, Self> =
           >;
         } extends infer Properties
       ? NodeObjectKeywords<Self> & {
-          [K in keyof Properties]: object extends Properties[K]
-            ? NodeObject<
-                PropertyTypes,
-                ActiveContext,
-                K extends keyof Self ? Self[K] : object
-              >
-            : Properties[K];
+          [K in keyof Properties]: MaybeArray<
+            K extends keyof Self ? Self[K] : unknown,
+            object extends Properties[K]
+              ? NodeObject<
+                  PropertyTypes,
+                  ActiveContext,
+                  K extends keyof Self
+                    ? Self[K] extends readonly unknown[]
+                      ? IterableElement<Self[K]>
+                      : Self[K]
+                    : unknown
+                >
+              : Properties[K]
+          >;
         }
       : // /infer Properties
         never

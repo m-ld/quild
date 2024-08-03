@@ -302,6 +302,56 @@ describe("JsonLDDocument", () => {
         ],
       ]);
     });
+
+    it("accepts nested objects with arrays", () => {
+      const code = /* ts */ `
+        ${setup}
+
+        withPropertyTypes<PT>().document({
+          "@context": {
+            "@vocab": "http://swapi.dev/documentation#",
+          } as const,
+          name: 123,
+          films: [
+            {
+              "@context": {
+                schema: "http://schema.org/",
+              } as const,
+              title: 234,
+              "schema:description": 345,
+              "schema:nonsense": 456,
+            },
+          ],
+        });
+      `;
+
+      const service = languageService(code);
+
+      expect(
+        service
+          .getSemanticDiagnostics(FILE_NAME)
+          .map((d) => [d.start, d.messageText])
+      ).toEqual([
+        [
+          code.indexOf("name: 123"),
+          "Type 'number' is not assignable to type 'string'.",
+        ],
+        [
+          code.indexOf("title: 234"),
+          "Type 'number' is not assignable to type 'string'.",
+        ],
+        [
+          code.indexOf(`"schema:description": 345`),
+          "Type 'number' is not assignable to type 'string'.",
+        ],
+        [
+          code.indexOf(`"schema:nonsense": 456`),
+          expect.stringMatching(
+            /^Type 'number' has no properties in common with type/
+          ),
+        ],
+      ]);
+    });
   });
 
   describe("completions", () => {
@@ -428,6 +478,44 @@ describe("JsonLDDocument", () => {
             /*|*/
           },
         });
+      `;
+
+      const completions = getCompletions(code);
+
+      expect(
+        (completions?.entries ?? []).map((c) => c.name).toSorted()
+      ).toEqual([
+        '"@id"',
+        '"@type"',
+        '"schema:alternateName"',
+        '"schema:description"',
+        "films",
+        "height",
+        "homeworld",
+        "mass",
+        "name",
+        "schema",
+        "title",
+      ]);
+    });
+
+    it("completes nested objects with arrays", () => {
+      const code = /* ts */ `
+        ${setup}
+
+        withPropertyTypes<PT>().document({
+          "@context": {
+            "@vocab": "http://swapi.dev/documentation#",
+          } as const,
+          films: [
+            {
+              "@context": {
+                schema: "http://schema.org/",
+              } as const,
+              /*|*/
+            },
+          ],
+        });        
       `;
 
       const completions = getCompletions(code);
