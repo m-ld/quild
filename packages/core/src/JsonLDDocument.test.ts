@@ -212,6 +212,25 @@ describe("JsonLDDocument", () => {
       ).toEqual(["Type 'number' is not assignable to type 'string'."]);
     });
 
+    it("expands Node Object Keys which are vocab-mapped", () => {
+      const code = /* ts */ `
+      ${setup}
+
+      withPropertyTypes<PT>().document({
+        "@context": {
+          "@vocab": "http://swapi.dev/documentation#",
+        } as const,
+        "name": 123,
+      });
+    `;
+
+      const service = languageService(code);
+
+      expect(
+        service.getSemanticDiagnostics(FILE_NAME).map((d) => d.messageText)
+      ).toEqual(["Type 'number' is not assignable to type 'string'."]);
+    });
+
     it("accepts arrays", () => {
       const code = /* ts */ `
       ${setup}

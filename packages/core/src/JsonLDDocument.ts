@@ -111,15 +111,6 @@ type NodeObject<PropertyTypes, OuterContext extends ContextConstraint, Self> =
             ActiveContext,
             PropertyTypes
           >;
-        } & {
-          // And nothing else:
-          [K in Exclude<
-            keyof Self,
-            | keyof ActiveContext
-            | keyof PropertyTypes
-            | Iri
-            | keyof NodeObjectKeywords<Self>
-          >]?: never;
         }
     : // /infer ActiveContext
       never;
