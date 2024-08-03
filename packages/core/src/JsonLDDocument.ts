@@ -31,6 +31,8 @@ type Const<T> = IsLiteralDeep<T> extends true
       error: "Must be composed of only literal types. Try adding `as const`.";
     } & "";
 
+type Keyword = `@${string}`;
+
 /**
  * The Compact IRIs which can expand under the given {@link Context} to a known
  * property from the given {@link PropertyTypes}.
@@ -40,7 +42,7 @@ type CompactIriKeys<
   PropertyTypes
 > = UnionToIntersection<
   ValueOf<{
-    [T in keyof Context & string]: {
+    [T in Exclude<keyof Context & string, Keyword>]: {
       [P in keyof PropertyTypes as P extends `${Context[T]}${infer Suffix}`
         ? // A "suffix" that's an empty string doesn't count.
           Suffix extends ""
@@ -50,6 +52,26 @@ type CompactIriKeys<
     };
   }>
 >;
+
+/**
+ * The Compact IRIs which can expand under the given {@link Context} to a known
+ * property from the given {@link PropertyTypes}.
+ */
+type VocabMappedKeys<
+  Context extends ContextConstraint,
+  PropertyTypes
+> = Context extends { "@vocab": infer Vocab }
+  ? Vocab extends string
+    ? {
+        [P in keyof PropertyTypes as P extends `${Vocab}${infer Suffix}`
+          ? // A "suffix" that's an empty string doesn't count.
+            Suffix extends ""
+            ? never
+            : Suffix
+          : never]?: PropertyTypes[P];
+      }
+    : unknown
+  : unknown;
 
 // Just to prove to TypeScript that this extends ContextConstraint.
 type ValidContext<C extends ContextConstraint> = C;
@@ -72,7 +94,10 @@ export type NodeObject<
       } & {
         // Any terms defined in the active context:
         // For each key K in the active context...
-        [K in keyof ActiveContext]?: ActiveContext[K] extends keyof PropertyTypes // If K is an alias for a property with a known type, use that type.
+        [K in Exclude<
+          keyof ActiveContext,
+          Keyword
+        >]?: ActiveContext[K] extends keyof PropertyTypes // If K is an alias for a property with a known type, use that type.
           ? PropertyTypes[ActiveContext[K]]
           : // Else, if K is in the object, it's a NodeObject
           // (TODO: That's woefully incomplete)
@@ -80,7 +105,8 @@ export type NodeObject<
           ? NodeObject<PropertyTypes, ActiveContext, Self[K]>
           : // Lastly, if it's not in the object, it's not in the object.
             never;
-      } & CompactIriKeys<ActiveContext, PropertyTypes> & {
+      } & CompactIriKeys<ActiveContext, PropertyTypes> &
+        VocabMappedKeys<ActiveContext, PropertyTypes> & {
           // Any IRI keys already in the object, with a type if known:
           [K in keyof Self & Iri]?: TypeOfPropertyAtKey<
             K,

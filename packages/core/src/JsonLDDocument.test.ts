@@ -296,5 +296,43 @@ describe("JsonLDDocument", () => {
         }),
       ]);
     });
+
+    it("completes Node Object Keys which are vocab-mapped", () => {
+      const code = /* ts */ `
+      ${setup}
+
+      withPropertyTypes<PT>().document({
+        "@context": {
+          "@vocab": "http://swapi.dev/documentation#",
+        } as const,
+        /*|*/
+      });
+    `;
+
+      const completions = getCompletions(code);
+
+      expect(sortBy((c) => c.name, completions?.entries ?? [])).toMatchObject([
+        expect.objectContaining({
+          name: "height",
+          kind: "property",
+          kindModifiers: "optional",
+        }),
+        expect.objectContaining({
+          name: "mass",
+          kind: "property",
+          kindModifiers: "optional",
+        }),
+        expect.objectContaining({
+          name: "name",
+          kind: "property",
+          kindModifiers: "optional",
+        }),
+        expect.objectContaining({
+          name: "title",
+          kind: "property",
+          kindModifiers: "optional",
+        }),
+      ]);
+    });
   });
 });
