@@ -84,21 +84,53 @@ type TypeOfPropertyAtKey<
     : unknown
   : never;
 
-type NodeObjectResult<Query, PropertyTypes> =
-  ContextOf<Query> extends infer Context
-    ? // Context always extends ContextConstraint already, but TypeScript
-      // doesn't know that here.
-      Context extends ContextConstraint
-      ? {
-          [Key in keyof Query & string]: Query[Key] extends Placeholder
-            ? TypeOfPropertyAtKey<Key, Context, PropertyTypes>
-            : Query[Key];
-        }
-      : never
+/**
+ * Given a {@link ParentContext} and a {@link ChildContext} definition, a
+ * Context which should be used as the active context for child.
+ */
+type PropagatedContext<
+  ParentContext extends ContextConstraint,
+  ChildContext extends ContextConstraint
+> = {
+  [Key in
+    | keyof ParentContext
+    | keyof ChildContext]: Key extends keyof ChildContext
+    ? ChildContext[Key]
+    : Key extends keyof ParentContext
+    ? ParentContext[Key]
     : never;
+};
 
-export type QueryResult<Query, PropertyTypes> = Query extends readonly [
-  infer ArraySubquery
-]
-  ? Array<NodeObjectResult<ArraySubquery, PropertyTypes>>
-  : NodeObjectResult<Query, PropertyTypes>;
+type NodeObjectResult<
+  Query,
+  PropertyTypes,
+  ParentContext extends ContextConstraint = EmptyContext
+> = PropagatedContext<ParentContext, ContextOf<Query>> extends infer Context
+  ? // Context always extends ContextConstraint already, but TypeScript
+    // doesn't know that here.
+    Context extends ContextConstraint
+    ? {
+        [Key in keyof Query & string]: Key extends "@context"
+          ? // Preserve the "@context" definition.
+            Query[Key]
+          : // If the value is a Placeholder, fill it in with the type of the
+          // property the key represents.
+          Query[Key] extends Placeholder
+          ? TypeOfPropertyAtKey<Key, Context, PropertyTypes>
+          : // If the value is a Node Object, recurse, passing the current
+          // Context down.
+          Query[Key] extends object
+          ? QueryResult<Query[Key], PropertyTypes, Context>
+          : // Otherwise, preserve it as a known literal.
+            Query[Key];
+      }
+    : never
+  : never;
+
+export type QueryResult<
+  Query,
+  PropertyTypes,
+  Context extends ContextConstraint = EmptyContext
+> = Query extends readonly [infer ArraySubquery]
+  ? Array<NodeObjectResult<ArraySubquery, PropertyTypes, Context>>
+  : NodeObjectResult<Query, PropertyTypes, Context>;

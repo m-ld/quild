@@ -17,6 +17,8 @@ interface PT {
   "http://swapi.dev/documentation#name": string;
   "http://swapi.dev/documentation#height": number;
   "http://swapi.dev/documentation#mass": number;
+  "http://swapi.dev/documentation#title": string;
+  "http://schema.org/description": string;
 }
 
 describe("QueryResult", () => {
@@ -153,5 +155,68 @@ describe("QueryResult", () => {
     expectTypeOf(first.name).toEqualTypeOf<string>();
   });
 
+  it("accepts nested objects", async () => {
+    const query = {
+      "@context": {
+        "@vocab": "http://swapi.dev/documentation#",
+      },
+      homeworld: {
+        "@context": {
+          schema: "http://schema.org/",
+        },
+        name: "?",
+        "schema:description": "?",
+      },
+    } as const;
+
+    const result = await withPropertyTypes<PT>().queryResult(query);
+
+    expectTypeOf(result).toEqualTypeOf<{
+      "@context": {
+        readonly "@vocab": "http://swapi.dev/documentation#";
+      };
+      homeworld: {
+        "@context": {
+          readonly schema: "http://schema.org/";
+        };
+        name: string;
+        "schema:description": string;
+      };
+    }>();
+  });
+
+  it("accepts nested objects and arrays", async () => {
+    const query = {
+      "@context": {
+        "@vocab": "http://swapi.dev/documentation#",
+      },
+      films: [
+        {
+          "@context": {
+            schema: "http://schema.org/",
+          },
+          title: "?",
+          "schema:description": "?",
+        },
+      ],
+    } as const;
+
+    const result = await withPropertyTypes<PT>().queryResult(query);
+
+    expectTypeOf(result).toEqualTypeOf<{
+      "@context": {
+        readonly "@vocab": "http://swapi.dev/documentation#";
+      };
+      films: Array<{
+        "@context": {
+          readonly schema: "http://schema.org/";
+        };
+        title: string;
+        "schema:description": string;
+      }>;
+    }>();
+  });
+
   it.todo("handle term definitions in @context that aren't strings");
+  it.todo("handle more advanced @context propagation cases");
 });
