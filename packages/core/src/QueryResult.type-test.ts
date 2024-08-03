@@ -130,5 +130,28 @@ describe("QueryResult", () => {
     expectTypeOf(result.name).toEqualTypeOf<string>();
   });
 
+  it("accepts an array", async () => {
+    const query = [
+      {
+        "@context": {
+          "@vocab": "http://swapi.dev/documentation#",
+        },
+        name: "?",
+      },
+    ] as const;
+
+    const result = await withPropertyTypes<PT>().queryResult(query);
+    const first = result[0];
+
+    if (!first) throw new Error("Expected a result");
+
+    expectTypeOf<keyof typeof first>().toEqualTypeOf<"@context" | "name">();
+
+    expectTypeOf(first["@context"]).toEqualTypeOf<
+      (typeof query)[number]["@context"]
+    >();
+    expectTypeOf(first.name).toEqualTypeOf<string>();
+  });
+
   it.todo("handle term definitions in @context that aren't strings");
 });

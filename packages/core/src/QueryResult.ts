@@ -84,10 +84,10 @@ type TypeOfPropertyAtKey<
     : unknown
   : never;
 
-export type QueryResult<Query, PropertyTypes> =
+type NodeObjectResult<Query, PropertyTypes> =
   ContextOf<Query> extends infer Context
-    ? // Context is always a ContextDefinition already, but TypeScript doesn't know
-      // that here.
+    ? // Context always extends ContextConstraint already, but TypeScript
+      // doesn't know that here.
       Context extends ContextConstraint
       ? {
           [Key in keyof Query & string]: Query[Key] extends Placeholder
@@ -96,3 +96,9 @@ export type QueryResult<Query, PropertyTypes> =
         }
       : never
     : never;
+
+export type QueryResult<Query, PropertyTypes> = Query extends readonly [
+  infer ArraySubquery
+]
+  ? Array<NodeObjectResult<ArraySubquery, PropertyTypes>>
+  : NodeObjectResult<Query, PropertyTypes>;
