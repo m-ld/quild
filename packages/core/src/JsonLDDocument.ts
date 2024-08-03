@@ -82,11 +82,7 @@ type VocabMappedKeys<
 // Just to prove to TypeScript that this extends ContextConstraint.
 type ValidContext<C extends ContextConstraint> = C;
 
-export type NodeObject<
-  PropertyTypes,
-  OuterContext extends ContextConstraint,
-  Self
-> =
+type NodeObject<PropertyTypes, OuterContext extends ContextConstraint, Self> =
   // Calculate the active context
   PropagatedContext<OuterContext, ContextOf<Self>> extends ValidContext<
     infer ActiveContext
@@ -128,6 +124,14 @@ export type NodeObject<
     : // /infer ActiveContext
       never;
 
+type JsonLDDocumentInternal<
+  PropertyTypes,
+  OuterContext extends ContextConstraint,
+  Self
+> = Self extends unknown[]
+  ? { [I in keyof Self]: NodeObject<PropertyTypes, OuterContext, Self[I]> }
+  : NodeObject<PropertyTypes, OuterContext, Self>;
+
 export type JsonLDDocument<
   PropertyTypes,
   OuterContext extends ContextConstraint,
@@ -137,4 +141,4 @@ export type JsonLDDocument<
   // applied to, while the resulting type leaves the *values* of those keys as
   // `unknown`.
   [K in keyof Self]: K extends never ? Self[K] : unknown;
-} & NoInfer<NodeObject<PropertyTypes, OuterContext, Self>>;
+} & NoInfer<JsonLDDocumentInternal<PropertyTypes, OuterContext, Self>>;

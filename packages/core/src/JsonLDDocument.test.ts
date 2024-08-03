@@ -211,6 +211,27 @@ describe("JsonLDDocument", () => {
         service.getSemanticDiagnostics(FILE_NAME).map((d) => d.messageText)
       ).toEqual(["Type 'number' is not assignable to type 'string'."]);
     });
+
+    it("accepts arrays", () => {
+      const code = /* ts */ `
+      ${setup}
+
+      withPropertyTypes<PT>().document([{
+        "@context": {
+          swapi: "http://swapi.dev/documentation#",
+          swapi2: "http://swapi.dev/documentation#",
+        } as const,
+        "swapi:name": "Luke Skywalker",
+        "swapi2:name": 123,
+      }]);
+    `;
+
+      const service = languageService(code);
+
+      expect(
+        service.getSemanticDiagnostics(FILE_NAME).map((d) => d.messageText)
+      ).toEqual(["Type 'number' is not assignable to type 'string'."]);
+    });
   });
 
   describe("completions", () => {
@@ -348,6 +369,31 @@ describe("JsonLDDocument", () => {
         }),
         expect.objectContaining({
           name: "title",
+          kind: "property",
+          kindModifiers: "optional",
+        }),
+      ]);
+    });
+
+    it("completes terms in arrays", () => {
+      const code = /* ts */ `
+      ${setup}
+
+      withPropertyTypes<PT>().document([{
+        "@context": {
+          height: "http://swapi.dev/documentation#height",
+        } as const,
+        "@id": "http://swapi.dev/people/1",
+        "@type": "http://swapi.dev/documentation#Person",
+        /*|*/
+      }]);
+    `;
+
+      const completions = getCompletions(code);
+
+      expect(sortBy((c) => c.name, completions?.entries ?? [])).toMatchObject([
+        expect.objectContaining({
+          name: "height",
           kind: "property",
           kindModifiers: "optional",
         }),
