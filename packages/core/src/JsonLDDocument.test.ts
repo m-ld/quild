@@ -47,6 +47,7 @@ const languageService = (code: string) => {
 
 const setup = /* ts */ `
   import type { JsonLDDocument } from "./JsonLDDocument";
+  import type { EmptyContext } from "./Context";
 
   interface PT {
     "http://swapi.dev/documentation#name": string;
@@ -58,7 +59,7 @@ const setup = /* ts */ `
 
   declare function withPropertyTypes<PropertyTypes>(): {
     document<Doc>(
-      d: JsonLDDocument<PropertyTypes, {}, Doc>
+      d: JsonLDDocument<PropertyTypes, EmptyContext, Doc>
     ): void
   }
 `;
@@ -75,7 +76,7 @@ const getCompletions = (code: string) => {
 
 describe("JsonLDDocument", () => {
   describe("acceptance", () => {
-    it("accepts a `@context`", () => {
+    it("accepts `@context`, `@id`, and `@type`", () => {
       const code = /* ts */ `
       ${setup}
 
@@ -83,6 +84,8 @@ describe("JsonLDDocument", () => {
         "@context": {
           name: "http://swapi.dev/documentation#name",
         } as const,
+        "@id": "http://swapi.dev/people/1",
+        "@type": "http://swapi.dev/documentation#Person",
       });
     `;
 
@@ -211,7 +214,7 @@ describe("JsonLDDocument", () => {
   });
 
   describe("completions", () => {
-    it("completes `@context`", () => {
+    it("completes `@context`, `@id`, and `@type`", () => {
       const code = /* ts */ `
       ${setup}
 
@@ -228,6 +231,16 @@ describe("JsonLDDocument", () => {
           kind: "property",
           kindModifiers: "optional",
         }),
+        expect.objectContaining({
+          name: `"@id"`,
+          kind: "property",
+          kindModifiers: "optional",
+        }),
+        expect.objectContaining({
+          name: `"@type"`,
+          kind: "property",
+          kindModifiers: "optional",
+        }),
       ]);
     });
 
@@ -239,6 +252,8 @@ describe("JsonLDDocument", () => {
         "@context": {
           height: "http://swapi.dev/documentation#height",
         } as const,
+        "@id": "http://swapi.dev/people/1",
+        "@type": "http://swapi.dev/documentation#Person",
         /*|*/
       });
     `;
@@ -262,6 +277,8 @@ describe("JsonLDDocument", () => {
         "@context": {
           swapi: "http://swapi.dev/documentation#",
         } as const,
+        "@id": "http://swapi.dev/people/1",
+        "@type": "http://swapi.dev/documentation#Person",
         /*|*/
       });
     `;
@@ -305,6 +322,8 @@ describe("JsonLDDocument", () => {
         "@context": {
           "@vocab": "http://swapi.dev/documentation#",
         } as const,
+        "@id": "http://swapi.dev/people/1",
+        "@type": "http://swapi.dev/documentation#Person",
         /*|*/
       });
     `;

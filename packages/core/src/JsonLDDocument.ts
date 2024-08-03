@@ -33,6 +33,12 @@ type Const<T> = IsLiteralDeep<T> extends true
 
 type Keyword = `@${string}`;
 
+interface NodeObjectKeywords<Self> {
+  "@context"?: "@context" extends keyof Self ? Const<Self["@context"]> : never;
+  "@id"?: string;
+  "@type"?: string;
+}
+
 /**
  * The Compact IRIs which can expand under the given {@link Context} to a known
  * property from the given {@link PropertyTypes}.
@@ -87,11 +93,7 @@ export type NodeObject<
   >
     ? // NodeObjects may have...
       // The built-in keywords:
-      {
-        "@context"?: "@context" extends keyof Self
-          ? Const<Self["@context"]>
-          : never;
-      } & {
+      NodeObjectKeywords<Self> & {
         // Any terms defined in the active context:
         // For each key K in the active context...
         [K in Exclude<
@@ -117,7 +119,10 @@ export type NodeObject<
           // And nothing else:
           [K in Exclude<
             keyof Self,
-            keyof ActiveContext | keyof PropertyTypes | Iri | "@context"
+            | keyof ActiveContext
+            | keyof PropertyTypes
+            | Iri
+            | keyof NodeObjectKeywords<Self>
           >]?: never;
         }
     : // /infer ActiveContext
