@@ -65,35 +65,13 @@ describe("QueryResult", () => {
 
     const result = await withPropertyTypes<PT>().queryResult(query);
 
-    expectTypeOf<keyof typeof result>().toEqualTypeOf<
-      "@context" | "name" | "height"
-    >();
-    expectTypeOf(result["@context"]).toEqualTypeOf<
-      (typeof query)["@context"]
-    >();
-    expectTypeOf(result.name).toEqualTypeOf<string>();
-    expectTypeOf(result.height).toEqualTypeOf<unknown>();
-  });
-
-  it("expands Node Object Keys which are Terms", async () => {
-    const query = {
+    expectTypeOf(result).toEqualTypeOf<{
       "@context": {
-        name: "http://swapi.dev/documentation#name",
-      },
-      name: "?",
-      height: "?",
-    } as const;
-
-    const result = await withPropertyTypes<PT>().queryResult(query);
-
-    expectTypeOf<keyof typeof result>().toEqualTypeOf<
-      "@context" | "name" | "height"
-    >();
-    expectTypeOf(result["@context"]).toEqualTypeOf<
-      (typeof query)["@context"]
-    >();
-    expectTypeOf(result.name).toEqualTypeOf<string>();
-    expectTypeOf(result.height).toEqualTypeOf<unknown>();
+        readonly name: "http://swapi.dev/documentation#name";
+      };
+      name: string;
+      height: unknown;
+    }>();
   });
 
   it("expands Node Object Keys which are Compact IRIs", async () => {
@@ -106,13 +84,12 @@ describe("QueryResult", () => {
 
     const result = await withPropertyTypes<PT>().queryResult(query);
 
-    expectTypeOf<keyof typeof result>().toEqualTypeOf<
-      "@context" | "swapi:name"
-    >();
-    expectTypeOf(result["@context"]).toEqualTypeOf<
-      (typeof query)["@context"]
-    >();
-    expectTypeOf(result["swapi:name"]).toEqualTypeOf<string>();
+    expectTypeOf(result).toEqualTypeOf<{
+      "@context": {
+        readonly swapi: "http://swapi.dev/documentation#";
+      };
+      "swapi:name": string;
+    }>();
   });
 
   it("expands Node Object Keys which are vocab-mapped", async () => {
@@ -125,11 +102,12 @@ describe("QueryResult", () => {
 
     const result = await withPropertyTypes<PT>().queryResult(query);
 
-    expectTypeOf<keyof typeof result>().toEqualTypeOf<"@context" | "name">();
-    expectTypeOf(result["@context"]).toEqualTypeOf<
-      (typeof query)["@context"]
-    >();
-    expectTypeOf(result.name).toEqualTypeOf<string>();
+    expectTypeOf(result).toEqualTypeOf<{
+      "@context": {
+        readonly "@vocab": "http://swapi.dev/documentation#";
+      };
+      name: string;
+    }>();
   });
 
   it("accepts an array", async () => {
@@ -147,12 +125,14 @@ describe("QueryResult", () => {
 
     if (!first) throw new Error("Expected a result");
 
-    expectTypeOf<keyof typeof first>().toEqualTypeOf<"@context" | "name">();
-
-    expectTypeOf(first["@context"]).toEqualTypeOf<
-      (typeof query)[number]["@context"]
+    expectTypeOf(result).toEqualTypeOf<
+      Array<{
+        "@context": {
+          readonly "@vocab": "http://swapi.dev/documentation#";
+        };
+        name: string;
+      }>
     >();
-    expectTypeOf(first.name).toEqualTypeOf<string>();
   });
 
   it("accepts nested objects", async () => {
