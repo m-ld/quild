@@ -65,13 +65,59 @@ const setup = /* ts */ `
 const getCompletions = (code: string) => {
   const service = languageService(code);
 
-  expect(service.getSemanticDiagnostics(FILE_NAME)).toEqual([]);
+  expect(
+    service.getSemanticDiagnostics(FILE_NAME).map((d) => d.messageText)
+  ).toEqual([]);
 
   return service.getCompletionsAtPosition(FILE_NAME, code.indexOf("/*|*/"), {});
 };
 
 describe("JsonLDDocument", () => {
   describe("acceptance", () => {
+    it("accepts a `@context`", () => {
+      const code = /* ts */ `
+      ${setup}
+
+      withPropertyTypes<PT>().document({
+        "@context": {
+          name: "http://swapi.dev/documentation#name",
+        } as const,
+      });
+    `;
+
+      const service = languageService(code);
+
+      expect(
+        service.getSemanticDiagnostics(FILE_NAME).map((d) => d.messageText)
+      ).toEqual([]);
+    });
+
+    it("rejects a non-const `@context`", () => {
+      const code = /* ts */ `
+      ${setup}
+
+      withPropertyTypes<PT>().document({
+        "@context": {
+          name: "http://swapi.dev/documentation#name",
+        },
+      });
+    `;
+
+      const service = languageService(code);
+
+      expect(
+        service
+          .getSemanticDiagnostics(FILE_NAME)
+          .map((d) =>
+            typeof d.messageText === "string"
+              ? d.messageText
+              : d.messageText.messageText
+          )
+      ).toEqual([
+        "Type '{ name: string; }' is not assignable to type '{ error: \"Must be composed of only literal types. Try adding `as const`.\"; } & \"\"'.",
+      ]);
+    });
+
     it("accepts known IRI properties", () => {
       const code = /* ts */ `
       ${setup}
@@ -83,7 +129,9 @@ describe("JsonLDDocument", () => {
 
       const service = languageService(code);
 
-      expect(service.getSemanticDiagnostics(FILE_NAME)).toEqual([]);
+      expect(
+        service.getSemanticDiagnostics(FILE_NAME).map((d) => d.messageText)
+      ).toEqual([]);
     });
 
     it("accepts unknown IRI properties", () => {
@@ -97,7 +145,9 @@ describe("JsonLDDocument", () => {
 
       const service = languageService(code);
 
-      expect(service.getSemanticDiagnostics(FILE_NAME)).toEqual([]);
+      expect(
+        service.getSemanticDiagnostics(FILE_NAME).map((d) => d.messageText)
+      ).toEqual([]);
     });
 
     it("rejects known IRI properties with wrong type", () => {

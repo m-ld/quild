@@ -1,9 +1,25 @@
+import type { IsLiteral, Primitive } from "type-fest";
+
 type NoInfer<T> = [T][T extends any ? 0 : never];
 
 type Iri<
   Prefix extends string = string,
   Suffix extends string = string
 > = `${Prefix}:${Suffix}`;
+
+type IsLiteralDeep<T> = T extends Primitive
+  ? IsLiteral<T>
+  : { [K in keyof T]: IsLiteralDeep<T[K]> } extends infer O
+  ? O[keyof O] extends true
+    ? true
+    : false
+  : never;
+
+type Const<T> = IsLiteralDeep<T> extends true
+  ? T
+  : {
+      error: "Must be composed of only literal types. Try adding `as const`.";
+    } & "";
 
 // TODO: Incomplete
 export type NextContext<OuterContext, InnerContext> = OuterContext &
@@ -18,7 +34,7 @@ export type NodeObject<PropertyTypes, OuterContext, Self> =
   > extends infer ActiveContext ?
     // NodeObjects may have...
     // The built-in keywords:
-    { "@context"?: unknown } &
+    { "@context"?: "@context" extends keyof Self ? Const<Self["@context"]> : never } &
     // Any terms defined in the active context:
     {
       // For each key K in the active context...
