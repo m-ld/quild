@@ -1,6 +1,7 @@
 import type {
   ContextConstraint,
   ContextOf,
+  ExpandedTerm,
   Iri,
   PropagatedContext,
   TypeOfPropertyAtKey,
@@ -73,8 +74,8 @@ type CompactIriKeys<
 >;
 
 /**
- * The Compact IRIs which can expand under the given {@link Context} to a known
- * property from the given {@link PropertyTypes}.
+ * The terms which can expand under the `@vocab` mapping in the given
+ * {@link Context} to a known property from the given {@link PropertyTypes}.
  */
 type VocabMappedKeys<
   Context extends ContextConstraint,
@@ -103,11 +104,13 @@ type NodeObject<PropertyTypes, OuterContext extends ContextConstraint, Self> =
     ? {
         // Any terms defined in the active context:
         // For each key K in the active context...
-        [K in Exclude<
-          keyof ActiveContext,
-          Keyword
-        >]?: ActiveContext[K] extends keyof PropertyTypes // If K is an alias for a property with a known type, use that type.
-          ? PropertyTypes[ActiveContext[K]]
+        [K in Exclude<keyof ActiveContext, Keyword> as ExpandedTerm<
+          ActiveContext,
+          K
+        > extends keyof PropertyTypes
+          ? K
+          : never]?: ExpandedTerm<ActiveContext, K> extends keyof PropertyTypes
+          ? PropertyTypes[ExpandedTerm<ActiveContext, K>]
           : never;
       } & CompactIriKeys<ActiveContext, PropertyTypes> &
         VocabMappedKeys<ActiveContext, PropertyTypes> & {

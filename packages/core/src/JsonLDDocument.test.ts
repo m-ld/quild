@@ -87,6 +87,8 @@ describe("JsonLDDocument", () => {
       withPropertyTypes<PT>().document({
         "@context": {
           name: "http://swapi.dev/documentation#name",
+          films: { "@container": "@set" },
+          vehicles: { "@container": "@list" },
         } as const,
         "@id": "http://swapi.dev/people/1",
         "@type": "http://swapi.dev/documentation#Person",
@@ -223,8 +225,14 @@ describe("JsonLDDocument", () => {
       withPropertyTypes<PT>().document({
         "@context": {
           "@vocab": "http://swapi.dev/documentation#",
+
+          // Here to prove they don't break @vocab.
+          films: { "@container": "@set" },
+          vehicles: { "@container": "@list" },
         } as const,
-        "name": 123,
+        name: 123,
+        films: [{ title: "A New Hope" }],
+        vehicles: [{ name: "Snowspeeder" }],
       });
     `;
 
@@ -516,7 +524,6 @@ describe("JsonLDDocument", () => {
         '"swapi:name"',
         '"swapi:title"',
         '"swapi:vehicles"',
-        "swapi",
       ]);
     });
 
@@ -601,7 +608,6 @@ describe("JsonLDDocument", () => {
         "homeworld",
         "mass",
         "name",
-        "schema",
         "title",
         "vehicles",
       ]);
@@ -640,7 +646,6 @@ describe("JsonLDDocument", () => {
         "homeworld",
         "mass",
         "name",
-        "schema",
         "title",
         "vehicles",
       ]);
@@ -678,7 +683,6 @@ describe("JsonLDDocument", () => {
         "homeworld",
         "mass",
         "name",
-        "schema",
         "title",
         "vehicles",
       ]);
