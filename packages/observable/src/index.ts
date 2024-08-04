@@ -1,1 +1,1 @@
-export { observeMeldQuery } from "./observeMeldQuery";
+export { observeMeldQuery, withPropertyTypes } from "./observeMeldQuery";

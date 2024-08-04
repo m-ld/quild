@@ -20,11 +20,19 @@ export interface ReadQueryResult<Data> {
   parseWarnings: ParseWarning[];
 }
 
-type QueryPropertyTypes<PropertyTypes> = {
+export type QueryPropertyTypes<PropertyTypes> = {
   [K in keyof PropertyTypes]: LiteralUnion<PropertyTypes[K], "?">;
 };
 
+export type { JsonLDDocument } from "./JsonLDDocument";
+export type { EmptyContext } from "./Context";
+export type { QueryResult } from "./QueryResult";
+
+/**
+ * Prefix for {@link readQuery} to use a different set of property types.
+ */
 export const withPropertyTypes = <PropertyTypes>() => ({
+  /** @see {@link readQuery} */
   readQuery: async <Query>(
     source: RDF.Source,
     query: JsonLDDocument<
@@ -77,6 +85,15 @@ export const withPropertyTypes = <PropertyTypes>() => ({
    This is a placeholder for declaration merging. */
 export interface GlobalPropertyTypes {}
 
+/**
+ * Read a query once from the given source. Uses the global property types. To
+ * supply your own property types, use {@link withPropertyTypes}.
+ *
+ * @param meld The m-ld clone to query.
+ * @param query The Quild query to run.
+ * @param options.parser The parser to use for the query.
+ * @returns A {@link ReadQueryResult} with the data matching the query.
+ */
 export const readQuery = <Query>(
   source: RDF.Source,
   query: JsonLDDocument<

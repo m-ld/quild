@@ -21,7 +21,7 @@ const createMeldClone = async () =>
 const query = {
   "@context": { "@vocab": "http://schema.org/" },
   "@graph": [{ name: "?" }],
-};
+} as const;
 
 describe(useMeldQuery, () => {
   it("begins with `data` and `parseWarnings` `undefined`", async () => {
@@ -61,7 +61,7 @@ describe(useMeldQuery, () => {
           parseWarnings: [],
         });
       },
-      { timeout: 100 },
+      { timeout: 100 }
     );
 
     await act(async () => {
@@ -85,7 +85,7 @@ describe(useMeldQuery, () => {
           parseWarnings: [],
         });
       },
-      { timeout: 100 },
+      { timeout: 100 }
     );
   });
 });
