@@ -1,6 +1,6 @@
 {
   "name": "@quild/react",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Quild queries as a React hook.",
   "author": "Petra Jaros <peeja@peeja.com>",
   "license": "MIT",
@@ -59,8 +59,8 @@
   },
   "dependencies": {
     "@m-ld/m-ld": "catalog:",
-    "@quild/core": "workspace:0.0.1",
-    "@quild/observable": "workspace:0.0.1",
+    "@quild/core": "workspace:0.1.0",
+    "@quild/observable": "workspace:0.1.0",
     "setimmediate": "catalog:"
   },
   "peerDependencies": {
