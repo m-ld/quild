@@ -1,6 +1,6 @@
 {
   "extends": "./tsconfig.dev.json",
-  "exclude": ["src/**/*.test.*", "src/test-util/**/*"],
+  "exclude": ["src/**/*.test.*", "src/**/*.type-test.*", "src/test-util/**/*"],
   "compilerOptions": {
     "declarationMap": false
   }

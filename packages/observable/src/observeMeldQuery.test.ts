@@ -29,7 +29,7 @@ describe(observeMeldQuery, () => {
         "@context": { "@vocab": "http://swapi.dev/documentation#" },
         name: "Luke Skywalker",
         hair_color: "?",
-      }).pipe(map(({ data }) => data))
+      } as const).pipe(map(({ data }) => data))
     );
 
     expect(await first).toStrictEqual(null);

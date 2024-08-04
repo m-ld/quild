@@ -1,8 +1,43 @@
 import { watchQuery } from "@m-ld/m-ld/ext/rx";
-import { readQuery } from "@quild/core";
+import {
+  withPropertyTypes as withPropertyTypesCore,
+  type JsonLDDocument,
+  type QueryPropertyTypes,
+  type EmptyContext,
+  type ReadQueryResult,
+  type QueryResult,
+  type GlobalPropertyTypes,
+} from "@quild/core";
+import { parser } from "@quild/core/m-ld";
 
 import type { MeldClone } from "@m-ld/m-ld";
-import type { JsonValue } from "type-fest";
+import type { Observable } from "rxjs";
+
+/**
+ * Prefix for {@link observeMeldQuery} to use a different set of property types.
+ */
+export const withPropertyTypes = <PropertyTypes>() => ({
+  /** @see {@link observeMeldQuery} */
+  observeMeldQuery: <Query>(
+    meld: MeldClone,
+    query: JsonLDDocument<
+      QueryPropertyTypes<PropertyTypes>,
+      EmptyContext,
+      Query
+    >
+  ): Observable<ReadQueryResult<QueryResult<Query, PropertyTypes>>> =>
+    watchQuery(
+      meld,
+      (state) =>
+        withPropertyTypesCore<PropertyTypes>().readQuery(state, query, {
+          parser,
+        }),
+      (_update, state) =>
+        withPropertyTypesCore<PropertyTypes>().readQuery(state, query, {
+          parser,
+        })
+    ),
+});
 
 /**
  * Observe the results of a Quild query over a m-ld clone, emitting the latest
@@ -10,19 +45,15 @@ import type { JsonValue } from "type-fest";
  * not (currently) a guarantee that the result has changed, but every change is
  * guaranteed to be emitted.
  *
- * @template Data The expected shape of the data returned by the query.
- *                Eventually, this will be derived from the query itself. For
- *                now, it must be given explicitly.
  * @param meld The m-ld clone to query.
  * @param query The Quild query to run.
  * @returns An observable of the query results.
  */
-export const observeMeldQuery = <Data extends JsonValue>(
+export const observeMeldQuery = <Query>(
   meld: MeldClone,
-  query: JsonValue
-) =>
-  watchQuery(
-    meld,
-    (state) => readQuery<Data>(state, query),
-    (_update, state) => readQuery<Data>(state, query)
-  );
+  query: JsonLDDocument<
+    QueryPropertyTypes<GlobalPropertyTypes>,
+    EmptyContext,
+    Query
+  >
+) => withPropertyTypes<GlobalPropertyTypes>().observeMeldQuery(meld, query);
