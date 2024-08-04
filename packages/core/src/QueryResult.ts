@@ -58,10 +58,14 @@ type NodeObjectResult<
           // property the key represents.
           Query[Key] extends Placeholder
           ? TypeOfPropertyAtKey<Key, Context, PropertyTypes>
-          : // If the value is a Node Object, recurse, passing the current
-          // Context down.
-          Query[Key] extends object
-          ? QueryResult<Query[Key], PropertyTypes, Context>
+          : Query[Key] extends readonly [infer ArraySubquery]
+          ? Array<NodeObjectResult<
+              ArraySubquery,
+              PropertyTypes,
+              Context
+            > | null>
+          : Query[Key] extends object
+          ? NodeObjectResult<Query[Key], PropertyTypes, Context>
           : // Otherwise, preserve it as a known literal.
             Query[Key];
       }
@@ -73,5 +77,5 @@ export type QueryResult<
   PropertyTypes,
   Context extends ContextConstraint = EmptyContext
 > = Query extends readonly [infer ArraySubquery]
-  ? Array<NodeObjectResult<ArraySubquery, PropertyTypes, Context>>
-  : NodeObjectResult<Query, PropertyTypes, Context>;
+  ? Array<NodeObjectResult<ArraySubquery, PropertyTypes, Context> | null>
+  : NodeObjectResult<Query, PropertyTypes, Context> | null;
