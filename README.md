@@ -2,6 +2,8 @@
 
 **Quild** is a query language for building JSON-LD documents from RDF-style data sources, such as [JSON-LD](https://json-ld.org/), [RDF stores](https://rdf.js.org/), or [m-ld](https://m-ld.org/). It's a little like if [JSON-LD Framing](https://www.w3.org/TR/json-ld11-framing/) and [GraphQL](https://graphql.org/) had a happy little baby together.
 
+Plus, your data comes back typed!
+
 Just ask this…
 
 ```json
@@ -102,7 +104,7 @@ const queryResult = await readQuery(source, {
   "@id": "people/1/",
   name: "?",
   films: [{ title: "?" }],
-});
+} as const);
 ```
 
 ```json
@@ -142,7 +144,7 @@ observeMeldQuery(meld, {
   "@id": "people/16/",
   name: "?",
   films: [{ title: "?" }],
-}).subscribe({ data } => {
+} as const).subscribe({ data } => {
   console.log(data)
 });
 
@@ -210,7 +212,7 @@ export function Person({ id }) {
           title: "?",
         },
       ],
-    }),
+    } as const),
     [id]
   );
 
@@ -251,6 +253,39 @@ Then…
 >
 > - [Return of the Jedi](https://swapi.dev/api/films/3/)
 > - [The Phantom Menace](https://swapi.dev/api/films/4/)
+
+### 🔠 Types
+
+Through the Magic Of TypeScript™, your data comes back with full type information! By default, you'll get the structure inferred from your query, but you can get even more information by typing your properties.
+
+```ts
+const source: RDF.Source = swapiData();
+
+const queryResult = await readQuery(source, {
+  "@context": {
+    "@base": "https://swapi.dev/api/",
+    "@vocab": "http://swapi.dev/documentation#",
+  },
+  "@id": "people/1/",
+  name: "?",
+  films: [{ title: "?" }],
+} as const);
+
+// The type of the query results will be:
+type typeOfQueryResults = ReadQueryResult<{
+  "@context": {
+    readonly "@base": "https://swapi.dev/api/";
+    readonly "@vocab": "http://swapi.dev/documentation#";
+  };
+  "@id": "people/1/";
+  name: string;
+  films: ({
+    title: string;
+  } | null)[];
+} | null>;
+```
+
+Typed query results are available in all three APIs. Just make sure to write your queries with `as const` to give the type system as much information as possible.
 
 ## ▶️ Examples
 

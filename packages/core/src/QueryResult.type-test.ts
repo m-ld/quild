@@ -29,7 +29,7 @@ describe("QueryResult", () => {
       } as const)
     ).resolves.toEqualTypeOf<{
       "http://swapi.dev/documentation#name": "Luke Skywalker";
-    }>();
+    } | null>();
   });
 
   it("fills in placeholders", () => {
@@ -39,7 +39,7 @@ describe("QueryResult", () => {
       } as const)
     ).resolves.toEqualTypeOf<{
       "http://swapi.dev/documentation#name": unknown;
-    }>();
+    } | null>();
   });
 
   it("uses known property types", () => {
@@ -51,7 +51,7 @@ describe("QueryResult", () => {
     ).resolves.toEqualTypeOf<{
       "http://swapi.dev/documentation#name": string;
       "http://swapi.dev/documentation#height": number;
-    }>();
+    } | null>();
   });
 
   it("expands Node Object Keys which are Terms", async () => {
@@ -71,7 +71,7 @@ describe("QueryResult", () => {
       };
       name: string;
       height: unknown;
-    }>();
+    } | null>();
   });
 
   it("expands Node Object Keys which are Compact IRIs", async () => {
@@ -89,7 +89,7 @@ describe("QueryResult", () => {
         readonly swapi: "http://swapi.dev/documentation#";
       };
       "swapi:name": string;
-    }>();
+    } | null>();
   });
 
   it("expands Node Object Keys which are vocab-mapped", async () => {
@@ -107,7 +107,7 @@ describe("QueryResult", () => {
         readonly "@vocab": "http://swapi.dev/documentation#";
       };
       name: string;
-    }>();
+    } | null>();
   });
 
   it("accepts an array", async () => {
@@ -131,7 +131,7 @@ describe("QueryResult", () => {
           readonly "@vocab": "http://swapi.dev/documentation#";
         };
         name: string;
-      }>
+      } | null>
     >();
   });
 
@@ -162,7 +162,7 @@ describe("QueryResult", () => {
         name: string;
         "schema:description": string;
       };
-    }>();
+    } | null>();
   });
 
   it("accepts nested objects and arrays", async () => {
@@ -193,8 +193,8 @@ describe("QueryResult", () => {
         };
         title: string;
         "schema:description": string;
-      }>;
-    }>();
+      } | null>;
+    } | null>();
   });
 
   it.todo("handle term definitions in @context that aren't strings");
