@@ -42,7 +42,7 @@ describe(readQuery, () => {
           pilots: {
             "@list": [{ name: "?" }],
           },
-        },
+        } as const,
         { parser: meldParser }
       )
     ).toStrictEqual({
@@ -68,7 +68,7 @@ describe(readQuery, () => {
           },
           "@id": "https://swapi.dev/api/vehicles/14/",
           pilots: [{ name: "?" }],
-        },
+        } as const,
         { parser: meldParser }
       )
     ).toStrictEqual({
@@ -94,7 +94,7 @@ describe(readQuery, () => {
           pilots: {
             "@list": [{ hair_color: "brown", name: "?" }],
           },
-        },
+        } as const,
         { parser: meldParser }
       )
     ).toStrictEqual({

@@ -6,8 +6,7 @@ export type Iri<
 /**
  * A constraint type for Contexts.
  */
-// TODO: So far, we only handle string values for Term definitions in @context.
-export type ContextConstraint = Record<string, string>;
+export type ContextConstraint = Record<string, string | object>;
 
 export type EmptyContext = Record<never, never>;
 
@@ -34,14 +33,25 @@ export type PropagatedContext<
     : never;
 };
 
-type ExpandedKey<Key extends string, Context extends ContextConstraint> =
+export type ExpandedTerm<
+  Context extends ContextConstraint,
+  Term extends keyof Context
+> = Context[Term] extends string
+  ? Context[Term]
+  : "@id" extends keyof Context[Term]
+  ? Context[Term]["@id"] extends string
+    ? Context[Term]["@id"]
+    : unknown
+  : unknown;
+
+export type ExpandedKey<Key extends string, Context extends ContextConstraint> =
   // If the Key is a Prefixed IRI...
   Key extends Iri<infer Prefix, infer Rest>
-    ? Prefix extends keyof Context
-      ? `${Context[Prefix]}${Rest}`
+    ? ExpandedTerm<Context, Prefix> extends string
+      ? `${ExpandedTerm<Context, Prefix>}${Rest}`
       : Key
-    : Key extends keyof Context
-    ? Context[Key]
+    : ExpandedTerm<Context, Key> extends string
+    ? ExpandedTerm<Context, Key>
     : Context["@vocab"] extends string
     ? `${Context["@vocab"]}${Key}`
     : Key;

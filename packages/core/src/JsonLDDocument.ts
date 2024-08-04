@@ -63,11 +63,13 @@ type CompactIriKeys<
 > = UnionToIntersection<
   ValueOf<{
     [T in Exclude<keyof Context & string, Keyword>]: {
-      [P in keyof PropertyTypes as P extends `${Context[T]}${infer Suffix}`
-        ? // A "suffix" that's an empty string doesn't count.
-          Suffix extends ""
-          ? never
-          : Iri<T, Suffix>
+      [P in keyof PropertyTypes as ExpandedTerm<Context, T> extends string
+        ? P extends `${ExpandedTerm<Context, T>}${infer Suffix}`
+          ? // A "suffix" that's an empty string doesn't count.
+            Suffix extends ""
+            ? never
+            : Iri<T, Suffix>
+          : never
         : never]?: PropertyTypes[P];
     };
   }>

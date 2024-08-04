@@ -4,8 +4,7 @@ import path from "node:path";
 import * as url from "node:url";
 
 import { describe, it, expect } from "@jest/globals";
-import { sortBy } from "rambdax";
-import * as ts from "typescript";
+import ts from "typescript";
 
 const require = nodeModule.createRequire(import.meta.url);
 

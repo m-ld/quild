@@ -5,10 +5,13 @@ import { parseQuery } from "./parse";
 import { defaultParser } from "./parse/parser";
 import { readAll } from "./readAll";
 
+import type { EmptyContext } from "./Context";
 import type * as IR from "./IntermediateResult";
+import type { JsonLDDocument } from "./JsonLDDocument";
+import type { QueryResult } from "./QueryResult";
 import type { Parser, ParseWarning } from "./parse/common";
 import type * as RDF from "@rdfjs/types";
-import type { JsonValue } from "type-fest";
+import type { JsonValue, LiteralUnion } from "type-fest";
 
 const engine = new QueryEngine();
 
@@ -17,43 +20,70 @@ export interface ReadQueryResult<Data> {
   parseWarnings: ParseWarning[];
 }
 
-/**
- * Reads the query once and returns the result.
- *
- * @template Data The expected shape of the data returned by the query.
- *                Eventually, this will be derived from the query itself. For
- *                now, it must be given explicitly.
- * @param graph The RDF data to query.
- * @param query The Quild query to read.
- */
-export const readQuery = async <Data extends JsonValue>(
-  source: RDF.Source,
-  query: JsonValue,
-  { parser = defaultParser }: { parser?: Parser } = {}
-): Promise<ReadQueryResult<Data>> => {
-  const { intermediateResult, sparql, warnings } = await parseQuery(
-    query,
-    parser
-  );
-
-  // console.log(JSON.stringify(query, null, 2));
-  // console.log(toSparql(sparql));
-
-  const bindingsStream = await engine.queryBindings(sparql, {
-    sources: [source],
-  });
-
-  const solutions = await readAll(bindingsStream);
-
-  const ir = solutions.reduce<IR.IntermediateResult>(
-    (partialIr, solution) => partialIr.addSolution(solution),
-    intermediateResult
-  );
-
-  /* eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-     ---
-     The type of `readQuery` is not yet derived from the query. */
-  const data = getCompleteResult(ir) as Data | null;
-
-  return { data, parseWarnings: warnings };
+type QueryPropertyTypes<PropertyTypes> = {
+  [K in keyof PropertyTypes]: LiteralUnion<PropertyTypes[K], "?">;
 };
+
+export const withPropertyTypes = <PropertyTypes>() => ({
+  readQuery: async <Query>(
+    source: RDF.Source,
+    query: JsonLDDocument<
+      QueryPropertyTypes<PropertyTypes>,
+      EmptyContext,
+      Query
+    >,
+    { parser = defaultParser }: { parser?: Parser } = {}
+  ): Promise<ReadQueryResult<QueryResult<Query, PropertyTypes>>> => {
+    const { intermediateResult, sparql, warnings } = await parseQuery(
+      /* eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+       ---
+       We calculate the type and assert it's returned, but we don't flow the
+       detailed query types through the parser. */
+      query as JsonValue,
+      parser
+    );
+
+    const bindingsStream = await engine.queryBindings(sparql, {
+      sources: [source],
+    });
+
+    const solutions = await readAll(bindingsStream);
+
+    const ir = solutions.reduce<IR.IntermediateResult>(
+      (partialIr, solution) => partialIr.addSolution(solution),
+      intermediateResult
+    );
+
+    /* eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+       ---
+       We calculate the type and assert it's returned, but we don't flow the
+       detailed query types through the parser. */
+    const data = getCompleteResult(ir) as QueryResult<
+      Query,
+      PropertyTypes
+    > | null;
+
+    return { data, parseWarnings: warnings };
+  },
+});
+
+/**
+ * The property types used by the default {@link readQuery} function. You can
+ * add to these types with declaration merging. Or, use
+ * {@link withPropertyTypes} to use a different set of property types.
+ */
+/* eslint-disable-next-line @typescript-eslint/no-empty-object-type
+   --
+   This is a placeholder for declaration merging. */
+export interface GlobalPropertyTypes {}
+
+export const readQuery = <Query>(
+  source: RDF.Source,
+  query: JsonLDDocument<
+    QueryPropertyTypes<GlobalPropertyTypes>,
+    EmptyContext,
+    Query
+  >,
+  { parser = defaultParser }: { parser?: Parser } = {}
+) =>
+  withPropertyTypes<GlobalPropertyTypes>().readQuery(source, query, { parser });

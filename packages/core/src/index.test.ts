@@ -41,6 +41,21 @@ const source = quadSource(quads);
 
 /* eslint-enable @typescript-eslint/consistent-type-assertions -- ^^^ */
 
+declare module "./index" {
+  interface GlobalPropertyTypes {
+    "http://swapi.dev/documentation#name": string;
+    "http://swapi.dev/documentation#hair_color": string;
+    "http://swapi.dev/documentation#eye_color": string;
+    "http://swapi.dev/documentation#height": number;
+    "http://swapi.dev/documentation#mass": number;
+    "http://swapi.dev/documentation#title": string;
+    "http://swapi.dev/documentation#homeworld": object;
+    "http://swapi.dev/documentation#films": object;
+    "http://swapi.dev/documentation#vehicles": object;
+    "http://swapi.dev/documentation#director": string;
+  }
+}
+
 describe(readQuery, () => {
   it("can query for a property by @id", async () => {
     expect(
@@ -48,7 +63,7 @@ describe(readQuery, () => {
         "@id": "https://swapi.dev/api/people/1/",
         "http://swapi.dev/documentation#hair_color": "?",
         "http://swapi.dev/documentation#eye_color": "?",
-      })
+      } as const)
     ).toStrictEqual({
       data: {
         "@id": "https://swapi.dev/api/people/1/",
@@ -66,7 +81,7 @@ describe(readQuery, () => {
         "@id": "people/1/",
         "http://swapi.dev/documentation#hair_color": "?",
         "http://swapi.dev/documentation#eye_color": "?",
-      })
+      } as const)
     ).toStrictEqual({
       data: {
         "@context": { "@base": "https://swapi.dev/api/" },
@@ -84,7 +99,7 @@ describe(readQuery, () => {
         "@id": "?",
         "http://swapi.dev/documentation#hair_color": "blond",
         "http://swapi.dev/documentation#eye_color": "blue",
-      })
+      } as const)
     ).toStrictEqual({
       data: {
         "@id": "https://swapi.dev/api/people/1/",
@@ -101,7 +116,7 @@ describe(readQuery, () => {
         "http://swapi.dev/documentation#name": "Luke Skywalker",
         "http://swapi.dev/documentation#hair_color": "?",
         "http://swapi.dev/documentation#eye_color": "?",
-      })
+      } as const)
     ).toStrictEqual({
       data: {
         "http://swapi.dev/documentation#name": "Luke Skywalker",
@@ -119,7 +134,7 @@ describe(readQuery, () => {
           "http://swapi.dev/documentation#name": "?",
           "@type": "http://swapi.dev/documentation#Person",
         },
-      ])
+      ] as const)
     ).toStrictEqual({
       data: [
         {
@@ -144,7 +159,7 @@ describe(readQuery, () => {
       await readQuery(source, {
         "http://swapi.dev/documentation#name": "Luke Skywalker",
         "@type": "?",
-      })
+      } as const)
     ).toStrictEqual({
       data: {
         "http://swapi.dev/documentation#name": "Luke Skywalker",
@@ -164,6 +179,7 @@ describe(readQuery, () => {
           {
             "@type": "Person",
             name: "?",
+
             films: [
               {
                 "@type": "?",
@@ -172,10 +188,10 @@ describe(readQuery, () => {
             ],
           },
         ],
-      })
+      } as const)
     ).toStrictEqual({
       data: {
-        "@context": { "@vocab": "http://swapi.dev/documentation#" },
+        "@context": { "@vocab": "http://swapi.dev/documentation#" } as const,
         "@graph": [
           {
             "@type": "Person",
@@ -214,13 +230,13 @@ describe(readQuery, () => {
   it("can access a singular related node", async () => {
     expect(
       await readQuery(source, {
-        "@context": { "@vocab": "http://swapi.dev/documentation#" },
+        "@context": { "@vocab": "http://swapi.dev/documentation#" } as const,
         name: "Luke Skywalker",
         homeworld: { name: "?" },
-      })
+      } as const)
     ).toStrictEqual({
       data: {
-        "@context": { "@vocab": "http://swapi.dev/documentation#" },
+        "@context": { "@vocab": "http://swapi.dev/documentation#" } as const,
         name: "Luke Skywalker",
         homeworld: {
           name: "Tatooine",
@@ -234,22 +250,22 @@ describe(readQuery, () => {
     expect(
       await readQuery(source, [
         {
-          "@context": { "@vocab": "http://swapi.dev/documentation#" },
+          "@context": { "@vocab": "http://swapi.dev/documentation#" } as const,
           eye_color: "blue",
           name: "?",
           height: "?",
         },
-      ])
+      ] as const)
     ).toStrictEqual({
       data: [
         {
-          "@context": { "@vocab": "http://swapi.dev/documentation#" },
+          "@context": { "@vocab": "http://swapi.dev/documentation#" } as const,
           eye_color: "blue",
           name: "Luke Skywalker",
           height: 172,
         },
         {
-          "@context": { "@vocab": "http://swapi.dev/documentation#" },
+          "@context": { "@vocab": "http://swapi.dev/documentation#" } as const,
           eye_color: "blue",
           name: "Owen Lars",
           height: 178,
@@ -263,16 +279,16 @@ describe(readQuery, () => {
     expect(
       await readQuery(source, [
         {
-          "@context": { "@vocab": "http://swapi.dev/documentation#" },
+          "@context": { "@vocab": "http://swapi.dev/documentation#" } as const,
           eye_color: "blue",
           name: "?",
           films: [{ title: "?" }],
         },
-      ])
+      ] as const)
     ).toStrictEqual({
       data: [
         {
-          "@context": { "@vocab": "http://swapi.dev/documentation#" },
+          "@context": { "@vocab": "http://swapi.dev/documentation#" } as const,
           eye_color: "blue",
           name: "Luke Skywalker",
           films: [
@@ -283,7 +299,7 @@ describe(readQuery, () => {
           ],
         },
         {
-          "@context": { "@vocab": "http://swapi.dev/documentation#" },
+          "@context": { "@vocab": "http://swapi.dev/documentation#" } as const,
           eye_color: "blue",
           name: "Owen Lars",
           films: [
@@ -301,16 +317,16 @@ describe(readQuery, () => {
     expect(
       await readQuery(source, [
         {
-          "@context": { "@vocab": "http://swapi.dev/documentation#" },
+          "@context": { "@vocab": "http://swapi.dev/documentation#" } as const,
           eye_color: "blue",
           name: "?",
           films: { "@set": [{ title: "?" }] },
         },
-      ])
+      ] as const)
     ).toStrictEqual({
       data: [
         {
-          "@context": { "@vocab": "http://swapi.dev/documentation#" },
+          "@context": { "@vocab": "http://swapi.dev/documentation#" } as const,
           eye_color: "blue",
           name: "Luke Skywalker",
           films: {
@@ -323,7 +339,7 @@ describe(readQuery, () => {
           },
         },
         {
-          "@context": { "@vocab": "http://swapi.dev/documentation#" },
+          "@context": { "@vocab": "http://swapi.dev/documentation#" } as const,
           eye_color: "blue",
           name: "Owen Lars",
           films: {
@@ -346,12 +362,12 @@ describe(readQuery, () => {
           "@context": {
             "@vocab": "http://swapi.dev/documentation#",
             films: { "@container": "@set" },
-          },
+          } as const,
           eye_color: "blue",
           name: "?",
           films: [{ title: "?" }],
         },
-      ])
+      ] as const)
     ).toStrictEqual({
       data: [
         {
@@ -389,10 +405,10 @@ describe(readQuery, () => {
   it("can fail to match a singular query", async () => {
     expect(
       await readQuery(source, {
-        "@context": { "@vocab": "http://swapi.dev/documentation#" },
+        "@context": { "@vocab": "http://swapi.dev/documentation#" } as const,
         eye_color: "purple",
         name: "?",
-      })
+      } as const)
     ).toStrictEqual({ data: null, parseWarnings: [] });
   });
 
@@ -400,12 +416,12 @@ describe(readQuery, () => {
     expect(
       await readQuery(source, [
         {
-          "@context": { "@vocab": "http://swapi.dev/documentation#" },
+          "@context": { "@vocab": "http://swapi.dev/documentation#" } as const,
           eye_color: "blue",
           name: "?",
           films: { title: "The Phantom Menace" },
         },
-      ])
+      ] as const)
     ).toStrictEqual({ data: [], parseWarnings: [] });
   });
 
@@ -413,7 +429,7 @@ describe(readQuery, () => {
     expect(
       await readQuery(source, [
         {
-          "@context": { "@vocab": "http://swapi.dev/documentation#" },
+          "@context": { "@vocab": "http://swapi.dev/documentation#" } as const,
           eye_color: "blue",
           name: "?",
           films: [
@@ -423,11 +439,11 @@ describe(readQuery, () => {
             },
           ],
         },
-      ])
+      ] as const)
     ).toStrictEqual({
       data: [
         {
-          "@context": { "@vocab": "http://swapi.dev/documentation#" },
+          "@context": { "@vocab": "http://swapi.dev/documentation#" } as const,
           eye_color: "blue",
           name: "Luke Skywalker",
           films: [
@@ -438,7 +454,7 @@ describe(readQuery, () => {
           ],
         },
         {
-          "@context": { "@vocab": "http://swapi.dev/documentation#" },
+          "@context": { "@vocab": "http://swapi.dev/documentation#" } as const,
           eye_color: "blue",
           name: "Owen Lars",
           films: [],
@@ -451,17 +467,17 @@ describe(readQuery, () => {
   it("preserves the contexts used in the query", async () => {
     expect(
       await readQuery(source, {
-        "@context": { "@vocab": "http://swapi.dev/documentation#" },
+        "@context": { "@vocab": "http://swapi.dev/documentation#" } as const,
         "@id": "https://swapi.dev/api/people/1/",
         hair_color: "?",
         homeworld: {
           "@context": { planetName: "http://swapi.dev/documentation#name" },
           planetName: "?",
         },
-      })
+      } as const)
     ).toStrictEqual({
       data: {
-        "@context": { "@vocab": "http://swapi.dev/documentation#" },
+        "@context": { "@vocab": "http://swapi.dev/documentation#" } as const,
         "@id": "https://swapi.dev/api/people/1/",
         hair_color: "blond",
         homeworld: {
@@ -476,15 +492,15 @@ describe(readQuery, () => {
   it("can query for a @list", async () => {
     expect(
       await readQuery(source, {
-        "@context": { "@vocab": "http://swapi.dev/documentation#" },
+        "@context": { "@vocab": "http://swapi.dev/documentation#" } as const,
         "@id": "https://swapi.dev/api/vehicles/14/",
         pilots: {
           "@list": [{ name: "?" }],
         },
-      })
+      } as const)
     ).toStrictEqual({
       data: {
-        "@context": { "@vocab": "http://swapi.dev/documentation#" },
+        "@context": { "@vocab": "http://swapi.dev/documentation#" } as const,
         "@id": "https://swapi.dev/api/vehicles/14/",
         pilots: {
           "@list": [{ name: "Luke Skywalker" }, { name: "Wedge Antilles" }],
@@ -497,15 +513,15 @@ describe(readQuery, () => {
   it("can query for a @list", async () => {
     expect(
       await readQuery(source, {
-        "@context": { "@vocab": "http://swapi.dev/documentation#" },
+        "@context": { "@vocab": "http://swapi.dev/documentation#" } as const,
         "@id": "https://swapi.dev/api/vehicles/14/",
         pilots: {
           "@list": [{ name: "?" }],
         },
-      })
+      } as const)
     ).toStrictEqual({
       data: {
-        "@context": { "@vocab": "http://swapi.dev/documentation#" },
+        "@context": { "@vocab": "http://swapi.dev/documentation#" } as const,
         "@id": "https://swapi.dev/api/vehicles/14/",
         pilots: {
           "@list": [{ name: "Luke Skywalker" }, { name: "Wedge Antilles" }],
@@ -518,15 +534,15 @@ describe(readQuery, () => {
   it("can filter a @list", async () => {
     expect(
       await readQuery(source, {
-        "@context": { "@vocab": "http://swapi.dev/documentation#" },
+        "@context": { "@vocab": "http://swapi.dev/documentation#" } as const,
         "@id": "https://swapi.dev/api/vehicles/14/",
         pilots: {
           "@list": [{ hair_color: "brown", name: "?" }],
         },
-      })
+      } as const)
     ).toStrictEqual({
       data: {
-        "@context": { "@vocab": "http://swapi.dev/documentation#" },
+        "@context": { "@vocab": "http://swapi.dev/documentation#" } as const,
         "@id": "https://swapi.dev/api/vehicles/14/",
         pilots: {
           "@list": [{}, { hair_color: "brown", name: "Wedge Antilles" }],
